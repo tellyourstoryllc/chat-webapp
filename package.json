@@ -13,6 +13,9 @@
     "connect-assets": "~2.5.2"
   },
   "devDependencies": {
-    "node-dev": "~2.0.2"
+    "node-dev": "~2.0.2",
+    "grunt": "~0.4.0",
+    "grunt-ember-templates": "~0.4.5",
+    "grunt-contrib-watch": "~0.4.0"
   }
 }
