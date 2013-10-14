@@ -3,6 +3,7 @@ require('coffee-script');
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var connectAssets = require('connect-assets')
 
 var app = express();
 
@@ -13,6 +14,7 @@ app.use(express.favicon());
 app.use(express.logger('short'));
 app.use(express.bodyParser());
 app.use(app.router);
+app.use(connectAssets());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.configure('development', function() {
