@@ -3,7 +3,8 @@ require('coffee-script');
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var connectAssets = require('connect-assets')
+var httpProxy = require('http-proxy');
+var connectAssets = require('connect-assets');
 
 var app = express();
 
@@ -12,6 +13,24 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('short'));
+
+// Proxy api requests; must be *before* `bodyParser`.
+var routingProxy = new httpProxy.RoutingProxy();
+var apiProxy = function(pattern, host, port) {
+  return function(req, res, next) {
+    var matches = req.url.match(pattern);
+    if (matches) {
+      // Strip off /api prefix of the URL.
+      req.url = matches[1];
+      routingProxy.proxyRequest(req, res, { host: host, port: port });
+    }
+    else {
+      next();
+    }
+  };
+};
+app.use(apiProxy(/\/api(\/.*)/, 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com', 80));
+
 app.use(express.bodyParser());
 app.use(app.router);
 app.use(connectAssets());
