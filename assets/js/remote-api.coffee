@@ -42,3 +42,14 @@ App.RemoteApi = Ember.Object.extend
 
   fetchCurrentUser: (token = null) ->
     @ajax(@buildURL('/users/update'), 'POST', data: { token: token })
+
+  deserializeUnixTimestamp: (serialized) ->
+    newSerialized = if Ember.typeOf(serialized) == 'number'
+      serialized * 1000
+    else
+      serialized
+
+    if Ember.typeOf(newSerialized) in ['number', 'string']
+      new Date(newSerialized)
+    else
+      null

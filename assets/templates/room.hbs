@@ -3,3 +3,12 @@
   <div>{{topic}}</div>
 {{/if}}
 <div>Invite Link: <a {{bind-attr href='joinUrl'}}>{{joinUrl}}</a></div>
+
+<div class='messages'>
+  {{#each message in messages}}
+    <div class='message'>
+      <div class='text'>{{message.text}}</div>
+      <div class='timestamp'>{{message.createdAt}}</div>
+    </div>
+  {{/each}}
+</div>

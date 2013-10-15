@@ -35,6 +35,23 @@ window.App = App = Ember.Application.create
     @set('token', token)
     window.localStorage['token'] = token
 
+  loadAll: (json) ->
+    instances = for attrs in Ember.makeArray(json)
+      type = @classFromRawObject(attrs)
+      if type?
+        type.loadRaw(attrs)
+
+    instances.compact()
+
+  classFromRawObject: (obj) ->
+    switch obj.object_type
+      when 'group'
+        App.Group
+      when 'message'
+        App.Message
+      when 'user'
+        App.User
+
 
 if Modernizr.history
   # Browser supports pushState.

@@ -1,3 +1,5 @@
+#= require base-model
+
 App.Group = Ember.Object.extend()
 
 
@@ -40,3 +42,10 @@ App.Group.reopenClass
         return groups
       else
         throw new Error(json)
+
+  fetchById: (id) ->
+    api = App.get('api')
+    api.ajax(api.buildURL("/groups/#{id}"), 'GET', {})
+
+  lookup: (id) ->
+    @_allById[App.BaseModel.coerceId(id)]
