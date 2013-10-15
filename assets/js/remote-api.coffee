@@ -39,3 +39,6 @@ App.RemoteApi = Ember.Object.extend
       email: email
       password: password
     @ajax(@buildURL('/login'), 'POST', data: data)
+
+  fetchCurrentUser: (token = null) ->
+    @ajax(@buildURL('/users/update'), 'POST', data: { token: token })

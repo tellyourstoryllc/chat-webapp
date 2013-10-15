@@ -4,7 +4,7 @@ App.LoginController = Ember.Controller.extend
 
   actions:
 
-    login: ->
+    attemptLogin: ->
       @set('isChecking', true)
       App.get('api').login(@get('email'), @get('password'))
       .then (json) =>
@@ -15,12 +15,11 @@ App.LoginController = Ember.Controller.extend
         userJson = json.find (o) -> o.object_type == 'user'
         if userJson.token?
           token = userJson.token
-          App.set('token', token)
           delete userJson.token
 
         user = App.User.loadRaw(userJson)
         if token?
-          App.set('currentUser', user)
+          App.login(token, user)
           @transitionTo('index')
 
       , (e) =>
