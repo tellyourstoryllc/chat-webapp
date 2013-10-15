@@ -43,9 +43,14 @@ app.configure('development', function() {
   }));
 });
 
-app.get('/', function(req, res) {
+
+var renderChatApp = function(req, res) {
   res.render('index', { title: "Chat App" });
-});
+};
+
+app.get('/', renderChatApp);
+app.get('/login', renderChatApp);
+
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log("Express server listening on port %d in %s mode",

@@ -1,6 +1,11 @@
 #= require jquery
 #= require handlebars.runtime
 #= require ember
+#= require modernizr
+#
+#= require app-create
+#= require remote-api
 #= require templates
-
-window.App = Ember.Application.create()
+#= require_tree models
+#= require_tree controllers
+#= require_tree routes
