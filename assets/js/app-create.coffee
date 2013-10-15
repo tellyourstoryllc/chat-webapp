@@ -45,3 +45,4 @@ if Modernizr.history
 App.Router.map ->
 
   @route 'login', path: '/login'
+  @route 'room', path: '/rooms/:group_id'

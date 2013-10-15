@@ -1,1 +1,17 @@
 <h1>Rooms</h1>
+
+{{#if roomsLoaded}}
+  {{#if rooms}}
+    <ul>
+      {{#each room in rooms}}
+        <li class='room'>
+          {{#link-to 'room' room}}{{room.name}}{{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>You currently don't have access to any rooms.</p>
+  {{/if}}
+{{else}}
+  Loading...
+{{/if}}
