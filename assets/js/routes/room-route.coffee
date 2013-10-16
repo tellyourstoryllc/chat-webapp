@@ -5,6 +5,12 @@ App.RoomRoute = Ember.Route.extend
     # Stop listening for new messages.
     @controllerFor('room').cancelMessageSubscription()
 
+  beforeModel: (transition) ->
+    if ! App.isLoggedIn()
+      App.set('continueTransition', transition)
+      @transitionTo('login')
+      return
+
   model: (params, transition) ->
     params.group_id
 
@@ -20,6 +26,9 @@ App.RoomRoute = Ember.Route.extend
     .then (json) =>
       if ! json.error?
         instances = App.loadAll(json)
+        if ! model?
+          model = instances.find (o) -> o instanceof App.Group
+          controller.set('model', model)
         model.set('messages', instances.filter (o) -> o instanceof App.Message)
         if ! controller.get('subscription')?
           controller.resetMessageSubscription()

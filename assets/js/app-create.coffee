@@ -7,6 +7,8 @@ window.App = App = Ember.Application.create
 
   fayeClient: null
 
+  continueTransition: null
+
   ready: ->
     # API implementation.
     api = App.RemoteApi.create()
@@ -26,7 +28,14 @@ window.App = App = Ember.Application.create
           App.login(token, user)
           appController = App.__container__.lookup('controller:application')
           if appController.get('currentPath') == 'login'
-            App.__container__.lookup('router:main').transitionTo('index')
+            # We're currently on the login page, so automatically transition to
+            # somewhere more interesting.
+            transition = App.get('continueTransition')
+            if transition?
+              transition.retry()
+              App.set('continueTransition', null)
+            else
+              App.__container__.lookup('router:main').transitionTo('index')
       , (e) =>
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
           Ember.Logger.log "Invalid token; logging out"
