@@ -14,7 +14,7 @@
 </div>
 
 <div class='room-container'>
-  <div>{{name}}</div>
+  <div>{{#link-to 'rooms.room' model}}{{name}}{{/link-to}}</div>
   {{#if topic}}
     <div>{{topic}}</div>
   {{/if}}
