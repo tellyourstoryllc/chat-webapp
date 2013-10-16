@@ -11,7 +11,12 @@
         <tr>
           <td class='sender'>{{message.user.name}}</td>
           <td class='text'>
-            <span class='timestamp'>{{message.createdAt}}</span>
+            <span class='status'>
+              {{#if message.isSaving}}Sending...{{/if}}
+              {{#if message.createdAt}}
+                <span class='timestamp'>{{message.createdAt}}</span>
+              {{/if}}
+            </span>
             {{message.text}}
             <div class='clearfix'></div>
           </td>
