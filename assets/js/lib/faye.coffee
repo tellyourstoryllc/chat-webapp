@@ -40,6 +40,8 @@ App.Faye.reopenClass
           instance = messagesByFayeId[message.id]
           if instance? && message.data?
             App.Message.didCreateRecord(instance, message.data)
+            # We're done with this instance.
+            delete messagesByFayeId[message.id]
             # Since we already know about this message, don't call callback.
             return
 
