@@ -20,7 +20,7 @@ App.LoginController = Ember.Controller.extend
         user = App.User.loadRaw(userJson)
         if token?
           App.login(token, user)
-          @transitionTo('index')
+          @transitionTo('rooms.index')
 
       , (e) =>
         @set('isChecking', false)

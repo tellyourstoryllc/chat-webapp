@@ -35,7 +35,7 @@ window.App = App = Ember.Application.create
               transition.retry()
               App.set('continueTransition', null)
             else
-              App.__container__.lookup('router:main').transitionTo('index')
+              App.__container__.lookup('router:main').transitionTo('rooms.index')
       , (e) =>
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
           Ember.Logger.log "Invalid token; logging out"
@@ -75,4 +75,6 @@ if Modernizr.history
 App.Router.map ->
 
   @route 'login', path: '/login'
-  @route 'room', path: '/rooms/:group_id'
+
+  @resource 'rooms', path: '/', ->
+    @route 'room', path: '/rooms/:group_id'

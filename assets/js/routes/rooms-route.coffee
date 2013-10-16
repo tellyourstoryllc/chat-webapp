@@ -1,4 +1,4 @@
-App.IndexRoute = Ember.Route.extend
+App.RoomsRoute = Ember.Route.extend
 
   beforeModel: (transition) ->
     if ! App.isLoggedIn()

@@ -5,7 +5,7 @@
     <ul>
       {{#each room in rooms}}
         <li class='room'>
-          {{#link-to 'room' room}}{{room.name}}{{/link-to}}
+          {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
         </li>
       {{/each}}
     </ul>
@@ -15,3 +15,7 @@
 {{else}}
   Loading...
 {{/if}}
+
+<div class='room-content'>
+  {{outlet}}
+</div>

@@ -1,9 +1,9 @@
-App.RoomRoute = Ember.Route.extend
+App.RoomsRoomRoute = Ember.Route.extend
 
   deactivate: ->
     @_super(arguments...)
     # Stop listening for new messages.
-    @controllerFor('room').cancelMessageSubscription()
+    @controllerFor('rooms.room').cancelMessageSubscription()
 
   beforeModel: (transition) ->
     if ! App.isLoggedIn()

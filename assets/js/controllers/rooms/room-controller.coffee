@@ -1,4 +1,4 @@
-App.RoomController = Ember.ObjectController.extend
+App.RoomsRoomController = Ember.ObjectController.extend
 
   roomChanged: (->
     @resetMessageSubscription()

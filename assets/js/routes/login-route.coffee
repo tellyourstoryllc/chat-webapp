@@ -2,5 +2,5 @@ App.LoginRoute = Ember.Route.extend
 
   beforeModel: (transition) ->
     if App.isLoggedIn()
-      @transitionTo('index')
+      @transitionTo('rooms.index')
       return
