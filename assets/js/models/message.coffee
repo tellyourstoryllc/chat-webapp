@@ -10,6 +10,11 @@ App.Message = App.BaseModel.extend
     App.User.lookup(@get('userId'))
   ).property('userId')
 
+  # This is here to add an extra dependent key on the emoticons version.
+  body: (->
+    @get('text')
+  ).property('App.emoticonsVersion', 'text')
+
   toNotification: ->
     userName = @get('user.name') ? "User #{@get('userId')}"
     roomName = @get('group.name') ? "Room #{@get('groupId')}"

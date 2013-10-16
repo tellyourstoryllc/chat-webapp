@@ -1,3 +1,16 @@
+# Substitutes emoticons into user text.
+Ember.Handlebars.registerBoundHelper 'evalMessageText', (text) ->
+  escapedText = Ember.Handlebars.Utils.escapeExpression(text)
+
+  escapedText.replace /\((\w+?)\)/g, (fullMatch, capture) ->
+    emoticon = App.Emoticon.lookupByName(fullMatch)
+    if emoticon?
+      "<img src='#{emoticon.get('imageUrl')}'>"
+    else
+      fullMatch
+  .htmlSafe()
+
+
 # This converts named arguments that are unquoted to bindings.
 normalizeHash = (hash, hashTypes) ->
   for prop of hash

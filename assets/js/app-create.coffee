@@ -11,6 +11,8 @@ window.App = App = Ember.Application.create
 
   hasNotificationPermission: false
 
+  emoticonsVersion: null
+
   ready: ->
     # API implementation.
     api = App.RemoteApi.create()
@@ -49,6 +51,9 @@ window.App = App = Ember.Application.create
     @set('currentUser', user)
     @set('token', token)
     window.localStorage['token'] = token
+
+    # Fetch emoticons after logging in.
+    App.Emoticon.fetchAll()
 
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other

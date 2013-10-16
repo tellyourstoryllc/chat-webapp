@@ -33,7 +33,12 @@
                   <span class='timestamp'>{{message.createdAt}}</span>
                 {{/if}}
               </span>
-              {{message.text}}
+              {{#if message.imageUrl}}
+                <img {{bind-attr src='message.imageUrl'}}>
+              {{/if}}
+
+              {{evalMessageText message.body}}
+
               <div class='clearfix'></div>
             </td>
           </tr>
