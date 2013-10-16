@@ -13,6 +13,11 @@ window.App = App = Ember.Application.create
 
   emoticonsVersion: null
 
+  # Whether the app/window has focus.
+  hasFocus: true
+
+  currentlyViewingRoom: null
+
   ready: ->
     # API implementation.
     api = App.RemoteApi.create()

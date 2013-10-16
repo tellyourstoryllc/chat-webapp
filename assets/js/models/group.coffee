@@ -43,7 +43,9 @@ App.Group = App.BaseModel.extend
   didReceiveMessage: (message) ->
     @get('messages').pushObject(message)
 
-    if message.get('userId') != App.get('currentUser.id')
+    if message.get('userId') != App.get('currentUser.id') &&
+    (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
+
       # Notify of new message.
       notif = message.toNotification()
       title = notif.title

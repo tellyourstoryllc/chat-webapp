@@ -5,6 +5,8 @@ App.RoomsRoomRoute = Ember.Route.extend
     # Stop listening for new messages.
     @controllerFor('rooms.room').cancelMessageSubscription()
 
+    App.set('currentlyViewingRoom', null)
+
   beforeModel: (transition) ->
     if ! App.isLoggedIn()
       App.set('continueTransition', transition)
@@ -22,6 +24,10 @@ App.RoomsRoomRoute = Ember.Route.extend
       groupId = model.get('id')
     @_super(arguments...)
 
+    # Track which room is being viewed so we can determine when to notify the
+    # user.
+    App.set('currentlyViewingRoom', model)
+
     App.Group.fetchById(groupId)
     .then (json) =>
       if ! json.error?
@@ -33,6 +39,7 @@ App.RoomsRoomRoute = Ember.Route.extend
         if ! model?
           model = instances.find (o) -> o instanceof App.Group
           controller.set('model', model)
+          App.set('currentlyViewingRoom', model)
 
         model.set('usersLoaded', true)
 
