@@ -36,11 +36,32 @@ App.Message.reopenClass
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # Returns Promise.
-  sendNewMessage: (attrs) ->
-    groupId = attrs.group_id
-    if attrs.image_file?
-      Ember.Logger.error "TODO: send message via POST"
+  sendNewMessage: (message) ->
+    groupId = message.get('groupId')
+    data = {}
+    for key in ['text', 'imageFile']
+      val = message.get(key)
+      if val?
+        data[key.underscore()] = val
+    # Only send message via POST if there's an image.
+    if message.get('imageFile')?
       api = App.get('api')
-      return null
+      promise = api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST', data: data)
     else
-      App.get('fayeClient').publish("/groups/#{groupId}/messages", attrs)
+      # Publish the message via the socket.
+      promise = App.get('fayeClient').publish("/groups/#{groupId}/messages/create", data)
+
+    promise.then (json) =>
+      if ! json? || json.error?
+        # Reject the promise.
+        throw json
+      else
+        json = Ember.makeArray(json)
+        msgAttrs = json.find (o) -> o.object_type == 'message'
+        # Update the Message instance.
+        message.setProperties(@propertiesFromRawAttrs(msgAttrs))
+        # Save to our identity map.
+        @_all.pushObject(message)
+        @_allById[message.get('id')] = message
+
+        return message

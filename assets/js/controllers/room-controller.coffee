@@ -32,18 +32,20 @@ App.RoomController = Ember.ObjectController.extend
       return if Ember.isEmpty(text)
 
       @set('isSending', true)
-      promise = App.Message.sendNewMessage
-        group_id: @get('model.id')
+      groupId = @get('model.id')
+      msg = App.Message.create
+        groupId: groupId
         text: text
-      if promise?
-        promise.then =>
-          @set('isSending', false)
-        , (e) =>
-          @set('isSending', false)
-          throw e
-      else
+      App.Message.sendNewMessage(msg)
+      .then (msg) =>
         @set('isSending', false)
+        # if msg instanceof App.Message
+          # Message was created successfully.
+      , (e) =>
+        @set('isSending', false)
+        throw e
 
       @set('text', '')
+      @get('model.messages').pushObject(msg)
 
       return undefined
