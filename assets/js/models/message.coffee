@@ -2,9 +2,23 @@
 
 App.Message = App.BaseModel.extend
 
+  group: (->
+    App.Group.lookup(@get('groupId'))
+  ).property('groupId')
+
   user: (->
     App.User.lookup(@get('userId'))
   ).property('userId')
+
+  toNotification: ->
+    userName = @get('user.name') ? "User #{@get('userId')}"
+    roomName = @get('group.name') ? "Room #{@get('groupId')}"
+
+    # TODO: icon field.
+    tag: @get('id')
+    title: "#{userName} | #{roomName}"
+    body: @get('text')
+    icon: {}
 
 
 App.Message.reopenClass

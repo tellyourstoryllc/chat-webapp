@@ -5,7 +5,7 @@
     {{#if rooms}}
       <ul class='rooms-list'>
         {{#each room in rooms}}
-          <li class='room-list-item'>
+          <li class='room-list-item' {{action 'requestNotificationPermission'}}>
             {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
           </li>
         {{/each}}

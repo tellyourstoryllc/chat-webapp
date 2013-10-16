@@ -39,8 +39,15 @@ App.Group = App.BaseModel.extend
 
   didReceiveMessage: (message) ->
     @get('messages').pushObject(message)
-    # TODO: notify the user of new message.
 
+    if message.get('userId') != App.get('currentUser.id')
+      # Notify of new message.
+      notif = message.toNotification()
+      title = notif.title
+      delete notif.title
+      window.notify.createNotification(title, notif)
+
+    true
 
 
 App.Group.reopenClass

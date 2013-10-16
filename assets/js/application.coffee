@@ -2,6 +2,7 @@
 #= require handlebars.runtime
 #= require ember
 #= require modernizr
+#= require desktop-notify
 #
 #= require app-create
 #= require_tree lib

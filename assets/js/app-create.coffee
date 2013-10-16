@@ -9,6 +9,8 @@ window.App = App = Ember.Application.create
 
   continueTransition: null
 
+  hasNotificationPermission: false
+
   ready: ->
     # API implementation.
     api = App.RemoteApi.create()
@@ -47,6 +49,23 @@ window.App = App = Ember.Application.create
     @set('currentUser', user)
     @set('token', token)
     window.localStorage['token'] = token
+
+  # Note: due to browser restrictions, the actual infobar to ask the user to
+  # enable notifications can only be displayed as the result of a click or other
+  # user event.
+  requestNotificationPermission: ->
+    # Request permission to show desktop notifications.
+    permissionLevel = window.notify.permissionLevel()
+    @updateNotificationPermissionState(permissionLevel)
+    if permissionLevel == window.notify.PERMISSION_DEFAULT
+      Ember.Logger.log "Requesting permission for desktop notifications"
+      window.notify.requestPermission =>
+        Ember.run @, ->
+          @updateNotificationPermissionState()
+
+  updateNotificationPermissionState: (permissionLevel = null) ->
+    permissionLevel ?= window.notify.permissionLevel()
+    App.set('hasNotificationPermission', permissionLevel == window.notify.PERMISSION_GRANTED)
 
   loadAll: (json) ->
     instances = for attrs in Ember.makeArray(json)
