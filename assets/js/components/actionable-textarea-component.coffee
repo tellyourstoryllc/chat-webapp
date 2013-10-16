@@ -1,8 +1,10 @@
+#= require textarea-component
+
 # A textarea that triggers an action when the user presses enter.
 #
 # Caller should set the `action` property to the name of the action that should
 # get triggered when user presses the enter key.
-App.ActionableTextareaComponent = Ember.TextArea.extend
+App.ActionableTextareaComponent = App.Textarea.extend
 
   # The name of the action that gets sent.
   action: null
