@@ -1,6 +1,8 @@
 window.App = App = Ember.Application.create
   LOG_TRANSITIONS: true
 
+  isLoggingIn: false
+
   token: null
 
   currentUser: null
@@ -29,8 +31,11 @@ window.App = App = Ember.Application.create
     if token?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
+      App.set('isLoggingIn', true)
       api.fetchCurrentUser(token)
       .then (json) =>
+        App.set('isLoggingIn', false)
+
         if Ember.isArray(json)
           userJson = json.find (o) -> o.object_type == 'user'
           user = App.User.loadRaw(userJson)
@@ -46,6 +51,7 @@ window.App = App = Ember.Application.create
             else
               App.__container__.lookup('router:main').transitionTo('rooms.index')
       , (e) =>
+        App.set('isLoggingIn', false)
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')

@@ -1,4 +1,8 @@
-<div class='navbar'>
-  <div class='brand'>{{#link-to 'rooms.index'}}Chat App{{/link-to}}</div>
-</div>
-{{outlet}}
+{{#if App.isLoggingIn}}
+  <p class='empty-content-page'>Loading...</p>
+{{else}}
+  <div class='navbar'>
+    <div class='brand'>{{#link-to 'rooms.index'}}Chat App{{/link-to}}</div>
+  </div>
+  {{outlet}}
+{{/if}}
