@@ -18,12 +18,17 @@ App.RoomController = Ember.ObjectController.extend
       Ember.Logger.warn "I can't subscribe to messages without a group ID."
       return
 
-    subscription = client.subscribe "/groups/#{groupId}/messages", (json) ->
+    subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
       Ember.Logger.log "received packet", json
-      if ! json?.error?
-        Ember.Logger.log "received message", json
-        # TODO
+      if ! json?.error? && json.object_type == 'message'
+        # We received a new message.
+        message = App.Message.loadRaw(json)
+        @didReceiveMessage(message)
     @set('subscription', subscription)
+
+  didReceiveMessage: (message) ->
+    @get('model.messages').pushObject(message)
+    # TODO: notify the user of new message.
 
   actions:
 
