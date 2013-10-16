@@ -2,6 +2,9 @@
 
 App.Group = App.BaseModel.extend
 
+  # New message draft temporarily stored before sending.
+  newMessageText: ''
+
   init: ->
     @_super(arguments...)
     @setProperties

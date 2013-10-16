@@ -3,7 +3,7 @@ App.RoomsRoomController = Ember.ObjectController.extend
   actions:
 
     sendMessage: ->
-      text = @get('text')
+      text = @get('newMessageText')
       return if Ember.isEmpty(text)
 
       groupId = @get('model.id')
@@ -16,7 +16,7 @@ App.RoomsRoomController = Ember.ObjectController.extend
         # if msg instanceof App.Message
           # Message was created successfully.
 
-      @set('text', '')
+      @set('newMessageText', '')
       @get('model.messages').pushObject(msg)
 
       return undefined
