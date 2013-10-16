@@ -1,3 +1,5 @@
+#= require base-model
+
 App.User = Ember.Object.extend()
 
 App.User.reopenClass
@@ -9,11 +11,7 @@ App.User.reopenClass
   _allById: {}
 
   loadRaw: (json) ->
-    props =
-      id: if json.id? then "#{json.id}" else null
-      name: json.name
-      status: json.status
-      statusText: json.status_text
+    props = @propertiesFromRawAttrs(json)
 
     prevInst = props.id? && @_allById[props.id]
     if prevInst?
@@ -25,3 +23,12 @@ App.User.reopenClass
       @_allById[props.id] = inst
 
     inst
+
+  lookup: (id) ->
+    @_allById[App.BaseModel.coerceId(id)]
+
+  propertiesFromRawAttrs: (json) ->
+    id: if json.id? then "#{json.id}" else null
+    name: json.name
+    status: json.status
+    statusText: json.status_text

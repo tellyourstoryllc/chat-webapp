@@ -1,4 +1,8 @@
-App.Message = Ember.Object.extend()
+App.Message = Ember.Object.extend
+
+  user: (->
+    App.User.lookup(@get('userId'))
+  ).property('userId')
 
 
 App.Message.reopenClass
