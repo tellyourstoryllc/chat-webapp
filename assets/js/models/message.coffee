@@ -46,22 +46,29 @@ App.Message.reopenClass
     # Only send message via POST if there's an image.
     if message.get('imageFile')?
       api = App.get('api')
-      promise = api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST', data: data)
+      api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST', data: data)
+      .then (json) =>
+        Ember.Logger.log "message create response", json
+        if ! json? || json.error?
+          # Reject the promise.
+          throw json
+        else
+          json = Ember.makeArray(json)
+          msgAttrs = json.find (o) -> o.object_type == 'message'
+          @didCreateRecord(message, msgAttrs)
+
+          return message
     else
+      # The instance is used by the faye extension.
+      data.messageInstance = message
       # Publish the message via the socket.
-      promise = App.get('fayeClient').publish("/groups/#{groupId}/messages/create", data)
+      App.get('fayeClient').publish("/groups/#{groupId}/messages", data)
 
-    promise.then (json) =>
-      if ! json? || json.error?
-        # Reject the promise.
-        throw json
-      else
-        json = Ember.makeArray(json)
-        msgAttrs = json.find (o) -> o.object_type == 'message'
-        # Update the Message instance.
-        message.setProperties(@propertiesFromRawAttrs(msgAttrs))
-        # Save to our identity map.
-        @_all.pushObject(message)
-        @_allById[message.get('id')] = message
-
-        return message
+  didCreateRecord: (message, attrs) ->
+    hadId = message.get('id')?
+    # Update the Message instance.
+    message.setProperties(@propertiesFromRawAttrs(attrs))
+    if ! hadId && message.get('id')?
+      # Save to our identity map.
+      @_all.pushObject(message)
+      @_allById[message.get('id')] = message

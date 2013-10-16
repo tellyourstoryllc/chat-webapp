@@ -22,6 +22,30 @@ App.Faye.reopenClass
         Ember.Logger.log "faye incoming", message
         callback(message)
 
+    # This extension captures messages being sent and tracks their Faye ID so
+    # they can be deduped once the response is received.
+    messagesByFayeId = {}
+    sendingMessages =
+      outgoing: (message, callback) ->
+        # For sending messages, capture Faye's client ID.
+        if /\/groups\/[^\/]+\/messages/.test(message.channel)
+          instance = message.data.messageInstance
+          delete message.data.messageInstance
+          messagesByFayeId[message.id] = instance
+
+        callback(message)
+
+      incoming: (message, callback) ->
+        if /\/groups\/[^\/]+\/messages/.test(message.channel)
+          instance = messagesByFayeId[message.id]
+          if instance? && message.data?
+            App.Message.didCreateRecord(instance, message.data)
+            # Since we already know about this message, don't call callback.
+            return
+
+        callback(message)
+
     fayeClient.addExtension(clientAuth)
+    fayeClient.addExtension(sendingMessages)
 
     fayeClient
