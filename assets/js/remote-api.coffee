@@ -32,7 +32,10 @@ App.RemoteApi = Ember.Object.extend
   buildURL: (url) ->
     if url? && url[0] != '/'
       url = '/' + url
-    [@get('namespace'), url].compact().join('')
+
+    url = [@get('namespace'), url].compact().join('')
+    url = '/' + url if url[0] != '/'
+    url
 
   login: (email, password) ->
     data =
