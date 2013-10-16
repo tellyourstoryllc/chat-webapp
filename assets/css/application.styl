@@ -14,7 +14,15 @@ body {
     color #417ACE
     text-decoration none
 
-.room
+room-sidebar-width = 200px
+
+.rooms-sidebar
+  position fixed
+
+.rooms-list
+  width room-sidebar-width
+
+.room-list-item
   margin 10px 0
 
   > a
@@ -31,6 +39,9 @@ body {
 
     &:hover
       background-color #f8f8f8
+
+.room-content
+  margin-left room-sidebar-width + 40px
 
 .message {
   margin-top 5px

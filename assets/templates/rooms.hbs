@@ -1,20 +1,22 @@
-<h1>Rooms</h1>
+<div class='rooms-sidebar'>
+  <h1>Rooms</h1>
 
-{{#if roomsLoaded}}
-  {{#if rooms}}
-    <ul>
-      {{#each room in rooms}}
-        <li class='room'>
-          {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
+  {{#if roomsLoaded}}
+    {{#if rooms}}
+      <ul class='rooms-list'>
+        {{#each room in rooms}}
+          <li class='room-list-item'>
+            {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>You currently don't have access to any rooms.</p>
+    {{/if}}
   {{else}}
-    <p>You currently don't have access to any rooms.</p>
+    Loading...
   {{/if}}
-{{else}}
-  Loading...
-{{/if}}
+</div>
 
 <div class='room-content'>
   {{outlet}}
