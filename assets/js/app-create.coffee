@@ -5,10 +5,14 @@ window.App = App = Ember.Application.create
 
   currentUser: null
 
+  fayeClient: null
+
   ready: ->
     # API implementation.
     api = App.RemoteApi.create()
     @set('api', api)
+
+    @set('fayeClient', App.Faye.createClient())
 
     token = window.localStorage['token']
     if token?

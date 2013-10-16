@@ -5,6 +5,7 @@
 #
 #= require app-create
 #= require remote-api
+#= require_tree lib
 #= require templates
 #= require_tree models
 #= require_tree controllers
