@@ -52,6 +52,22 @@ room-sidebar-width = 200px
 .room-content
   margin-left room-sidebar-width + 40px
 
+room-members-sidebar-width = 150px
+
+.room-members-sidebar
+  position fixed
+  right 10px
+  width room-members-sidebar-width
+  overflow hidden
+
+  .room-member
+    color #999
+    font-size 12px
+    line-height 1.2em
+
+.room-container
+  margin-right room-members-sidebar-width + 20px
+
 .message
   margin-top 5px
   border-top 1px solid #ccc

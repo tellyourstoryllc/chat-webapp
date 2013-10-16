@@ -1,32 +1,49 @@
-<div>{{name}}</div>
-{{#if topic}}
-  <div>{{topic}}</div>
-{{/if}}
-<div>Invite Link: <a {{bind-attr href='joinUrl'}}>{{joinUrl}}</a></div>
-
-<div class='messages'>
-  {{#each message in messages}}
-    <div class='message'>
-      <table class='message-table'>
-        <tr>
-          <td class='sender'>{{message.user.name}}</td>
-          <td class='text'>
-            <span class='status'>
-              {{#if message.isSaving}}Sending...{{/if}}
-              {{#if message.createdAt}}
-                <span class='timestamp'>{{message.createdAt}}</span>
-              {{/if}}
-            </span>
-            {{message.text}}
-            <div class='clearfix'></div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  {{/each}}
+<div class='room-members-sidebar'>
+  <h3>Members</h3>
+  {{#if usersLoaded}}
+    <ul class='room-members'>
+      {{#each user in members}}
+        <li class='room-member'>
+          {{user.name}}
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    Loading...
+  {{/if}}
 </div>
 
-<div class='reply-area'>
-  {{input type='text' value=text action='sendMessage'}}
-  <button type='button' {{action 'sendMessage'}}>Send</button>
+<div class='room-container'>
+  <div>{{name}}</div>
+  {{#if topic}}
+    <div>{{topic}}</div>
+  {{/if}}
+  <div>Invite Link: <a {{bind-attr href='joinUrl'}}>{{joinUrl}}</a></div>
+
+  <div class='messages'>
+    {{#each message in messages}}
+      <div class='message'>
+        <table class='message-table'>
+          <tr>
+            <td class='sender'>{{message.user.name}}</td>
+            <td class='text'>
+              <span class='status'>
+                {{#if message.isSaving}}Sending...{{/if}}
+                {{#if message.createdAt}}
+                  <span class='timestamp'>{{message.createdAt}}</span>
+                {{/if}}
+              </span>
+              {{message.text}}
+              <div class='clearfix'></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class='reply-area'>
+    {{input type='text' value=text action='sendMessage'}}
+    <button type='button' {{action 'sendMessage'}}>Send</button>
+  </div>
 </div>

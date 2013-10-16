@@ -4,7 +4,15 @@ App.Group = App.BaseModel.extend
 
   init: ->
     @_super(arguments...)
-    @set('messages', [])
+    @setProperties
+      messages: []
+      memberIds: []
+
+  # Note: Can't have dependent key on memberIds.@each since the members are
+  # primitives, not objects, and you can't observe a primitive.
+  members: (->
+    @get('memberIds').map (id) -> App.User.lookup(id)
+  ).property('memberIds.@each')
 
   cancelMessagesSubscription: ->
     @get('subscription')?.cancel()
@@ -64,6 +72,7 @@ App.Group.reopenClass
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
+    memberIds: json.member_ids
 
   fetchAll: ->
     api = App.get('api')
