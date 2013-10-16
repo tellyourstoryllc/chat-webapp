@@ -39,7 +39,7 @@ App.Message.reopenClass
       prevInst.setProperties(props)
       inst = prevInst
     else
-      inst = App.Message.create(props)
+      inst = @create(props)
       @_all.pushObject(inst)
       @_allById[props.id] = inst
 

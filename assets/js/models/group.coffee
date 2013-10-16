@@ -72,7 +72,7 @@ App.Group.reopenClass
       prevInst.setProperties(props)
       inst = prevInst
     else
-      inst = App.Group.create(props)
+      inst = @create(props)
       @_all.pushObject(inst)
       @_allById[props.id] = inst
 
