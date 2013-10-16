@@ -7,9 +7,16 @@
 <div class='messages'>
   {{#each message in messages}}
     <div class='message'>
-      <div class='sender'>{{message.user.name}}</div>
-      <div class='text'>{{message.text}}</div>
-      <div class='timestamp'>{{message.createdAt}}</div>
+      <table class='message-table'>
+        <tr>
+          <td class='sender'>{{message.user.name}}</td>
+          <td class='text'>
+            <span class='timestamp'>{{message.createdAt}}</span>
+            {{message.text}}
+            <div class='clearfix'></div>
+          </td>
+        </tr>
+      </table>
     </div>
   {{/each}}
 </div>

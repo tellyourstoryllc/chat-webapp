@@ -1,6 +1,15 @@
 @import 'reset.css'
 
 
+.clearfix
+  &:before, &:after
+    content ""
+    display table
+    line-height 0
+  &:after
+    clear both
+
+
 body {
   margin: 10px;
   font-family: Helvetica, Arial, sans-serif;
@@ -43,14 +52,24 @@ room-sidebar-width = 200px
 .room-content
   margin-left room-sidebar-width + 40px
 
-.message {
+.message
   margin-top 5px
   border-top 1px solid #ccc
   padding-top 5px
   font-size 14px
 
-  .timestamp {
+  .message-table
+    width 100%
+
+  .sender
+    width 150px
+    height 1.2em
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+
+  .timestamp
+    float right
+    margin 0 0 5px 10px
     color #ccc
     font-size 10px
-  }
-}
