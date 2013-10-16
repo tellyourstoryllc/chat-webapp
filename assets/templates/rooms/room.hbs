@@ -43,7 +43,8 @@
   </div>
 
   <div class='reply-area'>
-    {{input type='text' value=text action='sendMessage'}}
+    {{actionable-textarea action='sendMessage'
+      valueBinding='text' maxlength='1000' rows='1'}}
     <button type='button' {{action 'sendMessage'}}>Send</button>
   </div>
 </div>
