@@ -10,6 +10,7 @@ App.Group = App.BaseModel.extend
     @setProperties
       messages: []
       memberIds: []
+      notificationResults: []
 
   # Note: Can't have dependent key on memberIds.@each since the members are
   # primitives, not objects, and you can't observe a primitive.
@@ -50,7 +51,8 @@ App.Group = App.BaseModel.extend
       notif = message.toNotification()
       title = notif.title
       delete notif.title
-      window.notify.createNotification(title, notif)
+      result = window.notify.createNotification(title, notif)
+      @get('notificationResults').pushObject(result)
 
     true
 

@@ -11,7 +11,18 @@ App.ApplicationView = Ember.View.extend
   focus: ->
     Ember.run @, ->
       App.set('hasFocus', true)
+      @hideNotifications()
 
   blur: ->
     Ember.run @, ->
       App.set('hasFocus', false)
+
+  currentlyViewingRoomChanged: (->
+    @hideNotifications()
+  ).observes('App.currentlyViewingRoom')
+
+  hideNotifications: ->
+    results = App.get('currentlyViewingRoom.notificationResults')
+    if results?
+      results.forEach (result) -> result.close()
+      results.clear()
