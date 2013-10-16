@@ -8,6 +8,7 @@ App.RoomsRoomController = Ember.ObjectController.extend
 
       groupId = @get('model.id')
       msg = App.Message.create
+        userId: App.get('currentUser.id')
         groupId: groupId
         text: text
       App.Message.sendNewMessage(msg)
