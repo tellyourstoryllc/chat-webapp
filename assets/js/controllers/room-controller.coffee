@@ -24,3 +24,26 @@ App.RoomController = Ember.ObjectController.extend
         Ember.Logger.log "received message", json
         # TODO
     @set('subscription', subscription)
+
+  actions:
+
+    sendMessage: ->
+      text = @get('text')
+      return if Ember.isEmpty(text)
+
+      @set('isSending', true)
+      promise = App.Message.sendNewMessage
+        group_id: @get('model.id')
+        text: text
+      if promise?
+        promise.then =>
+          @set('isSending', false)
+        , (e) =>
+          @set('isSending', false)
+          throw e
+      else
+        @set('isSending', false)
+
+      @set('text', '')
+
+      return undefined

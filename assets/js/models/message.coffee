@@ -34,3 +34,13 @@ App.Message.reopenClass
     text: json.text
     imageUrl: json.image_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
+
+  # Returns Promise.
+  sendNewMessage: (attrs) ->
+    groupId = attrs.group_id
+    if attrs.image_file?
+      Ember.Logger.error "TODO: send message via POST"
+      api = App.get('api')
+      return null
+    else
+      App.get('fayeClient').publish("/groups/#{groupId}/messages", attrs)

@@ -12,3 +12,8 @@
     </div>
   {{/each}}
 </div>
+
+<div class='reply-area'>
+  {{input type='text' value=text action='sendMessage'}}
+  <button type='button' {{action 'sendMessage'}}>Send</button>
+</div>

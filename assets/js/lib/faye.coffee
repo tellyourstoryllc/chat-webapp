@@ -15,6 +15,7 @@ App.Faye.reopenClass
         message.ext.token = App.get('token')
 
         # Carry on and send the message to the server
+        Ember.Logger.log "faye outgoing", message
         callback(message)
 
       incoming: (message, callback) ->
