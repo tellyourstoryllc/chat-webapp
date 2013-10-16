@@ -29,11 +29,12 @@ App.Group = App.BaseModel.extend
       return
 
     subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
-      Ember.Logger.log "received packet", json
-      if ! json?.error? && json.object_type == 'message'
-        # We received a new message.
-        message = App.Message.loadRaw(json)
-        @didReceiveMessage(message)
+      Ember.run @, ->
+        Ember.Logger.log "received packet", json
+        if ! json?.error? && json.object_type == 'message'
+          # We received a new message.
+          message = App.Message.loadRaw(json)
+          @didReceiveMessage(message)
     @set('subscription', subscription)
 
   didReceiveMessage: (message) ->
