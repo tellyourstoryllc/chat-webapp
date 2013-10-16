@@ -36,19 +36,14 @@ App.RoomController = Ember.ObjectController.extend
       text = @get('text')
       return if Ember.isEmpty(text)
 
-      @set('isSending', true)
       groupId = @get('model.id')
       msg = App.Message.create
         groupId: groupId
         text: text
       App.Message.sendNewMessage(msg)
       .then (msg) =>
-        @set('isSending', false)
         # if msg instanceof App.Message
           # Message was created successfully.
-      , (e) =>
-        @set('isSending', false)
-        throw e
 
       @set('text', '')
       @get('model.messages').pushObject(msg)
