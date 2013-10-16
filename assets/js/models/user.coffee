@@ -29,7 +29,7 @@ App.User.reopenClass
     @_allById[App.BaseModel.coerceId(id)]
 
   propertiesFromRawAttrs: (json) ->
-    id: if json.id? then "#{json.id}" else null
+    id: App.BaseModel.coerceId(json.id)
     name: json.name
     status: json.status
     statusText: json.status_text

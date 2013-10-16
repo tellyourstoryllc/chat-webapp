@@ -48,9 +48,9 @@ App.Message.reopenClass
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
 
-    id: if json.id? then "#{json.id}" else null
-    groupId: json.group_id
-    userId: json.user_id
+    id: App.BaseModel.coerceId(json.id)
+    groupId: App.BaseModel.coerceId(json.group_id)
+    userId: App.BaseModel.coerceId(json.user_id)
     text: json.text
     imageUrl: json.image_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)

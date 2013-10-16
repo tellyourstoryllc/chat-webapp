@@ -76,11 +76,11 @@ App.Group.reopenClass
     inst
 
   propertiesFromRawAttrs: (json) ->
-    id: if json.id? then "#{json.id}" else null
+    id: App.BaseModel.coerceId(json.id)
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
-    memberIds: json.member_ids
+    memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
 
   fetchAll: ->
     api = App.get('api')
