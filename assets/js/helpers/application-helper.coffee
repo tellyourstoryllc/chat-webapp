@@ -2,13 +2,13 @@
 Ember.Handlebars.registerBoundHelper 'evalMessageText', (text) ->
   escapedText = Ember.Handlebars.Utils.escapeExpression(text)
 
-  escapedText.replace /\((\w+?)\)/g, (fullMatch, capture) ->
-    emoticon = App.Emoticon.lookupByName(fullMatch)
-    if emoticon?
-      "<img src='#{emoticon.get('imageUrl')}'>"
-    else
-      fullMatch
-  .htmlSafe()
+  evaledText = App.Emoticon.all().reduce (str, emoticon) ->
+    regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
+    imageHtml = "<img src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
+    str.replace regexp, imageHtml
+  , escapedText
+
+  evaledText.htmlSafe()
 
 
 # This converts named arguments that are unquoted to bindings.
