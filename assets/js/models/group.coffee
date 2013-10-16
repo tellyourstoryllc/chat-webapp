@@ -1,6 +1,6 @@
 #= require base-model
 
-App.Group = Ember.Object.extend()
+App.Group = App.BaseModel.extend()
 
 
 App.Group.reopenClass
@@ -14,11 +14,8 @@ App.Group.reopenClass
   all: -> @_all
 
   loadRaw: (json) ->
-    props =
-      id: if json.id? then "#{json.id}" else null
-      name: json.name
-      joinUrl: json.join_url
-      topic: json.topic
+    props = @propertiesFromRawAttrs(json)
+    props.isLoaded = true
 
     prevInst = props.id? && @_allById[props.id]
     if prevInst?
@@ -30,6 +27,12 @@ App.Group.reopenClass
       @_allById[props.id] = inst
 
     inst
+
+  propertiesFromRawAttrs: (json) ->
+    id: if json.id? then "#{json.id}" else null
+    name: json.name
+    joinUrl: json.join_url
+    topic: json.topic
 
   fetchAll: ->
     api = App.get('api')

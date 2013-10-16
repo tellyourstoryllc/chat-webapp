@@ -1,4 +1,8 @@
-App.BaseModel = Ember.Object.extend()
+App.BaseModel = Ember.Object.extend
+
+  isLoaded: false
+  isSaving: false
+
 
 App.BaseModel.reopenClass
 

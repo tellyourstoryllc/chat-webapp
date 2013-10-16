@@ -1,4 +1,6 @@
-App.Message = Ember.Object.extend
+#= require base-model
+
+App.Message = App.BaseModel.extend
 
   user: (->
     App.User.lookup(@get('userId'))
@@ -47,6 +49,10 @@ App.Message.reopenClass
       val = message.get(key)
       if val?
         data[key.underscore()] = val
+
+    # Update instance state.
+    message.set('isSaving', true)
+
     # Only send message via POST if there's an image.
     if message.get('imageFile')?
       api = App.get('api')
@@ -71,7 +77,12 @@ App.Message.reopenClass
   didCreateRecord: (message, attrs) ->
     hadId = message.get('id')?
     # Update the Message instance.
-    message.setProperties(@propertiesFromRawAttrs(attrs))
+    props = @propertiesFromRawAttrs(attrs)
+    # Update state.
+    props.isLoaded = true
+    props.isSaving = false
+    message.setProperties(props)
+
     if ! hadId && message.get('id')?
       # Save to our identity map.
       @_all.pushObject(message)
