@@ -12,3 +12,5 @@ App.RoomsRoute = Ember.Route.extend
     .then (groups) =>
       if groups?
         controller.set('roomsLoaded', true)
+        for group in groups
+          group.subscribeToMessages()

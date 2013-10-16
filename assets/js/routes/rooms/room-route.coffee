@@ -29,6 +29,5 @@ App.RoomsRoomRoute = Ember.Route.extend
         if ! model?
           model = instances.find (o) -> o instanceof App.Group
           controller.set('model', model)
-        model.set('messages', instances.filter (o) -> o instanceof App.Message)
-        if ! controller.get('subscription')?
-          controller.resetMessageSubscription()
+        if Ember.isEmpty(model.get('messages'))
+          model.set('messages', instances.filter (o) -> o instanceof App.Message)

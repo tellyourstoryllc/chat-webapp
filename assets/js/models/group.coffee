@@ -1,6 +1,37 @@
 #= require base-model
 
-App.Group = App.BaseModel.extend()
+App.Group = App.BaseModel.extend
+
+  init: ->
+    @_super(arguments...)
+    @set('messages', [])
+
+  cancelMessagesSubscription: ->
+    @get('subscription')?.cancel()
+    @set('subscription', null)
+
+  subscribeToMessages: ->
+    # If we already have a subscription, we're done.
+    return if @get('subscription')?
+
+    client = App.get('fayeClient')
+    groupId = @get('id')
+    if ! groupId?
+      Ember.Logger.warn "I can't subscribe to messages without a group ID."
+      return
+
+    subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
+      Ember.Logger.log "received packet", json
+      if ! json?.error? && json.object_type == 'message'
+        # We received a new message.
+        message = App.Message.loadRaw(json)
+        @didReceiveMessage(message)
+    @set('subscription', subscription)
+
+  didReceiveMessage: (message) ->
+    @get('messages').pushObject(message)
+    # TODO: notify the user of new message.
+
 
 
 App.Group.reopenClass
