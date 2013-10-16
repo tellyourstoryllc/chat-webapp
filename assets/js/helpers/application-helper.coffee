@@ -1,7 +1,16 @@
 # Substitutes emoticons into user text.
 Ember.Handlebars.registerBoundHelper 'evalMessageText', (text) ->
+
   escapedText = Ember.Handlebars.Utils.escapeExpression(text)
 
+  # Link to URLs.
+  urlRegexp = ///
+    \b(https?|ftp)://[-A-Za-z0-9+&@\#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@\#/%=~_()|]
+  ///g
+  escapedText = escapedText.replace urlRegexp, (fullMatch) ->
+    "<a href='#{fullMatch}' target='_blank'>#{fullMatch}</a>"
+
+  # Emoticons.
   evaledText = App.Emoticon.all().reduce (str, emoticon) ->
     regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
     imageHtml = "<img src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
