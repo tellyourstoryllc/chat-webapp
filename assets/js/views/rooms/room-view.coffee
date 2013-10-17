@@ -38,7 +38,7 @@ App.RoomsRoomView = Ember.View.extend
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     height = $(window).height()
-    height -= 25
+    height -= 15
     height -= $('.navbar:first').outerHeight() ? 0
     height -= $('.room-info').outerHeight() ? 0
     height -= $('.send-message-area').outerHeight(true) ? 0
