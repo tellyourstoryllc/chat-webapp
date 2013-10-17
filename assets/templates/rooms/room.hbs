@@ -14,19 +14,33 @@
 </div>
 
 <div class='room-container'>
-  <div>{{#link-to 'rooms.room' model}}{{name}}{{/link-to}}</div>
-  {{#if topic}}
-    <div>{{topic}}</div>
-  {{/if}}
-  <div>Invite Link: <a {{bind-attr href='joinUrl'}}>{{joinUrl}}</a></div>
+  <div class='room-info'>
+    <table class='room-info-table'>
+      <tr>
+        <td>
+          {{#link-to 'rooms.room' model classNames='room-permalink'}}{{name}}{{/link-to}}
+        </td>
+        <td class='invite-link'>
+          Invite Link: <a {{bind-attr href='joinUrl'}}>{{joinUrl}}</a>
+        </td>
+      </tr>
+      {{#if topic}}
+        <tr>
+          <td colspan='2'>{{topic}}</td>
+        </tr>
+      {{/if}}
+    </table>
+  </div>
 
   <div class='messages'>
     {{#each message in messages}}
       <div class='message'>
         <table class='message-table'>
           <tr>
-            <td class='sender'>{{message.user.name}}</td>
-            <td class='text'>
+            <td class='sender-cell'>
+              <div class='sender'>{{message.user.name}}</div>
+            </td>
+            <td class='body-cell'>
               <span class='status'>
                 {{#if message.isSaving}}Sending...{{/if}}
                 {{#if message.createdAt}}

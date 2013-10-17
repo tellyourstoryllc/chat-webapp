@@ -1,5 +1,6 @@
 @import 'reset.css'
 
+link-color = #417ACE
 
 .clearfix
   &:before, &:after
@@ -9,18 +10,22 @@
   &:after
     clear both
 
+html
+  min-height 100%
 
-body {
-  margin: 10px;
-  font-family: Helvetica, Arial, sans-serif;
-}
+body
+  margin 10px 10px 0 10px
+  font-family Helvetica, Arial, sans-serif
+
+a
+  color link-color
 
 .brand
   margin-bottom 10px
   font-size 16px
 
   > a
-    color #417ACE
+    color link-color
     text-decoration none
 
 .empty-content-page
@@ -73,22 +78,50 @@ room-members-sidebar-width = 150px
 .room-container
   margin-right room-members-sidebar-width + 20px
 
+  .room-info
+    border 1px solid #B4B4B4
+    background-color #E6E6E6
+
+  .room-info-table
+    width 100%
+
+    td
+      padding 2px 5px
+
+  .room-permalink
+    text-decoration none
+
+  .invite-link
+    text-align right
+
 .messages
   // Scrollable.
   overflow auto
 
+  box-sizing border-box
+  border-left 1px solid #B4B4B4
+  border-right 1px solid #B4B4B4
+
 .message
-  margin-top 5px
   border-top 1px solid #ccc
-  padding-top 5px
   font-size 14px
 
   .message-table
     width 100%
 
+  .sender-cell, .body-cell
+    padding 7px 5px 5px 5px
+
+  .sender-cell
+    width 150px
+    background-color #f0f0f0
+    text-align right
+
   .sender
+    box-sizing border-box
     width 150px
     height 1.2em
+    padding 0 5px
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
@@ -100,7 +133,14 @@ room-members-sidebar-width = 150px
     font-size 10px
 
 .send-message-area
-  margin-top 10px
+  position absolute
+  bottom 5px
+  box-sizing border-box
+  height 45px
+  padding 5px
+  border 1px solid #B4B4B4
+  border-bottom 0
+  background-color #E6E6E6
 
   .send-message-text
     width 300px
