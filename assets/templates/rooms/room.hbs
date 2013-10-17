@@ -44,7 +44,9 @@
               <span class='status'>
                 {{#if message.isSaving}}Sending...{{/if}}
                 {{#if message.createdAt}}
-                  <span class='timestamp'>{{message.createdAt}}</span>
+                  <span class='timestamp'>
+                    {{compactTimestampElement message.createdAt}}
+                  </span>
                 {{/if}}
               </span>
               {{#if message.imageUrl}}

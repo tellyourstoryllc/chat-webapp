@@ -3,6 +3,7 @@
 #= require ember
 #= require underscore
 #= require modernizr
+#= require moment
 #= require desktop-notify
 #
 #= require app-create

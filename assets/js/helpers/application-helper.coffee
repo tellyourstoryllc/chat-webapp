@@ -20,6 +20,26 @@ Ember.Handlebars.registerBoundHelper 'evalMessageText', (text) ->
   evaledText.htmlSafe()
 
 
+Ember.Handlebars.registerBoundHelper 'compactTimestampElement', (date) ->
+  return null unless date?
+  now = new Date()
+  m = moment.utc(date).local()
+  daysDiff = m.diff(now, 'days', true)
+  relativeTime = switch
+    when daysDiff > -1
+      m.format('LT') # Just time.
+    when daysDiff > -7
+      m.format('dddd LT') # Day of week, e.g. Thursday.
+    when daysDiff > -365
+      # Try to strip off the year.
+      m.format('M/D LT')
+    else
+      m.format('M/D/YY LT')
+  tooltipTime = m.format('LLL')
+
+  new Handlebars.SafeString("<span title='#{Handlebars.Utils.escapeExpression(tooltipTime)}'>#{Handlebars.Utils.escapeExpression(relativeTime)}</span>")
+
+
 # This converts named arguments that are unquoted to bindings.
 normalizeHash = (hash, hashTypes) ->
   for prop of hash
