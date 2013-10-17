@@ -3,6 +3,8 @@
 {{else}}
   <div class='navbar'>
     <div class='brand'>{{#link-to 'rooms.index'}}Chat App{{/link-to}}</div>
+    <div class='pull-right'><a href='#' {{action 'logOut'}}>Log Out</a></div>
+    <div class='clearfix'></div>
   </div>
   {{outlet}}
 {{/if}}

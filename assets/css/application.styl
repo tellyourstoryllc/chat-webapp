@@ -2,6 +2,12 @@
 
 link-color = #417ACE
 
+.pull-left
+  float left
+
+.pull-right
+  float right
+
 .clearfix
   &:before, &:after
     content ""
@@ -20,13 +26,17 @@ body
 a
   color link-color
 
+.navbar
+  a
+    text-decoration none
+
 .brand
+  float left
   margin-bottom 10px
   font-size 16px
 
   > a
     color link-color
-    text-decoration none
 
 .empty-content-page
   text-align center

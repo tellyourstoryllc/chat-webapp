@@ -4,3 +4,6 @@ App.ApplicationRoute = Ember.Route.extend
 
     requestNotificationPermission: ->
       App.requestNotificationPermission()
+
+    logOut: ->
+      @transitionTo('logout')

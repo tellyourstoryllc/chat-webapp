@@ -56,6 +56,10 @@ window.App = App = Ember.Application.create
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
 
+  # Returns the router.  You should only call this as a last resort.
+  _getRouter: ->
+    @__container__.lookup('router:main')
+
   isLoggedIn: -> @get('currentUser')?
 
   login: (token, user) ->
@@ -120,6 +124,7 @@ App.Router.map ->
   @route 'join', path: '/join/:join_code'
 
   @route 'login', path: '/login'
+  @route 'logout', path: '/logout'
 
   @resource 'rooms', path: '/', ->
     @route 'room', path: '/rooms/:group_id'
