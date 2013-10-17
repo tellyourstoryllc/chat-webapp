@@ -9,9 +9,15 @@ App.RoomsRoomView = Ember.View.extend
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
       @scrollToLastMessage()
+      @activateRoomLinks()
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
+
+  roomsLoadedChanged: (->
+    Ember.run.schedule 'afterRender', @, ->
+      @activateRoomLinks()
+  ).observes('controller.roomsLoaded')
 
   roomChanged: (->
     @scrollToLastMessage()
@@ -51,3 +57,12 @@ App.RoomsRoomView = Ember.View.extend
   isScrolledToLastMessage: ->
     $msgs = @$('.messages')
     $msgs.height() + $msgs.prop('scrollTop') >= $msgs.prop('scrollHeight')
+
+  activateRoomLinks: ->
+    regexp = new RegExp("/#{@get('controller.model.id')}$")
+    $('.room-list-item a[href]').each ->
+      $link = $(@)
+      if regexp.test($link.prop('href') ? '')
+        $link.addClass 'active'
+      else
+        $link.removeClass 'active'

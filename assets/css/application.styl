@@ -37,9 +37,10 @@ room-sidebar-width = 200px
 
 .rooms-sidebar
   position fixed
+  width: room-sidebar-width
 
 .rooms-list
-  width room-sidebar-width
+  width 100%
 
 .room-list-item
   margin 10px 0
@@ -58,6 +59,10 @@ room-sidebar-width = 200px
 
     &:hover
       background-color #f8f8f8
+
+    &.active
+      background-color #242B37
+      color #eee
 
 .room-content
   margin-left room-sidebar-width + 40px
