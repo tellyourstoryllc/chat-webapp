@@ -117,6 +117,8 @@ if Modernizr.history
 
 App.Router.map ->
 
+  @route 'join', path: '/join/:join_code'
+
   @route 'login', path: '/login'
 
   @resource 'rooms', path: '/', ->

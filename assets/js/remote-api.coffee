@@ -46,6 +46,9 @@ App.RemoteApi = Ember.Object.extend
   fetchCurrentUser: (token = null) ->
     @ajax(@buildURL('/users/update'), 'POST', data: { token: token })
 
+  joinGroup: (joinCode) ->
+    @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', {})
+
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
       serialized * 1000
