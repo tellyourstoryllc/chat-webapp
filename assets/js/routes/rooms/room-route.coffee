@@ -32,7 +32,7 @@ App.RoomsRoomRoute = Ember.Route.extend
     .then (json) =>
       if ! json.error?
         # Load everything from the response.
-        instances = App.loadAll(json)
+        instances = App.loadAll(json, associateGroupMessages: true)
 
         # If we landed on this route, this is the first time we have the full
         # Group instance, so set it on the controller.
@@ -42,6 +42,3 @@ App.RoomsRoomRoute = Ember.Route.extend
           App.set('currentlyViewingRoom', model)
 
         model.set('usersLoaded', true)
-
-        if Ember.isEmpty(model.get('messages'))
-          model.set('messages', instances.filter (o) -> o instanceof App.Message)

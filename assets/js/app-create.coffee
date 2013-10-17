@@ -83,13 +83,21 @@ window.App = App = Ember.Application.create
     permissionLevel ?= window.notify.permissionLevel()
     App.set('hasNotificationPermission', permissionLevel == window.notify.PERMISSION_GRANTED)
 
-  loadAll: (json) ->
+  loadAll: (json, options = {}) ->
     instances = for attrs in Ember.makeArray(json)
       type = @classFromRawObject(attrs)
       if type?
         type.loadRaw(attrs)
 
-    instances.compact()
+    instances = instances.compact()
+
+    if options.associateGroupMessages
+      group = instances.find (o) -> o instanceof App.Group
+      if Ember.isEmpty(group.get('messages'))
+        group.set('messages', instances.filter (o) -> o instanceof App.Message)
+
+    instances
+
 
   classFromRawObject: (obj) ->
     switch obj.object_type
