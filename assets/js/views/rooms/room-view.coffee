@@ -47,6 +47,8 @@ App.RoomsRoomView = Ember.View.extend
 
     @$('.send-message-area').css
       width: @$('.messages').width() + 2
+    @$('.send-message-text').css
+      width: Math.max(250, @$('.messages').width() - 75)
 
   scrollToLastMessage: ->
     $msgs = @$('.messages')
