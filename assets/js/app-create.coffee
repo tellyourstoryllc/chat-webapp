@@ -49,7 +49,7 @@ window.App = App = Ember.Application.create
               transition.retry()
               App.set('continueTransition', null)
             else
-              App.__container__.lookup('router:main').transitionTo('rooms.index')
+              App._getRouter().transitionTo('rooms.index')
       , (e) =>
         App.set('isLoggingIn', false)
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
