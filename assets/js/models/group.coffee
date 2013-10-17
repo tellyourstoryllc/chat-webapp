@@ -42,19 +42,28 @@ App.Group = App.BaseModel.extend
     @set('subscription', subscription)
 
   didReceiveMessage: (message) ->
-    @get('messages').pushObject(message)
-
-    if message.get('userId') != App.get('currentUser.id') &&
-    (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
+    # Make sure the sender is loaded before displaying it.
+    message.loadAssociations()
+    .then (newlyLoadedMessages) =>
+      # If the group and its messages were newly fetched, don't add the message
+      # since it will be a dupe.
+      if ! newlyLoadedMessages
+        @get('messages').pushObject(message)
 
       # Notify of new message.
-      notif = message.toNotification()
-      title = notif.title
-      delete notif.title
-      result = window.notify.createNotification(title, notif)
-      @get('notificationResults').pushObject(result)
+      if message.get('userId') != App.get('currentUser.id') &&
+      (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
+        @notifyOfNewMessage(message)
 
     true
+
+  notifyOfNewMessage: (message) ->
+    # Create a desktop notification.
+    notif = message.toNotification()
+    title = notif.title
+    delete notif.title
+    result = window.notify.createNotification(title, notif)
+    @get('notificationResults').pushObject(result)
 
 
 App.Group.reopenClass

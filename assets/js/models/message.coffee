@@ -15,6 +15,30 @@ App.Message = App.BaseModel.extend
     @get('text')
   ).property('App.emoticonsVersion', 'text')
 
+  loadAssociations: ->
+    new Ember.RSVP.Promise (resolve, reject) =>
+      user = App.User.lookup(@get('userId'))
+      group = App.Group.lookup(@get('groupId'))
+      if user? && ! Ember.isEmpty(group?.get('messages'))
+        resolve(false)
+      else
+        App.Group.fetchById(@get('groupId'))
+        .then (json) =>
+          if json? && ! json.error?
+            # Load everything from the response.
+            instances = App.loadAll(json)
+
+            group = instances.find (o) -> o instanceof App.Group
+            newlyLoadedMessages = false
+            if Ember.isEmpty(group.get('messages'))
+              group.set('messages', instances.filter (o) -> o instanceof App.Message)
+              newlyLoadedMessages = true
+
+            resolve(newlyLoadedMessages)
+            return true
+          else
+            throw new Error(JSON.stringify(json))
+
   toNotification: ->
     userName = @get('user.name') ? "User #{@get('userId')}"
     roomName = @get('group.name') ? "Room #{@get('groupId')}"
