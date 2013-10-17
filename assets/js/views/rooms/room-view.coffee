@@ -37,8 +37,17 @@ App.RoomsRoomView = Ember.View.extend
 
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
-    height = $(window).height()
-    height -= 5
+    $window = $(window)
+    height = $window.height()
+    height -= $('.navbar:first').outerHeight() ? 0
+    width = $window.width()
+    width -= ($('.rooms-sidebar').outerWidth() ? 0) + 20
+    width -= ($('.room-members-sidebar').outerWidth() ? 0) + 20
+    @$('.room-container').css
+      width: width
+      height: height
+
+    height = $window.height()
     height -= $('.navbar:first').outerHeight() ? 0
     height -= $('.room-info').outerHeight() ? 0
     height -= $('.send-message-area').outerHeight(true) ? 0
@@ -46,9 +55,9 @@ App.RoomsRoomView = Ember.View.extend
       height: height
 
     @$('.send-message-area').css
-      width: @$('.messages').width() + 2
+      width: width
     @$('.send-message-text').css
-      width: Math.max(250, @$('.messages').width() - 75)
+      width: Math.max(250, width - 77)
 
   scrollToLastMessage: ->
     $msgs = @$('.messages')
