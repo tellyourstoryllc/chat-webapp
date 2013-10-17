@@ -20,13 +20,14 @@ html
   min-height 100%
 
 body
-  margin 10px 10px 0 10px
   font-family Helvetica, Arial, sans-serif
 
 a
   color link-color
 
 .navbar
+  padding 10px 10px 0
+
   a
     text-decoration none
 
@@ -53,29 +54,30 @@ room-sidebar-width = 200px
   width 100%
 
 .room-list-item
-  margin 10px 0
 
   > a
     display block
     width 200px
     overflow hidden
 
-    border 1px solid #ccc
-    border-radius 3px
+    border-top 1px solid rgba(255,255,255, .2)
+    border-bottom 1px solid rgba(0,0,0, .15)
     padding 10px
-    background-color #eee
-    color #888
+    background-color #313947
+    color #aaa
     text-decoration none
 
     &:hover
-      background-color #f8f8f8
+      color #ccc
 
     &.active
       background-color #242B37
       color #eee
+      border-top-color transparent
+      border-bottom-color transparent
 
 .room-content
-  margin-left room-sidebar-width + 40px
+  margin-left room-sidebar-width + 20px
 
 room-members-sidebar-width = 150px
 
