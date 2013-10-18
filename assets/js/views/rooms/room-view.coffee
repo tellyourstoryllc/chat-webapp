@@ -10,6 +10,7 @@ App.RoomsRoomView = Ember.View.extend
       @updateSize()
       @scrollToLastMessage()
       @activateRoomLinks()
+      @setFocus()
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
@@ -21,6 +22,7 @@ App.RoomsRoomView = Ember.View.extend
 
   roomChanged: (->
     @scrollToLastMessage()
+    @setFocus()
   ).observes('controller.model')
 
   messagesChanged: (->
@@ -68,6 +70,9 @@ App.RoomsRoomView = Ember.View.extend
   isScrolledToLastMessage: ->
     $msgs = @$('.messages')
     $msgs.height() + $msgs.prop('scrollTop') >= $msgs.prop('scrollHeight')
+
+  setFocus: ->
+    @$('.send-message-text')?.focus()
 
   activateRoomLinks: ->
     regexp = new RegExp("/#{@get('controller.model.id')}$")
