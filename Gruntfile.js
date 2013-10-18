@@ -41,8 +41,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ember-templates');
 
   /*
-    Default task. Compiles templates, neuters application code, and begins
-    watching for changes.
+    Default task. Compiles templates and begins watching for changes.
   */
   grunt.registerTask('default', ['emberTemplates', 'watch']);
+
+  /*
+    Build everything after a new deploy.  Right now just compiles templates.
+  */
+  grunt.registerTask('build', ['emberTemplates']);
 };
