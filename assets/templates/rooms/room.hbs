@@ -50,7 +50,9 @@
                 {{/if}}
               </span>
               {{#if message.imageUrl}}
-                <img {{bind-attr src='message.imageUrl'}}>
+                <a {{bind-attr href='message.imageUrl'}} target='_blank'>
+                  <img {{bind-attr src='message.imageUrl'}}>
+                </a>
               {{/if}}
 
               <div class='message-body'>{{evalMessageText message.body}}</div>
