@@ -35,6 +35,15 @@ App.RoomsRoomView = Ember.View.extend
     @scrollToLastMessage() if @isScrolledToLastMessage()
   ).observes('controller.model.messages.@each')
 
+  keyDown: (event) ->
+    if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
+      if event.which == 219      # [
+        @get('controller').send('showPreviousRoom')
+        event.preventDefault()
+      else if event.which == 221 # ]
+        @get('controller').send('showNextRoom')
+        event.preventDefault()
+
   resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()

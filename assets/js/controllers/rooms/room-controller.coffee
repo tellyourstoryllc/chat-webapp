@@ -1,6 +1,7 @@
 #= require ../base-controller-mixin
 
 App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
+  needs: ['rooms']
 
   resetNewMessage: ->
     @set('newMessageText', '')
@@ -27,4 +28,22 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
       @resetNewMessage()
       @get('model.messages').pushObject(msg)
 
+      return undefined
+
+    showPreviousRoom: ->
+      groups = @get('controllers.rooms.rooms')
+      index = groups.indexOf(@get('model'))
+      if index >= 0
+        index--
+        index = groups.length - 1 if index < 0
+        @transitionToRoute('rooms.room', groups[index])
+      return undefined
+
+    showNextRoom: ->
+      groups = @get('controllers.rooms.rooms')
+      index = groups.indexOf(@get('model'))
+      if index >= 0
+        index++
+        index = 0 if index >= groups.length
+        @transitionToRoute('rooms.room', groups[index])
       return undefined
