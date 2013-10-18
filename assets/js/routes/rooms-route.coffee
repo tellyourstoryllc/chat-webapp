@@ -1,5 +1,9 @@
 App.RoomsRoute = Ember.Route.extend
 
+  deactivate: ->
+    # Stop listening for new messages.
+    App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
+
   beforeModel: (transition) ->
     if ! App.isLoggedIn()
       App.set('continueTransition', transition)

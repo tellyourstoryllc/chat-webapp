@@ -2,8 +2,6 @@ App.RoomsRoomRoute = Ember.Route.extend
 
   deactivate: ->
     @_super(arguments...)
-    # Stop listening for new messages.
-    @controllerFor('rooms.room').cancelMessageSubscription()
 
     App.set('currentlyViewingRoom', null)
 
