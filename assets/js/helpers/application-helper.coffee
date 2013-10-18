@@ -13,7 +13,7 @@ Ember.Handlebars.registerBoundHelper 'evalMessageText', (text) ->
   # Emoticons.
   evaledText = App.Emoticon.all().reduce (str, emoticon) ->
     regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
-    imageHtml = "<img src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
+    imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
     str.replace regexp, imageHtml
   , escapedText
 
