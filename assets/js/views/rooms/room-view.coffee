@@ -21,8 +21,9 @@ App.RoomsRoomView = Ember.View.extend
   ).observes('controller.roomsLoaded')
 
   roomChanged: (->
-    @scrollToLastMessage()
-    @setFocus()
+    Ember.run.schedule 'afterRender', @, ->
+      @scrollToLastMessage()
+      @setFocus()
   ).observes('controller.model')
 
   messagesChanged: (->
