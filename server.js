@@ -7,6 +7,7 @@ var httpProxy = require('http-proxy');
 var connectAssets = require('connect-assets');
 
 var app = express();
+var config = require('./config').getConfig(process.env.NODE_ENV || 'development', app, express);
 
 app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
@@ -29,7 +30,7 @@ var apiProxy = function(pattern, host, port) {
     }
   };
 };
-app.use(apiProxy(/\/api(\/.*)/, 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com', 80));
+app.use(apiProxy(/\/api(\/.*)/, config.apiHostname, config.apiPort));
 
 app.use(express.bodyParser());
 app.use(app.router);
@@ -45,7 +46,7 @@ app.configure('development', function() {
 
 
 var renderChatApp = function(req, res) {
-  res.render('index', { title: "Chat App" });
+  res.render('index', { config: config, title: "Chat App" });
 };
 
 app.get('/', renderChatApp);

@@ -1,2 +1,5 @@
 # Output of handlebars compiler.
 assets/js/templates.js
+
+# Config files.
+config/index.coffee

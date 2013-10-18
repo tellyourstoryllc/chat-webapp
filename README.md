@@ -1,6 +1,7 @@
 ## Install
 
     npm install -g grunt-cli
+    cp config/index.coffee.sample config/index.coffee
 
 ## Development
 
