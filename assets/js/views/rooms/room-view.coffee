@@ -57,6 +57,7 @@ App.RoomsRoomView = Ember.View.extend
     @$('.messages').css
       height: height
 
+    # The send message text input.
     @$('.send-message-area').css
       width: width
     @$('.send-message-text').css
