@@ -99,7 +99,14 @@ App.Message.reopenClass
     # Only send message via POST if there's an image.
     if message.get('imageFile')?
       api = App.get('api')
-      api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST', data: data)
+      formData = new FormData()
+      formData.append(k, v) for k,v of api.defaultParams()
+      formData.append(k, v) for k,v of data
+      api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST',
+        data: formData
+        processData: false
+        contentType: false
+      )
       .then (json) =>
         Ember.Logger.log "message create response", json
         if ! json? || json.error?

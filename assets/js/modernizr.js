@@ -1,5 +1,5 @@
 /* Modernizr 2.6.2 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-addtest
+ * Build: http://modernizr.com/download/#-history-addtest-domprefixes-file_api-forms_fileinput
  */
 ;
 
@@ -21,7 +21,14 @@ window.Modernizr = (function( window, document, undefined ) {
     inputElem  ,
 
 
-    toString = {}.toString,    tests = {},
+    toString = {}.toString,    omPrefixes = 'Webkit Moz O ms',
+
+    cssomPrefixes = omPrefixes.split(' '),
+
+    domPrefixes = omPrefixes.toLowerCase().split(' '),
+
+
+    tests = {},
     inputs = {},
     attrs = {},
 
@@ -170,8 +177,35 @@ window.Modernizr = (function( window, document, undefined ) {
 
     Modernizr._version      = version;
 
+    Modernizr._domPrefixes  = domPrefixes;
+    Modernizr._cssomPrefixes  = cssomPrefixes;
 
     return Modernizr;
 
 })(this, this.document);
+/**
+ * file tests for the File API specification
+ *   Tests for objects specific to the File API W3C specification without
+ *   being redundant (don't bother testing for Blob since it is assumed
+ *   to be the File object's prototype.
+ *
+ *   Will fail in Safari 5 due to its lack of support for the standards
+ *   defined FileReader object
+ */
+Modernizr.addTest('filereader', function () {
+    return !!(window.File && window.FileList && window.FileReader);
+});
+
+
+// Detects whether input type="file" is available on the platform
+// E.g. iOS < 6 and some android version don't support this
+
+//  It's useful if you want to hide the upload feature of your app on devices that
+//  don't support it (iphone, ipad, etc).
+
+Modernizr.addTest('fileinput', function() {
+    var elem = document.createElement('input');
+    elem.type = 'file';
+    return !elem.disabled;
+});
 ;

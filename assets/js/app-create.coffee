@@ -87,6 +87,9 @@ window.App = App = Ember.Application.create
     permissionLevel ?= window.notify.permissionLevel()
     App.set('hasNotificationPermission', permissionLevel == window.notify.PERMISSION_GRANTED)
 
+  doesBrowserSupportAjaxFileUpload: ->
+    !! (Modernizr.fileinput && window.FormData)
+
   loadAll: (json, options = {}) ->
     instances = for attrs in Ember.makeArray(json)
       type = @classFromRawObject(attrs)

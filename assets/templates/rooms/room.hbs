@@ -66,6 +66,16 @@
   <div class='send-message-area'>
     {{actionable-textarea action='sendMessage' classNames='send-message-text'
       valueBinding='newMessageText' maxlength='1000' rows='2' autocomplete='off'}}
+    {{#if doesBrowserSupportAjaxFileUpload}}
+      <button type='button' class='send-message-file-button' {{action 'chooseFile' target='view'}}>
+        {{#if newMessageFile}}
+          Change
+        {{else}}
+          Attach
+        {{/if}}
+      </button>
+      <input type='file' class='send-message-file'>
+    {{/if}}
     <button type='button' {{action 'sendMessage'}} class='send-button'>Send</button>
   </div>
 </div>

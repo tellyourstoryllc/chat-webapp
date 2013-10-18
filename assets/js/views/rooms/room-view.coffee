@@ -2,11 +2,12 @@ App.RoomsRoomView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize')
+    _.bindAll(@, 'resize', 'fileChange')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
     Ember.run.schedule 'afterRender', @, ->
+      @$('.send-message-file').on 'change', @fileChange
       @updateSize()
       @scrollToLastMessage()
       @activateRoomLinks()
@@ -14,6 +15,7 @@ App.RoomsRoomView = Ember.View.extend
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
+    @$('.send-message-file').off 'change', @fileChange
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -33,7 +35,7 @@ App.RoomsRoomView = Ember.View.extend
     @scrollToLastMessage() if @isScrolledToLastMessage()
   ).observes('controller.model.messages.@each')
 
-  resize: _.debounce ->
+  resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()
   , 5
@@ -57,11 +59,15 @@ App.RoomsRoomView = Ember.View.extend
     @$('.messages').css
       height: height
 
-    # The send message text input.
+    # The send message area, including textarea and send button.
     @$('.send-message-area').css
       width: width
+    # The send message text input.
+    textWidth = width - @$('.send-button').outerWidth() - 24
+    if App.doesBrowserSupportAjaxFileUpload()
+      textWidth -= @$('.send-message-file-button').outerWidth() + 4
     @$('.send-message-text').css
-      width: Math.max(250, width - 77)
+      width: Math.max(250, textWidth)
 
   scrollToLastMessage: ->
     $msgs = @$('.messages')
@@ -84,3 +90,39 @@ App.RoomsRoomView = Ember.View.extend
         $link.addClass 'active'
       else
         $link.removeClass 'active'
+
+  fileChange: (event) ->
+    Ember.run @, ->
+      file = if event.target.files?
+        event.target.files[0]
+      else if event.target.value
+        name: event.target.value.replace(/^.+\\/, '')
+
+      if ! file?
+        @clearFile()
+        return
+
+      @get('controller').set('newMessageFile', file)
+
+      # if Modernizr.filereader
+      #   # Setup file reader.
+      #   reader = new FileReader()
+      #   reader.onload = (e) =>
+      #     startIndex = reader.result.indexOf(',')
+      #     if startIndex < 0
+      #       throw new Error("I was trying to read the file base64-encoded, but I couldn't recognize the format returned from the FileReader's result")
+      #     # TODO: Set image preview here.
+      #     base64EncodedFile = reader.result[startIndex + 1 ..]
+      #        
+      #   # Actually start reading the file.
+      #   reader.readAsDataURL(file)
+
+  clearFile: ->
+    @$('.send-message-file').val('')
+    @get('controller').set('newMessageFile', null)
+
+  actions:
+
+    chooseFile: ->
+      @$('.send-message-file').trigger('click')
+      return undefined

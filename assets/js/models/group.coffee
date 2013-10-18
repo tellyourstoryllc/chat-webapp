@@ -5,6 +5,9 @@ App.Group = App.BaseModel.extend
   # New message draft temporarily stored before sending.
   newMessageText: ''
 
+  # New message file temporarily stored before sending.
+  newMessageFile: null
+
   init: ->
     @_super(arguments...)
     @setProperties

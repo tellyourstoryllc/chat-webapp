@@ -2,9 +2,17 @@ App.RemoteApi = Ember.Object.extend
 
   namespace: 'api'
 
+  defaultParams: ->
+    data = {}
+
+    token = App.get('token')
+    data.token = token if token?
+
+    data
+
   # Returns RSVP.Promise.
   ajax: (url, type, hash) ->
-    return new Ember.RSVP.Promise (resolve, reject) ->
+    return new Ember.RSVP.Promise (resolve, reject) =>
       hash ||= {}
       hash.url = url
       hash.type = type
@@ -15,11 +23,11 @@ App.RemoteApi = Ember.Object.extend
       token = App.get('token')
       if token?
         hash.data ?= {}
-        hash.data.token = token
+        _.extend hash.data, @defaultParams()
 
       if hash.data && type != 'GET'
-        hash.contentType = 'application/json; charset=utf-8'
-        hash.data = JSON.stringify(hash.data)
+        hash.contentType ?= 'application/json; charset=utf-8'
+        hash.data = JSON.stringify(hash.data) if hash.processData != false
 
       hash.success = (json) ->
         Ember.run(null, resolve, json)
