@@ -99,6 +99,9 @@
     }
     function getWrapper(notification) {
         return {
+            //JT Patch: Expose the raw native notification object.
+            nativeNotification: notification,
+
             close: function () {
                 if (notification) {
                     if (notification.close) {

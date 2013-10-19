@@ -5,5 +5,8 @@ App.ApplicationRoute = Ember.Route.extend
     requestNotificationPermission: ->
       App.requestNotificationPermission()
 
+    goToRoom: (group) ->
+      @transitionTo('rooms.room', group)
+
     logOut: ->
       @transitionTo('logout')

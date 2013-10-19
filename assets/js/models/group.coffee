@@ -81,6 +81,11 @@ App.Group = App.BaseModel.extend
     delete notif.title
     result = window.notify.createNotification(title, notif)
     @get('notificationResults').pushObject(result)
+    if result.nativeNotification?.addEventListener
+      result.nativeNotification.addEventListener 'click', (event) ->
+        # The user clicked the notification.  Go to the room.
+        applicationController = App.__container__.lookup('controller:application')
+        applicationController.send('goToRoom', message.get('group'))
 
 
 App.Group.reopenClass
