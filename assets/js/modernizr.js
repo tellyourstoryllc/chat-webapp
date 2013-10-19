@@ -1,5 +1,5 @@
 /* Modernizr 2.6.2 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-addtest-domprefixes-file_api-forms_fileinput
+ * Build: http://modernizr.com/download/#-history-audio-addtest-domprefixes-file_api-forms_fileinput
  */
 ;
 
@@ -132,7 +132,25 @@ window.Modernizr = (function( window, document, undefined ) {
     tests['history'] = function() {
       return !!(window.history && history.pushState);
     };
-    for ( var feature in tests ) {
+
+    tests['audio'] = function() {
+        var elem = document.createElement('audio'),
+            bool = false;
+
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,'');
+                bool.mp3  = elem.canPlayType('audio/mpeg;')               .replace(/^no$/,'');
+
+                                                    bool.wav  = elem.canPlayType('audio/wav; codecs="1"')     .replace(/^no$/,'');
+                bool.m4a  = ( elem.canPlayType('audio/x-m4a;')            ||
+                              elem.canPlayType('audio/aac;'))             .replace(/^no$/,'');
+            }
+        } catch(e) { }
+
+        return bool;
+    };    for ( var feature in tests ) {
         if ( hasOwnProp(tests, feature) ) {
                                     featureName  = feature.toLowerCase();
             Modernizr[featureName] = tests[feature]();

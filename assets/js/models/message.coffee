@@ -14,6 +14,13 @@ App.Message = App.BaseModel.extend
     @get('mentionedUserIds').map (id) -> App.User.lookup(id)
   ).property('mentionedUserIds')
 
+  doesMentionUser: (user) ->
+    mentionedUserIds = @get('mentionedUserIds')
+    return true if mentionedUserIds.any (id) -> id == App.Message.mentionAllId
+    userId = user.get('id')
+    return false unless userId?
+    mentionedUserIds.any (id) -> id == userId
+
   # This is the html text with emoticons and mentions.
   body: (->
     text = @get('text')

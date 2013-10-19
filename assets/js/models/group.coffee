@@ -53,14 +53,28 @@ App.Group = App.BaseModel.extend
       if ! newlyLoadedMessages
         @get('messages').pushObject(message)
 
-      # Notify of new message.
+      wasMentioned = message.doesMentionUser(App.get('currentUser'))
+      if wasMentioned
+        # The current user was mentioned.  Play sound.
+        @playMentionSound()
+
       if message.get('userId') != App.get('currentUser.id') &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
-        @notifyOfNewMessage(message)
+        # Notify of new message.
+        @notifyOfNewMessage(message, wasMentioned)
 
     true
 
-  notifyOfNewMessage: (message) ->
+  playMentionSound: ->
+    return unless Modernizr.audio
+    audio = $('.mention-sound').get(0)
+    audio.currentTime = 0 if audio.currentTime > 0
+    audio.play()
+
+  notifyOfNewMessage: (message, wasMentioned) ->
+    # if ! wasMentioned
+    #   # Play regular new message sound.
+
     # Create a desktop notification.
     notif = message.toNotification()
     title = notif.title
