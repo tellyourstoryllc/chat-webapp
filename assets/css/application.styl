@@ -138,8 +138,15 @@ room-members-sidebar-width = 150px
 
   .sender-cell
     width 150px
-    background-color #f0f0f0
+    background-color #F7F7F7
     text-align right
+
+  &.sent-by-you
+    .sender-cell
+      background-color #E4ECF6
+
+    .body-cell
+      background-color #F3F7FB
 
   .sender, .message-body
     line-height 20px
@@ -151,6 +158,9 @@ room-members-sidebar-width = 150px
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
+
+  .message-body
+    white-space pre-wrap
 
   .mention
     border 1px solid #B4B4B4
@@ -181,9 +191,6 @@ room-members-sidebar-width = 150px
     margin 0 0 5px 10px
     color #ccc
     font-size 10px
-
-  .message-body
-    white-space pre-wrap
 
 .connecting-status-bar
   position absolute

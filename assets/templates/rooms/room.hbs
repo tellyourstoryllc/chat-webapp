@@ -34,7 +34,7 @@
 
   <div class='messages'>
     {{#each message in messages}}
-      <div class='message'>
+      <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}}>
         <table class='message-table'>
           <tr>
             <td class='sender-cell'>

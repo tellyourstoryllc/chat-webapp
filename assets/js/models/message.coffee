@@ -58,6 +58,11 @@ App.Message = App.BaseModel.extend
     evaledText.htmlSafe()
   ).property('App.emoticonsVersion', 'text', 'group.members.@each.name')
 
+  isSentByCurrentUser: (->
+    userId = @get('userId')
+    userId? && userId == App.get('currentUser.id')
+  ).property('userId', 'App.currentUser.id')
+
   loadAssociations: ->
     new Ember.RSVP.Promise (resolve, reject) =>
       user = App.User.lookup(@get('userId'))
