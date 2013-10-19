@@ -24,6 +24,8 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
       .then (msg) =>
         # if msg instanceof App.Message
           # Message was created successfully.
+        # else
+          # TODO: set msg as errored.
 
       @resetNewMessage()
       @get('model.messages').pushObject(msg)
