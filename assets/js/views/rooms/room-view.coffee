@@ -2,10 +2,13 @@ App.RoomsRoomView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'fileChange')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'fileChange')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
+    # Bind to the body so that it works regardless of where the focus is.
+    $('body').on 'keydown', @bodyKeyDown
+
     Ember.run.schedule 'afterRender', @, ->
       @$('.send-message-file').on 'change', @fileChange
       @updateSize()
@@ -15,6 +18,7 @@ App.RoomsRoomView = Ember.View.extend
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
+    $('body').off 'keydown', @bodyKeyDown
     @$('.send-message-file').off 'change', @fileChange
 
   roomsLoadedChanged: (->
@@ -35,7 +39,7 @@ App.RoomsRoomView = Ember.View.extend
     @scrollToLastMessage() if @isScrolledToLastMessage()
   ).observes('controller.model.messages.@each')
 
-  keyDown: (event) ->
+  bodyKeyDown: (event) ->
     if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
       if event.which == 219      # [
         @get('controller').send('showPreviousRoom')
