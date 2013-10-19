@@ -10,6 +10,8 @@ App.User.reopenClass
   # Identity map of model instances by ID.
   _allById: {}
 
+  all: -> @_all
+
   loadRaw: (json) ->
     props = @propertiesFromRawAttrs(json)
     props.isLoaded = true
@@ -33,3 +35,13 @@ App.User.reopenClass
     name: json.name
     status: json.status
     statusText: json.status_text
+
+  userMentionedInGroup: (name, groupOrUsers) ->
+    lowerCaseName = name.toLowerCase()
+    users = if groupOrUsers instanceof App.Group
+      groupOrUsers.get('members')
+    else
+      groupOrUsers
+    users.find (u) ->
+      realName = u.get('name').replace(/\s/g, '')
+      realName.toLowerCase() == lowerCaseName

@@ -10,10 +10,42 @@ App.Message = App.BaseModel.extend
     App.User.lookup(@get('userId'))
   ).property('userId')
 
-  # This is here to add an extra dependent key on the emoticons version.
+  # This is the html text with emoticons and mentions.
   body: (->
-    @get('text')
-  ).property('App.emoticonsVersion', 'text')
+    text = @get('text')
+
+    escapedText = Ember.Handlebars.Utils.escapeExpression(text)
+
+    # Link to URLs.
+    urlRegexp = ///
+      \b(https?|ftp)://[-A-Za-z0-9+&@\#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@\#/%=~_()|]
+    ///g
+    escapedText = escapedText.replace urlRegexp, (fullMatch) ->
+      "<a href='#{fullMatch}' target='_blank'>#{fullMatch}</a>"
+
+    # Mentions.
+    currentUser = App.get('currentUser')
+    group = @get('group')
+    groupMembers = group.get('members')
+    evaledText = escapedText.replace /@(\w+)/g, (fullMatch, name) ->
+      user = App.User.userMentionedInGroup(name, groupMembers)
+      isAll = /^all$/i.test(name)
+      if user? || isAll
+        classNames = ['mention']
+        classNames.push('you') if user == currentUser || isAll
+        "<span class='#{classNames.join(' ')}'>#{fullMatch}</span>"
+      else
+        fullMatch
+
+    # Emoticons.
+    evaledText = App.Emoticon.all().reduce (str, emoticon) ->
+      regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
+      imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
+      str.replace regexp, imageHtml
+    , evaledText
+
+    evaledText.htmlSafe()
+  ).property('App.emoticonsVersion', 'text', 'group.members.@each.name')
 
   loadAssociations: ->
     new Ember.RSVP.Promise (resolve, reject) =>
