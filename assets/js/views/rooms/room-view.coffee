@@ -39,6 +39,16 @@ App.RoomsRoomView = Ember.View.extend
     @scrollToLastMessage() if @isScrolledToLastMessage()
   ).observes('controller.model.messages.@each')
 
+  isFayeClientConnectedChanged: (->
+    bottom = if App.get('isFayeClientConnected')
+      '0'
+    else
+      "#{$('.send-message-area').outerHeight()}px"
+
+    @$('.connecting-status-bar').css
+      bottom: bottom
+  ).observes('App.isFayeClientConnected')
+
   bodyKeyDown: (event) ->
     if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
       if event.which == 219      # [
@@ -71,6 +81,12 @@ App.RoomsRoomView = Ember.View.extend
     height -= $('.send-message-area').outerHeight(true) ? 0
     @$('.messages').css
       height: height
+
+    # The connecting status bar.
+    connectingBuffer = 60
+    @$('.connecting-status-bar').css
+      width: width - connectingBuffer
+      left: Math.floor(connectingBuffer / 2)
 
     # The send message area, including textarea and send button.
     @$('.send-message-area').css

@@ -9,6 +9,8 @@ window.App = App = Ember.Application.create
 
   fayeClient: null
 
+  isFayeClientConnected: false
+
   continueTransition: null
 
   hasNotificationPermission: false
@@ -25,7 +27,12 @@ window.App = App = Ember.Application.create
     api = App.RemoteApi.create()
     @set('api', api)
 
-    @set('fayeClient', App.Faye.createClient())
+    # Setup Faye client.
+    fayeClient = App.Faye.createClient()
+    @set('fayeClient', fayeClient)
+    _.bindAll(@, 'fayeTransportUp', 'fayeTransportDown')
+    fayeClient.on 'transport:up', @fayeTransportUp
+    fayeClient.on 'transport:down', @fayeTransportDown
 
     token = window.localStorage['token']
     if token?
@@ -55,6 +62,14 @@ window.App = App = Ember.Application.create
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
+
+  fayeTransportUp: ->
+    Ember.run @, ->
+      @set('isFayeClientConnected', true)
+
+  fayeTransportDown: ->
+    Ember.run @, ->
+      @set('isFayeClientConnected', false)
 
   # Returns the router.  You should only call this as a last resort.
   _getRouter: ->
