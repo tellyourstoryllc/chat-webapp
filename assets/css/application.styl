@@ -2,9 +2,15 @@
 
 link-color = #417ACE
 
+base-line-height = 20px
+
 warning-text-color = #c09853
 warning-background-color = #fcf8e3
 warning-border-color = darken(adjust(warning-background-color, 'hue', -10), 3%)
+
+error-text-color       = #b94a48
+error-background-color = #f2dede
+error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
 .pull-left
   float left
@@ -19,6 +25,21 @@ warning-border-color = darken(adjust(warning-background-color, 'hue', -10), 3%)
     line-height 0
   &:after
     clear both
+
+.alert
+  margin-bottom base-line-height
+  border 1px solid warning-border-color
+  border-top-left-radius 4px
+  border-top-right-radius 4px
+  padding 5px 10px
+  background-color warning-background-color
+  color warning-text-color
+
+.alert-error
+  border-color error-border-color
+  background-color error-background-color
+  color error-text-color
+
 
 html
   min-height 100%
