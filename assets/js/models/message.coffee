@@ -2,6 +2,9 @@
 
 App.Message = App.BaseModel.extend
 
+  # Error message to diplay to the user.
+  errorMessage: null
+
   group: (->
     App.Group.lookup(@get('groupId'))
   ).property('groupId')
@@ -169,6 +172,7 @@ App.Message.reopenClass
       )
       .then (json) =>
         Ember.Logger.log "message create response", json
+        message.set('isSaving', false)
         if ! json? || json.error?
           # Reject the promise.
           throw json
@@ -178,6 +182,9 @@ App.Message.reopenClass
           @didCreateRecord(message, msgAttrs)
 
           return message
+      , (e) =>
+        message.set('isSaving', false)
+        throw e
     else
       # The instance is used by the faye extension.
       data.messageInstance = message

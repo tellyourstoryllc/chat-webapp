@@ -43,6 +43,9 @@
             <td class='body-cell'>
               <span class='status'>
                 {{#if message.isSaving}}Sending...{{/if}}
+                {{#if message.isError}}
+                  <span class='error'>{{message.errorMessage}}</span>
+                {{/if}}
                 {{#if message.createdAt}}
                   <span class='timestamp'>
                     {{compactTimestampElement message.createdAt}}

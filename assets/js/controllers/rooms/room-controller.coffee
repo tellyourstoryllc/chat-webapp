@@ -23,11 +23,11 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
         imageFile: file
         mentionedUserIds: App.Message.mentionedIdsInText(text, group.get('members'))
       App.Message.sendNewMessage(msg)
-      .then (msg) =>
-        # if msg instanceof App.Message
-          # Message was created successfully.
-        # else
-          # TODO: set msg as errored.
+      .then null, (e) =>
+        Ember.Logger.error e
+        msg.setProperties
+          isError: true
+          errorMessage: e?.error?.message ? "There was an unknown error sending this message."
 
       @resetNewMessage()
       @get('model.messages').pushObject(msg)
