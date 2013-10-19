@@ -138,3 +138,15 @@ App.Group.reopenClass
 
   lookup: (id) ->
     @_allById[App.BaseModel.coerceId(id)]
+
+  createRecord: (data) ->
+    api = App.get('api')
+    api.ajax(api.buildURL('/groups/create'), 'POST', data: data)
+    .then (json) =>
+      if json? && ! json.error?
+        json = Ember.makeArray(json)
+        groupAttrs = json.find (o) -> o.object_type == 'group'
+        group = @loadRaw(groupAttrs)
+        return group
+      else
+        throw json
