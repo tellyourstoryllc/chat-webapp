@@ -92,7 +92,7 @@ App.Message = App.BaseModel.extend
     roomName = @get('group.name') ? "Room #{@get('groupId')}"
 
     # TODO: icon field.
-    tag: @get('id')
+    tag: @get('groupId')
     title: "#{userName} | #{roomName}"
     body: @get('text')
     icon: {}
