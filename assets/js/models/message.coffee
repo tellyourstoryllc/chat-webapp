@@ -10,6 +10,10 @@ App.Message = App.BaseModel.extend
     App.User.lookup(@get('userId'))
   ).property('userId')
 
+  mentionedUsers: (->
+    @get('mentionedUserIds').map (id) -> App.User.lookup(id)
+  ).property('mentionedUserIds')
+
   # This is the html text with emoticons and mentions.
   body: (->
     text = @get('text')
@@ -84,6 +88,9 @@ App.Message = App.BaseModel.extend
 
 App.Message.reopenClass
 
+  # ID representing @all mention.  Yes, a string to match the type of other IDs.
+  mentionAllId: '-1'
+
   # Array of all instances.
   _all: []
 
@@ -108,15 +115,20 @@ App.Message.reopenClass
 
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
+    mentionedUserIds = if Ember.isArray(json.mentioned_user_ids)
+      json.mentioned_user_ids
+    else
+      (json.mentioned_user_ids ? '').split(/,/)
 
     id: App.BaseModel.coerceId(json.id)
     groupId: App.BaseModel.coerceId(json.group_id)
     userId: App.BaseModel.coerceId(json.user_id)
+    mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     text: json.text
     imageUrl: json.image_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
-  # Returns Promise.
+  # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
     groupId = message.get('groupId')
     data = {}
@@ -124,6 +136,10 @@ App.Message.reopenClass
       val = message.get(key)
       if val?
         data[key.underscore()] = val
+
+    mentionedUserIds = message.get('mentionedUserIds')
+    if ! Ember.isEmpty(mentionedUserIds)
+      data.mentioned_user_ids = mentionedUserIds.join(',')
 
     # Update instance state.
     message.set('isSaving', true)
@@ -169,3 +185,20 @@ App.Message.reopenClass
       # Save to our identity map.
       @_all.pushObject(message)
       @_allById[message.get('id')] = message
+
+  # Parses text and returns users from the given set who were mentioned.  This
+  # is helpful when creating new messages.
+  mentionedIdsInText: (text, users) ->
+    return [] unless text?
+
+    if /@all\b/i.test(text)
+      # Everyone was mentioned.
+      return [@mentionAllId]
+
+    lowerCasedText = text.toLowerCase()
+    users.filter (user) ->
+      name = user.get('name')
+      mentionName = name.replace(/\s/g, '')
+      regexp = new RegExp("@#{App.Util.escapeRegexp(mentionName)}\\b", 'i')
+      regexp.test(text)
+    .mapProperty('id')

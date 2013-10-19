@@ -14,12 +14,14 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
       file = @get('newMessageFile')
       return if Ember.isEmpty(text) && Ember.isEmpty(file)
 
-      groupId = @get('model.id')
+      group = @get('model')
+      groupId = group.get('id')
       msg = App.Message.create
         userId: App.get('currentUser.id')
         groupId: groupId
         text: text
         imageFile: file
+        mentionedUserIds: App.Message.mentionedIdsInText(text, group.get('members'))
       App.Message.sendNewMessage(msg)
       .then (msg) =>
         # if msg instanceof App.Message
