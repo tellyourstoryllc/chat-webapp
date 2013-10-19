@@ -67,16 +67,14 @@ App.RoomsRoomView = Ember.View.extend
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
     height = $window.height()
-    height -= $('.navbar:first').outerHeight() ? 0
     width = $window.width()
-    width -= ($('.rooms-sidebar').outerWidth() ? 0) + 20
-    width -= ($('.room-members-sidebar').outerWidth() ? 0) + 20
+    width -= ($('.rooms-sidebar').outerWidth() ? 0)
+    width -= ($('.room-members-sidebar').outerWidth() ? 0)
     @$('.room-container').css
       width: width
       height: height
 
     height = $window.height()
-    height -= $('.navbar:first').outerHeight() ? 0
     height -= $('.room-info').outerHeight() ? 0
     height -= $('.send-message-area').outerHeight(true) ? 0
     @$('.messages').css

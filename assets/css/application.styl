@@ -51,8 +51,13 @@ body
 a
   color link-color
 
+room-sidebar-width = 200px
+
 .navbar
+  box-sizing border-box
+  width room-sidebar-width
   padding 10px 10px 0
+  background-color #313947
 
   a
     text-decoration none
@@ -63,33 +68,32 @@ a
   font-size 16px
 
   > a
-    color link-color
+    color #fff
 
 .empty-content-page
   text-align center
   margin-top 20px
   margin-bottom 20px
 
-room-sidebar-width = 200px
-
 .rooms-sidebar
   position fixed
+  box-sizing border-box
   width: room-sidebar-width
 
 .rooms-list
-  width 100%
+  box-sizing border-box
+  width room-sidebar-width
+  background-color #313947
 
 .room-list-item
 
   > a
     display block
-    width 200px
     overflow hidden
 
     border-top 1px solid rgba(255,255,255, .2)
     border-bottom 1px solid rgba(0,0,0, .15)
     padding 10px
-    background-color #313947
     color #aaa
     text-decoration none
 
@@ -103,7 +107,9 @@ room-sidebar-width = 200px
       border-bottom-color transparent
 
 .room-content
-  margin-left room-sidebar-width + 20px
+  position fixed
+  top 0
+  margin-left room-sidebar-width
 
 .create-room-form
   width 260px
@@ -133,9 +139,11 @@ room-members-sidebar-width = 150px
 
 .room-members-sidebar
   position fixed
-  right 10px
+  right 0
+  box-sizing border-box
   width room-members-sidebar-width
   overflow hidden
+  padding 5px 10px
 
   .room-member
     color #999
@@ -144,7 +152,6 @@ room-members-sidebar-width = 150px
 
 .room-container
   position absolute
-  margin-right room-members-sidebar-width + 20px
 
   .room-info
     border 1px solid #B4B4B4
