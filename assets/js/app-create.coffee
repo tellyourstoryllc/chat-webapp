@@ -1,6 +1,9 @@
 window.App = App = Ember.Application.create
   LOG_TRANSITIONS: true
 
+  # Default title displayed in the window/tab's titlebar.
+  title: 'Chat App'
+
   isLoggingIn: false
 
   token: null
@@ -21,6 +24,9 @@ window.App = App = Ember.Application.create
   hasFocus: true
 
   currentlyViewingRoom: null
+
+  # Set this to a string that should flash in the browser window/tab's titlebar.
+  pageTitleToFlash: null
 
   ready: ->
     # API implementation.

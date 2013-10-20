@@ -70,6 +70,10 @@ App.Group = App.BaseModel.extend
         # Mark the room as unread.
         @set('isUnread', true)
 
+      if ! fromCurrentUser && ! App.get('hasFocus')
+        # Flash the window's titlebar.
+        App.set('pageTitleToFlash', "#{message.get('user.name')} | #{@get('name')}")
+
     true
 
   playMentionSound: ->
