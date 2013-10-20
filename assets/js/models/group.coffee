@@ -8,6 +8,8 @@ App.Group = App.BaseModel.extend
   # New message file temporarily stored before sending.
   newMessageFile: null
 
+  isUnread: false
+
   init: ->
     @_super(arguments...)
     @setProperties
@@ -58,10 +60,15 @@ App.Group = App.BaseModel.extend
         # The current user was mentioned.  Play sound.
         @playMentionSound()
 
-      if message.get('userId') != App.get('currentUser.id') &&
+      fromCurrentUser = message.get('userId') == App.get('currentUser.id')
+      if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
         # Notify of new message.
         @notifyOfNewMessage(message, wasMentioned)
+
+      if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
+        # Mark the room as unread.
+        @set('isUnread', true)
 
     true
 

@@ -26,6 +26,10 @@ App.RoomsRoomRoute = Ember.Route.extend
     # user.
     App.set('currentlyViewingRoom', model)
 
+    # Mark the room as read.
+    if model?
+      model.set('isUnread', false)
+
     App.Group.fetchById(groupId)
     .then (json) =>
       if ! json.error?
