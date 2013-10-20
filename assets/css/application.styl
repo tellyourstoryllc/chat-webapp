@@ -183,11 +183,12 @@ room-members-sidebar-width = 150px
   border-right 1px solid #B4B4B4
 
 .message
-  border-top 1px solid #ccc
+  border-top 1px solid #E1E1E1
   font-size 14px
 
   .message-table
     width 100%
+    border-collapse separate
 
   .sender-cell, .body-cell
     padding 5px
@@ -195,26 +196,40 @@ room-members-sidebar-width = 150px
 
   .sender-cell
     width 150px
+    border-top 1px solid #fff
+    border-right 1px solid #fff
     background-color #F7F7F7
     text-align right
 
+  .body-cell
+    border-left 1px solid #E1E1E1
+
   &.sent-by-you
+    border-color #BFD6EA
+
     .sender-cell
+      border-color #F3F7FB
       background-color #E4ECF6
 
     .body-cell
+      border-color #BFD6EA
       background-color #F3F7FB
 
   .sender, .message-body
     line-height 20px
 
   .sender
+    padding 0 5px
+
+    // Truncate with ellipsis.
     box-sizing border-box
     width 150px
-    padding 0 5px
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
+
+    color #686868
+    font-weight bold
 
   .message-body
     white-space pre-wrap
