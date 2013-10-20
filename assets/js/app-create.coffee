@@ -25,8 +25,9 @@ window.App = App = Ember.Application.create
 
   currentlyViewingRoom: null
 
-  # Set this to a string that should flash in the browser window/tab's titlebar.
-  pageTitleToFlash: null
+  # Messages that should flash in the browser window/tab's titlebar.  General
+  # use is to unshift an object with an id and a title.
+  pageTitlesToFlash: []
 
   ready: ->
     # API implementation.

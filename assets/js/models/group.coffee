@@ -72,7 +72,10 @@ App.Group = App.BaseModel.extend
 
       if ! fromCurrentUser && ! App.get('hasFocus')
         # Flash the window's titlebar.
-        App.set('pageTitleToFlash', "#{message.get('user.name')} | #{@get('name')}")
+        titleObj = Ember.Object.create
+          id: message.get('groupId')
+          title: message.get('title')
+        App.get('pageTitlesToFlash').unshiftObject(titleObj)
 
     true
 
@@ -97,6 +100,13 @@ App.Group = App.BaseModel.extend
         # The user clicked the notification.  Go to the room.
         applicationController = App.__container__.lookup('controller:application')
         applicationController.send('goToRoom', message.get('group'))
+
+      result.nativeNotification.addEventListener 'close', (event) ->
+        # The user closed the notification.  Stop flashing that message.
+        titleObjs = App.get('pageTitlesToFlash')
+        groupId = message.get('groupId')
+        objs = titleObjs.filterBy('id', groupId)
+        titleObjs.removeObjects(objs)
 
 
 App.Group.reopenClass

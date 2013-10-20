@@ -24,6 +24,12 @@ App.Message = App.BaseModel.extend
     return false unless userId?
     mentionedUserIds.any (id) -> id == userId
 
+  title: (->
+    userName = @get('user.name') ? "User #{@get('userId')}"
+    roomName = @get('group.name') ? "Room #{@get('groupId')}"
+    "#{userName} | #{roomName}"
+  ).property('user.name', 'group.name')
+
   # This is the html text with emoticons and mentions.
   body: (->
     text = @get('text')
@@ -111,12 +117,9 @@ App.Message = App.BaseModel.extend
             throw new Error(JSON.stringify(json))
 
   toNotification: ->
-    userName = @get('user.name') ? "User #{@get('userId')}"
-    roomName = @get('group.name') ? "Room #{@get('groupId')}"
-
     # TODO: icon field.
     tag: @get('groupId')
-    title: "#{userName} | #{roomName}"
+    title: @get('title')
     body: @get('text')
     icon: {}
 

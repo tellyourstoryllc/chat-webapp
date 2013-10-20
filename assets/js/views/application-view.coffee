@@ -14,7 +14,7 @@ App.ApplicationView = Ember.View.extend
   focus: ->
     Ember.run @, ->
       App.set('hasFocus', true)
-      App.set('pageTitleToFlash', null)
+      App.get('pageTitlesToFlash').clear()
       @hideNotifications()
 
   blur: ->
@@ -31,12 +31,12 @@ App.ApplicationView = Ember.View.extend
       results.forEach (result) -> result.close()
       results.clear()
 
-  pageTitleToFlashChanged: (->
-    if Ember.isEmpty(App.get('pageTitleToFlash'))
+  pageTitlesToFlashChanged: (->
+    if Ember.isEmpty(App.get('pageTitlesToFlash'))
       @stopFlashingPageTitle()
     else
       @startFlashingPageTitle()
-  ).observes('App.pageTitleToFlash')
+  ).observes('App.pageTitlesToFlash.@each')
 
   startFlashingPageTitle: ->
     timer = @get('_pageTitleFlashTimer')
@@ -62,5 +62,6 @@ App.ApplicationView = Ember.View.extend
     @set('_isShowingPageTitleFlash', false)
 
   _addPageTitleFlash: ->
-    $(document).attr('title', "#{App.get('pageTitleToFlash')} | #{App.get('title')}")
+    titleObj = App.get('pageTitlesToFlash')[0]
+    $(document).attr('title', "#{titleObj.get('title')} | #{App.get('title')}")
     @set('_isShowingPageTitleFlash', true)
