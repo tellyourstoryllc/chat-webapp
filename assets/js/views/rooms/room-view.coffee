@@ -94,7 +94,7 @@ App.RoomsRoomView = Ember.View.extend
     if App.doesBrowserSupportAjaxFileUpload()
       textWidth -= @$('.send-message-file-button').outerWidth() + 4
     @$('.send-message-text').css
-      width: Math.max(250, textWidth)
+      width: Math.max(10, textWidth)
 
   scrollToLastMessage: ->
     $msgs = @$('.messages')
