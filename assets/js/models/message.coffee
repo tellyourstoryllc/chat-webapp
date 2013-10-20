@@ -76,7 +76,10 @@ App.Message = App.BaseModel.extend
     , evaledText
 
     evaledText.htmlSafe()
-  ).property('App.emoticonsVersion', 'text', 'group.members.@each.name')
+  # Note: We omit group members' names from dependent keys since we don't care
+  # about updating mentions when a user changes his/her name or a new user joins
+  # or leaves the room.
+  ).property('App.emoticonsVersion', 'text')
 
   isSentByCurrentUser: (->
     userId = @get('userId')
