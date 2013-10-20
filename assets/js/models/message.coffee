@@ -30,12 +30,29 @@ App.Message = App.BaseModel.extend
 
     escapedText = Ember.Handlebars.Utils.escapeExpression(text)
 
-    # Link to URLs.
+    # Link to URLs.  I know this looks overly complicated, but there's a reason.
+    # We whitelist characters to prevent XSS injection.
+    # See http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
     urlRegexp = ///
-      \b(https?|ftp)://[-A-Za-z0-9+&@\#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@\#/%=~_()|]
+      \(?                                # Optional open-paren at the beginning.
+        \b(https?|ftp)://                # Protocol.
+        [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
+        [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
     ///g
     escapedText = escapedText.replace urlRegexp, (fullMatch) ->
-      "<a href='#{fullMatch}' target='_blank'>#{fullMatch}</a>"
+      url = fullMatch
+      prefix = ''
+      suffix = ''
+      if url[0] == '('
+        if url.slice(-1) == ')'
+          # The whole URL is inside parentheses.
+          url = url[1 ... -1]
+          prefix = '('
+          suffix = ')'
+        else
+          url = url[1 ..]
+          prefix = '('
+      "#{prefix}<a href='#{url}' target='_blank'>#{url}</a>#{suffix}"
 
     # Mentions.
     currentUser = App.get('currentUser')
