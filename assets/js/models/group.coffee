@@ -10,6 +10,9 @@ App.Group = App.BaseModel.extend
 
   isUnread: false
 
+  # Used to expire cache of members association.
+  _membersAssociationLoaded: 0
+
   init: ->
     @_super(arguments...)
     @setProperties
@@ -17,11 +20,14 @@ App.Group = App.BaseModel.extend
       memberIds: []
       notificationResults: []
 
-  # Note: Can't have dependent key on memberIds.@each since the members are
-  # primitives, not objects, and you can't observe a primitive.
   members: (->
-    @get('memberIds').map (id) -> App.User.lookup(id)
-  ).property('memberIds.@each')
+    @get('memberIds').map((id) -> App.User.lookup(id)).compact()
+  ).property('memberIds.@each', '_membersAssociationLoaded')
+
+  # You should call this after all the User instances have been loaded for the
+  # group.
+  didLoadMembers: ->
+    @incrementProperty('_membersAssociationLoaded')
 
   cancelMessagesSubscription: ->
     @get('subscription')?.cancel()

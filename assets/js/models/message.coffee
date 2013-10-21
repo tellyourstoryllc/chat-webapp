@@ -106,6 +106,7 @@ App.Message = App.BaseModel.extend
             instances = App.loadAll(json)
 
             group = instances.find (o) -> o instanceof App.Group
+            group.didLoadMembers()
             newlyLoadedMessages = false
             if Ember.isEmpty(group.get('messages'))
               group.set('messages', instances.filter (o) -> o instanceof App.Message)

@@ -120,8 +120,9 @@ window.App = App = Ember.Application.create
 
     instances = instances.compact()
 
-    if options.associateGroupMessages
+    if options.loadSingleGroup
       group = instances.find (o) -> o instanceof App.Group
+      group.didLoadMembers()
       if Ember.isEmpty(group.get('messages'))
         group.set('messages', instances.filter (o) -> o instanceof App.Message)
 

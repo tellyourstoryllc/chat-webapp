@@ -9,7 +9,7 @@ App.JoinRoute = Ember.Route.extend
     .then (json) =>
       if json? && ! json.error?
         # Load everything from the response.
-        instances = App.loadAll(json, associateGroupMessages: true)
+        instances = App.loadAll(json, loadSingleGroup: true)
         group = instances.find (o) -> o instanceof App.Group
         if group?
           @transitionTo('rooms.room', group)
