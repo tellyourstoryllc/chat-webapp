@@ -165,6 +165,7 @@ App.Message.reopenClass
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     text: json.text
     imageUrl: json.image_url
+    imageThumbUrl: json.image_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # Given a Message instance, persists it to the server.  Returns a Promise.
