@@ -45,7 +45,7 @@ App.Message = App.BaseModel.extend
         [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
         [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
     ///g
-    escapedText = escapedText.replace urlRegexp, (fullMatch) ->
+    evaledText = escapedText.replace urlRegexp, (fullMatch) ->
       url = fullMatch
       prefix = ''
       suffix = ''
@@ -64,7 +64,7 @@ App.Message = App.BaseModel.extend
     currentUser = App.get('currentUser')
     group = @get('group')
     groupMembers = group.get('members')
-    evaledText = escapedText.replace /@(\w+)/g, (fullMatch, name) ->
+    evaledText = evaledText.replace /@(\w+)/g, (fullMatch, name) ->
       user = App.User.userMentionedInGroup(name, groupMembers)
       isAll = /^all$/i.test(name)
       if user? || isAll
