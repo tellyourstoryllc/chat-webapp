@@ -61,12 +61,12 @@ App.Group = App.BaseModel.extend
       if ! newlyLoadedMessages
         @get('messages').pushObject(message)
 
+      fromCurrentUser = message.get('userId') == App.get('currentUser.id')
       wasMentioned = message.doesMentionUser(App.get('currentUser'))
-      if wasMentioned
+      if ! fromCurrentUser && wasMentioned
         # The current user was mentioned.  Play sound.
         @playMentionSound()
 
-      fromCurrentUser = message.get('userId') == App.get('currentUser.id')
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
         # Notify of new message.
