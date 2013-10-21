@@ -4,7 +4,12 @@
     <ul class='room-members'>
       {{#each user in arrangedMembers}}
         <li class='room-member'>
-          <span {{bind-attr class=':status-dot user.status'}}></span> {{user.name}}
+          <div>
+            <span {{bind-attr class=':status-dot user.status'}}></span> {{user.name}}
+          </div>
+          {{#if user.statusText}}
+            <div class='status-text'>{{user.statusText}}</div>
+          {{/if}}
         </li>
       {{/each}}
     </ul>
