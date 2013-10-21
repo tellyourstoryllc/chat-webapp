@@ -211,8 +211,18 @@ App.Message.reopenClass
     else
       # The instance is used by the faye extension.
       data.messageInstance = message
-      # Publish the message via the socket.
-      App.get('fayeClient').publish("/groups/#{groupId}/messages", data)
+      # Wrap Faye's promise in an RSVP.Promise.
+      return new Ember.RSVP.Promise (resolve, reject) =>
+        # Publish the message via the socket.
+        App.get('fayeClient').publish("/groups/#{groupId}/messages", data)
+        .then (result) =>
+          Ember.run @, ->
+            message.set('isSaving', false)
+            resolve(result)
+        , (result) =>
+          Ember.run @, ->
+            message.set('isSaving', false)
+            reject(result)
 
   didCreateRecord: (message, attrs) ->
     hadId = message.get('id')?

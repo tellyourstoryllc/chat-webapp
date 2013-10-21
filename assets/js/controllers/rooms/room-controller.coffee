@@ -27,7 +27,7 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
         Ember.Logger.error e
         msg.setProperties
           isError: true
-          errorMessage: e?.error?.message ? "There was an unknown error sending this message."
+          errorMessage: e?.error?.message ? e?.message ? "There was an unknown error sending this message."
 
       @resetNewMessage()
       @get('model.messages').pushObject(msg)
