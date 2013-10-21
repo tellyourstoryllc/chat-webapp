@@ -73,7 +73,7 @@
   </div>
 
   <div class='send-message-area'>
-    {{actionable-textarea action='sendMessage' classNames='send-message-text'
+    {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
       valueBinding='newMessageText' maxlength='1000' rows='2'}}
     {{#if doesBrowserSupportAjaxFileUpload}}
       <button type='button' class='send-message-file-button' {{action 'chooseFile' target='view'}}>
