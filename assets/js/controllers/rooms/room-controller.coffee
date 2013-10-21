@@ -7,6 +7,14 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
     @set('newMessageText', '')
     @set('newMessageFile', null)
 
+  # Room members sorted by name.
+  arrangedMembers: (->
+    members = @get('members')
+    return members unless members?
+
+    _.sortBy members.toArray(), (u) -> (u.get('name') ? '').trim().toLowerCase()
+  ).property('usersLoaded', 'members.@each.name')
+
   actions:
 
     sendMessage: ->
