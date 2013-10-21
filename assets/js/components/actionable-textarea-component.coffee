@@ -4,7 +4,7 @@
 #
 # Caller should set the `action` property to the name of the action that should
 # get triggered when user presses the enter key.
-App.ActionableTextareaComponent = App.Textarea.extend
+App.ActionableTextareaComponent = App.TextareaComponent.extend
 
   # The name of the action that gets sent.
   action: null
