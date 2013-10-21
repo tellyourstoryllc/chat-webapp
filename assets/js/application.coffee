@@ -1,6 +1,6 @@
 #= require jquery
 #= require handlebars.runtime
-#= require ember
+#= require ember.prod
 #= require underscore
 #= require modernizr
 #= require moment
