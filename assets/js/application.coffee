@@ -1,9 +1,9 @@
-#= require jquery
-#= require handlebars.runtime
-#= require ember.prod
-#= require underscore
-#= require modernizr
-#= require moment
+#= require vendor/jquery
+#= require vendor/handlebars.runtime
+#= require vendor/ember.prod
+#= require vendor/underscore
+#= require vendor/modernizr
+#= require vendor/moment
 #= require desktop-notify
 #
 #= require app-create

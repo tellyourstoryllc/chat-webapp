@@ -1,4 +1,9 @@
 /**
+ * NOTE: This is not in the vendor directory since it has been forked!!!
+ ***************************************************************************
+ ***************************************************************************
+ ***************************************************************************
+ *
  * Copyright 2012 Tsvetan Tsvetkov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
