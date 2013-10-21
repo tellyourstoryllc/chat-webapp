@@ -1,14 +1,16 @@
-<h1>Login</h1>
-
 {{! Use a form tag to capture enter key. }}
 <form class='login' {{action 'attemptLogin' on='submit'}}>
-  <div>
-    {{input type='email' value=email}}
+  <div class='title'>Log In</div>
+  {{#if errorMessage}}
+    <div class='alert alert-error'>{{errorMessage}}</div>
+  {{/if}}
+  <div class='control-group'>
+    {{input type='email' value=email placeholder='Email'}}
   </div>
-  <div>
-    {{input type='password' value=password}}
+  <div class='control-group'>
+    {{input type='password' value=password placeholder='Password'}}
   </div>
-  <div>
+  <div class='form-actions'>
     <button type='submit' {{bind-attr disabled='isLoginDisabled'}}>Log In</button>
   </div>
 </form>
