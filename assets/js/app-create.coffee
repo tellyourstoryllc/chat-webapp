@@ -25,6 +25,9 @@ window.App = App = Ember.Application.create
 
   currentlyViewingRoom: null
 
+  # The current `App.RoomsRoomView` instance.
+  currentRoomView: null
+
   # Messages that should flash in the browser window/tab's titlebar.  General
   # use is to unshift an object with an id and a title.
   pageTitlesToFlash: []
@@ -111,6 +114,16 @@ window.App = App = Ember.Application.create
 
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
+
+  onMessageImageLoad: (groupId) ->
+    Ember.run @, ->
+      group = App.Group.lookup(groupId)
+      return unless group?
+
+      # Make sure we're still viewing the same room.
+      if App.get('currentlyViewingRoom') == group
+        view = App.get('currentRoomView')
+        view?.didLoadMessageImage()
 
   loadAll: (json, options = {}) ->
     instances = for attrs in Ember.makeArray(json)

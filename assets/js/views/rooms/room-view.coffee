@@ -5,6 +5,9 @@ App.RoomsRoomView = Ember.View.extend
     _.bindAll(@, 'resize', 'bodyKeyDown', 'fileChange')
 
   didInsertElement: ->
+    # Yeah, this sucks but we have external event handlers that need this.
+    App.set('currentRoomView', @)
+
     $(window).on 'resize', @resize
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
@@ -20,6 +23,7 @@ App.RoomsRoomView = Ember.View.extend
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
     @$('.send-message-file').off 'change', @fileChange
+    App.set('currentRoomView', null)
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -105,6 +109,24 @@ App.RoomsRoomView = Ember.View.extend
   isScrolledToLastMessage: ->
     $msgs = @$('.messages')
     $msgs.height() + $msgs.prop('scrollTop') >= $msgs.prop('scrollHeight')
+
+  # Computed property version of `isScrollToLastMessage()`.
+  isScrollAnchoredToBottom: (->
+    @isScrolledToLastMessage()
+  ).property().volatile()
+
+  didLoadMessageImage: ->
+    @scrollToLastMessage()
+
+  # Returns string that evaluates to the JS function to call when the image is
+  # loaded.
+  messageImageOnLoad: (->
+    if @isScrolledToLastMessage()
+      "App.onMessageImageLoad"
+    else
+      # When we don't want to scroll, use a no-op.
+      "Ember.K"
+  ).property().volatile()
 
   setFocus: ->
     @$('.send-message-text')?.focus()

@@ -55,7 +55,7 @@
                 </span>
                 {{#if message.imageUrl}}
                   <a {{bind-attr href='message.imageUrl'}} target='_blank'>
-                    <img {{bind-attr src='message.imageUrl'}}>
+                    <img {{bind-attr src='message.imageUrl'}} onload='{{unbound view.messageImageOnLoad}}("{{unbound message.groupId}}");'>
                   </a>
                 {{/if}}
 
