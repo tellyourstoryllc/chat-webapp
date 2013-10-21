@@ -1,4 +1,2 @@
 # Customizations to `Ember.TextArea`.
-App.Textarea = Ember.TextArea.extend
-
-  attributeBindings: ['autocomplete']
+App.Textarea = Ember.TextArea.extend()
