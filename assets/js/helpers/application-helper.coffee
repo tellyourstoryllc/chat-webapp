@@ -1,4 +1,4 @@
-Ember.Handlebars.registerBoundHelper 'compactTimestampElement', (date) ->
+Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date) ->
   return null unless date?
   now = new Date()
   m = moment.utc(date).local()
