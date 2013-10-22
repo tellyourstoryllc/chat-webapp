@@ -1,6 +1,22 @@
 #= require base-model
 
-App.User = App.BaseModel.extend()
+App.User = App.BaseModel.extend
+
+  # TODO: this should take into account device status.
+  computedStatus: Ember.computed.alias('status')
+
+  sortableComputedStatus: (->
+    switch @get('computedStatus')
+      when 'available'
+        0
+      when 'away'
+        1
+      when 'do_not_disturb'
+        2
+      else
+        3
+  ).property('computedStatus')
+
 
 App.User.reopenClass
 

@@ -5,7 +5,7 @@
       {{#each user in arrangedMembers}}
         <li class='room-member'>
           <div>
-            <span {{bind-attr class=':status-dot user.status'}}></span> {{user.name}}
+            <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
           </div>
           {{#if user.statusText}}
             <div class='status-text'>{{user.statusText}}</div>
