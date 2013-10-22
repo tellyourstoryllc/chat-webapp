@@ -10,6 +10,9 @@ App.Group = App.BaseModel.extend
 
   isUnread: false
 
+  # Faye subscription to listen for updates.
+  subscription: null
+
   # Used to expire cache of members association.
   _membersAssociationLoaded: 0
 
@@ -28,6 +31,59 @@ App.Group = App.BaseModel.extend
   # group.
   didLoadMembers: ->
     @incrementProperty('_membersAssociationLoaded')
+
+  isFayeClientConnectedChanged: (->
+    if ! @get('subscription')?
+      # If we're not listening, we don't care.
+      return
+
+    if App.get('isFayeClientConnected')
+      @didReconnect()
+  ).observes('App.isFayeClientConnected')
+
+  didReconnect: ->
+    # We just reconnected.  Fetch any messages we may have missed.
+    @fetchMostRecentMessages()
+    .then (instances) =>
+      firstMessage = instances.find (o) -> o instanceof App.Message
+      overlapFound = false
+      if firstMessage?
+        minId = parseInt(firstMessage.get('id'))
+        if ! _.isNaN(minId)
+          currentMessages = @get('messages')
+          for i in [currentMessages.length - 1 .. 0] by -1
+            msgId = parseInt(currentMessages[i].get('id'))
+            if msgId == minId
+              overlapFound = true
+              break
+      messages = instances.filter (o) -> o instanceof App.Message
+      if overlapFound
+        # After fetching the most recent page of messages, we found that we
+        # already had one or more of them.
+        @dedupeAndAppendMostRecentMessages(messages)
+      else
+        # No overlap.  This means that we missed more than a page of messages.
+        # Just give up and reload.
+        @set('messages', messages)
+
+  # Fetch most recent messages, load them, and resolve returned promise to all
+  # instances.
+  fetchMostRecentMessages: ->
+    api = App.get('api')
+    api.ajax(api.buildURL("/groups/#{@get('id')}/messages"), 'GET', {})
+    .then (json) =>
+      if ! json? || json.error?
+        throw json
+      else
+        json = Ember.makeArray(json)
+        instances = App.loadAll(json)
+        return instances
+
+  dedupeAndAppendMostRecentMessages: (messages) ->
+    curMessages = @get('messages')
+    # TODO: speed this up.
+    newMessages = messages.filter (m) -> ! curMessages.any (oldMsg) -> oldMsg == m
+    curMessages.pushObjects(newMessages)
 
   cancelMessagesSubscription: ->
     @get('subscription')?.cancel()
