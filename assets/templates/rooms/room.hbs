@@ -1,10 +1,15 @@
 <div class='room-members-sidebar'>
-  <h3>Members</h3>
+  <div class='title'>People</div>
   {{#if usersLoaded}}
     <ul class='room-members'>
       {{#each user in arrangedMembers}}
         <li class='room-member'>
-          {{user.name}}
+          <div>
+            <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
+          </div>
+          {{#if user.statusText}}
+            <div class='status-text'>{{user.statusText}}</div>
+          {{/if}}
         </li>
       {{/each}}
     </ul>

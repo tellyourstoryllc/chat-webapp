@@ -12,8 +12,10 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
     members = @get('members')
     return members unless members?
 
-    _.sortBy members.toArray(), (u) -> (u.get('name') ? '').trim().toLowerCase()
-  ).property('usersLoaded', 'members.@each.name')
+    _.sortBy members.toArray(), (u) ->
+      [u.get('sortableComputedStatus'), (u.get('name') ? '').trim().toLowerCase()]
+  ).property('usersLoaded', 'members.@each.name',
+             'members.@each.sortableComputedStatus')
 
   actions:
 

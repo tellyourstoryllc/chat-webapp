@@ -1,6 +1,28 @@
 #= require base-model
 
-App.User = App.BaseModel.extend()
+App.User = App.BaseModel.extend
+
+  # TODO: this should take into account device status.
+  computedStatus: (->
+    # Show everyone as do not disturb until the backend is fixed.
+    if ! App.get('__user_status')
+      return 'unavailable'
+    
+    @get('status')
+  ).property('status', 'App.__user_status')
+
+  sortableComputedStatus: (->
+    switch @get('computedStatus')
+      when 'available'
+        0
+      when 'away'
+        1
+      when 'do_not_disturb'
+        2
+      else
+        3
+  ).property('computedStatus')
+
 
 App.User.reopenClass
 
