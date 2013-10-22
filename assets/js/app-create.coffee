@@ -40,9 +40,9 @@ window.App = App = Ember.Application.create
     # Setup Faye client.
     fayeClient = App.Faye.createClient()
     @set('fayeClient', fayeClient)
-    _.bindAll(@, 'fayeTransportUp', 'fayeTransportDown')
-    fayeClient.on 'transport:up', @fayeTransportUp
-    fayeClient.on 'transport:down', @fayeTransportDown
+    _.bindAll(@, 'onFayeTransportUp', 'onFayeTransportDown')
+    fayeClient.on 'transport:up', @onFayeTransportUp
+    fayeClient.on 'transport:down', @onFayeTransportDown
 
     token = window.localStorage['token']
     if token?
@@ -73,11 +73,11 @@ window.App = App = Ember.Application.create
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
 
-  fayeTransportUp: ->
+  onFayeTransportUp: ->
     Ember.run @, ->
       @set('isFayeClientConnected', true)
 
-  fayeTransportDown: ->
+  onFayeTransportDown: ->
     Ember.run @, ->
       @set('isFayeClientConnected', false)
 
