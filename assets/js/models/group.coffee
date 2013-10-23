@@ -10,6 +10,8 @@ App.Group = App.BaseModel.extend
 
   isUnread: false
 
+  usersLoaded: false
+
   # Faye subscription to listen for updates.
   subscription: null
 
@@ -30,7 +32,45 @@ App.Group = App.BaseModel.extend
   # You should call this after all the User instances have been loaded for the
   # group.
   didLoadMembers: ->
+    @set('usersLoaded', true)
     @incrementProperty('_membersAssociationLoaded')
+
+  fetchAndLoadAssociations: ->
+    loadPromise = @get('loadPromise')
+    # If we're already loading, just return the same promise.
+    return loadPromise if loadPromise?
+
+    promise = new Ember.RSVP.Promise (resolve, reject) =>
+      if @get('usersLoaded')
+        resolve(false)
+      else
+        @set('isLoading', true)
+        App.Group.fetchById(@get('id'))
+        .then (json) =>
+          @setProperties(isLoading: false, loadPromise: null)
+          if json? && ! json.error?
+            # Load everything from the response.
+            instances = App.loadAll(json)
+
+            group = instances.find (o) -> o instanceof App.Group
+            group.didLoadMembers()
+            newlyLoadedMessages = false
+            if Ember.isEmpty(group.get('messages'))
+              group.set('messages', instances.filter (o) -> o instanceof App.Message)
+              newlyLoadedMessages = true
+
+            resolve(newlyLoadedMessages)
+            return true
+          else
+            reject(json)
+        , (e) =>
+          @setProperties(isLoading: false, loadPromise: null)
+          reject(e)
+
+    # Store the promise so that others can attach to it.
+    @set('loadPromise', promise)
+
+    promise
 
   isFayeClientConnectedChanged: (->
     if ! @get('subscription')?
@@ -56,14 +96,18 @@ App.Group = App.BaseModel.extend
             if msgId == minId
               overlapFound = true
               break
+
       messages = instances.filter (o) -> o instanceof App.Message
       if overlapFound
         # After fetching the most recent page of messages, we found that we
-        # already had one or more of them.
-        @dedupeAndAppendMostRecentMessages(messages)
+        # already had one or more of them.  Notify the user of each message like
+        # normal.
+        newMessages = @dedupeMostRecentMessages(messages)
+        # Load user associations and append messages to the display.
+        @didReceiveMessage(msg) for msg in newMessages
       else
-        # No overlap.  This means that we missed more than a page of messages.
-        # Just give up and reload.
+        # No overlap.  This means that we missed more than a page of messages
+        # when disconnected.  Just give up and reload.  Don't notify the user.
         @set('messages', messages)
 
   # Fetch most recent messages, load them, and resolve returned promise to all
@@ -76,14 +120,13 @@ App.Group = App.BaseModel.extend
         throw json
       else
         json = Ember.makeArray(json)
-        instances = App.loadAll(json)
-        return instances
+        # Load everything from the response.
+        return App.loadAll(json)
 
-  dedupeAndAppendMostRecentMessages: (messages) ->
+  dedupeMostRecentMessages: (messages) ->
     curMessages = @get('messages')
     # TODO: speed this up.
-    newMessages = messages.filter (m) -> ! curMessages.any (oldMsg) -> oldMsg == m
-    curMessages.pushObjects(newMessages)
+    messages.filter (m) -> ! curMessages.any (oldMsg) -> oldMsg == m
 
   cancelMessagesSubscription: ->
     @get('subscription')?.cancel()
@@ -108,14 +151,16 @@ App.Group = App.BaseModel.extend
           @didReceiveMessage(message)
     @set('subscription', subscription)
 
-  didReceiveMessage: (message) ->
+  didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.
-    message.loadAssociations()
+    message.fetchAndLoadAssociations()
     .then (newlyLoadedMessages) =>
       # If the group and its messages were newly fetched, don't add the message
       # since it will be a dupe.
       if ! newlyLoadedMessages
         @get('messages').pushObject(message)
+
+      return newlyLoadedMessages if options.suppressNotifications
 
       fromCurrentUser = message.get('userId') == App.get('currentUser.id')
       wasMentioned = message.doesMentionUser(App.get('currentUser'))
@@ -138,6 +183,9 @@ App.Group = App.BaseModel.extend
           id: message.get('groupId')
           title: message.get('title')
         App.get('pageTitlesToFlash').unshiftObject(titleObj)
+
+      # Make sure to return what we were given for other listeners.
+      return newlyLoadedMessages
 
     true
 

@@ -11,7 +11,7 @@ App.Message = App.BaseModel.extend
 
   user: (->
     App.User.lookup(@get('userId'))
-  ).property('userId')
+  ).property('userId', 'group._membersAssociationLoaded')
 
   mentionedUsers: (->
     @get('mentionedUserIds').map (id) -> App.User.lookup(id)
@@ -92,30 +92,8 @@ App.Message = App.BaseModel.extend
     userId? && userId == App.get('currentUser.id')
   ).property('userId', 'App.currentUser.id')
 
-  loadAssociations: ->
-    new Ember.RSVP.Promise (resolve, reject) =>
-      user = App.User.lookup(@get('userId'))
-      group = App.Group.lookup(@get('groupId'))
-      if user? && ! Ember.isEmpty(group?.get('messages'))
-        resolve(false)
-      else
-        App.Group.fetchById(@get('groupId'))
-        .then (json) =>
-          if json? && ! json.error?
-            # Load everything from the response.
-            instances = App.loadAll(json)
-
-            group = instances.find (o) -> o instanceof App.Group
-            group.didLoadMembers()
-            newlyLoadedMessages = false
-            if Ember.isEmpty(group.get('messages'))
-              group.set('messages', instances.filter (o) -> o instanceof App.Message)
-              newlyLoadedMessages = true
-
-            resolve(newlyLoadedMessages)
-            return true
-          else
-            throw new Error(JSON.stringify(json))
+  fetchAndLoadAssociations: ->
+    @get('group').fetchAndLoadAssociations()
 
   toNotification: ->
     # TODO: icon field.

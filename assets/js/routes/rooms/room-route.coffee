@@ -42,5 +42,3 @@ App.RoomsRoomRoute = Ember.Route.extend
           model = instances.find (o) -> o instanceof App.Group
           controller.set('model', model)
           App.set('currentlyViewingRoom', model)
-
-        model.set('usersLoaded', true)

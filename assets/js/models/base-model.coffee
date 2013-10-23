@@ -1,5 +1,6 @@
 App.BaseModel = Ember.Object.extend
 
+  isLoading: false
   isLoaded: false
   isSaving: false
   isError: false
