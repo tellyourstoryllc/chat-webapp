@@ -42,6 +42,10 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
       @resetNewMessage()
       @get('model.messages').pushObject(msg)
 
+      # Get permission to show desktop notifications since it must be done in
+      # response to a user event.
+      @get('target').send('requestNotificationPermission')
+
       return undefined
 
     showPreviousRoom: ->
