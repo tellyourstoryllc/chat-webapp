@@ -4,12 +4,8 @@ App.User = App.BaseModel.extend
 
   # TODO: this should take into account device status.
   computedStatus: (->
-    # Show everyone as do not disturb until the backend is fixed.
-    if ! App.get('__user_status')
-      return 'unavailable'
-    
     @get('status')
-  ).property('status', 'App.__user_status')
+  ).property('status')
 
   sortableComputedStatus: (->
     switch @get('computedStatus')
