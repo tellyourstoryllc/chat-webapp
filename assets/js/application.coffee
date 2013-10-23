@@ -5,6 +5,7 @@
 #= require vendor/modernizr
 #= require vendor/moment
 #= require desktop-notify
+#= require mobile-platform-tests
 #
 #= require app-create
 #= require_tree lib
