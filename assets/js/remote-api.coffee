@@ -51,8 +51,8 @@ App.RemoteApi = Ember.Object.extend
       password: password
     @ajax(@buildURL('/login'), 'POST', data: data)
 
-  fetchCurrentUser: (token = null) ->
-    @ajax(@buildURL('/users/update'), 'POST', data: { token: token })
+  updateCurrentUser: (data) ->
+    @ajax(@buildURL('/users/update'), 'POST', data: data)
 
   joinGroup: (joinCode) ->
     @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', {})

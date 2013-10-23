@@ -49,7 +49,7 @@ window.App = App = Ember.Application.create
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
       App.set('isLoggingIn', true)
-      api.fetchCurrentUser(token)
+      api.updateCurrentUser(_.extend(@userStatusParams(), token: token))
       .then (json) =>
         App.set('isLoggingIn', false)
 
@@ -100,9 +100,13 @@ window.App = App = Ember.Application.create
 
   updateStatusAfterConnect: ->
     return unless @isLoggedIn()
+    App.get('api').updateCurrentUser(@userStatusParams())
+
+  userStatusParams: ->
     # TODO: save status in memory if user sets it to away or something other
-    # than available.  Also track idle time.
-    App.get('api').updateUserStatus('available', statusText: null)
+    # than available and return that.  Also track idle time.
+    status: 'available'
+    status_text: null
 
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other
