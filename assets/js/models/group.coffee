@@ -168,11 +168,9 @@ App.Group = App.BaseModel.extend
         # The current user was mentioned.  Play sound.
         @playMentionSound()
 
-      if ! fromCurrentUser && ! wasMentioned
-        @playRecieveMessageSound()
-
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
+        @playRecieveMessageSound() if ! wasMentioned
         # Create or update the desktop notification.
         @createDesktopNotification(message)
 
