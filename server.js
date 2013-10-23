@@ -50,7 +50,7 @@ var renderChatApp = function(req, res) {
 };
 
 app.get('/', renderChatApp);
-app.get('/join', renderChatApp);
+app.get('/join/*', renderChatApp);
 app.get('/login', renderChatApp);
 app.get('/rooms/*', renderChatApp);
 
