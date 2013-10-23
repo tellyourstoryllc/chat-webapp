@@ -168,10 +168,13 @@ App.Group = App.BaseModel.extend
         # The current user was mentioned.  Play sound.
         @playMentionSound()
 
+      if ! fromCurrentUser && ! wasMentioned
+        @playRecieveMessageSound()
+
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
-        # Notify of new message.
-        @notifyOfNewMessage(message, wasMentioned)
+        # Create or update the desktop notification.
+        @createDesktopNotification(message)
 
       if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
         # Mark the room as unread.
@@ -195,10 +198,13 @@ App.Group = App.BaseModel.extend
     audio.currentTime = 0 if audio.currentTime > 0
     audio.play()
 
-  notifyOfNewMessage: (message, wasMentioned) ->
-    # if ! wasMentioned
-    #   # Play regular new message sound.
+  playRecieveMessageSound: ->
+    return unless Modernizr.audio
+    audio = $('.receive-message-sound').get(0)
+    audio.currentTime = 0 if audio.currentTime > 0
+    audio.play()
 
+  createDesktopNotification: (message) ->
     # Create a desktop notification.
     notif = message.toNotification()
     title = notif.title
