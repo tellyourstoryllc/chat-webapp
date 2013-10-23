@@ -20,6 +20,10 @@
   {{else}}
     Loading...
   {{/if}}
+
+  <div class='current-user-status-bar'>
+    <span {{bind-attr class=':status-dot currentUser.computedStatus'}}></span> {{humanize currentUser.status}}
+  </div>
 </div>
 
 <div class='room-content'>

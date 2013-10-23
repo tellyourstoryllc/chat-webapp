@@ -41,6 +41,27 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   background-color error-background-color
   color error-text-color
 
+.status-dot
+  display inline-block
+  box-sizing border-box
+  width 10px
+  height 10px
+  border 1px solid rgba(0,0,0, .05)
+  border-radius 50%
+  box-shadow inset 0 3px 3px rgba(255,255,255, .5), inset 0 -3px 3px rgba(0,0,0, .3), 0 1px 1px rgba(0,0,0, .25)
+
+  &.available
+    background-color #A2D61C
+
+  &.away
+    background-color #FDB00D
+
+  &.do_not_disturb
+    background-color #DA362A
+
+  &.unavailable
+    background-color #BBBBBB
+
 
 html
   min-height 100%
@@ -103,7 +124,7 @@ room-sidebar-width = 200px
 .rooms-sidebar
   position fixed
   box-sizing border-box
-  width: room-sidebar-width
+  width room-sidebar-width
 
 .rooms-list
   box-sizing border-box
@@ -135,6 +156,17 @@ room-sidebar-width = 200px
 
     > a
       color #c00
+
+.current-user-status-bar
+  position fixed
+  left 0
+  bottom 0
+  box-sizing border-box
+  width room-sidebar-width
+  padding 10px
+  background-color #3F4755
+  color #aaa
+  font-size 12px
 
 .room-content
   position fixed
@@ -182,27 +214,6 @@ room-members-sidebar-width = 150px
 
   .room-member
     color #000
-
-  .status-dot
-    display inline-block
-    box-sizing border-box
-    width 10px
-    height 10px
-    border 1px solid rgba(0,0,0, .05)
-    border-radius 50%
-    box-shadow inset 0 3px 3px rgba(255,255,255, .5), inset 0 -3px 3px rgba(0,0,0, .3), 0 1px 1px rgba(0,0,0, .25)
-
-    &.available
-      background-color #A2D61C
-
-    &.away
-      background-color #FDB00D
-
-    &.do_not_disturb
-      background-color #DA362A
-
-    &.unavailable
-      background-color #BBBBBB
 
   .status-text
     box-sizing border-box

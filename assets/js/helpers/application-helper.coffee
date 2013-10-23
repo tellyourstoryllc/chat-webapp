@@ -1,3 +1,11 @@
+Ember.Handlebars.registerBoundHelper 'capitalize', (text) ->
+  return null unless text?
+  text.capitalize()
+
+Ember.Handlebars.registerBoundHelper 'humanize', (text) ->
+  return null unless text?
+  text.decamelize().replace(/[_-]/g, ' ').capitalize()
+
 Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date) ->
   return null unless date?
   now = new Date()

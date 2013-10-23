@@ -4,6 +4,11 @@ App.BaseControllerMixin = Ember.Mixin.create
     App.isLoggedIn()
   ).property('App.currentUser')
 
+  # Note: Ember.computed.alias doesn't work here.
+  currentUser: (->
+    App.get('currentUser')
+  ).property('App.currentUser')
+
   # When this is supported, we can read files locally and show image previews,
   # for example.
   doesBrowserSupportFileReader: (->
