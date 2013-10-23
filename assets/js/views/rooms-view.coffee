@@ -1,17 +1,21 @@
 App.RoomsView = Ember.View.extend
 
+  isChooseStatusMenuVisible: false
+
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize')
+    _.bindAll(@, 'resize', 'documentClick')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
+    $('html').on 'click', @documentClick
 
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
+    $('html').off 'click', @documentClick
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -31,3 +35,37 @@ App.RoomsView = Ember.View.extend
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
       height: height
+
+  documentClick: (event) ->
+    Ember.run @, ->
+      @closeChooseStatusMenu()
+
+  showChooseStatusMenu: ->
+    @$('.choose-status-menu').fadeIn(50)
+    @set('isChooseStatusMenuVisible', true)
+
+  closeChooseStatusMenu: ->
+    @$('.choose-status-menu').fadeOut(300)
+    @set('isChooseStatusMenuVisible', false)
+
+  actions:
+
+    toggleChooseStatusMenu: ->
+      if @get('isChooseStatusMenuVisible')
+        @closeChooseStatusMenu()
+      else
+        @showChooseStatusMenu()
+      return undefined
+
+    setStatus: (status) ->
+      newStatus = status.get('name')
+      # TODO: Wrap in transaction.
+      App.get('currentUser').set('status', newStatus)
+      App.get('api').updateUserStatus(newStatus)
+      @closeChooseStatusMenu()
+      return undefined
+
+    logOut: ->
+      @closeChooseStatusMenu()
+      @get('controller').send('logOut')
+      return undefined

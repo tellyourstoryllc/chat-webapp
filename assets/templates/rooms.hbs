@@ -22,9 +22,21 @@
   {{/if}}
 
   <div class='current-user-status-bar'>
-    <span {{bind-attr class=':status-dot currentUser.computedStatus'}}></span> {{humanize currentUser.status}}
+    <div class='current-user-status' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
+      <span {{bind-attr class=':status-dot currentUser.computedStatus'}}></span> {{humanize currentUser.status}}
+    </div>
   </div>
 </div>
+
+<ul class='choose-status-menu' role='menu'>
+  {{#each status in App.User.statuses}}
+    <li class='menu-item' {{action 'setStatus' status target='view'}}>
+      <span {{bind-attr class=':status-dot status.name'}}></span> {{status.title}}
+    </li>
+  {{/each}}
+  <li class='separator'></li>
+  <li class='menu-item' {{action 'logOut' target='view'}}>Log Out</li>
+</ul>
 
 <div class='room-content'>
   {{outlet}}

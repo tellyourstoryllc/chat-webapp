@@ -22,6 +22,12 @@ App.User = App.BaseModel.extend
 
 App.User.reopenClass
 
+  statuses: [
+    Ember.Object.create(title: 'Available', name: 'available')
+    Ember.Object.create(title: 'Away', name: 'away')
+    Ember.Object.create(title: 'Do not disturb', name: 'do_not_disturb')
+  ]
+
   # Array of all instances.
   _all: []
 

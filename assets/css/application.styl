@@ -163,10 +163,40 @@ room-sidebar-width = 200px
   bottom 0
   box-sizing border-box
   width room-sidebar-width
-  padding 10px
   background-color #3F4755
   color #aaa
-  font-size 12px
+
+.current-user-status
+  padding 10px
+  // Clickable.
+  cursor pointer
+
+  &:hover
+    color #ccc
+
+.choose-status-menu
+  display none // Initially hidden.
+  position fixed
+  left 5px
+  bottom 37px
+  box-sizing border-box
+  width room-sidebar-width - 10px
+  overflow hidden
+  background-color #ccc
+  border-radius 4px
+  box-shadow 0 0 3px rgba(0,0,0, .2)
+
+  .menu-item
+    padding 5px 10px
+    cursor pointer
+
+    &:hover
+      background-color #E0E0E0
+
+  .separator
+    height 0
+    border 1px solid #888
+    border-bottom-color #eee
 
 .room-content
   position fixed
