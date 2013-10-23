@@ -76,6 +76,7 @@ window.App = App = Ember.Application.create
   onFayeTransportUp: ->
     Ember.run @, ->
       @set('isFayeClientConnected', true)
+      @updateStatusAfterConnect()
 
   onFayeTransportDown: ->
     Ember.run @, ->
@@ -94,6 +95,14 @@ window.App = App = Ember.Application.create
 
     # Fetch emoticons after logging in.
     App.Emoticon.fetchAll()
+
+    @updateStatusAfterConnect() if @get('isFayeClientConnected')
+
+  updateStatusAfterConnect: ->
+    return unless @isLoggedIn()
+    # TODO: save status in memory if user sets it to away or something other
+    # than available.  Also track idle time.
+    App.get('api').updateUserStatus('available', statusText: null)
 
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other
