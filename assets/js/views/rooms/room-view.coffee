@@ -70,13 +70,18 @@ App.RoomsRoomView = Ember.View.extend
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
+    isMembersVisible = $window.width() > 650
+
     height = $window.height()
     width = $window.width()
     width -= ($('.rooms-sidebar').outerWidth() ? 0)
-    width -= ($('.room-members-sidebar').outerWidth() ? 0)
+    width -= ($('.room-members-sidebar').outerWidth() ? 0) if isMembersVisible
     @$('.room-container').css
       width: width
       height: height
+
+    @$('.room-members-sidebar').css
+      display: if isMembersVisible then 'block' else 'none'
 
     height = $window.height()
     height -= $('.room-info').outerHeight() ? 0
