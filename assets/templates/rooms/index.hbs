@@ -11,3 +11,31 @@
     <button type='submit' {{action 'createRoom'}} {{bind-attr disabled='isCreatingGroup'}}>Create Room</button>
   </div>
 </form>
+
+{{#if rooms}}
+  <table class='rooms-table'>
+    <tr>
+      <th colspan='2'>Rooms</th>
+    </tr>
+    {{#each room in rooms itemViewClass='App.RoomsTableRowView'}}
+      <td>
+        {{#if view.isRenaming}}
+          <form>
+            {{input type='text' value=view.newName classNames='new-name' placeholder='New Name'}}
+            <button type='submit' {{action 'saveRoomName' room target='view'}}
+              {{bind-attr disabled='room.isNameLocked'}}>Save</button>
+          </form>
+        {{else}}
+          {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
+        {{/if}}
+      </td>
+      <td>
+        {{#if view.isRenaming}}
+          <a href='#' {{action 'cancelRenamingRoom' target='view'}}>Cancel</a>
+        {{else}}
+          <a href='#' {{action 'renameRoom' room target='view'}}>Rename</a>
+        {{/if}}
+      </td>
+    {{/each}}
+  </table>
+{{/if}}

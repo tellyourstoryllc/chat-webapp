@@ -1,6 +1,6 @@
 #= require base-model
 
-App.Group = App.BaseModel.extend
+App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
   # New message draft temporarily stored before sending.
   newMessageText: ''
@@ -34,6 +34,10 @@ App.Group = App.BaseModel.extend
   didLoadMembers: ->
     @set('usersLoaded', true)
     @incrementProperty('_membersAssociationLoaded')
+
+  isNameLocked: (->
+    @isPropertyLocked('name')
+  ).property('_lockedProperties.@each')
 
   fetchAndLoadAssociations: ->
     loadPromise = @get('loadPromise')

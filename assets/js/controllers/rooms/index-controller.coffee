@@ -2,6 +2,10 @@
 
 App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
 
+  rooms: (->
+    App.Group.all()
+  ).property()
+
   resetNewRoom: ->
     @setProperties
       newRoomName: ''
