@@ -1,6 +1,8 @@
 <div class='empty-content-page'>
   {{#if userMessage}}
-    {{userMessage}}
+    <div class='alert alert-error'>
+      {{userMessage}}
+    </div>
   {{else}}
     Joining Group...
   {{/if}}

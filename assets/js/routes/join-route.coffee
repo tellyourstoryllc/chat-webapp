@@ -15,3 +15,7 @@ App.JoinRoute = Ember.Route.extend
           @transitionTo('rooms.room', group)
       else if json.error
         controller.set('userMessage', json.error)
+    , (xhr) =>
+      msg = xhr?.responseJSON?.error?.message
+      if msg?
+        controller.set('userMessage', msg)
