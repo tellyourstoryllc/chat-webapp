@@ -4,11 +4,13 @@ App.RoomsView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'documentClick')
+    _.bindAll(@, 'resize', 'documentClick', 'documentActive')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
     $('html').on 'click', @documentClick
+    $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
+    Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
@@ -16,6 +18,7 @@ App.RoomsView = Ember.View.extend
   willDestroyElement: ->
     $(window).off 'resize', @resize
     $('html').off 'click', @documentClick
+    $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -39,6 +42,26 @@ App.RoomsView = Ember.View.extend
   documentClick: (event) ->
     Ember.run @, ->
       @closeChooseStatusMenu()
+
+  # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
+  documentActive: (event) ->
+    Ember.run @, ->
+      App.set('lastActiveAt', new Date())
+
+  lastActiveAtChanged: (->
+    @checkIfIdle()
+  ).observes('App.lastActiveAt')
+
+  checkIfIdleTick: ->
+    @checkIfIdle()
+    Ember.run.later @, 'checkIfIdleTick', 5000
+
+  checkIfIdle: ->
+    lastActiveAt = App.get('lastActiveAt')
+    msDiff = new Date().getTime() - lastActiveAt.getTime()
+    secDiff = Math.round(msDiff / 1000)
+    App.set('idleForSeconds', secDiff)
+    App.set('isIdle', secDiff >= 60 * App.get('showIdleAfterMinutes'))
 
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)

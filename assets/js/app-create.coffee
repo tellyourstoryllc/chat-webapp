@@ -28,6 +28,20 @@ window.App = App = Ember.Application.create
   # The current `App.RoomsRoomView` instance.
   currentRoomView: null
 
+  # Date instance used to track idle time.
+  lastActiveAt: null
+
+  # Calculated number of seconds that the current user has been idle on this
+  # device.
+  idleForSeconds: 0
+
+  # The number of minutes of inactivity after which the client is considered
+  # idle on this device.
+  showIdleAfterMinutes: 5
+
+  # Boolean whether the current user is idle on this device.
+  isIdle: false
+
   # Messages that should flash in the browser window/tab's titlebar.  General
   # use is to unshift an object with an id and a title.
   pageTitlesToFlash: []
@@ -36,6 +50,8 @@ window.App = App = Ember.Application.create
     # API implementation.
     api = App.RemoteApi.create()
     @set('api', api)
+
+    @set('lastActiveAt', new Date())
 
     # Setup Faye client.
     fayeClient = App.Faye.createClient()

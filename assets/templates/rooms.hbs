@@ -28,6 +28,7 @@
   <div class='current-user-status-bar'>
     <div class='current-user-status' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
       <span {{bind-attr class=':status-dot currentUser.computedStatus'}}></span> {{humanize currentUser.status}}
+      <span class='idle-time'>{{App.idleForSeconds}}s</span>
     </div>
   </div>
 </div>
