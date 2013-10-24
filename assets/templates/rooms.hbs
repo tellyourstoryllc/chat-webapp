@@ -10,17 +10,13 @@
 
 <div class='rooms-sidebar'>
   {{#if roomsLoaded}}
-    {{#if rooms}}
-      <ul class='rooms-list'>
-        {{#each room in rooms}}
-          <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
-            {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
-          </li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <p>You currently don't have access to any rooms.</p>
-    {{/if}}
+    <ul class='rooms-list'>
+      {{#each room in rooms}}
+        <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
+          {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
   {{else}}
     Loading...
   {{/if}}
