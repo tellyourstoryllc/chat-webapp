@@ -2,6 +2,14 @@ App.ApplicationRoute = Ember.Route.extend
 
   actions:
 
+    didSignUp: ->
+      transition = App.get('continueTransition')
+      if transition?
+        App.set('continueTransition', null)
+        transition.retry()
+      else
+        @transitionTo('rooms.index')
+
     requestNotificationPermission: ->
       App.requestNotificationPermission()
 

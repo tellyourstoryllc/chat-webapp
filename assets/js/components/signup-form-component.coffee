@@ -1,3 +1,4 @@
+# Actions: didSignUp
 App.SignupFormComponent = Ember.Component.extend
 
   email: null
@@ -36,7 +37,7 @@ App.SignupFormComponent = Ember.Component.extend
           user = App.User.loadRaw(userJson)
           if token?
             App.login(token, user)
-            @get('controller').transitionToRoute('rooms.index')
+            @sendAction('didSignUp')
 
       , (e) =>
         @set('isCreatingUser', false)
