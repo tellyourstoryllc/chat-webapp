@@ -14,10 +14,12 @@
     {{input type='text' value=name placeholder='Name'}}
   </div>
   <div class='form-actions'>
-    <div class='related-link'>
-      Already have an account?<br>
-      {{#link-to 'login'}}Log In{{/link-to}}
-    </div>
+    {{#if showRelatedLinks}}
+      <div class='related-link'>
+        Already have an account?<br>
+        {{#link-to 'login'}}Log In{{/link-to}}
+      </div>
+    {{/if}}
     <button type='submit' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
     <div class='clearfix'></div>
   </div>
