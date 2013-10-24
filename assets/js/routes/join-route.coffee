@@ -1,9 +1,26 @@
 App.JoinRoute = Ember.Route.extend
 
+  deactivate: ->
+    @_super(arguments...)
+    # If we're listening for the login and transition away, stop listening.
+    App.get('eventTarget').off 'didLogIn', @, '_didLogIn'
+
+  beforeModel: (transition) ->
+    # This should work when lading on this URL, so allow when we're in the
+    # process of logging in.
+    if ! App.isLoggedIn() && ! App.get('isLoggingIn')
+      App.set('continueTransition', transition)
+      @transitionTo('login')
+      return
+
   model: (params, transition) ->
     params.join_code
 
   setupController: (controller, model) ->
+    @_super(arguments...)
+    App.whenLoggedIn @, '_didLogIn'
+
+  _didLogIn: ->
     api = App.get('api')
     api.joinGroup(model)
     .then (json) =>

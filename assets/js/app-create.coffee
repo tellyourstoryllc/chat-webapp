@@ -4,6 +4,12 @@ window.App = App = Ember.Application.create
   # Default title displayed in the window/tab's titlebar.
   title: 'Chat App'
 
+  # Object that mixes in `Ember.Evented` and receives application events.
+  #
+  # List of events:
+  # - didLogIn
+  eventTarget: null
+
   isLoggingIn: false
 
   token: null
@@ -47,6 +53,8 @@ window.App = App = Ember.Application.create
   pageTitlesToFlash: []
 
   ready: ->
+    @set('eventTarget', Ember.Object.extend(Ember.Evented).create())
+
     # API implementation.
     api = App.RemoteApi.create()
     @set('api', api)
@@ -113,6 +121,21 @@ window.App = App = Ember.Application.create
     App.Emoticon.fetchAll()
 
     @updateStatusAfterConnect() if @get('isFayeClientConnected')
+
+    @get('eventTarget').trigger('didLogIn')
+
+  # Runs callback asynchronously.  If condition is true, runs in next iteration
+  # of the run loop.  Otherwise, it runs when the event triggers.
+  when: (condition, eventTarget, eventName, target, method) ->
+    if condition
+      Ember.run.next target, method
+    else
+      eventTarget.one eventName, target, method
+
+  # Runs callback asynchronously after logging in.  ***You should only call this
+  # when you know the user is about to log in.***
+  whenLoggedIn: (target, method) ->
+    @when @isLoggedIn(), @get('eventTarget'), 'didLogIn', arguments...
 
   updateStatusAfterConnect: ->
     return unless @isLoggedIn()
