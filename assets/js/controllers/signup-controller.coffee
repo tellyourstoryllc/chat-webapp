@@ -1,6 +1,6 @@
-App.LoginController = Ember.Controller.extend
+App.SignupController = Ember.Controller.extend
 
-  isLoginDisabled: Ember.computed.bool('isChecking')
+  isSignupDisabled: Ember.computed.bool('isCreatingUser')
 
   errorMessage: null
 
@@ -10,14 +10,14 @@ App.LoginController = Ember.Controller.extend
 
   actions:
 
-    attemptLogin: ->
-      return if @get('isChecking')
-      @set('isChecking', true)
+    attemptSignup: ->
+      return if @get('isCreatingUser')
+      @set('isCreatingUser', true)
       @set('errorMessage', null)
 
-      App.get('api').login(@get('email'), @get('password'))
+      App.get('api').createUser(@get('email'), @get('password'), @get('name'))
       .then (json) =>
-        @set('isChecking', false)
+        @set('isCreatingUser', false)
 
         if ! json? || json.error?
           @set('errorMessage', json.error.message)
@@ -35,7 +35,7 @@ App.LoginController = Ember.Controller.extend
             @transitionToRoute('rooms.index')
 
       , (e) =>
-        @set('isChecking', false)
+        @set('isCreatingUser', false)
         @set('errorMessage', "There was an unknown error.  Please try again.")
         throw e
       return undefined
