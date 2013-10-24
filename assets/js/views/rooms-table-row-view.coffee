@@ -1,7 +1,15 @@
 App.RoomsTableRowView = Ember.View.extend
   tagName: 'tr'
+  classNameBindings: 'oddOrEven'
 
   newName: ''
+
+  oddOrEven: (->
+    if @get('contentIndex') % 2 == 0
+      'odd'
+    else
+      'even'
+  ).property('contentIndex')
 
   actions:
 

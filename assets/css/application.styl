@@ -1,4 +1,6 @@
 @import 'reset.css'
+@import 'nib/text/ellipsis'
+@import 'nib/overflow'
 @import 'nib/vendor'
 
 link-color = #417ACE
@@ -267,7 +269,7 @@ body.logged-out
 
 .rooms-table
   margin 20px
-  background-color #E0E0E0
+  background-color #F0F0F0
 
   th, td
     border 1px solid #ccc
@@ -275,6 +277,19 @@ body.logged-out
 
   th
     text-align left
+
+  a
+    text-decoration none
+
+    &:hover
+      text-decoration underline
+
+  .odd td
+    background-color #F8F8F8
+
+  .room-name
+    width 200px
+    overflow ellipsis
 
 room-members-sidebar-width = 150px
 
