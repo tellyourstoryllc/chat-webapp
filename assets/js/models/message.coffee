@@ -146,6 +146,9 @@ App.Message.reopenClass
     imageThumbUrl: json.image_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
+  lookup: (id) ->
+    @_allById[App.BaseModel.coerceId(id)]
+
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
     groupId = message.get('groupId')

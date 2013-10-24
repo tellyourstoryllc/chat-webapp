@@ -66,6 +66,9 @@ App.User.reopenClass
       groupOrUsers.get('members')
     else
       groupOrUsers
-    users.find (u) ->
-      realName = u.get('name').replace(/\s/g, '')
+    users.find (u) =>
+      realName = @nameAsMentionText(u.get('name'))
       realName.toLowerCase() == lowerCaseName
+
+  nameAsMentionText: (name) ->
+    name.replace(/\s/g, '')

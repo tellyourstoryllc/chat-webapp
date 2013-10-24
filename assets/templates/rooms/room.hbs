@@ -40,7 +40,7 @@
   <div class='messages'>
     {{#if usersLoaded}}
       {{#each message in messages}}
-        <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}}>
+        <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}} {{bind-attr data-message-id='message.id'}}>
           <table class='message-table'>
             <tr>
               <td class='sender-cell'>

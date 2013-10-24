@@ -2,7 +2,7 @@ App.RoomsRoomView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'fileChange')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange')
 
   didInsertElement: ->
     # Yeah, this sucks but we have external event handlers that need this.
@@ -11,6 +11,7 @@ App.RoomsRoomView = Ember.View.extend
     $(window).on 'resize', @resize
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
+    $(document).on 'click', '.sender', @clickSender
 
     Ember.run.schedule 'afterRender', @, ->
       @$('.send-message-file').on 'change', @fileChange
@@ -22,6 +23,7 @@ App.RoomsRoomView = Ember.View.extend
   willDestroyElement: ->
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
+    $(document).off 'click', '.sender', @clickSender
     @$('.send-message-file').off 'change', @fileChange
     App.set('currentRoomView', null)
 
@@ -144,6 +146,32 @@ App.RoomsRoomView = Ember.View.extend
         $link.addClass 'active'
       else
         $link.removeClass 'active'
+
+  # When clicking a name, insert @name to mention that user.
+  clickSender: (event) ->
+    Ember.run @, ->
+      messageId = $(event.target).closest('.message').attr('data-message-id')
+      return if Ember.isEmpty(messageId)
+
+      message = App.Message.lookup(messageId)
+      return unless message?
+
+      name = message.get('user.name')
+      return unless name?
+
+      textarea = @$('.send-message-text')
+      return unless textarea
+
+      event.preventDefault()
+
+      # Insert mention text.
+      mentionName = App.User.nameAsMentionText(name)
+      textarea.textrange('replace', "@#{mentionName} ")
+
+      # Deselect the text we just inserted by moving the cursor to the end.
+      curSel = textarea.textrange('get')
+      if curSel?.end?
+        textarea.textrange('set', curSel.end, 0)
 
   fileChange: (event) ->
     Ember.run @, ->

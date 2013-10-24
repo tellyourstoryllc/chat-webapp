@@ -4,6 +4,7 @@
 #= require vendor/underscore
 #= require vendor/modernizr
 #= require vendor/moment
+#= require vendor/jquery-textrange
 #= require desktop-notify
 #= require mobile-platform-tests
 #
