@@ -52,7 +52,8 @@ var renderChatApp = function(req, res) {
 app.get('/', renderChatApp);
 app.get('/join/*', renderChatApp);
 app.get('/login', renderChatApp);
-app.get('/rooms/*', renderChatApp);
+app.get('/signup', renderChatApp);
+app.get('/rooms(/*)?', renderChatApp);
 
 
 http.createServer(app).listen(app.get('port'), function() {

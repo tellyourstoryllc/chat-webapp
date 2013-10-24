@@ -6,6 +6,8 @@ App.ApplicationView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'focus', 'blur')
+    Ember.run.schedule 'afterRender', @, ->
+      @setupUi()
 
   didInsertElement: ->
     $(window).focus @focus
@@ -20,6 +22,16 @@ App.ApplicationView = Ember.View.extend
   blur: ->
     Ember.run @, ->
       App.set('hasFocus', false)
+
+  loggedInChanged: (->
+    @setupUi()
+  ).observes('controller.isLoggedIn')
+
+  setupUi: ->
+    if App.isLoggedIn()
+      $('body').removeClass('logged-out')
+    else
+      $('body').addClass('logged-out')
 
   currentlyViewingRoomChanged: (->
     @hideNotifications()

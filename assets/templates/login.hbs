@@ -1,5 +1,5 @@
 {{! Use a form tag to capture enter key. }}
-<form class='login' {{action 'attemptLogin' on='submit'}}>
+<form class='login-form form' {{action 'attemptLogin' on='submit'}}>
   <div class='title'>Log In</div>
   {{#if errorMessage}}
     <div class='alert alert-error'>{{errorMessage}}</div>
@@ -11,6 +11,11 @@
     {{input type='password' value=password placeholder='Password'}}
   </div>
   <div class='form-actions'>
+    <div class='related-link'>
+      Don't have an account?<br>
+      {{#link-to 'signup'}}Sign Up{{/link-to}}
+    </div>
     <button type='submit' {{bind-attr disabled='isLoginDisabled'}}>Log In</button>
+    <div class='clearfix'></div>
   </div>
 </form>

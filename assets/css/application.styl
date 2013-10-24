@@ -82,7 +82,13 @@ room-sidebar-width = 200px
   background-color #313947
 
   a
+    color #fff
     text-decoration none
+
+body.logged-out
+  background-color #EDEDED
+  .navbar
+    width auto
 
 .brand
   float left
@@ -97,19 +103,18 @@ room-sidebar-width = 200px
   margin-top 20px
   margin-bottom 20px
 
-.login
-  width 195px
-  margin 20px
+.form
   border 1px solid #ccc
   border-radius 4px
   padding 10px
-  background-color #ECECEC
+  background-color #F8F8F8
   font-size 14px
 
   .title
     margin-bottom 20px
 
   input[type=text], input[type=email], input[type=password], button
+    padding 5px 10px
     font-size 14px
 
   input[type=text], input[type=email], input[type=password]
@@ -120,6 +125,29 @@ room-sidebar-width = 200px
 
   .form-actions
     text-align right
+
+  .related-link
+    float left
+    color #aaa
+    font-size 11px
+    text-align left
+
+.login-form
+  width 214px
+  margin 20px
+
+  input[type=text], input[type=email], input[type=password]
+    width 188px
+
+.signup-form
+  width 214px
+  margin 20px
+
+  input[type=text], input[type=email], input[type=password]
+    width 188px
+
+  .related-link
+    font-size 9px
 
 .rooms-sidebar
   position fixed
