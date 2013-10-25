@@ -488,3 +488,28 @@ room-members-sidebar-width = 150px
     margin 0
     padding 8px
     font-size 14px
+
+.mention-autocomplete
+  position absolute
+  left 10px
+  bottom 54px
+  border-radius 6px
+  box-shadow 0 0 5px rgba(0,0,0, .2)
+  background-color #fff
+  overflow hidden
+  opacity 0.95
+
+  transition opacity 0.1s ease-in
+
+  &.hidden
+    opacity 0
+
+.mention-autocomplete-item
+  padding 2px 10px
+  cursor pointer
+
+  &.active
+    background-color #D4D4D4
+
+  strong
+    font-weight bold

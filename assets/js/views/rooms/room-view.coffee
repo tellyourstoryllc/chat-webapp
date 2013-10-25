@@ -1,8 +1,11 @@
 App.RoomsRoomView = Ember.View.extend
 
+  group: Ember.computed.alias('controller.model')
+
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'sendMessageTextKeyDown', 'sendMessageTextKeyPress')
+    @set('suggestions', [])
 
   didInsertElement: ->
     # Yeah, this sucks but we have external event handlers that need this.
@@ -14,6 +17,8 @@ App.RoomsRoomView = Ember.View.extend
     $(document).on 'click', '.sender', @clickSender
 
     Ember.run.schedule 'afterRender', @, ->
+      @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
+      @$('.send-message-text').on 'keypress keyup', @sendMessageTextKeyPress
       @$('.send-message-file').on 'change', @fileChange
       @updateSize()
       @scrollToLastMessage()
@@ -24,6 +29,8 @@ App.RoomsRoomView = Ember.View.extend
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
     $(document).off 'click', '.sender', @clickSender
+    @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
+    @$('.send-message-text').off 'keypress keyup', @sendMessageTextKeyPress
     @$('.send-message-file').off 'change', @fileChange
     App.set('currentRoomView', null)
 
@@ -179,6 +186,85 @@ App.RoomsRoomView = Ember.View.extend
       if curSel?.end?
         textarea.textrange('set', curSel.end, 0)
 
+  sendMessageTextKeyDown: (event) ->
+    Ember.run @, ->
+      return unless @get('suggestionsShowing')
+      # The suggestion popup is open.  Detect cursor movement and selection.
+      switch event.which
+        when 9 # Tab.
+          @get('autocompleteView').send('selectCurrentSuggestion')
+          event.preventDefault()
+          return
+        when 13 # Enter.
+          @get('autocompleteView').send('selectCurrentSuggestion')
+          event.preventDefault()
+          # For enter, we must stop propagation also; otherwise it sends the
+          # message.
+          event.stopPropagation()
+          return
+        when 27 # Escape.
+          # Hide suggestions.
+          @set('suggestionsShowing', false)
+          event.preventDefault()
+          return
+        when 38 # Arrow up.
+          @get('autocompleteView').send('moveCursorUp')
+          event.preventDefault()
+          return
+        when 40 # Arrow down.
+          @get('autocompleteView').send('moveCursorDown')
+          event.preventDefault()
+          return
+
+  sendMessageTextKeyPress: (event) ->
+    Ember.run @, ->
+      if @get('suggestionsShowing') && event.which in [9, 13, 38, 40]
+        # User is interacting with the autocomplate view.
+        return
+      if event.which in [27]
+        # Escape is a special case.  Always ignore it.
+        return
+
+      # Find any @text before the cursor.
+      text = @$('.send-message-text').val()
+      range = @$('.send-message-text').textrange('get')
+      beforeCursorText = text[0 ... range.position]
+      matches = /(?:^|\W)@(\w*)$/.exec(beforeCursorText)
+      if matches
+        # @text found; now figure out which names to suggest.
+        @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+        lowerCasedInputName = matches[1].toLowerCase()
+        newSuggestions = []
+
+        if 'all'.indexOf(lowerCasedInputName) == 0
+          newSuggestions.pushObject Ember.Object.create
+            name: '@all'
+            value: null
+
+        # TODO: suggest based on last name.
+        users = @get('group.members')
+        userSuggestions = users.filter (u) ->
+          App.User.nameAsMentionText(u.get('name')).toLowerCase().indexOf(lowerCasedInputName) == 0
+        .map (u) ->
+          name = u.get('name')
+          Ember.Object.create
+            name: name
+            value: "@" + App.User.nameAsMentionText(name)
+        newSuggestions.pushObjects(userSuggestions)
+      else
+        # No @text before the cursor.
+        @setProperties(mentionText: null, textCursorPosition: null)
+        newSuggestions = []
+
+      if Ember.isEmpty(newSuggestions)
+        # Hide instead of removing all elements so we get a nice visual effect.
+        @set('suggestionsShowing', false)
+      else
+        @set('suggestions', newSuggestions)
+        @set('suggestionsShowing', true)
+
+      return undefined
+
   fileChange: (event) ->
     Ember.run @, ->
       file = if event.target.files?
@@ -213,4 +299,18 @@ App.RoomsRoomView = Ember.View.extend
 
     chooseFile: ->
       @$('.send-message-file').trigger('click')
+      return undefined
+
+    didSelectSuggestion: (suggestion) ->
+      # User selected a suggestion.  Expand the value into the text.
+      text = @$('.send-message-text').val()
+      mentionText = @get('mentionText')
+      textCursorPosition = @get('textCursorPosition')
+      mentionLen = mentionText.length + 1 # Add one for the @ sign.
+      textLeftOfExpansion = text[0...textCursorPosition - mentionLen]
+      expandedText = suggestion.get('value') ? suggestion.get('name')
+      newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
+      @$('.send-message-text').val(newText)
+      # Move the cursor to the end of the expansion.
+      @$('.send-message-text').textrange('set', textLeftOfExpansion.length + expandedText.length + 1, 0)
       return undefined
