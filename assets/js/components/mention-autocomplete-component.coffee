@@ -73,8 +73,8 @@ App.MentionAutocompleteItemView = Ember.View.extend
     if value?
       # Highlight the matched text in the @name.
       value = Ember.Handlebars.Utils.escapeExpression(suggestion.get('value'))
-      if matchText?.length && value[1..].toLowerCase().indexOf(matchText.toLowerCase()) == 0
-        value = "<strong>" + value[0 .. matchText.length] + "</strong>" + value[matchText.length + 1..]
+      if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
+        value = "<strong>" + value[0 ... matchText.length] + "</strong>" + value[matchText.length..]
       display += " (#{value})"
 
     display.htmlSafe()

@@ -229,11 +229,11 @@ App.RoomsRoomView = Ember.View.extend
       text = @$('.send-message-text').val()
       range = @$('.send-message-text').textrange('get')
       beforeCursorText = text[0 ... range.position]
-      matches = /(?:^|\W)@(\w*)$/.exec(beforeCursorText)
+      matches = /(?:^|\W)(@\w*)$/.exec(beforeCursorText)
       if matches
         # @text found; now figure out which names to suggest.
         @setProperties(mentionText: matches[1], textCursorPosition: range.position)
-        lowerCasedInputName = matches[1].toLowerCase()
+        lowerCasedInputName = matches[1][1..].toLowerCase()
         newSuggestions = []
 
         if 'all'.indexOf(lowerCasedInputName) == 0
@@ -306,7 +306,7 @@ App.RoomsRoomView = Ember.View.extend
       text = @$('.send-message-text').val()
       mentionText = @get('mentionText')
       textCursorPosition = @get('textCursorPosition')
-      mentionLen = mentionText.length + 1 # Add one for the @ sign.
+      mentionLen = mentionText.length
       textLeftOfExpansion = text[0...textCursorPosition - mentionLen]
       expandedText = suggestion.get('value') ? suggestion.get('name')
       newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
