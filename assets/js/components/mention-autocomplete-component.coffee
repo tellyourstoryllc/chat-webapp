@@ -66,7 +66,11 @@ App.MentionAutocompleteItemView = Ember.View.extend
   itemDisplay: (->
     suggestion = @get('content')
     # TODO: highlight matched text in name if we start matching by last name
-    display = "#{Ember.Handlebars.Utils.escapeExpression(suggestion.get('name'))}"
+    name = suggestion.get('name')
+    if name?
+      display = "#{Ember.Handlebars.Utils.escapeExpression(name)}"
+    else if suggestion.get('imageUrl')
+      display = "<img class='emoticon' src='#{Ember.Handlebars.Utils.escapeExpression(suggestion.get('imageUrl'))}'>"
     matchText = @get('autocompleteView.matchText')
 
     value = suggestion.get('value')

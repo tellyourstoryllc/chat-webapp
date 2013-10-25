@@ -251,8 +251,22 @@ App.RoomsRoomView = Ember.View.extend
             name: name
             value: "@" + App.User.nameAsMentionText(name)
         newSuggestions.pushObjects(userSuggestions)
+      else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
+        # `(text` found; now figure out which emoticons to suggest.
+        @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+        lowerCasedInputName = matches[1].toLowerCase()
+        newSuggestions = []
+
+        emoticons = App.Emoticon.all()
+        emoticonSuggestions = emoticons.filter (e) ->
+          e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
+        .map (e) ->
+          Ember.Object.create
+            imageUrl: e.get('imageUrl')
+            value: e.get('name')
+        newSuggestions.pushObjects(emoticonSuggestions)
       else
-        # No @text before the cursor.
+        # Nothing interesting before the cursor.
         @setProperties(mentionText: null, textCursorPosition: null)
         newSuggestions = []
 
