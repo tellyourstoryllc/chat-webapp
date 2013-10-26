@@ -56,6 +56,12 @@ App.RoomsRoomView = Ember.View.extend
   ).observes('App.isFayeClientConnected')
 
   bodyKeyDown: (event) ->
+    # No key modifiers.
+    if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
+      if event.which == 27 # Escape.
+        # Focus on send message textarea.
+        @$('.send-message-text')?.focus()
+    # Ctrl.
     if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
       if event.which == 219      # [
         @get('controller').send('showPreviousRoom')
