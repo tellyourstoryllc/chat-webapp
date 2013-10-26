@@ -6,8 +6,7 @@ App.MentionAutocompleteComponent = Ember.Component.extend
   classNameBindings: [':mention-autocomplete', 'isShowing::hidden']
 
   # Caller should bind this to collection of objects with name and value
-  # properties.  Value is what the item expands to when selected.  If value is
-  # null (in the case of @all), name is used as fallback.
+  # properties.  Value is what the item expands to when selected.
   suggestions: null
 
   cursorIndex: 0
@@ -65,21 +64,21 @@ App.MentionAutocompleteItemView = Ember.View.extend
 
   itemDisplay: (->
     suggestion = @get('content')
+    # Highlight the matched text in the @name.
+    value = Ember.Handlebars.Utils.escapeExpression(suggestion.get('value'))
+    matchText = @get('autocompleteView.matchText')
+    if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
+      value = "<strong>" + value[0 ... matchText.length] + "</strong>" + value[matchText.length..]
+
     # TODO: highlight matched text in name if we start matching by last name
     name = suggestion.get('name')
     if name?
-      display = "#{Ember.Handlebars.Utils.escapeExpression(name)}"
+      display = Ember.Handlebars.Utils.escapeExpression(name) + " (#{value})"
     else if suggestion.get('imageUrl')
-      display = "<img class='emoticon' src='#{Ember.Handlebars.Utils.escapeExpression(suggestion.get('imageUrl'))}'>"
-    matchText = @get('autocompleteView.matchText')
-
-    value = suggestion.get('value')
-    if value?
-      # Highlight the matched text in the @name.
-      value = Ember.Handlebars.Utils.escapeExpression(suggestion.get('value'))
-      if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
-        value = "<strong>" + value[0 ... matchText.length] + "</strong>" + value[matchText.length..]
-      display += " (#{value})"
+      img = "<img class='emoticon' src='#{Ember.Handlebars.Utils.escapeExpression(suggestion.get('imageUrl'))}'>"
+      display = img + " #{value}"
+    else
+      display = value
 
     display.htmlSafe()
   ).property('content.name', 'content.value', 'autocompleteView.matchText')

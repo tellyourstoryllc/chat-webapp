@@ -238,8 +238,8 @@ App.RoomsRoomView = Ember.View.extend
 
         if 'all'.indexOf(lowerCasedInputName) == 0
           newSuggestions.pushObject Ember.Object.create
-            name: '@all'
-            value: null
+            name: null
+            value: '@all'
 
         # TODO: suggest based on last name.
         users = @get('group.members')
@@ -322,7 +322,7 @@ App.RoomsRoomView = Ember.View.extend
       textCursorPosition = @get('textCursorPosition')
       mentionLen = mentionText.length
       textLeftOfExpansion = text[0...textCursorPosition - mentionLen]
-      expandedText = suggestion.get('value') ? suggestion.get('name')
+      expandedText = suggestion.get('value')
       newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
       @$('.send-message-text').val(newText)
       # Move the cursor to the end of the expansion.
