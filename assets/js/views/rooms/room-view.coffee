@@ -227,8 +227,9 @@ App.RoomsRoomView = Ember.View.extend
         return
 
       # Find any @text before the cursor.
-      text = @$('.send-message-text').val()
-      range = @$('.send-message-text').textrange('get')
+      $text = @$('.send-message-text')
+      text = $text.val()
+      range = $text.textrange('get')
       beforeCursorText = text[0 ... range.position]
       matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
       if matches
@@ -318,14 +319,15 @@ App.RoomsRoomView = Ember.View.extend
 
     didSelectSuggestion: (suggestion) ->
       # User selected a suggestion.  Expand the value into the text.
-      text = @$('.send-message-text').val()
+      $text = @$('.send-message-text')
+      text = $text.val()
       mentionText = @get('mentionText')
       textCursorPosition = @get('textCursorPosition')
       mentionLen = mentionText.length
       textLeftOfExpansion = text[0...textCursorPosition - mentionLen]
       expandedText = suggestion.get('value')
       newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
-      @$('.send-message-text').val(newText)
+      $text.val(newText)
       # Move the cursor to the end of the expansion.
-      @$('.send-message-text').textrange('set', textLeftOfExpansion.length + expandedText.length + 1, 0)
+      $text.textrange('set', textLeftOfExpansion.length + expandedText.length + 1, 0)
       return undefined
