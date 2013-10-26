@@ -89,15 +89,17 @@ window.App = App = Ember.Application.create
           userJson = json.find (o) -> o.object_type == 'user'
           user = App.User.loadRaw(userJson)
           App.login(token, user)
-          appController = App.__container__.lookup('controller:application')
-          if appController.get('currentPath') == 'login'
-            # We're currently on the login page, so automatically transition to
-            # somewhere more interesting.
-            transition = App.get('continueTransition')
-            if transition?
-              transition.retry()
-              App.set('continueTransition', null)
-            else
+
+          # Automatically transition to somewhere more interesting.
+          transition = App.get('continueTransition')
+          if transition?
+            transition.retry()
+            App.set('continueTransition', null)
+          else
+            appController = App.__container__.lookup('controller:application')
+            # We're currently on the login or home page, so go to the default
+            # place.
+            if appController.get('currentPath') in ['index', 'login']
               App._getRouter().transitionTo('rooms.index')
       , (e) =>
         App.set('isLoggingIn', false)
