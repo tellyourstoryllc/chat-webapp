@@ -53,6 +53,14 @@ window.App = App = Ember.Application.create
   pageTitlesToFlash: []
 
   ready: ->
+    if ! Modernizr.history
+      # Browser doesn't support changing the URL without reloading the page.  If
+      # we have a hash, we were probably on IE9 or below and refreshed the page
+      # or were redirected.  So preserve it.  Otherwise, use the URL path.
+      if Ember.isEmpty(window.location.hash)
+        # Copy the URL path to hash.
+        @_getRouter().location.setURL(window.location.pathname)
+
     @set('eventTarget', Ember.Object.extend(Ember.Evented).create())
 
     # API implementation.
