@@ -4,7 +4,7 @@ App.RoomsRoomView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'sendMessageTextKeyDown', 'sendMessageTextKeyPress')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
 
   didInsertElement: ->
@@ -18,7 +18,8 @@ App.RoomsRoomView = Ember.View.extend
 
     Ember.run.schedule 'afterRender', @, ->
       @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
-      @$('.send-message-text').on 'keypress keyup', @sendMessageTextKeyPress
+      # `propertychange` is for IE8.
+      @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
       @$('.send-message-file').on 'change', @fileChange
       @updateSize()
       @scrollToLastMessage()
@@ -30,7 +31,7 @@ App.RoomsRoomView = Ember.View.extend
     $('body').off 'keydown', @bodyKeyDown
     $(document).off 'click', '.sender', @clickSender
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
-    @$('.send-message-text').off 'keypress keyup', @sendMessageTextKeyPress
+    @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
     @$('.send-message-file').off 'change', @fileChange
     App.set('currentRoomView', null)
 
@@ -216,7 +217,7 @@ App.RoomsRoomView = Ember.View.extend
           event.preventDefault()
           return
 
-  sendMessageTextKeyPress: (event) ->
+  sendMessageTextInput: (event) ->
     Ember.run @, ->
       if @get('suggestionsShowing') && event.which in [9, 13, 38, 40]
         # User is interacting with the autocomplate view.
