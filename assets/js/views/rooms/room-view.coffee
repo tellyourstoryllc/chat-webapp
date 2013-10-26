@@ -195,27 +195,23 @@ App.RoomsRoomView = Ember.View.extend
         when 9 # Tab.
           @get('autocompleteView').send('selectCurrentSuggestion')
           event.preventDefault()
-          return
         when 13 # Enter.
           @get('autocompleteView').send('selectCurrentSuggestion')
           event.preventDefault()
           # For enter, we must stop propagation also; otherwise it sends the
           # message.
           event.stopPropagation()
-          return
         when 27 # Escape.
           # Hide suggestions.
           @set('suggestionsShowing', false)
           event.preventDefault()
-          return
         when 38 # Arrow up.
           @get('autocompleteView').send('moveCursorUp')
           event.preventDefault()
-          return
         when 40 # Arrow down.
           @get('autocompleteView').send('moveCursorDown')
           event.preventDefault()
-          return
+      return undefined
 
   sendMessageTextInput: (event) ->
     Ember.run @, ->
