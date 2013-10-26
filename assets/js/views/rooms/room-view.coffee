@@ -229,7 +229,7 @@ App.RoomsRoomView = Ember.View.extend
       text = @$('.send-message-text').val()
       range = @$('.send-message-text').textrange('get')
       beforeCursorText = text[0 ... range.position]
-      matches = /(?:^|\W)(@\w*)$/.exec(beforeCursorText)
+      matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
       if matches
         # @text found; now figure out which names to suggest.
         @setProperties(mentionText: matches[1], textCursorPosition: range.position)
