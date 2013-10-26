@@ -4,7 +4,7 @@ App.RoomsRoomView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'sendMessageTextKeyDown', 'sendMessageTextInput')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
 
   didInsertElement: ->
@@ -20,6 +20,7 @@ App.RoomsRoomView = Ember.View.extend
       @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
       # `propertychange` is for IE8.
       @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
+      @$('.send-message-text').on 'keyup', @onIe9KeyUp if Modernizr.msie9
       @$('.send-message-file').on 'change', @fileChange
       @updateSize()
       @scrollToLastMessage()
@@ -32,6 +33,7 @@ App.RoomsRoomView = Ember.View.extend
     $(document).off 'click', '.sender', @clickSender
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
     @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
+    @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
     @$('.send-message-file').off 'change', @fileChange
     App.set('currentRoomView', null)
 
@@ -186,6 +188,13 @@ App.RoomsRoomView = Ember.View.extend
       curSel = textarea.textrange('get')
       if curSel?.end?
         textarea.textrange('set', curSel.end, 0)
+
+  onIe9KeyUp: (event) ->
+    Ember.run @, ->
+      # This is to work around the fact that IE9 doesn't trigger the input event
+      # when pressing backspace or delete.
+      if event.which in [8, 46] # Backspace, delete.
+        @sendMessageTextInput(event)
 
   sendMessageTextKeyDown: (event) ->
     Ember.run @, ->
