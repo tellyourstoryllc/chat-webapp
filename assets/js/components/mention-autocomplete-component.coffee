@@ -101,7 +101,10 @@ App.MentionAutocompleteItemView = Ember.View.extend
       display = escapedValue
 
     display.htmlSafe()
-  ).property('content.name', 'content.value', 'autocompleteView.matchText')
+  # This also depends on suggestFor.@each, but that shouldn't change and I don't
+  # want to add any more observers than are needed for performance.
+  ).property('content.name', 'content.value', 'content.imageUrl',
+             'autocompleteView.matchText')
 
   click: ->
     @get('autocompleteView').send('selectSuggestion', @get('content'))
