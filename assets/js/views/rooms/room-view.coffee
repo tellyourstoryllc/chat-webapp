@@ -200,6 +200,14 @@ App.RoomsRoomView = Ember.View.extend
 
   sendMessageTextKeyDown: (event) ->
     Ember.run @, ->
+      if event.ctrlKey && ! (event.altKey || event.shiftKey || event.metaKey)
+        switch event.which
+          when 32 # Space.
+            # Show autocomplete.
+            @showAutocomplete()
+            event.preventDefault()
+      # The following are only for when the autocomplete suggestions are
+      # showing.
       return unless @get('suggestionsShowing')
       # The suggestion popup is open.  Detect cursor movement and selection.
       switch event.which
@@ -233,60 +241,62 @@ App.RoomsRoomView = Ember.View.extend
         # Escape is a special case.  Always ignore it.
         return
 
-      # Find any @text before the cursor.
-      $text = @$('.send-message-text')
-      text = $text.val()
-      range = $text.textrange('get')
-      beforeCursorText = text[0 ... range.position]
-      matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
-      if matches
-        # @text found; now figure out which names to suggest.
-        @setProperties(mentionText: matches[1], textCursorPosition: range.position)
-        lowerCasedInputName = matches[1][1..].toLowerCase()
-        newSuggestions = []
-
-        if 'all'.indexOf(lowerCasedInputName) == 0
-          newSuggestions.pushObject Ember.Object.create
-            name: null
-            value: '@all'
-            isAll: true
-
-        users = @get('group.arrangedMembers')
-        userSuggestions = users.filter (u) ->
-          u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
-        .map (u) ->
-          Ember.Object.create
-            name: u.get('name')
-            value: "@" + u.get('mentionName')
-            object: u
-        newSuggestions.pushObjects(userSuggestions)
-      else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
-        # `(text` found; now figure out which emoticons to suggest.
-        @setProperties(mentionText: matches[1], textCursorPosition: range.position)
-        lowerCasedInputName = matches[1].toLowerCase()
-        newSuggestions = []
-
-        emoticons = App.Emoticon.allArranged()
-        emoticonSuggestions = emoticons.filter (e) ->
-          e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
-        .map (e) ->
-          Ember.Object.create
-            imageUrl: e.get('imageUrl')
-            value: e.get('name')
-        newSuggestions.pushObjects(emoticonSuggestions)
-      else
-        # Nothing interesting before the cursor.
-        @setProperties(mentionText: null, textCursorPosition: null)
-        newSuggestions = []
-
-      if Ember.isEmpty(newSuggestions)
-        # Hide instead of removing all elements so we get a nice visual effect.
-        @set('suggestionsShowing', false)
-      else
-        @set('suggestions', newSuggestions)
-        @set('suggestionsShowing', true)
-
+      @showAutocomplete()
       return undefined
+
+  showAutocomplete: ->
+    # Find any @text before the cursor.
+    $text = @$('.send-message-text')
+    text = $text.val()
+    range = $text.textrange('get')
+    beforeCursorText = text[0 ... range.position]
+    matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
+    if matches
+      # @text found; now figure out which names to suggest.
+      @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+      lowerCasedInputName = matches[1][1..].toLowerCase()
+      newSuggestions = []
+
+      if 'all'.indexOf(lowerCasedInputName) == 0
+        newSuggestions.pushObject Ember.Object.create
+          name: null
+          value: '@all'
+          isAll: true
+
+      users = @get('group.arrangedMembers')
+      userSuggestions = users.filter (u) ->
+        u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
+      .map (u) ->
+        Ember.Object.create
+          name: u.get('name')
+          value: "@" + u.get('mentionName')
+          object: u
+      newSuggestions.pushObjects(userSuggestions)
+    else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
+      # `(text` found; now figure out which emoticons to suggest.
+      @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+      lowerCasedInputName = matches[1].toLowerCase()
+      newSuggestions = []
+
+      emoticons = App.Emoticon.allArranged()
+      emoticonSuggestions = emoticons.filter (e) ->
+        e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
+      .map (e) ->
+        Ember.Object.create
+          imageUrl: e.get('imageUrl')
+          value: e.get('name')
+      newSuggestions.pushObjects(emoticonSuggestions)
+    else
+      # Nothing interesting before the cursor.
+      @setProperties(mentionText: null, textCursorPosition: null)
+      newSuggestions = []
+
+    if Ember.isEmpty(newSuggestions)
+      # Hide instead of removing all elements so we get a nice visual effect.
+      @set('suggestionsShowing', false)
+    else
+      @set('suggestions', newSuggestions)
+      @set('suggestionsShowing', true)
 
   fileChange: (event) ->
     Ember.run @, ->
