@@ -248,7 +248,6 @@ App.RoomsRoomView = Ember.View.extend
             value: '@all'
             isAll: true
 
-        # TODO: suggest based on last name.
         users = @get('group.arrangedMembers')
         userSuggestions = users.filter (u) ->
           u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
