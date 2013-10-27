@@ -63,19 +63,22 @@ App.MentionAutocompleteItemView = Ember.View.extend
   ).property('contentIndex', 'autocompleteView.cursorIndex')
 
   itemDisplay: (->
+    escape = Ember.Handlebars.Utils.escapeExpression
     suggestion = @get('content')
-    # Highlight the matched text in the @name.
-    value = Ember.Handlebars.Utils.escapeExpression(suggestion.get('value'))
+
+    value = escape(suggestion.get('value'))
     matchText = @get('autocompleteView.matchText')
+
+    # Highlight the matched text in the @name.
     if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
       value = "<strong>" + value[0 ... matchText.length] + "</strong>" + value[matchText.length..]
 
-    # TODO: highlight matched text in name if we start matching by last name
+    # TODO: highlight matched text in name if it matches there.
     name = suggestion.get('name')
     if name?
-      display = Ember.Handlebars.Utils.escapeExpression(name) + " (#{value})"
+      display = escape(name) + " (#{value})"
     else if suggestion.get('imageUrl')
-      img = "<img class='emoticon' src='#{Ember.Handlebars.Utils.escapeExpression(suggestion.get('imageUrl'))}'>"
+      img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
       display = img + " #{value}"
     else
       display = value

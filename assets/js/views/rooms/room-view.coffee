@@ -250,12 +250,12 @@ App.RoomsRoomView = Ember.View.extend
         # TODO: suggest based on last name.
         users = @get('group.members')
         userSuggestions = users.filter (u) ->
-          u.get('mentionName').toLowerCase().indexOf(lowerCasedInputName) == 0
+          u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
         .map (u) ->
-          name = u.get('name')
           Ember.Object.create
-            name: name
+            name: u.get('name')
             value: "@" + u.get('mentionName')
+            object: u
         newSuggestions.pushObjects(userSuggestions)
       else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
         # `(text` found; now figure out which emoticons to suggest.

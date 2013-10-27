@@ -23,6 +23,13 @@ App.User = App.BaseModel.extend
     @get('name').replace(/\s/g, '')
   ).property('name')
 
+  # Array of lowercase strings that this user should be suggested for when
+  # autocompleting.
+  suggestFor: (->
+    [@get('mentionName')].concat(@get('name').split(/\s+/))
+    .map (s) -> s.toLowerCase()
+  ).property('mentionName', 'name')
+
 
 App.User.reopenClass
 
