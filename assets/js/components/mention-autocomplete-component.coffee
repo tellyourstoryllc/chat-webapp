@@ -66,22 +66,24 @@ App.MentionAutocompleteItemView = Ember.View.extend
     escape = Ember.Handlebars.Utils.escapeExpression
     suggestion = @get('content')
 
-    value = escape(suggestion.get('value'))
+    value = suggestion.get('value')
     matchText = @get('autocompleteView.matchText')
 
     # Highlight the matched text in the @name.
     if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
-      value = "<strong>" + value[0 ... matchText.length] + "</strong>" + value[matchText.length..]
+      escapedValue = "<strong>" + escape(value[0 ... matchText.length]) + "</strong>" + escape(value[matchText.length..])
+    else
+      escapedValue = escape(value)
 
     # TODO: highlight matched text in name if it matches there.
     name = suggestion.get('name')
     if name?
-      display = escape(name) + " (#{value})"
+      display = escape(name) + " (#{escapedValue})"
     else if suggestion.get('imageUrl')
       img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
-      display = img + " #{value}"
+      display = img + " #{escapedValue}"
     else
-      display = value
+      display = escapedValue
 
     display.htmlSafe()
   ).property('content.name', 'content.value', 'autocompleteView.matchText')
