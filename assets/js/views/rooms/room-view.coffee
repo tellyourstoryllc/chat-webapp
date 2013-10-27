@@ -43,6 +43,9 @@ App.RoomsRoomView = Ember.View.extend
   ).observes('controller.roomsLoaded')
 
   roomChanged: (->
+    # Hide autocomplete suggestions.
+    @set('suggestionsShowing', false)
+
     Ember.run.schedule 'afterRender', @, ->
       @scrollToLastMessage()
       @setFocus()
