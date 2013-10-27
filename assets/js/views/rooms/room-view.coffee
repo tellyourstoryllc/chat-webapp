@@ -257,16 +257,27 @@ App.RoomsRoomView = Ember.View.extend
       lowerCasedInputName = matches[1][1..].toLowerCase()
       newSuggestions = []
 
+      # @all is always first.
       if 'all'.indexOf(lowerCasedInputName) == 0
         newSuggestions.pushObject Ember.Object.create
           name: null
           value: '@all'
           isAll: true
 
+      # Filter users.
       users = @get('group.arrangedMembers')
-      userSuggestions = users.filter (u) ->
+      filteredUsers = users.filter (u) ->
         u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
-      .map (u) ->
+
+      # Move current user to the bottom of suggestions.
+      currentUser = App.get('currentUser')
+      index = filteredUsers.indexOf(currentUser)
+      if index >= 0
+        filteredUsers.removeAt(index)
+        filteredUsers.pushObject(currentUser)
+
+      # Convert to suggestion object.
+      userSuggestions = filteredUsers.map (u) ->
         Ember.Object.create
           name: u.get('name')
           value: "@" + u.get('mentionName')
