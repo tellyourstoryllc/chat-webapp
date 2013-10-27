@@ -29,6 +29,20 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     @get('memberIds').map((id) -> App.User.lookup(id)).compact()
   ).property('memberIds.@each', '_membersAssociationLoaded')
 
+  # Room members sorted by status and name.
+  arrangedMembers: (->
+    sorted = @get('members').map (u, i) ->
+      # Map to criteria so that it's only generated once.  Use index so that
+      # it's stable.
+      user: u
+      criteria: [u.get('sortableComputedStatus'), (u.get('name') ? '').trim(), i]
+    # Sort with `Ember.compare` which uses `String::localeCompare` under the
+    # hood.
+    .sort (a, b) -> Ember.compare(a.criteria, b.criteria)
+
+    _.pluck sorted, 'user'
+  ).property('members.@each.name', 'members.@each.sortableComputedStatus')
+
   # You should call this after all the User instances have been loaded for the
   # group.
   didLoadMembers: ->

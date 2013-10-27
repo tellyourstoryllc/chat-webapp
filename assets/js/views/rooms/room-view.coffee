@@ -249,7 +249,7 @@ App.RoomsRoomView = Ember.View.extend
             isAll: true
 
         # TODO: suggest based on last name.
-        users = @get('group.members')
+        users = @get('group.arrangedMembers')
         userSuggestions = users.filter (u) ->
           u.get('suggestFor').any (s) -> s.indexOf(lowerCasedInputName) == 0
         .map (u) ->
@@ -264,7 +264,7 @@ App.RoomsRoomView = Ember.View.extend
         lowerCasedInputName = matches[1].toLowerCase()
         newSuggestions = []
 
-        emoticons = App.Emoticon.all()
+        emoticons = App.Emoticon.allArranged()
         emoticonSuggestions = emoticons.filter (e) ->
           e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
         .map (e) ->
