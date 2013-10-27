@@ -237,8 +237,7 @@ App.Message.reopenClass
 
     lowerCasedText = text.toLowerCase()
     users.filter (user) ->
-      name = user.get('name')
-      mentionName = name.replace(/\s/g, '')
+      mentionName = user.get('mentionName')
       regexp = new RegExp("@#{App.Util.escapeRegexp(mentionName)}\\b", 'i')
       regexp.test(text)
     .mapProperty('id')

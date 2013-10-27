@@ -19,6 +19,10 @@ App.User = App.BaseModel.extend
         3
   ).property('computedStatus')
 
+  mentionName: (->
+    @get('name').replace(/\s/g, '')
+  ).property('name')
+
 
 App.User.reopenClass
 
@@ -66,9 +70,4 @@ App.User.reopenClass
       groupOrUsers.get('members')
     else
       groupOrUsers
-    users.find (u) =>
-      realName = @nameAsMentionText(u.get('name'))
-      realName.toLowerCase() == lowerCaseName
-
-  nameAsMentionText: (name) ->
-    name.replace(/\s/g, '')
+    users.find (u) => u.get('mentionName').toLowerCase() == lowerCaseName

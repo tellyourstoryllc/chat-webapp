@@ -172,8 +172,8 @@ App.RoomsRoomView = Ember.View.extend
       message = App.Message.lookup(messageId)
       return unless message?
 
-      name = message.get('user.name')
-      return unless name?
+      user = message.get('user')
+      return unless user?
 
       textarea = @$('.send-message-text')
       return unless textarea
@@ -181,8 +181,7 @@ App.RoomsRoomView = Ember.View.extend
       event.preventDefault()
 
       # Insert mention text.
-      mentionName = App.User.nameAsMentionText(name)
-      textarea.textrange('replace', "@#{mentionName} ")
+      textarea.textrange('replace', "@#{user.get('mentionName')} ")
 
       # Deselect the text we just inserted by moving the cursor to the end.
       curSel = textarea.textrange('get')
@@ -251,12 +250,12 @@ App.RoomsRoomView = Ember.View.extend
         # TODO: suggest based on last name.
         users = @get('group.members')
         userSuggestions = users.filter (u) ->
-          App.User.nameAsMentionText(u.get('name')).toLowerCase().indexOf(lowerCasedInputName) == 0
+          u.get('mentionName').toLowerCase().indexOf(lowerCasedInputName) == 0
         .map (u) ->
           name = u.get('name')
           Ember.Object.create
             name: name
-            value: "@" + App.User.nameAsMentionText(name)
+            value: "@" + u.get('mentionName')
         newSuggestions.pushObjects(userSuggestions)
       else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
         # `(text` found; now figure out which emoticons to suggest.
