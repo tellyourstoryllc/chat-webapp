@@ -52,11 +52,13 @@ App.MentionAutocompleteComponent = Ember.Component.extend
 
 # View that represents each suggestion item.
 App.MentionAutocompleteItemView = Ember.View.extend
-  classNameBindings: [':mention-autocomplete-item', 'isActive:active']
+  classNameBindings: [':mention-autocomplete-item', 'isActive:active', 'isAll:all-item']
 
   autocompleteView: Ember.computed.alias('parentView')
 
   collectionView: Ember.computed.alias('_parentView')
+
+  isAll: Ember.computed.bool('content.isAll')
 
   isActive: (->
     @get('contentIndex') == @get('autocompleteView.cursorIndex')
@@ -94,6 +96,9 @@ App.MentionAutocompleteItemView = Ember.View.extend
             escape(name[index ... index + matchText.length]) + "</strong>" +
             escape(name[index + matchText.length ..])
       display = escapedName + " (#{escapedValue})"
+      object = suggestion.get('object')
+      if object instanceof App.User
+        display = "<span class='status-dot #{object.get('computedStatus')}'></span> " + display
     else if suggestion.get('imageUrl')
       img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
       display = img + " #{escapedValue}"

@@ -246,6 +246,7 @@ App.RoomsRoomView = Ember.View.extend
           newSuggestions.pushObject Ember.Object.create
             name: null
             value: '@all'
+            isAll: true
 
         # TODO: suggest based on last name.
         users = @get('group.members')
