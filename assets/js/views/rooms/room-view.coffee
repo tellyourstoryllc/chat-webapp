@@ -270,7 +270,7 @@ App.RoomsRoomView = Ember.View.extend
         Ember.Object.create
           name: u.get('name')
           value: "@" + u.get('mentionName')
-          object: u
+          user: u
       newSuggestions.pushObjects(userSuggestions)
     else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
       # `(text` found; now figure out which emoticons to suggest.
