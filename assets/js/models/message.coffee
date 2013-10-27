@@ -32,6 +32,11 @@ App.Message = App.BaseModel.extend
 
   # This is the html text with emoticons and mentions.
   body: (->
+    # For some reason, this is getting triggered on rooms that haven't been
+    # loaded yet.  Since this is a fairly expensive computation, just exit
+    # without doing anything since the result will be bogus anyway.
+    return null if ! @get('group.usersLoaded')
+
     text = @get('text')
 
     escapedText = Ember.Handlebars.Utils.escapeExpression(text)
@@ -85,7 +90,7 @@ App.Message = App.BaseModel.extend
   # Note: We omit group members' names from dependent keys since we don't care
   # about updating mentions when a user changes his/her name or a new user joins
   # or leaves the room.
-  ).property('App.emoticonsVersion', 'text')
+  ).property('App.emoticonsVersion', 'text', 'group.usersLoaded')
 
   isSentByCurrentUser: (->
     userId = @get('userId')
