@@ -215,7 +215,9 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     @get('notificationResults').pushObject(result)
     if result.nativeNotification?.addEventListener
       result.nativeNotification.addEventListener 'click', (event) ->
-        # The user clicked the notification.  Go to the room.
+        # The user clicked the notification.  Focus the window and go to the
+        # room.
+        $(window).focus()
         applicationController = App.__container__.lookup('controller:application')
         applicationController.send('goToRoom', message.get('group'))
 
