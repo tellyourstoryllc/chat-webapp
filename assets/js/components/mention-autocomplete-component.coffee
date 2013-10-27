@@ -72,13 +72,28 @@ App.MentionAutocompleteItemView = Ember.View.extend
     # Highlight the matched text in the @name.
     if matchText?.length && value.toLowerCase().indexOf(matchText.toLowerCase()) == 0
       escapedValue = "<strong>" + escape(value[0 ... matchText.length]) + "</strong>" + escape(value[matchText.length..])
+      highlightFound = true
     else
       escapedValue = escape(value)
 
-    # TODO: highlight matched text in name if it matches there.
     name = suggestion.get('name')
     if name?
-      display = escape(name) + " (#{escapedValue})"
+      escapedName = escape(name)
+      # Highlight matched text in name if it matches there.
+      suggestFor = suggestion.get('object.suggestFor')
+      if ! highlightFound && matchText?.length && suggestFor
+        # Strip off the @ sign.
+        matchText = matchText[1..] if matchText[0] == '@'
+        # Find the word that we matched.  We do it this way to prevent
+        # highlighting in the middle of words.
+        word = suggestFor.find (word) -> word.indexOf(matchText) == 0
+        # Find that word in the name.
+        index = name.toLowerCase().indexOf(word)
+        if index >= 0
+          escapedName = escape(name[0 ... index]) + "<strong>" +
+            escape(name[index ... index + matchText.length]) + "</strong>" +
+            escape(name[index + matchText.length ..])
+      display = escapedName + " (#{escapedValue})"
     else if suggestion.get('imageUrl')
       img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
       display = img + " #{escapedValue}"
