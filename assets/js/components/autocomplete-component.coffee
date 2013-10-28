@@ -56,8 +56,6 @@ App.AutocompleteItemView = Ember.View.extend
 
   autocompleteView: Ember.computed.alias('parentView')
 
-  collectionView: Ember.computed.alias('_parentView')
-
   isAll: Ember.computed.bool('content.isAll')
 
   isActive: (->
