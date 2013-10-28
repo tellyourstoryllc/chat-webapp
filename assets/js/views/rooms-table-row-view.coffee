@@ -4,12 +4,18 @@ App.RoomsTableRowView = Ember.View.extend
 
   newName: ''
 
+  group: Ember.computed.alias('content')
+
   oddOrEven: (->
     if @get('contentIndex') % 2 == 0
       'odd'
     else
       'even'
   ).property('contentIndex')
+
+  isAdmin: (->
+    App.get('currentUser.id') in @get('group.adminIds')
+  ).property('App.currentUser.id', 'group.adminIds.@each')
 
   actions:
 

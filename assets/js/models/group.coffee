@@ -273,6 +273,7 @@ App.Group.reopenClass
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
+    adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
 
   fetchAll: ->

@@ -35,7 +35,9 @@
         {{#if view.isRenaming}}
           <a href='#' {{action 'cancelRenamingRoom' target='view'}}>Cancel</a>
         {{else}}
-          <a href='#' {{action 'renameRoom' room target='view'}}>Rename</a>
+          {{#if view.isAdmin}}
+            <a href='#' {{action 'renameRoom' room target='view'}}>Rename</a>
+          {{/if}}
         {{/if}}
       </td>
     {{/each}}
