@@ -3,6 +3,8 @@
 App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
   needs: ['rooms']
 
+  room: Ember.computed.alias('content')
+
   resetNewMessage: ->
     @set('newMessageText', '')
     @set('newMessageFile', null)
