@@ -6,7 +6,7 @@
 #= require vendor/moment
 #= require vendor/jquery-textrange
 #= require desktop-notify
-#= require mobile-platform-tests
+#= require platform-tests
 #
 #= require app-create
 #= require_tree lib

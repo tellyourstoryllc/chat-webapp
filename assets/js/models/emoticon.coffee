@@ -23,6 +23,8 @@ App.Emoticon.reopenClass
   # Identity map of model instances by name.
   _allByName: {}
 
+  _allArranged: null
+
   all: -> @_all
 
   loadRaw: (json) ->
@@ -67,3 +69,9 @@ App.Emoticon.reopenClass
 
   lookupByName: (name) ->
     @_allByName[name]
+
+  allArranged: ->
+    @_allArranged ?= App.RecordArray.create
+      type: @
+      content: @_all
+      sortProperties: ['name']

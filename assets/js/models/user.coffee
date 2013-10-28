@@ -19,6 +19,17 @@ App.User = App.BaseModel.extend
         3
   ).property('computedStatus')
 
+  mentionName: (->
+    @get('name').replace(/\s/g, '')
+  ).property('name')
+
+  # Array of lowercase strings that this user should be suggested for when
+  # autocompleting.
+  suggestFor: (->
+    [@get('mentionName')].concat(@get('name').split(/\s+/))
+    .map (s) -> s.toLowerCase()
+  ).property('mentionName', 'name')
+
 
 App.User.reopenClass
 
@@ -66,9 +77,4 @@ App.User.reopenClass
       groupOrUsers.get('members')
     else
       groupOrUsers
-    users.find (u) =>
-      realName = @nameAsMentionText(u.get('name'))
-      realName.toLowerCase() == lowerCaseName
-
-  nameAsMentionText: (name) ->
-    name.replace(/\s/g, '')
+    users.find (u) => u.get('mentionName').toLowerCase() == lowerCaseName
