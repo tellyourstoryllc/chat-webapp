@@ -11,7 +11,7 @@ App.AutocompleteComponent = Ember.Component.extend
 
   cursorIndex: 0
 
-  # Caller should bind this to the matched text (without the @).
+  # Caller should bind this to the matched text (with the @).
   matchText: null
 
   suggestionsChanged: (->
