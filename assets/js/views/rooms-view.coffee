@@ -46,7 +46,14 @@ App.RoomsView = Ember.View.extend
   # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
   documentActive: (event) ->
     Ember.run @, ->
-      App.set('lastActiveAt', new Date())
+      @didDetectActivity()
+
+  windowHasFocusChanged: (->
+    @didDetectActivity()
+  ).observes('App.hasFocus')
+
+  didDetectActivity: ->
+    App.set('lastActiveAt', new Date())
 
   lastActiveAtChanged: (->
     @checkIfIdle()
