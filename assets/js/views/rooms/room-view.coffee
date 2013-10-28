@@ -253,7 +253,7 @@ App.RoomsRoomView = Ember.View.extend
     matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
     if matches
       # @text found; now figure out which names to suggest.
-      @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+      @setProperties(suggestMatchText: matches[1], textCursorPosition: range.position)
       lowerCasedInputName = matches[1][1..].toLowerCase()
       newSuggestions = []
 
@@ -285,7 +285,7 @@ App.RoomsRoomView = Ember.View.extend
       newSuggestions.pushObjects(userSuggestions)
     else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
       # `(text` found; now figure out which emoticons to suggest.
-      @setProperties(mentionText: matches[1], textCursorPosition: range.position)
+      @setProperties(suggestMatchText: matches[1], textCursorPosition: range.position)
       lowerCasedInputName = matches[1].toLowerCase()
       newSuggestions = []
 
@@ -299,7 +299,7 @@ App.RoomsRoomView = Ember.View.extend
       newSuggestions.pushObjects(emoticonSuggestions)
     else
       # Nothing interesting before the cursor.
-      @setProperties(mentionText: null, textCursorPosition: null)
+      @setProperties(suggestMatchText: null, textCursorPosition: null)
       newSuggestions = []
 
     if Ember.isEmpty(newSuggestions)
@@ -349,10 +349,10 @@ App.RoomsRoomView = Ember.View.extend
       # User selected a suggestion.  Expand the value into the text.
       $text = @$('.send-message-text')
       text = $text.val()
-      mentionText = @get('mentionText')
+      suggestMatchText = @get('suggestMatchText')
       textCursorPosition = @get('textCursorPosition')
-      mentionLen = mentionText.length
-      textLeftOfExpansion = text[0...textCursorPosition - mentionLen]
+      matchLen = suggestMatchText.length
+      textLeftOfExpansion = text[0...textCursorPosition - matchLen]
       expandedText = suggestion.get('value')
       newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
       $text.val(newText)
