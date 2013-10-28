@@ -2,8 +2,8 @@
 #
 # Note: we're sending the action to the parent view instead of the containing
 # controller.
-App.MentionAutocompleteComponent = Ember.Component.extend
-  classNameBindings: [':mention-autocomplete', 'isShowing::hidden']
+App.AutocompleteComponent = Ember.Component.extend
+  classNameBindings: [':autocomplete', 'isShowing::hidden']
 
   # Caller should bind this to collection of objects with name and value
   # properties.  Value is what the item expands to when selected.
@@ -51,8 +51,8 @@ App.MentionAutocompleteComponent = Ember.Component.extend
 
 
 # View that represents each suggestion item.
-App.MentionAutocompleteItemView = Ember.View.extend
-  classNameBindings: [':mention-autocomplete-item', 'isActive:active', 'isAll:all-item']
+App.AutocompleteItemView = Ember.View.extend
+  classNameBindings: [':autocomplete-item', 'isActive:active', 'isAll:all-item']
 
   autocompleteView: Ember.computed.alias('parentView')
 
