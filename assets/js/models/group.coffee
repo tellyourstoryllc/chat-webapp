@@ -252,7 +252,14 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
   messageIds: Ember.computed.mapBy('messages', 'id')
 
-  minMessageId: Ember.computed.min('messageIds')
+  # The min message ID stored as a number.
+  minNumericMessageId: Ember.reduceComputed.call null, 'messageIds',
+    initialValue: Infinity
+    addedItem: (accumulatedValue, item, changeMeta, instanceMeta) ->
+      Math.min(accumulatedValue, parseInt(item))
+    removedItem: (accumulatedValue, item, changeMeta, instanceMeta) ->
+      return accumulatedValue if parseInt(item) > accumulatedValue
+      return undefined
 
   fetchAndLoadEarlierMessages: ->
     return unless @get('usersLoaded') && @get('canLoadEarlierMessages')
@@ -262,7 +269,8 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     groupId = @get('id')
     data =
       limit: @get('messagesPageSize')
-      last_message_id: @get('minMessageId')
+    minMessageId = @get('minNumericMessageId')
+    data.last_message_id = minMessageId if minMessageId < Infinity
 
     @set('isLoadingEarlierMessages', true)
     api.ajax(api.buildURL("/groups/#{groupId}/messages"), 'GET', data: data)
