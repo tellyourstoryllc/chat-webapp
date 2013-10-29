@@ -111,10 +111,12 @@ window.App = App = Ember.Application.create
     Ember.run @, ->
       @set('isFayeClientConnected', true)
       @updateStatusAfterConnect()
+      return undefined
 
   onFayeTransportDown: ->
     Ember.run @, ->
       @set('isFayeClientConnected', false)
+      return undefined
 
   # Returns the router.  You should only call this as a last resort.
   _getRouter: ->
