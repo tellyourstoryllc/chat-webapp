@@ -53,7 +53,7 @@ App.Message = App.BaseModel.extend
           [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
           [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
         | (?:[A-Za-z0-9][-A-Za-z0-9]{0,61}[a-zA-Z0-9]\.)+ # Domain characters.
-          [a-zA-Z0-9]{2,5}                 # Only top-level domains at the end.
+          [a-zA-Z0-9]{2,6}                 # Only top-level domains at the end.
         )
     ///g
     evaledText = escapedText.replace urlRegexp, (fullMatch, urlOrDomain, protocol) ->
