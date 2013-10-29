@@ -10,6 +10,12 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
   isUnread: false
 
+  # Boolean set to false when the beginning of the messages is reached.
+  canLoadEarlierMessages: true
+  isLoadingEarlierMessages: false
+
+  messagesPageSize: 100
+
   usersLoaded: false
 
   # Faye subscription to listen for updates.
@@ -132,7 +138,9 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   # instances.
   fetchMostRecentMessages: ->
     api = App.get('api')
-    api.ajax(api.buildURL("/groups/#{@get('id')}/messages"), 'GET', {})
+    data =
+      limit: @get('messagesPageSize')
+    api.ajax(api.buildURL("/groups/#{@get('id')}/messages"), 'GET', data: data)
     .then (json) =>
       if ! json? || json.error?
         throw json
@@ -242,6 +250,39 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
         objs = titleObjs.filterBy('id', groupId)
         titleObjs.removeObjects(objs)
 
+  messageIds: Ember.computed.mapBy('messages', 'id')
+
+  minMessageId: Ember.computed.min('messageIds')
+
+  fetchAndLoadEarlierMessages: ->
+    return unless @get('usersLoaded') && @get('canLoadEarlierMessages')
+    return if @get('isLoadingEarlierMessages')
+
+    api = App.get('api')
+    groupId = @get('id')
+    data =
+      limit: @get('messagesPageSize')
+      last_message_id: @get('minMessageId')
+
+    @set('isLoadingEarlierMessages', true)
+    api.ajax(api.buildURL("/groups/#{groupId}/messages"), 'GET', data: data)
+    .then (json) =>
+      @set('isLoadingEarlierMessages', false)
+      if ! json? || json.error?
+        throw json
+      else
+        instances = App.loadAll(Ember.makeArray(json))
+        if Ember.isEmpty(instances)
+          # We've reached the beginning.
+          @set('canLoadEarlierMessages', false)
+        messages = instances.filter (o) -> o instanceof App.Message
+        @get('messages').unshiftObjects(messages)
+
+        return instances
+    , (e) =>
+      @set('isLoadingEarlierMessages', false)
+      throw e
+
 
 App.Group.reopenClass
 
@@ -290,7 +331,9 @@ App.Group.reopenClass
 
   fetchById: (id) ->
     api = App.get('api')
-    api.ajax(api.buildURL("/groups/#{id}"), 'GET', {})
+    data =
+      limit: 100
+    api.ajax(api.buildURL("/groups/#{id}"), 'GET', data: data)
 
   lookup: (id) ->
     @_allById[App.BaseModel.coerceId(id)]
