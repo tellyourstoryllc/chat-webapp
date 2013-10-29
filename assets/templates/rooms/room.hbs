@@ -95,7 +95,7 @@
     <button type='button' {{action 'sendMessage'}} class='send-button'>Send</button>
   </div>
 
-  {{autocomplete viewName='autocompleteView'
+  {{message-autocomplete viewName='autocompleteView'
     matchText=view.suggestMatchText
     suggestions=view.suggestions
     isShowing=view.suggestionsShowing
