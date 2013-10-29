@@ -157,7 +157,6 @@ window.App = App = Ember.Application.create
     # TODO: save status in memory if user sets it to away or something other
     # than available and return that.  Also track idle time.
     status: 'available'
-    status_text: null
 
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other
