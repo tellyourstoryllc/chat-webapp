@@ -42,28 +42,36 @@ App.Message = App.BaseModel.extend
     escapedText = Ember.Handlebars.Utils.escapeExpression(text)
 
     # Link to URLs.  I know this looks overly complicated, but there's a reason.
-    # We whitelist characters to prevent XSS injection.
-    # See http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
+    # See http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html We
+    # whitelist characters to prevent XSS injection.  We match both full URLs
+    # and bare domains at the same time since one would expand into matches of
+    # the other.
     urlRegexp = ///
-      \(?                                # Optional open-paren at the beginning.
-        \b(https?|ftp)://                # Protocol.
-        [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
-        [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
+      \(?\b                              # Optional open-paren at the beginning.
+        (
+          (https?|ftp)://                  # Protocol.
+          [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
+          [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
+        | (?:[A-Za-z0-9][-A-Za-z0-9]{0,61}[a-zA-Z0-9]\.)+ # Domain characters.
+          [a-zA-Z0-9]{2,5}                 # Only top-level domains at the end.
+        )
     ///g
-    evaledText = escapedText.replace urlRegexp, (fullMatch) ->
-      url = fullMatch
+    evaledText = escapedText.replace urlRegexp, (fullMatch, urlOrDomain, protocol) ->
+      display = urlOrDomain
+      if protocol
+        url = urlOrDomain
+      else
+        url = "http://#{urlOrDomain}/"
       prefix = ''
       suffix = ''
-      if url[0] == '('
+      if fullMatch[0] == '('
+        prefix = '('
         if url.slice(-1) == ')'
           # The whole URL is inside parentheses.
-          url = url[1 ... -1]
-          prefix = '('
+          url = url[0 ... -1]
+          display = display[0 ... -1]
           suffix = ')'
-        else
-          url = url[1 ..]
-          prefix = '('
-      "#{prefix}<a href='#{url}' target='_blank'>#{url}</a>#{suffix}"
+      "#{prefix}<a href='#{url}' target='_blank'>#{display}</a>#{suffix}"
 
     # Mentions.
     currentUser = App.get('currentUser')
