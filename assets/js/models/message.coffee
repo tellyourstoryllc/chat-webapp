@@ -52,18 +52,23 @@ App.Message = App.BaseModel.extend
           (https?|ftp)://                  # Protocol.
           [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
           [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
-        | (?:[A-Za-z0-9][-A-Za-z0-9]{0,61}[a-zA-Z0-9]\.)+ # Domain characters.
-          [a-zA-Z0-9]{2,6}                 # Only top-level domains at the end.
+        | ( (?:[A-Za-z0-9][-A-Za-z0-9]{0,61}[a-zA-Z0-9]\.)+ # Domain characters.
+            [a-zA-Z0-9]{2,6}               # Only top-level domains at the end.
+          )
+          ([^a-zA-Z0-9]|$)       # Make sure it's followed by non-domain char.
         )
     ///g
-    evaledText = escapedText.replace urlRegexp, (fullMatch, urlOrDomain, protocol) ->
-      display = urlOrDomain
-      if protocol
-        url = urlOrDomain
-      else
-        url = "http://#{urlOrDomain}/"
+    evaledText = escapedText.replace urlRegexp, (fullMatch, urlOrDomain, protocol, bareDomain, trailingChar) ->
       prefix = ''
       suffix = ''
+      if protocol
+        display = urlOrDomain
+        url = urlOrDomain
+      else
+        url = "http://#{bareDomain}/"
+        display = bareDomain
+        # Make sure to carry over trailing character.
+        suffix = trailingChar ? ''
       if fullMatch[0] == '('
         prefix = '('
         if url.slice(-1) == ')'
