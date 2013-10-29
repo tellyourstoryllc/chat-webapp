@@ -30,15 +30,16 @@ App.RoomsRoomRoute = Ember.Route.extend
     if model?
       model.set('isUnread', false)
 
-    App.Group.fetchById(groupId)
-    .then (json) =>
-      if ! json.error?
-        # Load everything from the response.
-        instances = App.loadAll(json, loadSingleGroup: true)
+    if ! model?.get('usersLoaded')
+      App.Group.fetchById(groupId)
+      .then (json) =>
+        if ! json.error?
+          # Load everything from the response.
+          instances = App.loadAll(json, loadSingleGroup: true)
 
-        # If we landed on this route, this is the first time we have the full
-        # Group instance, so set it on the controller.
-        if ! model?
-          model = instances.find (o) -> o instanceof App.Group
-          controller.set('model', model)
-          App.set('currentlyViewingRoom', model)
+          # If we landed on this route, this is the first time we have the full
+          # Group instance, so set it on the controller.
+          if ! model?
+            model = instances.find (o) -> o instanceof App.Group
+            controller.set('model', model)
+            App.set('currentlyViewingRoom', model)

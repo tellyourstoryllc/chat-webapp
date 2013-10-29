@@ -40,6 +40,12 @@ App.RoomsRoomController = Ember.ObjectController.extend App.BaseControllerMixin,
 
       return undefined
 
+    loadEarlierMessages: ->
+      group = @get('room')
+      group.fetchAndLoadEarlierMessages()
+
+      return undefined
+
     showPreviousRoom: ->
       groups = @get('controllers.rooms.rooms')
       index = groups.indexOf(@get('model'))

@@ -38,6 +38,10 @@
   </div>
 
   <div class='messages'>
+    <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
+      Loading...
+    </div>
+
     {{#if usersLoaded}}
       {{#each message in messages}}
         <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}} {{bind-attr data-message-id='message.id'}}>

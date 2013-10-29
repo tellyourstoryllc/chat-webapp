@@ -2,9 +2,16 @@ App.RoomsRoomView = Ember.View.extend
 
   group: Ember.computed.alias('controller.model')
 
+  # Number of pixels from the top to load more messages.
+  nextPageThresholdPixels: 500
+
+  _observingMessages: null
+
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange', 'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
+      'scrollMessages',
+      'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
 
   didInsertElement: ->
@@ -17,6 +24,7 @@ App.RoomsRoomView = Ember.View.extend
     $(document).on 'click', '.sender', @clickSender
 
     Ember.run.schedule 'afterRender', @, ->
+      @$('.messages').on 'scroll', @scrollMessages
       @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
       # `propertychange` is for IE8.
       @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
@@ -47,16 +55,64 @@ App.RoomsRoomView = Ember.View.extend
     @set('suggestionsShowing', false)
 
     Ember.run.schedule 'afterRender', @, ->
-      @scrollToLastMessage()
       @setFocus()
   ).observes('controller.model')
 
-  messagesChanged: (->
+  roomUsersLoadedChanged: (->
+    Ember.run.schedule 'afterRender', @, ->
+      @scrollToLastMessage() if @get('controller.model.usersLoaded')
+  ).observes('controller.model.usersLoaded')
+
+  messagesArrayChanged: (->
+    messages = @get('controller.model.messages')
+    observingMessages = @get('_observingMessages')
+    if messages != observingMessages
+      # Messages array changed.  Uninstall observer on old array and add to new
+      # one.
+      opts = willChange: 'messagesWillChange', didChange: 'messagesChanged'
+      observingMessages?.removeArrayObserver(@, opts)
+      messages?.addArrayObserver(@, opts)
+      @set('_observingMessages', messages)
+
+      # Track when the messages just updated.
+      @set('_justChangedRooms', true)
+      timer = @get('_justChangedRoomsTimer')
+      if timer?
+        Ember.run.cancel(timer)
+      @set('_justChangedRoomsTimer', Ember.run.later(@, ->
+        return if @isDestroyed
+        @setProperties(_justChangedRoomsTimer: null, _justChangedRooms: false)
+      , 1000))
+
+      # Handle as if it ware a change.
+      @messagesChanged(messages, 0, 0, messages.length, true)
+  ).observes('controller.model.messages')
+
+  messagesWillChange: (messages, start, removeCount, addCount) -> # Ignore.
+
+  messagesChanged: (messages, start, removeCount, addCount, arrayObjectChanged = false) ->
     return unless @currentState == Ember.View.states.inDOM
-    # When we append a new message, only scroll it into view if we're already at
-    # the bottom.
-    @scrollToLastMessage() if @isScrolledToLastMessage()
-  ).observes('controller.model.messages.@each')
+    $messages = @$('.messages')
+    isScrolledToLastMessage = @isScrolledToLastMessage()
+    origScrollHeight = $messages.prop('scrollHeight')
+    Ember.run.schedule 'afterRender', @, ->
+      newScrollHeight = $messages.prop('scrollHeight')
+      scrollHeightAdded = newScrollHeight - origScrollHeight
+      # If we're adding as many as the entire length, then we're displaying the
+      # page for the first time.
+      if arrayObjectChanged
+        # The whole messages array changed, so scroll to the bottom.  For some
+        # reason, without the delay, this isn't scrolling to the very bottom.
+        Ember.run.later @, 'scrollToLastMessage', 100
+      else
+        if scrollHeightAdded > 0 && start == 0 && addCount < messages.length
+          # We've prepended some messages, so fix the scroll position so that the
+          # visible portion doesn't change.
+          $messages.prop('scrollTop', $messages.scrollTop() + scrollHeightAdded)
+        else if isScrolledToLastMessage
+          # When we append a new message to the bottom and were at the bottom,
+          # scroll it into view.
+          @scrollToLastMessage()
 
   isFayeClientConnectedChanged: (->
     bottom = if App.get('isFayeClientConnected')
@@ -67,6 +123,18 @@ App.RoomsRoomView = Ember.View.extend
     @$('.connecting-status-bar').css
       bottom: bottom
   ).observes('App.isFayeClientConnected')
+
+  scrollMessages: _.throttle (event) ->
+    Ember.run @, ->
+      # This prevents us from loading more while switching rooms.
+      return if @get('_justChangedRooms')
+
+      $messages = @$('.messages')
+      return unless $messages?
+
+      if $messages.scrollTop() < @get('nextPageThresholdPixels')
+        @get('controller').send('loadEarlierMessages')
+  , 100, leading: false
 
   bodyKeyDown: (event) ->
     # No key modifiers.
@@ -109,6 +177,11 @@ App.RoomsRoomView = Ember.View.extend
     height -= $('.send-message-area').outerHeight(true) ? 0
     @$('.messages').css
       height: height
+
+    # Loading more messages bar at the top.
+    loadingMessagesWidth = @$('.loading-more-messages').width()
+    @$('.loading-more-messages').css
+      left: Math.round((width - loadingMessagesWidth) / 2)
 
     # The connecting status bar.
     connectingBuffer = 60
