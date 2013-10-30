@@ -6,7 +6,7 @@ Ember.Handlebars.registerBoundHelper 'humanize', (text) ->
   return null unless text?
   text.decamelize().replace(/[_-]/g, ' ').capitalize()
 
-Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date) ->
+Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date, options) ->
   return null unless date?
   now = new Date()
   m = moment.utc(date).local()
@@ -23,7 +23,15 @@ Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date) ->
       m.format('M/D/YY LT')
   tooltipTime = m.format('LLL')
 
-  new Handlebars.SafeString("<span title='#{Handlebars.Utils.escapeExpression(tooltipTime)}'>#{Handlebars.Utils.escapeExpression(relativeTime)}</span>")
+  escape = Ember.Handlebars.Utils.escapeExpression
+  classNames = options.hash.classNames
+  if classNames
+    classNames = classNames.join(' ') if Ember.typeOf(classNames) == 'array'
+    attrs = " class='#{escape(classNames)}'"
+  else
+    attrs = ''
+
+  "<span#{attrs} title='#{escape(tooltipTime)}'>#{escape(relativeTime)}</span>".htmlSafe()
 
 
 # This converts named arguments that are unquoted to bindings.
