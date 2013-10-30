@@ -196,7 +196,7 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
-        @playRecieveMessageSound() if ! wasMentioned
+        @playRecieveMessageSound() if ! wasMentioned && App.get('preferences.playSoundOnMessageReceive')
         # Create or update the desktop notification.
         @createDesktopNotification(message)
 

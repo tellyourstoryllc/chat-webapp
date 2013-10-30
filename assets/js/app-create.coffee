@@ -52,6 +52,9 @@ window.App = App = Ember.Application.create
   # use is to unshift an object with an id and a title.
   pageTitlesToFlash: []
 
+  # User preferences like notification settings.
+  preferences: null
+
   ready: ->
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -68,6 +71,10 @@ window.App = App = Ember.Application.create
     @set('api', api)
 
     @set('lastActiveAt', new Date())
+
+    prefs = Ember.Object.create
+      playSoundOnMessageReceive: !(window.localStorage['playSoundOnMessageReceive'] in ['0', 'false'])
+    @set('preferences', prefs)
 
     # Setup Faye client.
     fayeClient = App.Faye.createClient()
