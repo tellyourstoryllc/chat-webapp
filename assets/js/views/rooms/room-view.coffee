@@ -429,6 +429,7 @@ App.RoomsRoomView = Ember.View.extend
       expandedText = suggestion.get('value')
       newText = textLeftOfExpansion + expandedText + ' ' + text[textCursorPosition..]
       $text.val(newText)
+      $text.trigger('input')
       # Move the cursor to the end of the expansion.
       $text.textrange('set', textLeftOfExpansion.length + expandedText.length + 1, 0)
       return undefined
