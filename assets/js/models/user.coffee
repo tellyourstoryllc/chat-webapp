@@ -16,7 +16,7 @@ App.User = App.BaseModel.extend
     switch @get('computedStatus')
       when 'available'
         0
-      when 'away'
+      when 'away', 'idle'
         1
       when 'do_not_disturb'
         2
