@@ -158,8 +158,16 @@ window.App = App = Ember.Application.create
     @when @isLoggedIn(), @get('eventTarget'), 'didLogIn', arguments...
 
   updateStatusAfterConnect: ->
+    @publishClientStatus()
+
+  publishClientStatus: ->
     return unless @isLoggedIn()
-    App.get('api').updateCurrentUser(@userStatusParams())
+    data = if App.get('isIdle')
+      status: 'idle'
+      idle_duration: App.get('idleForSeconds')
+    else
+      status: 'active'
+    App.get('fayeClient').publish('/clients/update', data)
 
   userStatusParams: ->
     # TODO: save status in memory if user sets it to away or something other
