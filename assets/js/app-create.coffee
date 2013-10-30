@@ -88,7 +88,8 @@ window.App = App = Ember.Application.create
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
       App.set('isLoggingIn', true)
-      api.updateCurrentUser(_.extend(@userStatusParams(), token: token))
+      # TODO: Use /checkin since it now returns the current user.
+      api.updateCurrentUser(token: token)
       .then (json) =>
         App.set('isLoggingIn', false)
 
