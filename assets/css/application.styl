@@ -55,7 +55,7 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   &.available
     background-color #A2D61C
 
-  &.away
+  &.away, &.idle
     background-color #FDB00D
 
   &.do_not_disturb
@@ -316,7 +316,7 @@ room-members-sidebar-width = 150px
   .room-member
     color #000
 
-  .status-text
+  .status-text, .idle-duration
     box-sizing border-box
     width 100%
     max-height 2.4em

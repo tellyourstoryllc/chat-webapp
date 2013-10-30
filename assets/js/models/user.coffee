@@ -2,6 +2,11 @@
 
 App.User = App.BaseModel.extend
 
+  # Most recently calculated idle duration in seconds.
+  mostRecentIdleDuration: null
+
+  isIdle: Ember.computed.equal('status', 'idle')
+
   # TODO: this should take into account device status.
   computedStatus: (->
     @get('status')
@@ -29,6 +34,13 @@ App.User = App.BaseModel.extend
     [@get('mentionName')].concat(@get('name').split(/\s+/))
     .map (s) -> s.toLowerCase()
   ).property('mentionName', 'name')
+
+  idleDurationAsOfNow: (now = null) ->
+    seconds = @get('idleDuration')
+    asOf = @get('idleDurationReceivedAt')
+    return null unless seconds? && asOf?
+    now ?= new Date()
+    seconds + (now.getTime() - asOf.getTime()) / 1000
 
 
 App.User.reopenClass
@@ -70,6 +82,9 @@ App.User.reopenClass
     name: json.name
     status: json.status
     statusText: json.status_text
+    idleDuration: json.idle_duration
+    idleDurationReceivedAt: new Date()
+    mostRecentIdleDuration: json.idle_duration
 
   userMentionedInGroup: (name, groupOrUsers) ->
     lowerCaseName = name.toLowerCase()

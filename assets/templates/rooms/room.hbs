@@ -7,6 +7,9 @@
           <div>
             <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
           </div>
+          {{#if user.isIdle}}
+            <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>
+          {{/if}}
           {{#if user.statusText}}
             <div class='status-text'>{{user.statusText}}</div>
           {{/if}}

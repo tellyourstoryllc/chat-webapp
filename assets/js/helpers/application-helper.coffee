@@ -6,6 +6,13 @@ Ember.Handlebars.registerBoundHelper 'humanize', (text) ->
   return null unless text?
   text.decamelize().replace(/[_-]/g, ' ').capitalize()
 
+# Returns given number of seconds formatted as a duration.
+Ember.Handlebars.registerBoundHelper 'duration', (seconds) ->
+  return null unless Ember.typeOf(seconds) == 'number'
+  seconds = Math.round(seconds)
+  duration = moment.duration(seconds, 'seconds')
+  duration.humanize()
+
 Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date, options) ->
   return null unless date?
   now = new Date()

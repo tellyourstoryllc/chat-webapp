@@ -61,6 +61,7 @@ App.RoomsView = Ember.View.extend
 
   checkIfIdleTick: ->
     @checkIfIdle()
+    @updateUserIdleDurations()
     Ember.run.later @, 'checkIfIdleTick', 5000
 
   checkIfIdle: ->
@@ -69,6 +70,11 @@ App.RoomsView = Ember.View.extend
     secDiff = Math.round(msDiff / 1000)
     App.set('idleForSeconds', secDiff)
     App.set('isIdle', secDiff >= 60 * App.get('showIdleAfterMinutes'))
+
+  updateUserIdleDurations: ->
+    now = new Date()
+    App.User.all().forEach (user) =>
+      user.set('mostRecentIdleDuration', user.idleDurationAsOfNow(now))
 
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)

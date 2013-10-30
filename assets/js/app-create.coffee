@@ -144,6 +144,15 @@ window.App = App = Ember.Application.create
 
     @get('eventTarget').trigger('didLogIn')
 
+    # Listen for status updates from other users.
+    @get('fayeClient').subscribe "/users/#{user.get('id')}", (json) =>
+      Ember.run @, ->
+        Ember.Logger.log "received user packet", json
+        if ! json?.error? && json.object_type == 'user'
+          # We received a user status update.
+          App.loadAll(json)
+        return undefined
+
   # Runs callback asynchronously.  If condition is true, runs in next iteration
   # of the run loop.  Otherwise, it runs when the event triggers.
   when: (condition, eventTarget, eventName, target, method) ->
