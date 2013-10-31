@@ -123,6 +123,10 @@ App.RoomMessagesView = Ember.View.extend
           # scroll it into view.
           @scrollToLastMessage(true)
 
+  isCurrentlyViewingRoom: (->
+    App.get('currentlyViewingRoom') == @get('room')
+  ).property('App.currentlyViewingRoom', 'room')
+
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->
       # This prevents us from loading more while switching rooms.
@@ -139,7 +143,7 @@ App.RoomMessagesView = Ember.View.extend
     $msgs = @$('.messages')
     return unless $msgs?
     props = scrollTop: $msgs.get(0).scrollHeight
-    if animate
+    if animate && @get('isCurrentlyViewingRoom')
       $msgs.animate props, 200
     else
       $msgs.prop(props)
