@@ -7,6 +7,9 @@ App.RoomMessagesView = Ember.View.extend
   # Caller should bind this to the room.
   room: null
 
+  # Caller should bind this to all the rooms.
+  rooms: null
+
   # Number of pixels from the top to load more messages.
   nextPageThresholdPixels: 500
 
@@ -126,6 +129,15 @@ App.RoomMessagesView = Ember.View.extend
   isCurrentlyViewingRoom: (->
     App.get('currentlyViewingRoom') == @get('room')
   ).property('App.currentlyViewingRoom', 'room')
+
+  isRoomBeforeCursor: (->
+    rooms = @get('rooms')
+    return false unless rooms?
+    index = rooms.indexOf(@get('room'))
+    cursorIndex = rooms.indexOf(App.get('currentlyViewingRoom'))
+    return false if index < 0 || cursorIndex < 0
+    index < cursorIndex
+  ).property('rooms.@each', 'room', 'App.currentlyViewingRoom')
 
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->

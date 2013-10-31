@@ -55,10 +55,6 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     @set('usersLoaded', true)
     @incrementProperty('_membersAssociationLoaded')
 
-  isActiveRoom: (->
-    App.get('currentlyViewingRoom') == @
-  ).property('App.currentlyViewingRoom')
-
   isNameLocked: (->
     @isPropertyLocked('name')
   ).property('_lockedProperties.@each')

@@ -357,8 +357,13 @@ room-members-sidebar-width = 150px
   border-right 1px solid #B4B4B4
   background-color #fff
 
+  transition left 0.1s ease-out
+
   &.inactive
     left 100%
+
+    &.before-cursor
+      left -100%
 
 .loading-more-messages
   position absolute
