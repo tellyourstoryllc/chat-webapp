@@ -64,6 +64,7 @@ App.Message = App.BaseModel.extend
       if protocol
         display = urlOrDomain
         url = urlOrDomain
+        useTruncation = true
       else
         url = "http://#{bareDomain}/"
         display = bareDomain
@@ -76,7 +77,10 @@ App.Message = App.BaseModel.extend
           url = url[0 ... -1]
           display = display[0 ... -1]
           suffix = ')'
-      "#{prefix}<a href='#{url}' target='_blank'>#{display}</a>#{suffix}"
+      if useTruncation && display.length > 100
+        attrs = " title='#{display}'"
+        display = "#{display[0...100]}..."
+      "#{prefix}<a href='#{url}'#{attrs} target='_blank'>#{display}</a>#{suffix}"
 
     # Mentions.
     currentUser = App.get('currentUser')
