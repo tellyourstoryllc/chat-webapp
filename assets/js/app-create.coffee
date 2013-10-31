@@ -144,18 +144,22 @@ window.App = App = Ember.Application.create
     # Fetch emoticons after logging in.
     App.Emoticon.fetchAll()
 
-    @updateStatusAfterConnect() if @get('isFayeClientConnected')
-
+    # Trigger didLogIn event after we've set up the token and logged in state.
     @get('eventTarget').trigger('didLogIn')
 
-    # Listen for status updates from other users.
-    @get('fayeClient').subscribe "/users/#{user.get('id')}", (json) =>
+    # Listen for status updates from other users and echoes of our own status.
+    subscription = @get('fayeClient').subscribe "/users/#{user.get('id')}", (json) =>
       Ember.run @, ->
         Ember.Logger.log "received user packet", json
         if ! json?.error? && json.object_type == 'user'
           # We received a user status update.
           App.loadAll(json)
         return undefined
+
+    subscription.then =>
+      # Update our own status after we ensure that we're listening for status
+      # updates.
+      @updateStatusAfterConnect() if @get('isFayeClientConnected')
 
   # Runs callback asynchronously.  If condition is true, runs in next iteration
   # of the run loop.  Otherwise, it runs when the event triggers.
