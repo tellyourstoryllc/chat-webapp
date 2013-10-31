@@ -12,3 +12,23 @@ App.RoomsRoute = Ember.Route.extend
         controller.set('roomsLoaded', true)
         for group in groups
           group.subscribeToMessages()
+
+  actions:
+
+    showPreviousRoom: ->
+      groups = @controllerFor('rooms').get('rooms')
+      index = groups.indexOf(App.get('currentlyViewingRoom'))
+      if index >= 0
+        index--
+        index = groups.length - 1 if index < 0
+        @transitionTo('rooms.room', groups[index])
+      return undefined
+
+    showNextRoom: ->
+      groups = @controllerFor('rooms').get('rooms')
+      index = groups.indexOf(App.get('currentlyViewingRoom'))
+      if index >= 0
+        index++
+        index = 0 if index >= groups.length
+        @transitionTo('rooms.room', groups[index])
+      return undefined

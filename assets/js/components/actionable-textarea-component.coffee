@@ -9,6 +9,9 @@ App.ActionableTextareaComponent = App.TextareaComponent.extend
   # The optional context (argument) of the action.
   actionContext: null
 
+  # Object to send actions to.
+  target: null
+
   # Must use keyDown (not keyUp) so we can prevent the insertion of new line.
   keyDown: (event) ->
     # Pressing enter.
@@ -16,7 +19,7 @@ App.ActionableTextareaComponent = App.TextareaComponent.extend
       actionName = @get('enter-key-down')
       if actionName
         event.preventDefault()
-        @triggerAction(action: actionName)
+        @triggerAction(action: actionName, target: @get('target'))
       else
         Ember.Logger.warn "Action name not set (enter-key-down property) on ActionableTextareaComponent. Ignoring."
 

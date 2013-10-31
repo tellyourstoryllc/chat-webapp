@@ -4,12 +4,14 @@ App.RoomsView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'documentClick', 'documentActive')
+    _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
     $('html').on 'click', @documentClick
     $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
+    # Bind to the body so that it works regardless of where the focus is.
+    $('body').on 'keydown', @bodyKeyDown
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -19,11 +21,22 @@ App.RoomsView = Ember.View.extend
     $(window).off 'resize', @resize
     $('html').off 'click', @documentClick
     $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
+    $('body').off 'keydown', @bodyKeyDown
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
   ).observes('controller.roomsLoaded')
+
+  bodyKeyDown: (event) ->
+    # Ctrl.
+    if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
+      if event.which == 219      # [
+        @get('controller').send('showPreviousRoom')
+        event.preventDefault()
+      else if event.which == 221 # ]
+        @get('controller').send('showNextRoom')
+        event.preventDefault()
 
   resize: _.debounce (event) ->
     Ember.run @, ->
