@@ -45,23 +45,25 @@
   {{#rooms-container rooms=rooms activeRoom=activeRoom}}
     {{#with view as roomsContainer}}
       <div class='room-container'>
-        <div class='room-info'>
-          <table class='room-info-table'>
-            <tr>
-              <td>
-                {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
-              </td>
-              <td class='invite-link'>
-                Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
-              </td>
-            </tr>
-            {{#if activeRoom.topic}}
+        {{#if activeRoom}}
+          <div class='room-info'>
+            <table class='room-info-table'>
               <tr>
-                <td colspan='2'>{{activeRoom.topic}}</td>
+                <td>
+                  {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+                </td>
+                <td class='invite-link'>
+                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                </td>
               </tr>
-            {{/if}}
-          </table>
-        </div>
+              {{#if activeRoom.topic}}
+                <tr>
+                  <td colspan='2'>{{activeRoom.topic}}</td>
+                </tr>
+              {{/if}}
+            </table>
+          </div>
+        {{/if}}
 
         {{#each rooms}}
           {{#if usersLoaded}}
