@@ -196,9 +196,11 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
-        @playRecieveMessageSound() if ! wasMentioned && App.get('preferences.playSoundOnMessageReceive')
-        # Create or update the desktop notification.
-        @createDesktopNotification(message)
+        if wasMentioned
+          @createDesktopNotification(message)
+        else
+          @playRecieveMessageSound() if App.get('preferences.playSoundOnMessageReceive')
+          @createDesktopNotification(message) if App.get('preferences.showNotificationOnMessageReceive')
 
       if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
         # Mark the room as unread.
@@ -228,6 +230,7 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     audio.currentTime = 0 if audio.currentTime > 0
     audio.play()
 
+  # Create (or update) the desktop notification.
   createDesktopNotification: (message) ->
     # Create a desktop notification.
     notif = message.toNotification()

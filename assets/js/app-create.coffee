@@ -76,6 +76,7 @@ window.App = App = Ember.Application.create
 
     prefs = Ember.Object.create
       playSoundOnMessageReceive: !(window.localStorage['playSoundOnMessageReceive'] in ['0', 'false'])
+      showNotificationOnMessageReceive: !(window.localStorage['showNotificationOnMessageReceive'] in ['0', 'false'])
     @set('preferences', prefs)
 
     @set('roomMessagesViews', Ember.Map.create())
