@@ -76,29 +76,27 @@
 
                   {{#each message in messages}}
                     <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}} {{bind-attr data-message-id='message.id'}}>
-                      <table class='message-table'>
-                        <tr>
-                          <td class='sender-cell'>
-                            <div class='sender'>{{message.user.name}}</div>
-                          </td>
-                          <td class='body-cell'>
-                            <span class='status'>
-                              {{#if message.isSaving}}Sending...{{/if}}
-                              {{#if message.isError}}
-                                <span class='error'>{{message.errorMessage}}</span>
-                              {{/if}}
-                              {{compact-timestamp-element message.createdAt classNames='timestamp'}}
-                            </span>
-                            {{#if message.imageUrl}}
-                              <a {{bind-attr href='message.imageUrl'}} target='_blank'>
-                                <img {{bind-attr src='message.imageThumbUrl'}} onload='{{unbound messagesView.messageImageOnLoad}}("{{unbound message.groupId}}", this, false);'>
-                              </a>
+                      <div class='message-table'>
+                        <div class='sender-cell'>
+                          <div class='sender'>{{message.user.name}}</div>
+                        </div>
+                        <div class='body-cell'>
+                          <span class='status'>
+                            {{#if message.isSaving}}Sending...{{/if}}
+                            {{#if message.isError}}
+                              <span class='error'>{{message.errorMessage}}</span>
                             {{/if}}
+                            {{compact-timestamp-element message.createdAt classNames='timestamp'}}
+                          </span>
+                          {{#if message.imageUrl}}
+                            <a {{bind-attr href='message.imageUrl'}} target='_blank'>
+                              <img {{bind-attr src='message.imageThumbUrl'}} onload='{{unbound messagesView.messageImageOnLoad}}("{{unbound message.groupId}}", this, false);'>
+                            </a>
+                          {{/if}}
 
-                            <div class='message-body'>{{message.body}}</div>
-                          </td>
-                        </tr>
-                      </table>
+                          <div class='message-body'>{{message.body}}</div>
+                        </div>
+                      </div>
                     </div>
                   {{/each}}
                 </div>
