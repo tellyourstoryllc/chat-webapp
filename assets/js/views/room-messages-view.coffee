@@ -22,6 +22,7 @@ App.RoomMessagesView = Ember.View.extend
     @$('.messages').on 'scroll', @scrollMessages
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
+      @scrollToLastMessage(true)
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
@@ -68,7 +69,7 @@ App.RoomMessagesView = Ember.View.extend
 
   roomUsersLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
-      @scrollToLastMessage() if @get('room.usersLoaded')
+      @scrollToLastMessage(false) if @get('room.usersLoaded')
   ).observes('room.usersLoaded')
 
   messagesArrayChanged: (->
@@ -111,7 +112,7 @@ App.RoomMessagesView = Ember.View.extend
       if arrayObjectChanged
         # The whole messages array changed, so scroll to the bottom.  For some
         # reason, without the delay, this isn't scrolling to the very bottom.
-        Ember.run.later @, 'scrollToLastMessage', 100
+        Ember.run.later @, 'scrollToLastMessage', true, 100
       else
         if scrollHeightAdded > 0 && start == 0 && addCount < messages.length
           # We've prepended some messages, so fix the scroll position so that the
@@ -120,7 +121,7 @@ App.RoomMessagesView = Ember.View.extend
         else if isScrolledToLastMessage
           # When we append a new message to the bottom and were at the bottom,
           # scroll it into view.
-          @scrollToLastMessage()
+          @scrollToLastMessage(true)
 
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->
@@ -134,11 +135,14 @@ App.RoomMessagesView = Ember.View.extend
         @get('room').fetchAndLoadEarlierMessages()
   , 100, leading: false
 
-  scrollToLastMessage: ->
+  scrollToLastMessage: (animate) ->
     $msgs = @$('.messages')
-    $msgs?.animate
-      scrollTop: $msgs.get(0).scrollHeight
-    , 200
+    return unless $msgs?
+    props = scrollTop: $msgs.get(0).scrollHeight
+    if animate
+      $msgs.animate props, 200
+    else
+      $msgs.prop(props)
 
   isScrolledToLastMessage: ->
     return true if @currentState != Ember.View.states.inDOM
@@ -150,8 +154,22 @@ App.RoomMessagesView = Ember.View.extend
     @isScrolledToLastMessage()
   ).property().volatile()
 
-  didLoadMessageImage: ->
-    @scrollToLastMessage()
+  didLoadMessageImage: (element, isEmoticon) ->
+    if isEmoticon
+      # Just loaded an emoticon.
+      $msgs = @$('.messages')
+      return unless $msgs?
+      # Assume the emoticon loaded above the scrolled-into-view content, so
+      # scroll down the difference between a line of text and the height of the
+      # loaded image.
+      baseLineHeight = 20
+      imageHeight = $(element).height()
+      diff = Math.max(0, imageHeight - baseLineHeight)
+      if diff > 0
+        $msgs.prop('scrollTop', $msgs.prop('scrollTop') + diff)
+    else
+      # Just loaded a regular image.
+      @scrollToLastMessage(false)
 
   # Returns string that evaluates to the JS function to call when the image is
   # loaded.

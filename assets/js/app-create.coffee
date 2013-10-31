@@ -207,7 +207,7 @@ window.App = App = Ember.Application.create
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
 
-  onMessageImageLoad: (groupId) ->
+  onMessageImageLoad: (groupId, element, isEmoticon) ->
     Ember.run @, ->
       group = App.Group.lookup(groupId)
       return unless group?
@@ -215,7 +215,7 @@ window.App = App = Ember.Application.create
       # Make sure we're still viewing the same room.
       if App.get('currentlyViewingRoom') == group
         view = App.get('roomMessagesViews').get(group)
-        view?.didLoadMessageImage()
+        view?.didLoadMessageImage(element, isEmoticon)
 
   loadAll: (json, options = {}) ->
     instances = for attrs in Ember.makeArray(json)
