@@ -26,9 +26,11 @@ App.RoomsRoomRoute = Ember.Route.extend
     # user.
     App.set('currentlyViewingRoom', model)
 
-    # Mark the room as read.
     if model?
+      # Mark the room as read.
       model.set('isUnread', false)
+      # Set the room as opened to show it in the list.
+      model.set('isOpen', true)
 
     if ! model?.get('usersLoaded')
       App.Group.fetchById(groupId)

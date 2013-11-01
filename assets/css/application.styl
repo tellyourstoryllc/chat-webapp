@@ -185,16 +185,29 @@ body.logged-out
     &:hover
       color #ccc
 
+      .close-room
+        color #aaa
+
     &.active
       background-color #242B37
       color #eee
       border-top-color transparent
       border-bottom-color transparent
 
+      .close-room
+        color #aaa
+
   &.unread
 
     > a
       color #c00
+
+  .close-room
+    float right
+    padding 0 5px
+
+    &:hover
+      color #eee !important
 
 .current-user-status-bar
   position fixed

@@ -8,6 +8,9 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   # New message file temporarily stored before sending.
   newMessageFile: null
 
+  # True when the room is visible in the list of rooms.
+  isOpen: true
+
   isUnread: false
 
   # Boolean set to false when the beginning of the messages is reached.
@@ -58,6 +61,26 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   isNameLocked: (->
     @isPropertyLocked('name')
   ).property('_lockedProperties.@each')
+
+  isOpenChanged: (->
+    if @get('isOpen')
+      @open()
+    else
+      @close()
+  ).observes('isOpen')
+
+  open: ->
+    @subscribeToMessages()
+    @fetchAndLoadAssociations()
+
+  close: ->
+    @cancelMessagesSubscription()
+    @setProperties
+      newMessageText: ''
+      newMessageFile: null
+      usersLoaded: false
+      messages: []
+      canLoadEarlierMessages: true
 
   fetchAndLoadAssociations: ->
     loadPromise = @get('loadPromise')
@@ -302,6 +325,8 @@ App.Group.reopenClass
 
   # Identity map of model instances by ID.
   _allById: {}
+
+  _allActive: null
 
   all: -> @_all
 
