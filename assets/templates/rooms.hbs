@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<ul class='choose-status-menu' role='menu'>
+<ul class='menu choose-status-menu' role='menu'>
   {{#each status in App.User.statuses}}
     <li class='menu-item' {{action 'setStatus' status target='view'}}>
       <span {{bind-attr class=':status-dot status.name'}}></span> {{status.title}}

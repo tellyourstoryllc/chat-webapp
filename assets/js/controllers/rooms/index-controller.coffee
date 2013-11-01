@@ -2,9 +2,11 @@
 
 App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
 
-  rooms: (->
+  allRooms: (->
     App.Group.all()
   ).property()
+
+  rooms: Ember.computed.filterBy 'allRooms', 'isDeleted', false
 
   resetNewRoom: ->
     @setProperties

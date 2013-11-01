@@ -4,6 +4,7 @@ App.BaseModel = Ember.Object.extend
   isLoaded: false
   isSaving: false
   isError: false
+  isDeleted: false
 
 
 App.BaseModel.reopenClass

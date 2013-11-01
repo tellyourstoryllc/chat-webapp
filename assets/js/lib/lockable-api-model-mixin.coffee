@@ -42,6 +42,14 @@ App.LockableApiModelMixin = Ember.Mixin.create
 
     callback()
 
+    if Ember.typeOf(properties) == 'object' && properties._pretend?
+      # Don't actually call the server.  This is used for debugging.
+      callback()
+      if ! properties._pretend
+        rollback()
+      # Return fake promise that resolves immediately.
+      return new Ember.RSVP.Promise (resolve, reject) -> resolve()
+
     # Send the update to the server.
     api = App.get('api')
     api.ajax(url, httpMethod, ajaxHash)

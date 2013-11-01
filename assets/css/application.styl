@@ -43,6 +43,27 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   background-color error-background-color
   color error-text-color
 
+.menu
+  position absolute
+  display none // Initially hidden.
+  box-sizing border-box
+  overflow hidden
+  background-color #ccc
+  border-radius 4px
+  box-shadow 0 0 3px rgba(0,0,0, .2)
+
+  .menu-item
+    padding 5px 10px
+    cursor pointer
+
+    &:hover
+      background-color #E0E0E0
+
+  .separator
+    height 0
+    border 1px solid #888
+    border-bottom-color #eee
+
 .status-dot
   display inline-block
   box-sizing border-box
@@ -230,28 +251,10 @@ body.logged-out
     font-size 11px
 
 .choose-status-menu
-  display none // Initially hidden.
   position fixed
   left 5px
   bottom 37px
-  box-sizing border-box
   width room-sidebar-width - 10px
-  overflow hidden
-  background-color #ccc
-  border-radius 4px
-  box-shadow 0 0 3px rgba(0,0,0, .2)
-
-  .menu-item
-    padding 5px 10px
-    cursor pointer
-
-    &:hover
-      background-color #E0E0E0
-
-  .separator
-    height 0
-    border 1px solid #888
-    border-bottom-color #eee
 
 .room-content
   position fixed
@@ -308,6 +311,10 @@ body.logged-out
   .room-name
     width 200px
     overflow ellipsis
+
+.lobby-room-menu
+  position absolute
+
 
 room-members-sidebar-width = 150px
 

@@ -2,7 +2,10 @@
 
 App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
-  rooms: Ember.computed.filterBy 'allRooms', 'isOpen', true
+  rooms: (->
+    @get('allRooms').filter (room) ->
+      room.get('isOpen') && ! room.get('isDeleted')
+  ).property('allRooms.@each.isOpen', 'allRooms.@each.isDeleted')
 
   activeRoom: (->
     App.get('currentlyViewingRoom')
