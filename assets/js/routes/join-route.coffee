@@ -18,21 +18,20 @@ App.JoinRoute = Ember.Route.extend
 
   setupController: (controller, model) ->
     @_super(arguments...)
-    App.whenLoggedIn @, '_didLogIn'
-
-  _didLogIn: ->
-    api = App.get('api')
-    api.joinGroup(model)
-    .then (json) =>
-      if json? && ! json.error?
-        # Load everything from the response.
-        instances = App.loadAll(json, loadSingleGroup: true)
-        group = instances.find (o) -> o instanceof App.Group
-        if group?
-          @transitionTo('rooms.room', group)
-      else if json.error
-        controller.set('userMessage', json.error)
-    , (xhr) =>
-      msg = xhr?.responseJSON?.error?.message
-      if msg?
-        controller.set('userMessage', msg)
+    joinCode = model
+    App.whenLoggedIn @, ->
+      api = App.get('api')
+      api.joinGroup(joinCode)
+      .then (json) =>
+        if json? && ! json.error?
+          # Load everything from the response.
+          instances = App.loadAll(json, loadSingleGroup: true)
+          group = instances.find (o) -> o instanceof App.Group
+          if group?
+            @transitionTo('rooms.room', group)
+        else if json.error
+          controller.set('userMessage', json.error)
+      , (xhr) =>
+        msg = xhr?.responseJSON?.error?.message
+        if msg?
+          controller.set('userMessage', msg)
