@@ -122,12 +122,14 @@ window.App = App = Ember.Application.create
 
   onFayeTransportUp: ->
     Ember.run @, ->
+      Ember.Logger.log "faye transport:up", new Date()
       @set('isFayeClientConnected', true)
       @updateStatusAfterConnect()
       return undefined
 
   onFayeTransportDown: ->
     Ember.run @, ->
+      Ember.Logger.log "faye transport:down", new Date()
       @set('isFayeClientConnected', false)
       return undefined
 
