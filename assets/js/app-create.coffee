@@ -29,10 +29,8 @@ window.App = App = Ember.Application.create
   # Whether the app/window has focus.
   hasFocus: true
 
+  # The current `App.Group` instance.
   currentlyViewingRoom: null
-
-  # The current `App.RoomsRoomView` instance.
-  currentRoomView: null
 
   # Date instance used to track idle time.
   lastActiveAt: null
@@ -55,6 +53,10 @@ window.App = App = Ember.Application.create
   # User preferences like notification settings.
   preferences: null
 
+  # Ember.Map whose keys are `App.Group` instances, and values are
+  # `App.RoomMessagesView` instances.
+  roomMessagesViews: null
+
   ready: ->
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -75,6 +77,8 @@ window.App = App = Ember.Application.create
     prefs = Ember.Object.create
       playSoundOnMessageReceive: !(window.localStorage['playSoundOnMessageReceive'] in ['0', 'false'])
     @set('preferences', prefs)
+
+    @set('roomMessagesViews', Ember.Map.create())
 
     # Setup Faye client.
     fayeClient = App.Faye.createClient()
@@ -203,15 +207,15 @@ window.App = App = Ember.Application.create
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
 
-  onMessageImageLoad: (groupId) ->
+  onMessageImageLoad: (groupId, element, isEmoticon) ->
     Ember.run @, ->
       group = App.Group.lookup(groupId)
       return unless group?
 
       # Make sure we're still viewing the same room.
       if App.get('currentlyViewingRoom') == group
-        view = App.get('currentRoomView')
-        view?.didLoadMessageImage()
+        view = App.get('roomMessagesViews').get(group)
+        view?.didLoadMessageImage(element, isEmoticon)
 
   loadAll: (json, options = {}) ->
     instances = for attrs in Ember.makeArray(json)

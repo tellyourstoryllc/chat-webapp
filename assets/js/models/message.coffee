@@ -93,9 +93,13 @@ App.Message = App.BaseModel.extend
         fullMatch
 
     # Emoticons.
+    groupId = @get('groupId')
+    escape = Ember.Handlebars.Utils.escapeExpression
     evaledText = App.Emoticon.all().reduce (str, emoticon) ->
       regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
-      imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}' title='#{emoticon.get('name')}'>"
+      imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
+                  " title='#{escape(emoticon.get('name'))}'" +
+                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, true);'>"
       str.replace regexp, imageHtml
     , evaledText
 

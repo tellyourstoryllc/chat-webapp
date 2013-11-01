@@ -41,4 +41,100 @@
 
 <div class='room-content'>
   {{outlet}}
+
+  {{#rooms-container rooms=rooms activeRoom=activeRoom}}
+    {{#with view as roomsContainer}}
+      <div class='room-container'>
+        {{#if activeRoom}}
+          <div class='room-info'>
+            <table class='room-info-table'>
+              <tr>
+                <td>
+                  {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+                </td>
+                <td class='invite-link'>
+                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                </td>
+              </tr>
+              {{#if activeRoom.topic}}
+                <tr>
+                  <td colspan='2'>{{activeRoom.topic}}</td>
+                </tr>
+              {{/if}}
+            </table>
+          </div>
+        {{/if}}
+
+        {{#each rooms}}
+          {{#if usersLoaded}}
+            {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
+              {{#with view as messagesView}}
+                <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}}>
+                  <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
+                    Loading...
+                  </div>
+
+                  {{#each message in messages}}
+                    <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you'}} {{bind-attr data-message-id='message.id'}}>
+                      <table class='message-table'>
+                        <tr>
+                          <td class='sender-cell'>
+                            <div class='sender'>{{message.user.name}}</div>
+                          </td>
+                          <td class='body-cell'>
+                            <span class='status'>
+                              {{#if message.isSaving}}Sending...{{/if}}
+                              {{#if message.isError}}
+                                <span class='error'>{{message.errorMessage}}</span>
+                              {{/if}}
+                              {{compact-timestamp-element message.createdAt classNames='timestamp'}}
+                            </span>
+                            {{#if message.imageUrl}}
+                              <a {{bind-attr href='message.imageUrl'}} target='_blank'>
+                                <img {{bind-attr src='message.imageThumbUrl'}} onload='{{unbound messagesView.messageImageOnLoad}}("{{unbound message.groupId}}", this, false);'>
+                              </a>
+                            {{/if}}
+
+                            <div class='message-body'>{{message.body}}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  {{/each}}
+                </div>
+              {{/with}}
+            {{/view}}
+          {{/if}}
+        {{/each}}
+
+        <div class='connecting-status-bar'>
+          Connecting...
+        </div>
+
+        <div class='send-message-area'>
+          {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
+            valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
+            target=roomsContainer}}
+          {{#if doesBrowserSupportAjaxFileUpload}}
+            <button type='button' class='send-message-file-button' {{action 'chooseFile' target=roomsContainer}}>
+              {{#if activeRoom.newMessageFile}}
+                Change
+              {{else}}
+                Attach
+              {{/if}}
+            </button>
+            <input type='file' class='send-message-file'>
+          {{/if}}
+          <button type='button' {{action 'sendMessage' target=roomsContainer}} class='send-button'>Send</button>
+        </div>
+
+        {{message-autocomplete viewName='autocompleteView'
+          matchText=roomsContainer.suggestMatchText
+          suggestions=roomsContainer.suggestions
+          isShowing=roomsContainer.suggestionsShowing
+          didSelectSuggestion='didSelectSuggestion'
+          target=roomsContainer}}
+      </div>
+    {{/with}}
+  {{/rooms-container}}
 </div>
