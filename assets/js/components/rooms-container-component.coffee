@@ -8,6 +8,7 @@ App.RoomsContainerComponent = Ember.Component.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
+      'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
 
@@ -19,6 +20,7 @@ App.RoomsContainerComponent = Ember.Component.extend
 
     Ember.run.schedule 'afterRender', @, ->
       @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
+      @$('.send-message-text').on 'keyup click', @onSendMessageTextCursorMove
       # `propertychange` is for IE8.
       @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
       @$('.send-message-text').on 'keyup', @onIe9KeyUp if Modernizr.msie9
@@ -31,6 +33,7 @@ App.RoomsContainerComponent = Ember.Component.extend
     $('body').off 'keydown', @bodyKeyDown
     $(document).off 'click', '.sender', @clickSender
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
+    @$('.send-message-text').off 'keyup click', @onSendMessageTextCursorMove
     @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
     @$('.send-message-file').off 'change', @fileChange
@@ -136,6 +139,17 @@ App.RoomsContainerComponent = Ember.Component.extend
       curSel = textarea.textrange('get')
       if curSel?.end?
         textarea.textrange('set', curSel.end, 0)
+
+  onSendMessageTextCursorMove: (event) ->
+    Ember.run @, ->
+      prevPosition = @get('textCursorPosition')
+      if prevPosition?
+        # We're matching autocomplete text.  If the cursor really moved, update
+        # suggestions and/or hide them.
+        $text = @$('.send-message-text')
+        range = $text.textrange('get')
+        if range.position != prevPosition
+          @showAutocomplete()
 
   onIe9KeyUp: (event) ->
     Ember.run @, ->
