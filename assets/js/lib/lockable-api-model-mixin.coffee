@@ -47,7 +47,7 @@ App.LockableApiModelMixin = Ember.Mixin.create
     api.ajax(url, httpMethod, ajaxHash)
     .then (json) =>
       if ! json? || json.error?
-        Ember.Logger.error "API error committing locked property transaction: #{json.error.message}"
+        Ember.Logger.error "API error committing locked property transaction: #{json?.error.message}"
         rollback(json)
       else
         # For success, ignore the result.  Assume it worked.
