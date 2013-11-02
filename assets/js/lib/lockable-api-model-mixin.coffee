@@ -17,7 +17,7 @@ App.LockableApiModelMixin = Ember.Mixin.create
     lockedProps = @get('_lockedProperties')
     if @arePropertiesLocked(properties)
       throw new Error("You can't lock a property that's already locked; properties=#{Ember.inspect(properties)}, _lockedProperties=#{Ember.inspect(lockedProps)}")
-    lockedProps.pushObjects(lockedProps)
+    lockedProps.pushObjects(properties)
 
   lockProperties: Ember.aliasMethod('lockProperty')
 
@@ -26,7 +26,7 @@ App.LockableApiModelMixin = Ember.Mixin.create
     lockedProps = @get('_lockedProperties')
     if ! @arePropertiesLocked(properties)
       throw new Error("You can't unlock a property that's not locked; properties=#{Ember.inspect(properties)}, _lockedProperties=#{Ember.inspect(lockedProps)}")
-    lockedProps.removeObjects(lockedProps)
+    lockedProps.removeObjects(properties)
 
   unlockProperties: Ember.aliasMethod('unlockProperty')
 
