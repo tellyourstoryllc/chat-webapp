@@ -9,8 +9,11 @@
 </audio>
 
 <div class='rooms-sidebar'>
-  {{#if roomsLoaded}}
-    <ul class='rooms-list'>
+  <ul class='rooms-list'>
+    <li class='room-list-item'>
+      {{#link-to 'rooms.index'}}Lobby{{/link-to}}
+    </li>
+    {{#if roomsLoaded}}
       {{#each room in rooms}}
         <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
@@ -19,10 +22,10 @@
           {{/link-to}}
         </li>
       {{/each}}
-    </ul>
-  {{else}}
-    Loading...
-  {{/if}}
+    {{else}}
+      Loading...
+    {{/if}}
+  </ul>
 
   <div class='current-user-status-bar'>
     <div class='current-user-status' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
