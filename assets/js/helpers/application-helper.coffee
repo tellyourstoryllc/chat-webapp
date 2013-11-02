@@ -19,7 +19,7 @@ Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date, options
   m = moment.utc(date).local()
   daysDiff = m.diff(now, 'days', true)
   relativeTime = switch
-    when daysDiff > -1
+    when daysDiff > -1 && m.date() == now.getDate()
       m.format('LT') # Just time.
     when daysDiff > -7
       m.format('dddd LT') # Day of week, e.g. Thursday.
