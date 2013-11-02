@@ -89,27 +89,29 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
     promise = new Ember.RSVP.Promise (resolve, reject) =>
       if @get('usersLoaded')
-        resolve(false)
+        resolve(null)
       else
         @set('isLoading', true)
         App.Group.fetchById(@get('id'))
         .then (json) =>
           @setProperties(isLoading: false, loadPromise: null)
-          if json? && ! json.error?
-            # Load everything from the response.
-            instances = App.loadAll(json)
 
-            group = instances.find (o) -> o instanceof App.Group
-            group.didLoadMembers()
-            newlyLoadedMessages = false
-            if Ember.isEmpty(group.get('messages'))
-              group.set('messages', instances.filter (o) -> o instanceof App.Message)
-              newlyLoadedMessages = true
-
-            resolve(newlyLoadedMessages)
-            return true
-          else
+          if ! json? || json.error?
             reject(json)
+            return
+
+          # Load everything from the response.
+          loadMetas = App.loadAllWithMetaData(json)
+          instances = App.allInstancesFromLoadMetaData(loadMetas)
+
+          group = instances.find (o) -> o instanceof App.Group
+          group.didLoadMembers()
+          if Ember.isEmpty(group.get('messages'))
+            newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
+              o instanceof App.Message
+            group.set('messages', newMessages)
+
+          resolve(loadMetas)
         , (e) =>
           @setProperties(isLoading: false, loadPromise: null)
           reject(e)
@@ -131,31 +133,23 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   didReconnect: ->
     # We just reconnected.  Fetch any messages we may have missed.
     @fetchMostRecentMessages()
-    .then (instances) =>
-      firstMessage = instances.find (o) -> o instanceof App.Message
-      overlapFound = false
-      if firstMessage?
-        minId = parseInt(firstMessage.get('id'))
-        if ! _.isNaN(minId)
-          currentMessages = @get('messages')
-          for i in [currentMessages.length - 1 .. 0] by -1
-            msgId = parseInt(currentMessages[i].get('id'))
-            if msgId == minId
-              overlapFound = true
-              break
+    .then (loadMetas) =>
+      overlapFound = loadMetas.any ([inst, isNew]) ->
+        # Consider there to be overlap if any of the most recent messages were
+        # already in our store.
+        isNew? && ! isNew && inst instanceof App.Message
 
-      messages = instances.filter (o) -> o instanceof App.Message
+      newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
+        o instanceof App.Message
       if overlapFound
         # After fetching the most recent page of messages, we found that we
         # already had one or more of them.  Notify the user of each message like
         # normal.
-        newMessages = @dedupeMostRecentMessages(messages)
-        # Load user associations and append messages to the display.
         @didReceiveMessage(msg) for msg in newMessages
       else
         # No overlap.  This means that we missed more than a page of messages
         # when disconnected.  Just give up and reload.  Don't notify the user.
-        @set('messages', messages)
+        @set('messages', newMessages)
 
   # Fetch most recent messages, load them, and resolve returned promise to all
   # instances.
@@ -170,12 +164,7 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
       else
         json = Ember.makeArray(json)
         # Load everything from the response.
-        return App.loadAll(json)
-
-  dedupeMostRecentMessages: (messages) ->
-    curMessages = @get('messages')
-    # TODO: speed this up.
-    messages.filter (m) -> ! curMessages.any (oldMsg) -> oldMsg == m
+        return App.loadAllWithMetaData(json)
 
   cancelMessagesSubscription: ->
     @get('subscription')?.cancel()
@@ -196,20 +185,20 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
         Ember.Logger.log "received packet", json
         if ! json?.error? && json.object_type == 'message'
           # We received a new message.
-          message = App.Message.loadRaw(json)
-          @didReceiveMessage(message)
+          [message, isNew] = App.Message.loadRawWithMetaData(json)
+          # If it's a Message we've created before, just ignore it.  Otherwise,
+          # trigger our callback.
+          @didReceiveMessage(message) if isNew
     @set('subscription', subscription)
 
   didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.
     message.fetchAndLoadAssociations()
-    .then (newlyLoadedMessages) =>
-      # If the group and its messages were newly fetched, don't add the message
-      # since it will be a dupe.
-      if ! newlyLoadedMessages
-        @get('messages').pushObject(message)
+    .then (result) =>
+      # Add the message to the room list.
+      @get('messages').pushObject(message)
 
-      return newlyLoadedMessages if options.suppressNotifications
+      return result if options.suppressNotifications
 
       fromCurrentUser = message.get('userId') == App.get('currentUser.id')
       wasMentioned = message.doesMentionUser(App.get('currentUser'))
@@ -237,7 +226,7 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
         App.get('pageTitlesToFlash').unshiftObject(titleObj)
 
       # Make sure to return what we were given for other listeners.
-      return newlyLoadedMessages
+      return result
 
     true
 
@@ -302,17 +291,19 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     api.ajax(api.buildURL("/groups/#{groupId}/messages"), 'GET', data: data)
     .then (json) =>
       @set('isLoadingEarlierMessages', false)
+
       if ! json? || json.error?
         throw json
-      else
-        instances = App.loadAll(Ember.makeArray(json))
-        if Ember.isEmpty(instances)
-          # We've reached the beginning.
-          @set('canLoadEarlierMessages', false)
-        messages = instances.filter (o) -> o instanceof App.Message
-        @get('messages').unshiftObjects(messages)
 
-        return instances
+      loadMetas = App.loadAllWithMetaData(Ember.makeArray(json))
+      if Ember.isEmpty(loadMetas)
+        # We've reached the beginning.
+        @set('canLoadEarlierMessages', false)
+      messages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
+        o instanceof App.Message
+      @get('messages').unshiftObjects(messages)
+
+      return messages
     , (e) =>
       @set('isLoadingEarlierMessages', false)
       throw e
@@ -352,6 +343,15 @@ App.Group.reopenClass
     topic: json.topic
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
+
+  # Given json for a Group and all its associations, load it, and return the
+  # `App.Group` instance.
+  loadSingleGroup: (json) ->
+    instances = App.loadAll(json)
+    group = instances.find (o) -> o instanceof App.Group
+    group.didLoadMembers()
+    if Ember.isEmpty(group.get('messages'))
+      group.set('messages', instances.filter (o) -> o instanceof App.Message)
 
   fetchAll: ->
     api = App.get('api')

@@ -217,22 +217,33 @@ window.App = App = Ember.Application.create
         view = App.get('roomMessagesViews').get(group)
         view?.didLoadMessageImage(element, isEmoticon)
 
-  loadAll: (json, options = {}) ->
-    instances = for attrs in Ember.makeArray(json)
+  loadAllWithMetaData: (json) ->
+    descs = for attrs in Ember.makeArray(json)
       type = @classFromRawObject(attrs)
       if type?
-        type.loadRaw(attrs)
+        if type.loadRawWithMetaData
+          type.loadRawWithMetaData(attrs)
+        else
+          [type.loadRaw(attrs), null]
 
-    instances = instances.compact()
+    descs.compact()
 
-    if options.loadSingleGroup
-      group = instances.find (o) -> o instanceof App.Group
-      group.didLoadMembers()
-      if Ember.isEmpty(group.get('messages'))
-        group.set('messages', instances.filter (o) -> o instanceof App.Message)
+  loadAll: (json) ->
+    @allInstancesFromLoadMetaData(@loadAllWithMetaData(arguments...))
 
-    instances
+  allInstancesFromLoadMetaData: (loadMetas, filterFn = null) ->
+    loadMetas = loadMetas.filter(filterFn) if filterFn?
+    loadMetas.map ([inst]) -> inst
 
+  newInstancesFromLoadMetaData: (loadMetas, filterFn = null) ->
+    loadMetas.filter ([inst, isNew]) ->
+      isNew? && isNew && (! filterFn? || filterFn(inst))
+    .map ([inst]) -> inst
+
+  existingInstancesFromLoadMetaData: (loadMetas, filterFn = null) ->
+    loadMetas.filter ([inst, isNew]) ->
+      isNew? && ! isNew && (! filterFn? || filterFn(inst))
+    .map ([inst]) -> inst
 
   classFromRawObject: (obj) ->
     switch obj.object_type

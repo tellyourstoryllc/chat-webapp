@@ -142,19 +142,25 @@ App.Message.reopenClass
 
   all: -> @_all
 
-  loadRaw: (json) ->
+  loadRawWithMetaData: (json) ->
     props = @propertiesFromRawAttrs(json)
 
     prevInst = props.id? && @_allById[props.id]
     if prevInst?
       prevInst.setProperties(props)
       inst = prevInst
+      isNew = false
     else
       inst = @create(props)
       @_all.pushObject(inst)
       @_allById[props.id] = inst
+      isNew = true
 
-    inst
+    [inst, isNew]
+
+  loadRaw: (json) ->
+    [instance] = @loadRawWithMetaData(arguments...)
+    instance
 
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
