@@ -45,6 +45,29 @@ App.RemoteApi = Ember.Object.extend
     url = '/' + url if url[0] != '/'
     url
 
+  checkin: (data) ->
+    api = App.get('api')
+    api.ajax(api.buildURL('/checkin'), 'POST', data: data)
+    .then (json) =>
+      if ! json? || json.error?
+        throw json
+      else
+        json = Ember.makeArray(json)
+
+        # Get version.
+        meta = json.find (o) -> o.object_type == 'meta'
+        version = meta.emoticons?.version
+        App.set('emoticonsVersion', version) if version?
+
+        objs = json.filter (o) -> o.object_type == 'emoticon'
+        emoticons = objs.map (o) -> App.Emoticon.loadRaw(o)
+
+        userAttrs = json.find (o) -> o.object_type == 'user'
+        throw new Error("Expected to find user in checkin result but didn't") unless userAttrs?
+        user = App.User.loadRaw(userAttrs)
+
+        return user
+
   login: (email, password) ->
     data =
       email: email

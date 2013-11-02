@@ -93,27 +93,23 @@ window.App = App = Ember.Application.create
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
       App.set('isLoggingIn', true)
-      # TODO: Use /checkin since it now returns the current user.
-      api.updateCurrentUser(token: token)
-      .then (json) =>
+      api.checkin(token: token)
+      .then (user) =>
         App.set('isLoggingIn', false)
 
-        if Ember.isArray(json)
-          userJson = json.find (o) -> o.object_type == 'user'
-          user = App.User.loadRaw(userJson)
-          App.login(token, user)
+        App.login(token, user)
 
-          # Automatically transition to somewhere more interesting.
-          transition = App.get('continueTransition')
-          if transition?
-            transition.retry()
-            App.set('continueTransition', null)
-          else
-            appController = App.__container__.lookup('controller:application')
-            # We're currently on the login or home page, so go to the default
-            # place.
-            if appController.get('currentPath') in ['index', 'login']
-              App._getRouter().transitionTo('rooms.index')
+        # Automatically transition to somewhere more interesting.
+        transition = App.get('continueTransition')
+        if transition?
+          transition.retry()
+          App.set('continueTransition', null)
+        else
+          appController = App.__container__.lookup('controller:application')
+          # We're currently on the login or home page, so go to the default
+          # place.
+          if appController.get('currentPath') in ['index', 'login']
+            App._getRouter().transitionTo('rooms.index')
       , (e) =>
         App.set('isLoggingIn', false)
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
@@ -143,9 +139,6 @@ window.App = App = Ember.Application.create
     @set('currentUser', user)
     @set('token', token)
     window.localStorage['token'] = token
-
-    # Fetch emoticons after logging in.
-    App.Emoticon.fetchAll()
 
     # Trigger didLogIn event after we've set up the token and logged in state.
     @get('eventTarget').trigger('didLogIn')
