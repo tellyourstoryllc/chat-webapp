@@ -14,10 +14,10 @@ App.Emoticon = App.BaseModel.extend
 
 App.Emoticon.reopenClass
 
-  # Array of all instances.
+  # Array of all instances.  Public access is with `all()`.
   _all: []
 
-  # Identity map of model instances by ID.
+  # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
 
   # Identity map of model instances by name.
@@ -25,22 +25,24 @@ App.Emoticon.reopenClass
 
   _allArranged: null
 
-  all: -> @_all
-
-  loadRaw: (json) ->
+  # Note: this differs from the base class in that it has an identity map by
+  # name.
+  loadRawWithMetaData: (json) ->
     props = @propertiesFromRawAttrs(json)
 
     prevInst = props.id? && @_allById[props.id]
     if prevInst?
       prevInst.setProperties(props)
       inst = prevInst
+      isNew = false
     else
       inst = @create(props)
       @_all.pushObject(inst)
       @_allById[props.id] = inst
       @_allByName[props.name] = inst
+      isNew = true
 
-    inst
+    [inst, isNew]
 
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')

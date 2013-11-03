@@ -134,33 +134,11 @@ App.Message.reopenClass
   # ID representing @all mention.  Yes, a string to match the type of other IDs.
   mentionAllId: '-1'
 
-  # Array of all instances.
+  # Array of all instances.  Public access is with `all()`.
   _all: []
 
-  # Identity map of model instances by ID.
+  # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
-
-  all: -> @_all
-
-  loadRawWithMetaData: (json) ->
-    props = @propertiesFromRawAttrs(json)
-
-    prevInst = props.id? && @_allById[props.id]
-    if prevInst?
-      prevInst.setProperties(props)
-      inst = prevInst
-      isNew = false
-    else
-      inst = @create(props)
-      @_all.pushObject(inst)
-      @_allById[props.id] = inst
-      isNew = true
-
-    [inst, isNew]
-
-  loadRaw: (json) ->
-    [instance] = @loadRawWithMetaData(arguments...)
-    instance
 
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
@@ -177,9 +155,6 @@ App.Message.reopenClass
     imageUrl: json.image_url
     imageThumbUrl: json.image_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
-
-  lookup: (id) ->
-    @_allById[App.BaseModel.coerceId(id)]
 
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->

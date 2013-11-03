@@ -51,31 +51,11 @@ App.User.reopenClass
     Ember.Object.create(title: 'Do not disturb', name: 'do_not_disturb')
   ]
 
-  # Array of all instances.
+  # Array of all instances.  Public access is with `all()`.
   _all: []
 
-  # Identity map of model instances by ID.
+  # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
-
-  all: -> @_all
-
-  loadRaw: (json) ->
-    props = @propertiesFromRawAttrs(json)
-    props.isLoaded = true
-
-    prevInst = props.id? && @_allById[props.id]
-    if prevInst?
-      prevInst.setProperties(props)
-      inst = prevInst
-    else
-      inst = App.User.create(props)
-      @_all.pushObject(inst)
-      @_allById[props.id] = inst
-
-    inst
-
-  lookup: (id) ->
-    @_allById[App.BaseModel.coerceId(id)]
 
   propertiesFromRawAttrs: (json) ->
     id: App.BaseModel.coerceId(json.id)
