@@ -34,6 +34,11 @@ App.RoomsIndexView = Ember.View.extend
     @$('.lobby-room-menu').fadeOut(300)
     @set('isRoomMenuVisible', false)
 
+  isAdminOfMenuRoom: Ember.computed.alias('menuRoom.isCurrentUserAdmin')
+
+  _rowView: (room) ->
+    @get('roomsRows').find (view) -> view.get('room') == room
+
   actions:
 
     toggleRoomMenu: (room) ->
@@ -41,6 +46,12 @@ App.RoomsIndexView = Ember.View.extend
         @closeRoomMenu()
       else
         @showRoomMenu(room)
+      return undefined
+
+    renameRoom: ->
+      room = @get('menuRoom')
+      return unless room?
+      @_rowView(room)?.send('renameRoom', room)
       return undefined
 
     leaveRoom: ->

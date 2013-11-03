@@ -52,6 +52,10 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     _.pluck sorted, 'user'
   ).property('members.@each.name', 'members.@each.sortableComputedStatus')
 
+  isCurrentUserAdmin: (->
+    @get('adminIds').contains(App.get('currentUser.id'))
+  ).property('App.currentUser.id', 'adminIds.@each')
+
   # You should call this after all the User instances have been loaded for the
   # group.
   didLoadMembers: ->

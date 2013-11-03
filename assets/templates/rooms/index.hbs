@@ -18,27 +18,19 @@
       <tr>
         <th colspan='3'>Rooms</th>
       </tr>
-      {{#each room in rooms itemViewClass='App.RoomsTableRowView'}}
+      {{#each room in rooms itemViewClass='App.RoomsTableRowView' viewName='roomsRows'}}
         <td>
           {{#if view.isRenaming}}
             <form>
               {{input type='text' value=view.newName classNames='new-name' placeholder='New Name'}}
               <button type='submit' {{action 'saveRoomName' room target='view'}}
                 {{bind-attr disabled='room.isNameLocked'}}>Save</button>
+              <a href='#' {{action 'cancelRenamingRoom' target='view'}} class='cancel'>Cancel</a>
             </form>
           {{else}}
             <div class='room-name'>
               {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
             </div>
-          {{/if}}
-        </td>
-        <td>
-          {{#if view.isRenaming}}
-            <a href='#' {{action 'cancelRenamingRoom' target='view'}}>Cancel</a>
-          {{else}}
-            {{#if view.isAdmin}}
-              <a href='#' {{action 'renameRoom' room target='view'}}>Rename</a>
-            {{/if}}
           {{/if}}
         </td>
         <td>
@@ -49,6 +41,7 @@
     </table>
 
     <ul class='menu lobby-room-menu' role='menu'>
+      <li {{bind-attr class=':menu-item lobbyView.isAdminOfMenuRoom::disabled'}} {{action 'renameRoom' target=lobbyView}}>Rename Room</li>
       <li class='menu-item' {{action 'leaveRoom' target=lobbyView}}>Leave Room</li>
     </ul>
   {{/with}}

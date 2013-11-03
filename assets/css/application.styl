@@ -51,18 +51,22 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   background-color #ccc
   border-radius 4px
   box-shadow 0 0 3px rgba(0,0,0, .2)
+  z-index 100
 
   .menu-item
     padding 5px 10px
     cursor pointer
 
-    &:hover
+    &:hover:not(.disabled)
       background-color #E0E0E0
 
   .separator
     height 0
     border 1px solid #888
     border-bottom-color #eee
+
+.disabled
+  opacity .6
 
 .status-dot
   display inline-block
@@ -311,6 +315,9 @@ body.logged-out
   .room-name
     width 200px
     overflow ellipsis
+
+  .cancel
+    font-size 10px
 
 .lobby-room-menu
   position absolute
