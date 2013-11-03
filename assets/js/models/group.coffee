@@ -153,7 +153,9 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
       else
         # No overlap.  This means that we missed more than a page of messages
         # when disconnected.  Just give up and reload.  Don't notify the user.
-        @set('messages', newMessages)
+        @get('messages').clear()
+        for msg in newMessages
+          @didReceiveMessage(msg, suppressNotifications: true)
 
   # Fetch most recent messages, load them, and resolve returned promise to all
   # instances.
