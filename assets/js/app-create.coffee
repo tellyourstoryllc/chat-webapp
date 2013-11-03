@@ -53,6 +53,9 @@ window.App = App = Ember.Application.create
   # User preferences like notification settings.
   preferences: null
 
+  # The `App.RoomsContainerComponent` currently being displayed.
+  roomsContainerView: null
+
   # Ember.Map whose keys are `App.Group` instances, and values are
   # `App.RoomMessagesView` instances.
   roomMessagesViews: null

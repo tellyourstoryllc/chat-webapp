@@ -13,6 +13,8 @@ App.RoomsContainerComponent = Ember.Component.extend
     @set('suggestions', [])
 
   didInsertElement: ->
+    App.set('roomsContainerView', @)
+
     $(window).on 'resize', @resize
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
@@ -29,6 +31,8 @@ App.RoomsContainerComponent = Ember.Component.extend
       @setFocus()
 
   willDestroyElement: ->
+    App.set('roomsContainerView', null)
+
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
     $(document).off 'click', '.sender', @clickSender
@@ -308,6 +312,9 @@ App.RoomsContainerComponent = Ember.Component.extend
     chooseFile: ->
       @$('.send-message-file').trigger('click')
       return undefined
+
+    attachUrl: (url) ->
+      @$('.send-message-text').textrange('replace', url)
 
     didSelectSuggestion: (suggestion) ->
       # User selected a suggestion.  Expand the value into the text.
