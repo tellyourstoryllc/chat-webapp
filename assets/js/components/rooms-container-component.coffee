@@ -342,7 +342,7 @@ App.RoomsContainerComponent = Ember.Component.extend
       msg = App.Message.create
         userId: App.get('currentUser.id')
         groupId: groupId
-        text: text
+        localText: text
         imageFile: file
         mentionedUserIds: App.Message.mentionedIdsInText(text, group.get('members'))
       App.Message.sendNewMessage(msg)

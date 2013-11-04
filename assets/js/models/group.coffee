@@ -24,15 +24,30 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   # Faye subscription to listen for updates.
   subscription: null
 
+  # Message processor extensions.  For example, encryption is implemented as a
+  # processor.
+  processors: null
+
   # Used to expire cache of members association.
   _membersAssociationLoaded: 0
 
   init: ->
     @_super(arguments...)
+
+    processors = []
+
+    # Load the key.
+    id = @get('id')
+    symmetricKey = App.loadConfig('symmetricKey', if id? then "Group:#{id}")
+    # If we have a key, use the encryption processor.
+    if symmetricKey?
+      processors.pushObject App.AesEncryptionProcessor.create(key: symmetricKey)
+
     @setProperties
       messages: []
       memberIds: []
       notificationResults: []
+      processors: processors
 
   members: (->
     @get('memberIds').map((id) -> App.User.lookup(id)).compact()
@@ -313,6 +328,38 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     , (e) =>
       @set('isLoadingEarlierMessages', false)
       throw e
+
+  processIncomingMessageText: (message, text) ->
+    newText = text
+    for processor in @get('processors')
+      if Ember.typeOf(processor) == 'instance'
+        target = processor.get('target')
+        method = processor.get('incoming')
+      else
+        target = processor.target
+        method = processor.incoming
+      target ?= processor
+      method = target[method] if Ember.typeOf(method) == 'string'
+      if method?
+        newText = method.call(target, message, newText)
+
+    newText
+
+  processOutgoingMessageText: (message, text) ->
+    newText = text
+    for processor in @get('processors')
+      if Ember.typeOf(processor) == 'instance'
+        target = processor.get('target')
+        method = processor.get('outgoing')
+      else
+        target = processor.target
+        method = processor.outgoing
+      target ?= processor
+      method = target[method] if Ember.typeOf(method) == 'string'
+      if method?
+        newText = method.call(target, message, newText)
+
+    newText
 
 
 App.Group.reopenClass
