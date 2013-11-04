@@ -217,15 +217,15 @@ App.Message.reopenClass
         if ! json? || json.error?
           # Reject the promise.
           throw json
-        else
-          json = Ember.makeArray(json)
-          msgAttrs = json.find (o) -> o.object_type == 'message'
-          @didCreateRecord(message, msgAttrs)
 
-          return message
-      , (e) =>
+        json = Ember.makeArray(json)
+        msgAttrs = json.find (o) -> o.object_type == 'message'
+        @didCreateRecord(message, msgAttrs)
+
+        return message
+      , (xhr) =>
         message.set('isSaving', false)
-        throw e
+        throw xhr.responseJSON
     else
       # The instance is used by the faye extension.
       data.messageInstance = message
@@ -237,10 +237,10 @@ App.Message.reopenClass
           Ember.run @, ->
             message.set('isSaving', false)
             resolve(result)
-        , (result) =>
+        , (error) =>
           Ember.run @, ->
             message.set('isSaving', false)
-            reject(result)
+            reject(error)
 
   didCreateRecord: (message, attrs) ->
     hadId = message.get('id')?
