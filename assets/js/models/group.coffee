@@ -25,7 +25,9 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
   subscription: null
 
   # Message processor extensions.  For example, encryption is implemented as a
-  # processor.
+  # processor.  Processors are called in order, with first being on the network
+  # side and last being on the user-facing side.  I.e. it's like a stack and the
+  # order is reversed depending on which way the message is going.
   processors: null
 
   # Used to expire cache of members association.
@@ -347,7 +349,7 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
   processOutgoingMessageText: (message, text) ->
     newText = text
-    for processor in @get('processors')
+    for processor in @get('processors') by -1
       if Ember.typeOf(processor) == 'instance'
         target = processor.get('target')
         method = processor.get('outgoing')
