@@ -83,6 +83,10 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     @isPropertyLocked('name')
   ).property('_lockedProperties.@each')
 
+  isEncrypted: (->
+    @get('processors').any (p) -> p instanceof App.AesEncryptionProcessor
+  ).property('processors.@each')
+
   isOpenChanged: (->
     if @get('isOpen')
       @open()

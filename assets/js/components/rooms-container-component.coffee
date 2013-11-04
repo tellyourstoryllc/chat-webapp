@@ -72,6 +72,11 @@ App.RoomsContainerComponent = Ember.Component.extend
       @updateSize()
   , 5
 
+  activeRoomIsEncryptedChanged: (->
+    Ember.run.schedule 'afterRender', @, ->
+      @updateSize()
+  ).observes('activeRoom.isEncrypted')
+
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
@@ -115,6 +120,11 @@ App.RoomsContainerComponent = Ember.Component.extend
       textWidth -= @$('.send-message-file-button').outerWidth() + 4
     @$('.send-message-text').css
       width: Math.max(10, textWidth)
+
+    # The send message file button.
+    if App.doesBrowserSupportAjaxFileUpload()
+      @$('.send-message-file-button').css
+        right: @$('.send-button').outerWidth() + 10
 
   setFocus: ->
     @$('.send-message-text')?.focus()
