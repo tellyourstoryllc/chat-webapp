@@ -129,7 +129,7 @@
             </button>
             <input type='file' class='send-message-file'>
           {{/if}}
-          <button type='button' {{action 'sendMessage' target=roomsContainer}} class='send-button'>Send</button>
+          <button type='button' {{action 'sendMessage' target=roomsContainer}} {{bind-attr class=':send-button activeRoom.isEncrypted:encrypted-send-button'}}>Send</button>
         </div>
 
         {{message-autocomplete viewName='autocompleteView'

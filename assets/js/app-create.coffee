@@ -257,6 +257,14 @@ window.App = App = Ember.Application.create
       when 'user'
         App.User
 
+  loadConfig: (key, scope = null) ->
+    value = undefined
+    if scope?
+      value ?= window.localStorage.getItem("#{key}.#{scope}")
+    value ?= window.localStorage.getItem("#{key}")
+
+    value
+
 
 if Modernizr.history
   # Browser supports pushState.

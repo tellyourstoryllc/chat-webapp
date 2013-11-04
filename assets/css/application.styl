@@ -531,7 +531,6 @@ room-members-sidebar-width = 150px
   .send-message-file-button
     position absolute
     top 5px
-    right 63px
     margin 0
     padding 8px
     font-size 14px
@@ -547,6 +546,12 @@ room-members-sidebar-width = 150px
     margin 0
     padding 8px
     font-size 14px
+
+    &.encrypted-send-button
+      background-color #00A053
+
+      &:after
+        content " Encrypted"
 
 .autocomplete
   position absolute

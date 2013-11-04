@@ -2,6 +2,10 @@
 
 App.Message = App.BaseModel.extend
 
+  # Message text when the message was created locally.  This is never sent over
+  # the wire without first going through the processing pipe.
+  localText: null
+
   # Error message to diplay to the user.
   errorMessage: null
 
@@ -30,6 +34,22 @@ App.Message = App.BaseModel.extend
     "#{userName} | #{roomName}"
   ).property('user.name', 'group.name')
 
+  # Use this property whenever displaying message text to the user.
+  userFacingText: (->
+    localText = @get('localText')
+    return localText if localText?
+
+    @get('group').processIncomingMessageText(@, @get('text'))
+  ).property('localText', 'text')
+
+  # Use this property whenever sending message text over the wire.
+  networkFacingText: (->
+    text = @get('text')
+    return text if text?
+
+    @get('group').processOutgoingMessageText(@, @get('localText'))
+  ).property('localText', 'text')
+
   # This is the html text with emoticons and mentions.
   body: (->
     # For some reason, this is getting triggered on rooms that haven't been
@@ -37,9 +57,12 @@ App.Message = App.BaseModel.extend
     # without doing anything since the result will be bogus anyway.
     return null if ! @get('group.usersLoaded')
 
-    text = @get('text')
+    # When the current user sends a message, show his or her text prior to
+    # processing.
+    userFacingText = @get('userFacingText')
 
-    escapedText = Ember.Handlebars.Utils.escapeExpression(text)
+    escape = Ember.Handlebars.Utils.escapeExpression
+    escapedText = escape(userFacingText)
 
     # Link to URLs.  I know this looks overly complicated, but there's a reason.
     # See http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html We
@@ -98,7 +121,6 @@ App.Message = App.BaseModel.extend
 
     # Emoticons.
     groupId = @get('groupId')
-    escape = Ember.Handlebars.Utils.escapeExpression
     evaledText = App.Emoticon.all().reduce (str, emoticon) ->
       regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
       imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
@@ -111,7 +133,7 @@ App.Message = App.BaseModel.extend
   # Note: We omit group members' names from dependent keys since we don't care
   # about updating mentions when a user changes his/her name or a new user joins
   # or leaves the room.
-  ).property('App.emoticonsVersion', 'text', 'group.usersLoaded')
+  ).property('App.emoticonsVersion', 'userFacingText', 'group.usersLoaded')
 
   isSentByCurrentUser: (->
     userId = @get('userId')
@@ -125,7 +147,7 @@ App.Message = App.BaseModel.extend
     # TODO: icon field.
     tag: @get('groupId')
     title: @get('title')
-    body: @get('text')
+    body: @get('userFacingText')
     icon: {}
 
 
@@ -160,10 +182,16 @@ App.Message.reopenClass
   sendNewMessage: (message) ->
     groupId = message.get('groupId')
     data = {}
-    for key in ['text', 'imageFile']
+    for key in ['imageFile']
       val = message.get(key)
       if val?
         data[key.underscore()] = val
+
+    # Process text prior to sending over the wire.
+    networkFacingText = message.get('networkFacingText')
+    message.set('text', networkFacingText)
+    if networkFacingText?
+      data.text = networkFacingText
 
     mentionedUserIds = message.get('mentionedUserIds')
     if ! Ember.isEmpty(mentionedUserIds)

@@ -5,6 +5,7 @@
 #= require vendor/modernizr
 #= require vendor/moment
 #= require vendor/jquery-textrange
+#= require vendor/sjcl
 #= require desktop-notify
 #= require platform-tests
 #
