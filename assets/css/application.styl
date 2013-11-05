@@ -320,8 +320,15 @@ body.logged-out
     background-color #F8F8F8
 
   .room-name
-    width 200px
-    overflow ellipsis
+    min-width 200px
+
+    .topic
+      display inline-block
+      max-width 200px
+      overflow ellipsis
+      color #aaa
+      font-size 11px
+      vertical-align middle
 
   .cancel
     font-size 10px
