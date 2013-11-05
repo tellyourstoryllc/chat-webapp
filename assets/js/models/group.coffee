@@ -215,12 +215,21 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
     subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
       Ember.run @, ->
         Ember.Logger.log "received packet", json
-        if ! json?.error? && json.object_type == 'message'
+        if ! json? || json.error?
+          return
+
+        if json.object_type == 'message'
           # We received a new message.
           [message, isNew] = App.Message.loadRawWithMetaData(json)
           # If it's a Message we've created before, just ignore it.  Otherwise,
           # trigger our callback.
           @didReceiveMessage(message) if isNew
+
+        if json.object_type == 'group'
+          # We received an update to the group.
+          #
+          # TODO: create join and leave messages here.
+          App.Group.loadRawWithMetaData(json)
     @set('subscription', subscription)
 
   didReceiveMessage: (message, options = {}) ->
