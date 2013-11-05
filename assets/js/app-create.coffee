@@ -61,6 +61,13 @@ window.App = App = Ember.Application.create
   roomMessagesViews: null
 
   ready: ->
+    Ember.onerror = (e) ->
+      # TODO: Send error to server.
+
+      Ember.Logger.error(e.message, e, e?.stack ? e?.stacktrace)
+
+      undefined
+
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
       # we have a hash, we were probably on IE9 or below and refreshed the page
