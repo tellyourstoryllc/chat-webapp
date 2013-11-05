@@ -13,6 +13,11 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
       newRoomName: ''
       createGroupErrorMessage: null
 
+  resetJoinRoom: ->
+    @setProperties
+      joinCode: ''
+      joinRoomErrorMessage: null
+
   actions:
 
     createRoom: ->
@@ -33,5 +38,36 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         # Show error message.
         @set('createGroupErrorMessage', e?.error?.message ? "There was an error.  Please try again.")
         throw e
+
+      return undefined
+
+    joinRoom: ->
+      joinCode = @get('joinCode') ? ''
+      joinCode = joinCode.trim()
+      return if Ember.isEmpty(joinCode)
+
+      matches = joinCode.match(/^[^\?]*\/join\/([a-zA-Z0-9]+)/)
+      if matches
+        # If we were given a URL, strip out the join code.
+        joinCode = matches[1]
+
+      @set('isJoiningRoom', true)
+      App.get('api').joinGroup(joinCode)
+      .then (json) =>
+        @set('isJoiningRoom', false)
+        if ! json? || json.error?
+          @set('joinRoomErrorMessage', json?.error.message ? "There was an error.  Please try again.")
+          return
+
+        # Group was joined successfully.
+        @resetJoinRoom()
+        group = App.Group.loadSingleGroup(json)
+        if group?
+          @get('target').send('goToRoom', group)
+      , (xhr) =>
+        @set('isJoiningRoom', false)
+        # Show error message.
+        msg = xhr?.responseJSON?.error?.message
+        @set('joinRoomErrorMessage', msg ? "There was an error.  Please try again.")
 
       return undefined
