@@ -8,6 +8,11 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     null
   ).property()
 
+  isSubscribedToUpdates: true
+
+  subscribeToMessages: ->
+    # Ignore.  Assume we're already listening on the user channel.
+
   mostRecentMessagesUrl: (->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
   ).property('id')

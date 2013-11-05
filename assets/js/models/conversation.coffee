@@ -14,9 +14,6 @@ App.Conversation = Ember.Mixin.create
 
   isUnread: false
 
-  # Faye subscription to listen for updates.
-  subscription: null
-
   # Boolean set to false when the beginning of the messages is reached.
   canLoadEarlierMessages: true
   isLoadingEarlierMessages: false
@@ -136,10 +133,6 @@ App.Conversation = Ember.Mixin.create
 
     promise
 
-  isSubscribedToUpdates: (->
-    @get('subscription')?
-  ).property('subscription')
-
   isFayeClientConnectedChanged: (->
     if ! @get('isSubscribedToUpdates')
       # If we're not listening, we don't care.
@@ -192,58 +185,42 @@ App.Conversation = Ember.Mixin.create
         # Load everything from the response.
         return App.loadAllWithMetaData(json)
 
-  cancelMessagesSubscription: ->
-    @get('subscription')?.cancel()
-    @set('subscription', null)
-
-  subscribeToMessages: ->
-    # If we already have a subscription, we're done.
-    return if @get('subscription')?
-
-    client = App.get('fayeClient')
-    groupId = @get('id')
-    if ! groupId?
-      Ember.Logger.warn "I can't subscribe to messages without a group ID."
+  didReceiveUpdateFromFaye: (json) ->
+    Ember.Logger.log "received packet", json
+    if ! json? || json.error?
       return
 
-    subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
-      Ember.run @, ->
-        Ember.Logger.log "received packet", json
-        if ! json? || json.error?
-          return
+    if json.object_type == 'message'
+      # We received a new message.
+      [message, isNew] = App.Message.loadRawWithMetaData(json)
+      # If it's a Message we've created before, just ignore it.  Otherwise,
+      # trigger our callback.
+      @didReceiveMessage(message) if isNew
 
-        if json.object_type == 'message'
-          # We received a new message.
-          [message, isNew] = App.Message.loadRawWithMetaData(json)
-          # If it's a Message we've created before, just ignore it.  Otherwise,
-          # trigger our callback.
-          @didReceiveMessage(message) if isNew
+    if json.object_type in ['group', 'one_on_one']
+      # We received an update to the conversation.
+      type = App.classFromRawObject(json)
+      convo = type.lookup(json.id)
+      oldMemberIds = convo.get('memberIds').copy()
 
-        if json.object_type in ['group', 'one_on_one']
-          # We received an update to the conversation.
-          type = App.classFromRawObject(json)
-          convo = type.lookup(json.id)
-          oldMemberIds = convo.get('memberIds').copy()
+      # Load the new data.
+      @constructor.loadRawWithMetaData(json)
 
-          # Load the new data.
-          @constructor.loadRawWithMetaData(json)
-
-          # Create join and leave messages here.
-          newMemberIds = convo.get('memberIds')
-          oldMemberIds.forEach (oldId) =>
-            if ! newMemberIds.contains(oldId)
-              user = App.User.lookup(oldId)
-              message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
-              @didReceiveMessage(message, suppressNotifications: true)
-          newMemberIds.forEach (newId) =>
-            if ! oldMemberIds.contains(newId)
-              # TODO: The user might not be loaded yet here.  Fetch the user
-              # before proceeding.
-              user = App.User.lookup(newId)
-              if user?
-                message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
-                @didReceiveMessage(message, suppressNotifications: true)
-    @set('subscription', subscription)
+      # Create join and leave messages here.
+      newMemberIds = convo.get('memberIds')
+      oldMemberIds.forEach (oldId) =>
+        if ! newMemberIds.contains(oldId)
+          user = App.User.lookup(oldId)
+          message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
+          @didReceiveMessage(message, suppressNotifications: true)
+      newMemberIds.forEach (newId) =>
+        if ! oldMemberIds.contains(newId)
+          # TODO: The user might not be loaded yet here.  Fetch the user
+          # before proceeding.
+          user = App.User.lookup(newId)
+          if user?
+            message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
+            @didReceiveMessage(message, suppressNotifications: true)
 
   didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.

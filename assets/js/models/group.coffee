@@ -3,6 +3,9 @@
 
 App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
+  # Faye subscription to listen for updates.
+  subscription: null
+
   isCurrentUserAdmin: (->
     @get('adminIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'adminIds.@each')
@@ -10,6 +13,10 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   isNameLocked: (->
     @isPropertyLocked('name')
   ).property('_lockedProperties.@each')
+
+  isSubscribedToUpdates: (->
+    @get('subscription')?
+  ).property('subscription')
 
   close: ->
     @_super(arguments...)
@@ -21,6 +28,25 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
       usersLoaded: false
       messages: []
       canLoadEarlierMessages: true
+
+  cancelMessagesSubscription: ->
+    @get('subscription')?.cancel()
+    @set('subscription', null)
+
+  subscribeToMessages: ->
+    # If we already have a subscription, we're done.
+    return if @get('subscription')?
+
+    client = App.get('fayeClient')
+    groupId = @get('id')
+    if ! groupId?
+      Ember.Logger.warn "I can't subscribe to messages without a group ID."
+      return
+
+    subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
+      Ember.run @, ->
+        @didReceiveUpdateFromFaye(json)
+    @set('subscription', subscription)
 
   mostRecentMessagesUrl: (->
     App.get('api').buildURL("/groups/#{@get('id')}/messages")
