@@ -153,13 +153,32 @@ window.App = App = Ember.Application.create
     # Trigger didLogIn event after we've set up the token and logged in state.
     @get('eventTarget').trigger('didLogIn')
 
-    # Listen for status updates from other users and echoes of our own status.
+    # Listen for status updates from other users, echoes of our own status, and
+    # one to one messages.
     subscription = @get('fayeClient').subscribe "/users/#{user.get('id')}", (json) =>
       Ember.run @, ->
         Ember.Logger.log "received user packet", json
-        if ! json?.error? && json.object_type == 'user'
+        if ! json? || json.error?
+          return
+
+        if json.object_type == 'user'
           # We received a user status update.
           App.loadAll(json)
+        else if json.object_type == 'message' && json.one_to_one_id?
+          # We received a new 1-1 message.
+          App.OneToOne.find(json.one_to_one_id)
+          .then (oneToOne) =>
+            oneToOne.didReceiveUpdateFromFaye(json)
+        else if json.object_type == 'one_to_one'
+          # We received an update to a OneToOne.
+          oneToOne = App.OneToOne.lookup(oneToOneJson.id)
+          if oneToOne?
+            # If we've loaded this OneToOne before, notify the existing instance
+            # so that it can handle changes.
+            oneToOne.didReceiveUpdateFromFaye(json)
+          else
+            # This is a OneToOne we've never seen before, so just load it.
+            App.loadAll(json)
         return undefined
 
     subscription.then =>
@@ -263,6 +282,8 @@ window.App = App = Ember.Application.create
         App.Group
       when 'message'
         App.Message
+      when 'one_to_one'
+        App.OneToOne
       when 'user'
         App.User
 

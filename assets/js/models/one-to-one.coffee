@@ -34,8 +34,38 @@ App.OneToOne.reopenClass
     id: @coerceId(json.id)
     memberIds: (json.member_ids ? []).map (id) -> @coerceId(id)
 
+  # Lookup by id.  If we don't have it, fetch and load.  Returns a promise that
+  # resolves to the model instance.
+  find: (id) ->
+    new Ember.RSVP.Promise (resolve, reject) =>
+      inst = @lookup(id)
+      if inst?
+        resolve(inst)
+      else
+        resolve(@fetchAndLoadSingle(id))
+
+  # Fetches a OneToOne by id and returns a promise that resolves to the OneToOne
+  # instance.
+  fetchAndLoadSingle: (id) ->
+    @fetchById(id)
+    .then (json) =>
+      if ! json? || json.error?
+        throw json
+      return @loadSingle(json)
+
   fetchById: (id) ->
     api = App.get('api')
     data =
       limit: 100
     api.ajax(api.buildURL("/one_to_ones/#{id}"), 'GET', data: data)
+
+  # Given json for a OneToOne and all its associations, load it, and return the
+  # `App.OneToOne` instance.
+  loadSingle: (json) ->
+    instances = App.loadAll(json)
+    oneToOne = instances.find (o) -> o instanceof App.OneToOne
+    oneToOne.didLoadMembers()
+    if Ember.isEmpty(oneToOne.get('messages'))
+      oneToOne.set('messages', instances.filter (o) -> o instanceof App.Message)
+
+    oneToOne
