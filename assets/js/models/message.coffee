@@ -93,6 +93,7 @@ App.Message = App.BaseModel.extend
         display = bareDomain
         # Make sure to carry over trailing character.
         suffix = trailingChar ? ''
+
       if fullMatch[0] == '('
         prefix = '('
         if url.slice(-1) == ')'
@@ -100,9 +101,13 @@ App.Message = App.BaseModel.extend
           url = url[0 ... -1]
           display = display[0 ... -1]
           suffix = ')'
+
       if useTruncation && display.length > 100
         attrs = " title='#{display}'"
         display = "#{display[0...100]}..."
+        # Allow soft line break after slashes in a URL.
+        display = display.replace /\//g, '/<wbr>'
+
       "#{prefix}<a href='#{url}'#{attrs} target='_blank'>#{display}</a>#{suffix}"
 
     # Mentions.
