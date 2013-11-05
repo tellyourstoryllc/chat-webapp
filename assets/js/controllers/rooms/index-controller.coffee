@@ -63,6 +63,7 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         @resetJoinRoom()
         group = App.Group.loadSingleGroup(json)
         if group?
+          group.set('isDeleted', false)
           @get('target').send('goToRoom', group)
       , (xhr) =>
         @set('isJoiningRoom', false)

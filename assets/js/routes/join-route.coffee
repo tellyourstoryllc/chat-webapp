@@ -27,6 +27,7 @@ App.JoinRoute = Ember.Route.extend
           # Load everything from the response.
           group = App.Group.loadSingleGroup(json)
           if group?
+            group.set('isDeleted', false)
             @transitionTo('rooms.room', group)
         else if json.error
           controller.set('userMessage', json.error)

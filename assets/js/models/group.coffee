@@ -427,6 +427,8 @@ App.Group.reopenClass
     if Ember.isEmpty(group.get('messages'))
       group.set('messages', instances.filter (o) -> o instanceof App.Message)
 
+    group
+
   fetchAll: ->
     api = App.get('api')
     api.ajax(api.buildURL('/groups'), 'GET', data: {})
