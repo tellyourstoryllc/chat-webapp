@@ -40,6 +40,9 @@ App.BaseModel.reopenClass
   # Removes given instances from our store.  Does not modify instances.
   discardRecords: (instances) ->
     for instance in Ember.makeArray(instances)
+      # Only discard records of this type.
+      continue if instance not instanceof @
+
       id = instance.get('id')
       delete @_allById[id] if id?
       # TODO: This is linear on all our objects...
