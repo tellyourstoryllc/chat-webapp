@@ -9,13 +9,19 @@ App.Message = App.BaseModel.extend
   # Error message to diplay to the user.
   errorMessage: null
 
+  conversation: Ember.computed.any('group', 'oneToOne')
+
   group: (->
     App.Group.lookup(@get('groupId'))
   ).property('groupId')
 
+  oneToOne: (->
+    App.OneToOne.lookup(@get('one_to_one_id'))
+  ).property('oneToOneId')
+
   user: (->
     App.User.lookup(@get('userId'))
-  ).property('userId', 'group._membersAssociationLoaded')
+  ).property('userId', 'conversation._membersAssociationLoaded')
 
   mentionedUsers: (->
     @get('mentionedUserIds').map (id) -> App.User.lookup(id)
@@ -29,17 +35,25 @@ App.Message = App.BaseModel.extend
     mentionedUserIds.any (id) -> id == userId
 
   title: (->
-    userName = @get('user.name') ? "User #{@get('userId')}"
-    roomName = @get('group.name') ? "Room #{@get('groupId')}"
-    "#{userName} | #{roomName}"
-  ).property('user.name', 'group.name')
+    parts = [@get('user.name') ? "User #{@get('userId')}"]
+
+    convo = @get('conversation')
+    roomName = if convo?
+      convo.get('name')
+    else if @get('groupId')?
+      "Room #{@get('groupId')}"
+    else if @get('oneToOneId')?
+      "1-on-1 with User #{@get('oneToOneId')}"
+
+    parts.join(' | ')
+  ).property('user.name', 'conversation.name')
 
   # Use this property whenever displaying message text to the user.
   userFacingText: (->
     localText = @get('localText')
     return localText if localText?
 
-    @get('group').processIncomingMessageText(@, @get('text'))
+    @get('conversation').processIncomingMessageText(@, @get('text'))
   ).property('localText', 'text')
 
   # Use this property whenever sending message text over the wire.
@@ -47,7 +61,7 @@ App.Message = App.BaseModel.extend
     text = @get('text')
     return text if text?
 
-    @get('group').processOutgoingMessageText(@, @get('localText'))
+    @get('conversation').processOutgoingMessageText(@, @get('localText'))
   ).property('localText', 'text')
 
   # This is the html text with emoticons and mentions.
@@ -55,7 +69,7 @@ App.Message = App.BaseModel.extend
     # For some reason, this is getting triggered on rooms that haven't been
     # loaded yet.  Since this is a fairly expensive computation, just exit
     # without doing anything since the result will be bogus anyway.
-    return null if ! @get('group.usersLoaded')
+    return null if ! @get('conversation.usersLoaded')
 
     # When the current user sends a message, show his or her text prior to
     # processing.
@@ -112,8 +126,8 @@ App.Message = App.BaseModel.extend
 
     # Mentions.
     currentUser = App.get('currentUser')
-    group = @get('group')
-    groupMembers = group.get('members')
+    convo = @get('conversation')
+    groupMembers = convo.get('members')
     evaledText = evaledText.replace /@(\w+)/g, (fullMatch, name) ->
       user = App.User.userMentionedInGroup(name, groupMembers)
       isAll = /^all$/i.test(name)
@@ -135,10 +149,10 @@ App.Message = App.BaseModel.extend
     , evaledText
 
     evaledText.htmlSafe()
-  # Note: We omit group members' names from dependent keys since we don't care
-  # about updating mentions when a user changes his/her name or a new user joins
-  # or leaves the room.
-  ).property('App.emoticonsVersion', 'userFacingText', 'group.usersLoaded')
+  # Note: We omit conversation members' names from dependent keys since we don't
+  # care about updating mentions when a user changes his/her name or a new user
+  # joins or leaves the room.
+  ).property('App.emoticonsVersion', 'userFacingText', 'conversation.usersLoaded')
 
   isSentByCurrentUser: (->
     userId = @get('userId')
@@ -146,11 +160,16 @@ App.Message = App.BaseModel.extend
   ).property('userId', 'App.currentUser.id')
 
   fetchAndLoadAssociations: ->
-    @get('group').fetchAndLoadAssociations()
+    @get('conversation').fetchAndLoadAssociations()
+
+  notificationTag: (->
+    convo = @get('conversation')
+    "#{convo.constructor}:#{convo.get('id')}"
+  ).property('conversation.id')
 
   toNotification: ->
     # TODO: icon field.
-    tag: @get('groupId')
+    tag: @get('notificationTag')
     title: @get('title')
     body: @get('userFacingText')
     icon: {}
@@ -176,6 +195,7 @@ App.Message.reopenClass
 
     id: App.BaseModel.coerceId(json.id)
     groupId: App.BaseModel.coerceId(json.group_id)
+    oneToOneId: App.BaseModel.coerceId(json.one_to_one_id)
     userId: App.BaseModel.coerceId(json.user_id)
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     text: json.text
