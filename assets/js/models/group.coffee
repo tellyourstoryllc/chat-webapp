@@ -227,9 +227,27 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
 
         if json.object_type == 'group'
           # We received an update to the group.
-          #
-          # TODO: create join and leave messages here.
+          group = App.Group.lookup(json.id)
+          oldMemberIds = group.get('memberIds').copy()
+
+          # Load the new data.
           App.Group.loadRawWithMetaData(json)
+
+          # Create join and leave messages here.
+          newMemberIds = group.get('memberIds')
+          oldMemberIds.forEach (oldId) =>
+            if ! newMemberIds.contains(oldId)
+              user = App.User.lookup(oldId)
+              message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
+              @didReceiveMessage(message, suppressNotifications: true)
+          newMemberIds.forEach (newId) =>
+            if ! oldMemberIds.contains(newId)
+              # TODO: The user might not be loaded yet here.  Fetch the user
+              # before proceeding.
+              user = App.User.lookup(newId)
+              if user?
+                message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
+                @didReceiveMessage(message, suppressNotifications: true)
     @set('subscription', subscription)
 
   didReceiveMessage: (message, options = {}) ->
