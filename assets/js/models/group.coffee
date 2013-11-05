@@ -164,17 +164,22 @@ App.Group = App.BaseModel.extend App.LockableApiModelMixin,
         # already in our store.
         isNew? && ! isNew && inst instanceof App.Message
 
-      newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
-        o instanceof App.Message
       if overlapFound
         # After fetching the most recent page of messages, we found that we
         # already had one or more of them.  Notify the user of each message like
         # normal.
+        newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
+          o instanceof App.Message
         @didReceiveMessage(msg) for msg in newMessages
       else
         # No overlap.  This means that we missed more than a page of messages
-        # when disconnected.  Just give up and reload.  Don't notify the user.
-        @get('messages').clear()
+        # when disconnected.  Just give up and reload.  We need to clear the old
+        # messages out of our store so that if the user pages back through
+        # history, they're seen as new instances again.
+        currentMessages = @get('messages')
+        App.Message.discardRecords(currentMessages)
+        currentMessages.clear()
+        # Don't notify the user.
         for msg in newMessages
           @didReceiveMessage(msg, suppressNotifications: true)
 

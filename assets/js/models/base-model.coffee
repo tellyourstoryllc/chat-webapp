@@ -36,3 +36,13 @@ App.BaseModel.reopenClass
 
   lookup: (id) ->
     @_allById[App.BaseModel.coerceId(id)]
+
+  # Removes given instances from our store.  Does not modify instances.
+  discardRecords: (instances) ->
+    for instance in Ember.makeArray(instances)
+      id = instance.get('id')
+      delete @_allById[id] if id?
+      # TODO: This is linear on all our objects...
+      @_all.removeObject(instance)
+
+    undefined

@@ -44,6 +44,11 @@ App.Emoticon.reopenClass
 
     [inst, isNew]
 
+  # Note: this differs from the base class in that it has an identity map by
+  # name.
+  discardRecords: (instances) ->
+    throw "discardRecords not implemented for App.Emoticon"
+
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
 
