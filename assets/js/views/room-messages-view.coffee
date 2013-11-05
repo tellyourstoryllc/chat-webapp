@@ -36,6 +36,13 @@ App.RoomMessagesView = Ember.View.extend
       @updateSize()
   , 5
 
+  roomTopicChanged: (->
+    isScrolledToLastMessage = @isScrolledToLastMessage()
+    Ember.run.schedule 'afterRender', @, ->
+      @updateSize()
+      @scrollToLastMessage(false) if isScrolledToLastMessage
+  ).observes('room.topic')
+
   # TODO: Why do we need this?  Seems redundant with rooms container version.
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
