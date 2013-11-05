@@ -6,6 +6,10 @@ Ember.Handlebars.registerBoundHelper 'humanize', (text) ->
   return null unless text?
   text.decamelize().replace(/[_-]/g, ' ').capitalize()
 
+Ember.Handlebars.registerBoundHelper 'truncate', (text, options) ->
+  return null unless text?
+  text[0 ... options.hash.length ? 30]
+
 # Returns given number of seconds formatted as a duration.
 Ember.Handlebars.registerBoundHelper 'duration', (seconds) ->
   return null unless Ember.typeOf(seconds) == 'number'
