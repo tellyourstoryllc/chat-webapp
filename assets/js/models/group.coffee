@@ -20,13 +20,17 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   didClose: ->
     @_super(arguments...)
+    # Stop listening for updates.
     @cancelMessagesSubscription()
-    # TODO: Discard message records.
+    # Discard messages.
+    messages = @get('messages')
+    App.Message.discardRecords(messages)
+    messages.clear()
+    # Reset other properties.
     @setProperties
       newMessageText: ''
       newMessageFile: null
       usersLoaded: false
-      messages: []
       canLoadEarlierMessages: true
 
   cancelMessagesSubscription: ->
