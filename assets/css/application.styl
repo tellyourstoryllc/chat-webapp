@@ -347,16 +347,21 @@ room-members-sidebar-width = 150px
   width room-members-sidebar-width
   height 100%
   overflow hidden
-  padding 5px 10px
+  padding 5px 0
   background-color #fff
   font-size 12px
   line-height 1.2em
 
-  .title
-    margin-bottom 10px
+  .title, .loading
+    margin 0 10px 10px 10px
 
   .room-member
+    padding 5px 10px
     color #000
+    cursor pointer // Clickable.
+
+    &:hover
+      background-color #F0F0F0
 
   .status-text, .idle-duration
     box-sizing border-box
