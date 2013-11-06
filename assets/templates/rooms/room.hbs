@@ -3,16 +3,18 @@
   {{#if usersLoaded}}
     <ul class='room-members'>
       {{#each user in arrangedMembers}}
-        <li class='room-member' {{action 'goToOneToOne' user}}>
-          <div>
-            <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
-          </div>
-          {{#if user.isIdle}}
-            <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>
-          {{/if}}
-          {{#if user.statusText}}
-            <div class='status-text'>{{user.statusText}}</div>
-          {{/if}}
+        <li class='room-member'>
+          {{#link-to 'rooms.room' user}}
+            <div>
+              <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
+            </div>
+            {{#if user.isIdle}}
+              <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>
+            {{/if}}
+            {{#if user.statusText}}
+              <div class='status-text'>{{user.statusText}}</div>
+            {{/if}}
+          {{/link-to}}
         </li>
       {{/each}}
     </ul>

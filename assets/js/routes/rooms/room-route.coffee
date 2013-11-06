@@ -14,6 +14,8 @@ App.RoomsRoomRoute = Ember.Route.extend
   serialize: (model) ->
     id = if Ember.typeOf(model) == 'string'
       model
+    else if model instanceof App.User
+      App.OneToOne.idFromUserIds(model.get('id'), App.get('currentUser.id'))
     else
       model.get('id')
 
@@ -26,6 +28,9 @@ App.RoomsRoomRoute = Ember.Route.extend
     if Ember.typeOf(model) == 'string'
       modelId = model
       model = @_typeFromRoomId(modelId).lookup(modelId)
+    else if model instanceof App.User
+      modelId = App.OneToOne.idFromUser(model)
+      model = null
     else
       modelId = model.get('id')
 

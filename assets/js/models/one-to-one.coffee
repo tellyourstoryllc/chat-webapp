@@ -115,6 +115,9 @@ App.OneToOne.reopenClass
     ids = if id1 < id2 then [id1, id2] else [id2, id1]
     ids.join('-')
 
+  idFromUser: (user) ->
+    @idFromUserIds(user.get('id'), App.get('currentUser.id'))
+
   userIdsFromId: (id) ->
     return [] unless id?
     id.split(/-/)

@@ -358,13 +358,14 @@ room-members-sidebar-width = 150px
   .title, .loading
     margin 0 10px 10px 10px
 
-  .room-member
+  .room-member > a
+    display block
     padding 5px 10px
     color #000
-    cursor pointer // Clickable.
+    text-decoration none
 
     &:hover
-      background-color #F0F0F0
+      background-color #F0F0F0 !important
 
   .status-text, .idle-duration
     box-sizing border-box
