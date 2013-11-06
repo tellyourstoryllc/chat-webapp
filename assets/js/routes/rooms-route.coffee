@@ -5,7 +5,8 @@ App.RoomsRoute = Ember.Route.extend
     App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
 
   setupController: (controller, model) ->
-    controller.set('allRooms', App.Group.all())
+    controller.set('allGroups', App.Group.all())
+    controller.set('allOneToOnes', App.OneToOne.all())
     App.Group.fetchAll()
     .then (groups) =>
       if groups?

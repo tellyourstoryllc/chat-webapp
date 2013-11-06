@@ -3,9 +3,10 @@
 App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
   rooms: (->
-    @get('allRooms').filter (room) ->
+    (@get('allGroups').concat(@get('allOneToOnes'))).filter (room) ->
       room.get('isOpen') && ! room.get('isDeleted')
-  ).property('allRooms.@each.isOpen', 'allRooms.@each.isDeleted')
+  ).property('allGroups.@each.isOpen', 'allGroups.@each.isDeleted',
+             'allOneToOnes.@each.isOpen', 'allOneToOnes.@each.isDeleted')
 
   activeRoom: (->
     App.get('currentlyViewingRoom')
