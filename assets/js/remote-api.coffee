@@ -84,15 +84,24 @@ App.RemoteApi = Ember.Object.extend
   updateCurrentUser: (data) ->
     @ajax(@buildURL('/users/update'), 'POST', data: data)
 
+  updateCurrentUserStatus: (newStatus) ->
+    user = App.get('currentUser')
+
+    if user.isPropertyLocked('status')
+      Ember.Logger.warn "I can't change the status of a user when I'm still waiting for a response from the server."
+      return
+
+    data =
+      status: newStatus
+    oldStatus = user.get('status')
+    url = @buildURL('/users/update')
+    user.withLockedPropertyTransaction url, 'POST', { data: data }, 'status', =>
+      user.set('status', newStatus)
+    , =>
+      user.set('status', oldStatus)
+
   joinGroup: (joinCode) ->
     @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', {})
-
-  updateUserStatus: (status, options = {}) ->
-    data =
-      status: status
-    if options.statusText != undefined
-      data.status_text = options.statusText
-    @ajax(@buildURL('/users/update'), 'POST', data: data)
 
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'

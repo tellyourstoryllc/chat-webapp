@@ -126,10 +126,7 @@ App.RoomsView = Ember.View.extend
       return undefined
 
     setStatus: (status) ->
-      newStatus = status.get('name')
-      # TODO: Wrap in transaction.
-      App.get('currentUser').set('status', newStatus)
-      App.get('api').updateUserStatus(newStatus)
+      App.get('api').updateCurrentUserStatus(status.get('name'))
       @closeChooseStatusMenu()
       return undefined
 

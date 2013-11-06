@@ -1,6 +1,6 @@
 #= require base-model
 
-App.User = App.BaseModel.extend
+App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
   # Most recently calculated idle duration in seconds.
   mostRecentIdleDuration: null
