@@ -57,6 +57,14 @@ App.RoomsContainerComponent = Ember.Component.extend
       @setFocus()
   ).observes('activeRoom')
 
+  roomUsersLoadedChanged: (->
+    if @get('activeRoom.usersLoaded')
+      Ember.run.schedule 'afterRender', @, ->
+        @setFocus()
+  ).observes('activeRoom.usersLoaded')
+
+  isSendDisabled: Ember.computed.not('activeRoom.usersLoaded')
+
   isFayeClientConnectedChanged: (->
     bottom = if App.get('isFayeClientConnected')
       '0'
