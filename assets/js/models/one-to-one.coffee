@@ -11,7 +11,14 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     currentUserId = App.get('currentUser.id')
     return null unless currentUserId?
     ids = id.split(/-/)
-    ids.find (id) -> id != currentUserId
+    return null unless ids.length >= 2
+
+    # This intentionally only compares the first id with the current user's id
+    # so that we allow 1-1 with yourself.
+    if ids[0] == currentUserId
+      ids[1]
+    else
+      ids[0]
   ).property('App.currentUser.id', 'id')
 
   otherUser: (->
