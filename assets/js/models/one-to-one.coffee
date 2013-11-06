@@ -60,11 +60,17 @@ App.OneToOne.reopenClass
     memberIds: (json.member_ids ? []).map (id) -> @coerceId(id)
 
   lookupOrCreate: (id) ->
+    id = @coerceId(id)
+
     inst = @lookup(id)
-    if inst?
-      inst
-    else
-      @create(id: id, memberIds: @userIdsFromId(id) ? [])
+    return inst if inst?
+
+    inst = @create(id: id, memberIds: @userIdsFromId(id) ? [])
+    # Save to our identity map.
+    @_all.pushObject(inst)
+    @_allById[id] = inst
+
+    inst
 
   # Lookup by id.  If we don't have it, fetch and load.  Returns a promise that
   # resolves to the model instance.
