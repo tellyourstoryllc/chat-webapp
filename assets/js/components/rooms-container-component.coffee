@@ -88,8 +88,8 @@ App.RoomsContainerComponent = Ember.Component.extend
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
-    isMembersVisible = $window.width() > 650
-    membersSidebarWidth = 150 # .room-members-sidebar
+    isMembersVisible = $window.width() > 700
+    membersSidebarWidth = 200 # .room-members-sidebar
 
     height = $window.height()
     width = $window.width()
