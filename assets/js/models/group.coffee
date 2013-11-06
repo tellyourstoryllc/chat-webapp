@@ -18,7 +18,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     @get('subscription')?
   ).property('subscription')
 
-  close: ->
+  didClose: ->
     @_super(arguments...)
     @cancelMessagesSubscription()
     # TODO: Discard message records.

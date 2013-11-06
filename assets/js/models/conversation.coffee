@@ -98,16 +98,16 @@ App.Conversation = Ember.Mixin.create
 
   isOpenChanged: (->
     if @get('isOpen')
-      @open()
+      @didOpen()
     else
-      @close()
+      @didClose()
   ).observes('isOpen')
 
-  open: ->
+  didOpen: ->
     @subscribeToMessages()
     @fetchAndLoadAssociations()
 
-  close: ->
+  didClose: ->
 
   fetchAndLoadAssociations: ->
     loadPromise = @get('loadPromise')
