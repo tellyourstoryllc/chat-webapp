@@ -80,7 +80,7 @@ App.MessageAutocompleteItemView = Ember.View.extend
     if name?
       escapedName = escape(name)
       # Highlight matched text in name if it matches there.
-      suggestFor = suggestion.get('object.suggestFor')
+      suggestFor = suggestion.get('user.suggestFor')
       if ! highlightFound && matchText?.length && suggestFor
         # Strip off the @ sign.
         matchText = matchText[1..] if matchText[0] == '@'
