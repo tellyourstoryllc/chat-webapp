@@ -12,11 +12,15 @@ App.Message = App.BaseModel.extend
   conversation: Ember.computed.any('group', 'oneToOne')
 
   group: (->
-    App.Group.lookup(@get('groupId'))
+    id = @get('groupId')
+    return null unless id?
+    App.Group.lookup(id)
   ).property('groupId')
 
   oneToOne: (->
-    App.OneToOne.lookup(@get('one_to_one_id'))
+    id = @get('oneToOneId')
+    return null unless id?
+    App.OneToOne.lookup(id)
   ).property('oneToOneId')
 
   user: (->
