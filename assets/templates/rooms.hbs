@@ -75,7 +75,7 @@
         {{/if}}
 
         {{#each rooms}}
-          {{#if usersLoaded}}
+          {{#if associationsLoaded}}
             {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
               {{#with view as messagesView}}
                 <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}}>

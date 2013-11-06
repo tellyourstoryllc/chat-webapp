@@ -58,6 +58,8 @@ App.Conversation = Ember.Mixin.create
 
     @setProperties(props)
 
+  associationsLoaded: Ember.computed.alias('usersLoaded')
+
   members: (->
     @get('memberIds').map((id) -> App.User.lookup(id)).compact()
   ).property('memberIds.@each', '_membersAssociationLoaded')

@@ -78,10 +78,10 @@ App.RoomMessagesView = Ember.View.extend
     App.get('roomMessagesViews').set(room, @) if room?
   ).observes('room').on('init')
 
-  roomUsersLoadedChanged: (->
+  roomAssociationsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
-      @scrollToLastMessage(false) if @get('room.usersLoaded')
-  ).observes('room.usersLoaded')
+      @scrollToLastMessage(false) if @get('room.associationsLoaded')
+  ).observes('room.associationsLoaded')
 
   messagesArrayChanged: (->
     messages = @get('room.messages')

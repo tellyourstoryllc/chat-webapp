@@ -50,7 +50,7 @@ App.RoomsRoomRoute = Ember.Route.extend
       # Set the room as opened to show it in the list.
       model.set('isOpen', true)
 
-    if ! model?.get('usersLoaded')
+    if ! model?.get('associationsLoaded')
       if isOneToOne
         App.OneToOne.fetchAndLoadSingle(modelId)
         .then (oneToOne) =>
