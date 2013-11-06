@@ -151,12 +151,12 @@ App.Conversation = Ember.Mixin.create
         # already in our store.
         isNew? && ! isNew && inst instanceof App.Message
 
+      newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
+        o instanceof App.Message
       if overlapFound
         # After fetching the most recent page of messages, we found that we
         # already had one or more of them.  Notify the user of each message like
         # normal.
-        newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
-          o instanceof App.Message
         @didReceiveMessage(msg) for msg in newMessages
       else
         # No overlap.  This means that we missed more than a page of messages
