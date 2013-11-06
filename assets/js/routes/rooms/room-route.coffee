@@ -28,6 +28,11 @@ App.RoomsRoomRoute = Ember.Route.extend
       model = @_typeFromRoomId(modelId).lookup(modelId)
     else
       modelId = model.get('id')
+
+    isOneToOne = @_typeFromRoomId(modelId) == App.OneToOne
+    if ! model? && modelId? && isOneToOne
+      model = App.OneToOne.lookupOrCreate(modelId)
+
     @_super(arguments...)
 
     # Track which room is being viewed so we can determine when to notify the
@@ -41,8 +46,8 @@ App.RoomsRoomRoute = Ember.Route.extend
       model.set('isOpen', true)
 
     if ! model?.get('usersLoaded')
-      if @_typeFromRoomId(modelId) == App.OneToOne
-        App.OneToOne.find(modelId)
+      if isOneToOne
+        App.OneToOne.fetchAndLoadSingle(modelId)
         .then (oneToOne) =>
           controller.set('model', oneToOne)
           App.set('currentlyViewingRoom', oneToOne)

@@ -47,11 +47,16 @@ App.Conversation = Ember.Mixin.create
     if symmetricKey?
       processors.pushObject App.AesEncryptionProcessor.create(key: symmetricKey)
 
-    @setProperties
-      messages: []
-      memberIds: []
-      notificationResults: []
+    props =
       processors: processors
+
+    # Initialize empty array properties, but only if they're not already set.
+    for name in ['messages', 'memberIds', 'notificationResults']
+      val = @get(name)
+      if ! val?
+        props[name] = []
+
+    @setProperties(props)
 
   members: (->
     @get('memberIds').map((id) -> App.User.lookup(id)).compact()
