@@ -311,6 +311,6 @@ App.Router.map ->
   @route 'signup', path: '/signup'
 
   @resource 'rooms', path: '/rooms', ->
-    @route 'room', path: '/:group_id'
+    @route 'room', path: '/:room_id'
 
   @route 'index', path: '/'

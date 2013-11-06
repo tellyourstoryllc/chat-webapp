@@ -3,10 +3,7 @@
 
 App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
-  name: (->
-    # TODO
-    null
-  ).property()
+  name: Ember.computed.alias('otherUser.name')
 
   otherUserId: (->
     id = @get('id')
@@ -42,6 +39,13 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   publishMessageChannelName: ->
     "/users/#{@get('otherUserId')}"
 
+  reload: ->
+    id = @get('id')
+    if ! id?
+      throw new Error("Can't reload a record when it doesn't have an id.")
+
+    @constructor.fetchAndLoadSingle(id)
+
 
 App.OneToOne.reopenClass
 
@@ -54,6 +58,13 @@ App.OneToOne.reopenClass
   propertiesFromRawAttrs: (json) ->
     id: @coerceId(json.id)
     memberIds: (json.member_ids ? []).map (id) -> @coerceId(id)
+
+  lookupOrCreate: (id) ->
+    inst = @lookup(id)
+    if inst?
+      inst
+    else
+      @create(id: id, memberIds: @userIdsFromId(id) ? [])
 
   # Lookup by id.  If we don't have it, fetch and load.  Returns a promise that
   # resolves to the model instance.
@@ -90,3 +101,14 @@ App.OneToOne.reopenClass
       oneToOne.set('messages', instances.filter (o) -> o instanceof App.Message)
 
     oneToOne
+
+  idFromUserIds: (userId1, userId2) ->
+    return null unless userId1? && userId2?
+    id1 = parseInt(userId1)
+    id2 = parseInt(userId2)
+    ids = if id1 < id2 then [id1, id2] else [id2, id1]
+    ids.join('-')
+
+  userIdsFromId: (id) ->
+    return [] unless id?
+    id.split(/-/)

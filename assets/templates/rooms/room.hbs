@@ -3,7 +3,7 @@
   {{#if usersLoaded}}
     <ul class='room-members'>
       {{#each user in arrangedMembers}}
-        <li class='room-member'>
+        <li class='room-member' {{action 'goToOneToOne' user}}>
           <div>
             <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
           </div>

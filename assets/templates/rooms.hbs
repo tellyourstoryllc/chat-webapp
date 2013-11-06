@@ -59,7 +59,9 @@
                   {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
                 </td>
                 <td class='invite-link'>
-                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                  {{#if activeRoom.joinUrl}}
+                    Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                  {{/if}}
                 </td>
               </tr>
               {{#if activeRoom.topic}}
