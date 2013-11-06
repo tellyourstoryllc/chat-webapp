@@ -17,6 +17,7 @@
       {{#each room in rooms}}
         <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
+            {{room-icon room=room}}
             {{room.name}}
             <span {{action 'closeRoom' room}} class='close-room'>&times;</span>
           {{/link-to}}
@@ -59,7 +60,9 @@
                   {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
                 </td>
                 <td class='invite-link'>
-                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                  {{#if activeRoom.joinUrl}}
+                    Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                  {{/if}}
                 </td>
               </tr>
               {{#if activeRoom.topic}}
@@ -72,7 +75,7 @@
         {{/if}}
 
         {{#each rooms}}
-          {{#if usersLoaded}}
+          {{#if associationsLoaded}}
             {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
               {{#with view as messagesView}}
                 <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}}>
@@ -118,6 +121,7 @@
         <div class='send-message-area'>
           {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
             valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
+            disabledBinding='roomsContainer.isSendDisabled'
             target=roomsContainer}}
           {{#if doesBrowserSupportAjaxFileUpload}}
             <button type='button' class='send-message-file-button' {{action 'chooseFile' target=roomsContainer}}>
@@ -129,7 +133,10 @@
             </button>
             <input type='file' class='send-message-file'>
           {{/if}}
-          <button type='button' {{action 'sendMessage' target=roomsContainer}} {{bind-attr class=':send-button activeRoom.isEncrypted:encrypted-send-button'}}>Send</button>
+          <button type='button' {{action 'sendMessage' target=roomsContainer}}
+            {{bind-attr class=':send-button activeRoom.isEncrypted:encrypted-send-button'}}
+            {{bind-attr disabled='roomsContainer.isSendDisabled'}}
+            >Send</button>
         </div>
 
         {{message-autocomplete viewName='autocompleteView'

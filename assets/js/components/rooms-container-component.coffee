@@ -57,6 +57,14 @@ App.RoomsContainerComponent = Ember.Component.extend
       @setFocus()
   ).observes('activeRoom')
 
+  roomAssociationsLoadedChanged: (->
+    if @get('activeRoom.associationsLoaded')
+      Ember.run.schedule 'afterRender', @, ->
+        @setFocus()
+  ).observes('activeRoom.associationsLoaded')
+
+  isSendDisabled: Ember.computed.not('activeRoom.associationsLoaded')
+
   isFayeClientConnectedChanged: (->
     bottom = if App.get('isFayeClientConnected')
       '0'
@@ -347,14 +355,14 @@ App.RoomsContainerComponent = Ember.Component.extend
       file = @get('activeRoom.newMessageFile')
       return if Ember.isEmpty(text) && Ember.isEmpty(file)
 
-      group = @get('activeRoom')
-      groupId = group.get('id')
+      convo = @get('activeRoom')
       msg = App.Message.create
         userId: App.get('currentUser.id')
-        groupId: groupId
+        groupId: convo instanceof App.Group && convo.get('id')
+        oneToOneId: convo instanceof App.OneToOne && convo.get('id')
         localText: text
         imageFile: file
-        mentionedUserIds: App.Message.mentionedIdsInText(text, group.get('members'))
+        mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
         Ember.Logger.error e

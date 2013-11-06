@@ -16,6 +16,7 @@ App.BaseModel.reopenClass
 
   loadRawWithMetaData: (json) ->
     props = @propertiesFromRawAttrs(json)
+    props.isLoaded ?= true
 
     prevInst = props.id? && @_allById[props.id]
     if prevInst?
