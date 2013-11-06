@@ -32,13 +32,11 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   subscribeToMessages: ->
     # Ignore.  Assume we're already listening on the user channel.
 
-  mostRecentMessagesUrl: (->
+  mostRecentMessagesUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
-  ).property('id')
 
-  earlierMessagesUrl: (->
+  earlierMessagesUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
-  ).property('id')
 
   publishMessageWithAttachmentUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages/create")

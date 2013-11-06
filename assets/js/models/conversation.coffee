@@ -35,6 +35,14 @@ App.Conversation = Ember.Mixin.create
 
   isListeningForMessages: Ember.required(Function)
 
+  mostRecentMessagesUrl: Ember.required(Function)
+
+  earlierMessagesUrl: Ember.required(Function)
+
+  publishMessageWithAttachmentUrl: Ember.required(Function)
+
+  publishMessageChannelName: Ember.required(Function)
+
   init: ->
     @_super(arguments...)
 
@@ -183,7 +191,7 @@ App.Conversation = Ember.Mixin.create
     api = App.get('api')
     data =
       limit: @get('messagesPageSize')
-    api.ajax(@get('mostRecentMessagesUrl'), 'GET', data: data)
+    api.ajax(@mostRecentMessagesUrl(), 'GET', data: data)
     .then (json) =>
       if ! json? || json.error?
         throw json
@@ -326,7 +334,7 @@ App.Conversation = Ember.Mixin.create
     data.last_message_id = minMessageId if minMessageId < Infinity
 
     @set('isLoadingEarlierMessages', true)
-    api.ajax(@get('earlierMessagesUrl'), 'GET', data: data)
+    api.ajax(@earlierMessagesUrl(), 'GET', data: data)
     .then (json) =>
       @set('isLoadingEarlierMessages', false)
 
