@@ -56,6 +56,11 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     App.get('api').buildURL("/groups/#{@get('id')}/messages")
   ).property('id')
 
+  publishMessageWithAttachmentUrl: ->
+    App.get('api').buildURL("/groups/#{@get('id')}/messages/create")
+
+  publishMessageChannelName: ->
+    "/groups/#{@get('id')}/messages"
 
 App.Group.reopenClass
 

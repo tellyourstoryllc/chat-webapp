@@ -205,7 +205,6 @@ App.Message.reopenClass
 
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
-    groupId = message.get('groupId')
     data = {}
     for key in ['imageFile']
       val = message.get(key)
@@ -226,12 +225,13 @@ App.Message.reopenClass
     message.set('isSaving', true)
 
     # Only send message via POST if there's an image.
+    convo = message.get('conversation')
     if message.get('imageFile')?
       api = App.get('api')
       formData = new FormData()
       formData.append(k, v) for k,v of api.defaultParams()
       formData.append(k, v) for k,v of data
-      api.ajax(api.buildURL("/groups/#{groupId}/messages/create"), 'POST',
+      api.ajax(convo.publishMessageWithAttachmentUrl(), 'POST',
         data: formData
         processData: false
         contentType: false
@@ -257,7 +257,7 @@ App.Message.reopenClass
       # Wrap Faye's promise in an RSVP.Promise.
       return new Ember.RSVP.Promise (resolve, reject) =>
         # Publish the message via the socket.
-        App.get('fayeClient').publish("/groups/#{groupId}/messages", data)
+        App.get('fayeClient').publish(convo.publishMessageChannelName(), data)
         .then (result) =>
           Ember.run @, ->
             message.set('isSaving', false)

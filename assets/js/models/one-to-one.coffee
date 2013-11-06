@@ -8,6 +8,21 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     null
   ).property()
 
+  otherUserId: (->
+    id = @get('id')
+    return null unless id?
+    currentUserId = App.get('currentUser.id')
+    return null unless currentUserId?
+    ids = id.split(/-/)
+    ids.find (id) -> id != currentUserId
+  ).property('App.currentUser.id', 'id')
+
+  otherUser: (->
+    id = @get('otherUserId')
+    return null unless id?
+    App.User.lookup(id)
+  ).property('otherUserId', 'usersLoaded')
+
   isSubscribedToUpdates: true
 
   subscribeToMessages: ->
@@ -20,6 +35,12 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   earlierMessagesUrl: (->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
   ).property('id')
+
+  publishMessageWithAttachmentUrl: ->
+    App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages/create")
+
+  publishMessageChannelName: ->
+    "/users/#{@get('otherUserId')}"
 
 
 App.OneToOne.reopenClass

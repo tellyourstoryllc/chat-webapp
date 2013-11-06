@@ -347,14 +347,14 @@ App.RoomsContainerComponent = Ember.Component.extend
       file = @get('activeRoom.newMessageFile')
       return if Ember.isEmpty(text) && Ember.isEmpty(file)
 
-      group = @get('activeRoom')
-      groupId = group.get('id')
+      convo = @get('activeRoom')
       msg = App.Message.create
         userId: App.get('currentUser.id')
-        groupId: groupId
+        groupId: convo instanceof App.Group && convo.get('id')
+        oneToOneId: convo instanceof App.OneToOne && convo.get('id')
         localText: text
         imageFile: file
-        mentionedUserIds: App.Message.mentionedIdsInText(text, group.get('members'))
+        mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
         Ember.Logger.error e
