@@ -89,6 +89,25 @@ App.RoomsView = Ember.View.extend
     App.User.all().forEach (user) =>
       user.set('mostRecentIdleDuration', user.idleDurationAsOfNow(now))
 
+  currentlyViewingRoomChanged: (->
+    Ember.run.schedule 'afterRender', @, ->
+      return unless @currentState == Ember.View.states.inDOM
+
+      roomId = App.get('currentlyViewingRoom.id')
+      if roomId?
+        regexp = new RegExp("/#{App.Util.escapeRegexp(roomId)}$")
+      else
+        # We're in the lobby.
+        regexp = new RegExp("/rooms$")
+
+      $('.room-list-item a[href]').each ->
+        $link = $(@)
+        if regexp.test($link.prop('href') ? '')
+          $link.addClass 'active'
+        else
+          $link.removeClass 'active'
+  ).observes('App.currentlyViewingRoom')
+
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)
     @set('isChooseStatusMenuVisible', true)

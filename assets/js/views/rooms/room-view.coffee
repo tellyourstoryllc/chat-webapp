@@ -1,6 +1,6 @@
 App.RoomsRoomView = Ember.View.extend
 
-  group: Ember.computed.alias('controller.model')
+  room: Ember.computed.alias('controller.room')
 
   init: ->
     @_super(arguments...)
@@ -26,20 +26,3 @@ App.RoomsRoomView = Ember.View.extend
       # TODO: This doesn't seem to work in Firefox.
       event.originalEvent.dataTransfer?.items[0]?.getAsString (url) ->
         App.get('roomsContainerView')?.send('attachUrl', url)
-
-  activeRoomChanged: (->
-    Ember.run.schedule 'afterRender', @, ->
-      @activateRoomLinks()
-  ).observes('controller.roomsLoaded', 'controller.model.id')
-
-  activateRoomLinks: ->
-    groupId = @get('controller.model.id')
-    return unless groupId?
-
-    regexp = new RegExp("/#{groupId}$")
-    $('.room-list-item a[href]').each ->
-      $link = $(@)
-      if regexp.test($link.prop('href') ? '')
-        $link.addClass 'active'
-      else
-        $link.removeClass 'active'
