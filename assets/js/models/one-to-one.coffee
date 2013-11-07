@@ -70,7 +70,7 @@ App.OneToOne.reopenClass
 
   propertiesFromRawAttrs: (json) ->
     id: @coerceId(json.id)
-    memberIds: (json.member_ids ? []).map (id) -> @coerceId(id)
+    memberIds: (json.member_ids ? []).map (id) => @coerceId(id)
 
   lookupOrCreate: (id) ->
     id = @coerceId(id)
