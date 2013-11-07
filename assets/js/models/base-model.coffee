@@ -38,6 +38,9 @@ App.BaseModel.reopenClass
   lookup: (id) ->
     @_allById[App.BaseModel.coerceId(id)]
 
+  exists: (id) ->
+    @lookup(id)?
+
   # Removes given instances from our store.  Does not modify instances.
   discardRecords: (instances) ->
     for instance in Ember.makeArray(instances)
