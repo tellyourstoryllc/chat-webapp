@@ -102,17 +102,6 @@ App.RoomsContainerComponent = Ember.Component.extend
     @$('.room-members-sidebar').css
       display: if isMembersVisible then 'block' else 'none'
 
-    height = $window.height()
-    height -= $('.room-info').outerHeight() ? 0
-    height -= $('.send-message-area').outerHeight(true) ? 0
-    @$('.messages').css
-      height: height
-
-    # Loading more messages bar at the top.
-    loadingMessagesWidth = @$('.loading-more-messages').width()
-    @$('.loading-more-messages').css
-      left: Math.round((width - loadingMessagesWidth) / 2)
-
     # The connecting status bar.
     connectingBuffer = 60
     @$('.connecting-status-bar').css
