@@ -110,18 +110,6 @@ App.Group.reopenClass
 
     group
 
-  fetchAll: ->
-    api = App.get('api')
-    api.ajax(api.buildURL('/groups'), 'GET', data: {})
-    .then (json) =>
-      if ! json?.error?
-        json = Ember.makeArray(json)
-        groupObjs = json.filter (o) -> o.object_type == 'group'
-        groups = groupObjs.map (g) -> App.Group.loadRaw(g)
-        return groups
-      else
-        throw new Error(json)
-
   fetchById: (id) ->
     api = App.get('api')
     data =
