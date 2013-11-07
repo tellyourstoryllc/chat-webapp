@@ -36,7 +36,7 @@ App.RoomsRoute = Ember.Route.extend
         index--
         index = uiGroups.length - 1 if index < 0
         inst = uiGroups.objectAt(index)
-        if inst instanceof App.Group
+        if inst.get('actsLikeConversation')
           @transitionTo('rooms.room', inst)
         else
           @transitionTo(inst.get('transitionToArgs')...)
@@ -49,7 +49,7 @@ App.RoomsRoute = Ember.Route.extend
         index++
         index = 0 if index >= uiGroups.length
         inst = uiGroups.objectAt(index)
-        if inst instanceof App.Group
+        if inst.get('actsLikeConversation')
           @transitionTo('rooms.room', inst)
         else
           @transitionTo(inst.get('transitionToArgs')...)

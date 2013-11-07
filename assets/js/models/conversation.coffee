@@ -66,6 +66,9 @@ App.Conversation = Ember.Mixin.create
 
     @setProperties(props)
 
+  # Marks a class as a conversation.
+  actsLikeConversation: true
+
   associationsLoaded: Ember.computed.alias('usersLoaded')
 
   members: (->
