@@ -190,6 +190,9 @@ App.Message.reopenClass
   # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
 
+  # Identity map of Messages by client ID (GUID).
+  _allByClientId: {}
+
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
     mentionedUserIds = if Ember.isArray(json.mentioned_user_ids)
@@ -197,7 +200,23 @@ App.Message.reopenClass
     else
       (json.mentioned_user_ids ? '').split(/,/)
 
+    # Parse JSON.
+    clientMetadata = if json.client_metadata
+      JSON.parse(json.client_metadata)
+    else
+      {}
+    # Extract the client ID.
+    if Ember.typeOf(clientMetadata) == 'string'
+      # If it's a string, assume that's the id.
+      clientId = clientMetadata
+      clientMetadata = {}
+    else
+      clientId = clientMetadata.id
+      delete clientMetadata.id
+
     id: App.BaseModel.coerceId(json.id)
+    clientId: clientId
+    clientMetadata: clientMetadata
     groupId: App.BaseModel.coerceId(json.group_id)
     oneToOneId: App.BaseModel.coerceId(json.one_to_one_id)
     userId: App.BaseModel.coerceId(json.user_id)
@@ -207,6 +226,35 @@ App.Message.reopenClass
     imageThumbUrl: json.image_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
+  # This is different from the base class since it dedupes by client IDs.
+  loadRawWithMetaData: (json) ->
+    props = @propertiesFromRawAttrs(json)
+    props.isLoaded ?= true
+
+    prevInst = null
+    prevInst = @_allById[props.id] if props.id?
+
+    # This line is the client ID magic sauce.
+    prevInst ?= @_allByClientId[props.clientId] if props.clientId?
+
+    if prevInst?
+      prevInst.setProperties(props)
+      inst = prevInst
+      isNew = false
+    else
+      inst = @create(props)
+      @_all.pushObject(inst)
+      @_allById[props.id] = inst
+      isNew = true
+
+    [inst, isNew]
+
+  discardRecords: (instances) ->
+    # Remove from seen client IDs.
+    for inst in instances when inst instanceof App.Message
+      delete @_allByClientId[inst.get('clientId')]
+    @_super(arguments...)
+
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
     data = {}
@@ -214,6 +262,9 @@ App.Message.reopenClass
       val = message.get(key)
       if val?
         data[key.underscore()] = val
+
+    # JSON encoded properties.
+    data.client_metadata = JSON.stringify(message.get('clientId'))
 
     # Process text prior to sending over the wire.
     networkFacingText = message.get('networkFacingText')
@@ -227,6 +278,9 @@ App.Message.reopenClass
 
     # Update instance state.
     message.set('isSaving', true)
+
+    # Track the message's client ID.
+    @_allByClientId[message.get('clientId')] = message
 
     # Only send message via POST if there's an image.
     convo = message.get('conversation')

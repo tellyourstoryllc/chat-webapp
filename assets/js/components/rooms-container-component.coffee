@@ -369,6 +369,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       convo = @get('activeRoom')
       msg = App.Message.create
+        clientId: App.Util.generateGuid()
         userId: App.get('currentUser.id')
         groupId: convo instanceof App.Group && convo.get('id')
         oneToOneId: convo instanceof App.OneToOne && convo.get('id')
