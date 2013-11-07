@@ -99,12 +99,6 @@ App.RoomsContainerComponent = Ember.Component.extend
       width: width
       height: height
 
-    # The connecting status bar.
-    connectingBuffer = 60
-    @$('.connecting-status-bar').css
-      width: width - connectingBuffer
-      left: Math.floor(connectingBuffer / 2)
-
     # The send message area, including textarea and send button.
     @$('.send-message-area').css
       width: width
