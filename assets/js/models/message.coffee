@@ -256,6 +256,7 @@ App.Message.reopenClass
         message.set('isSaving', false)
         throw xhr.responseJSON
     else
+      convo.willSendMessageToChannel(message, data)
       # The instance is used by the faye extension.
       data.messageInstance = message
       # Wrap Faye's promise in an RSVP.Promise.
