@@ -53,6 +53,9 @@ window.App = App = Ember.Application.create
   # User preferences like notification settings.
   preferences: null
 
+  # The faye subscription to the current user's channel.
+  userChannelSubscription: null
+
   # The `App.RoomsContainerComponent` currently being displayed.
   roomsContainerView: null
 
@@ -180,6 +183,7 @@ window.App = App = Ember.Application.create
             # This is a OneToOne we've never seen before, so just load it.
             App.loadAll(json)
         return undefined
+    @set('userChannelSubscription', subscription)
 
     subscription.then =>
       # Update our own status after we ensure that we're listening for status

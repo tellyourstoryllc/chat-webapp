@@ -33,7 +33,8 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   isSubscribedToUpdates: true
 
   subscribeToMessages: ->
-    # Ignore.  Assume we're already listening on the user channel.
+    # Assume we're already listening on the user channel.  Return that.
+    App.get('userChannelSubscription')
 
   willSendMessageToChannel: (message, data) ->
     # For OneToOnes, the server expects us to set the action.

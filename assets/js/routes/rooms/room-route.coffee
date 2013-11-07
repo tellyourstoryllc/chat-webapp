@@ -61,7 +61,7 @@ App.RoomsRoomRoute = Ember.Route.extend
         .then (json) =>
           if ! json.error?
             # Load everything from the response.
-            group = App.Group.loadSingleGroup(json)
+            group = App.Group.loadSingle(json)
 
             # If we landed on this route, this is the first time we have the full
             # Group instance, so set it on the controller.
