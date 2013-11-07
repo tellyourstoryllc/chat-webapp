@@ -22,6 +22,16 @@ App.Faye.reopenClass
         Ember.Logger.log "faye incoming", message
         callback(message)
 
+    # Allow application to specify metadata in the `ext` property of the
+    # payload.  We move it to the faye message `ext` here.
+    moveExtData =
+      outgoing: (message, callback) ->
+        if message?.data?.ext
+          message.ext ?= {}
+          _.extend message.ext, message.data.ext
+          delete message.data.ext
+        callback(message)
+
     # This extension captures messages being sent and tracks their Faye ID so
     # they can be deduped once the response is received.
     messagesByFayeId = {}
@@ -48,6 +58,7 @@ App.Faye.reopenClass
         callback(message)
 
     fayeClient.addExtension(clientAuth)
+    fayeClient.addExtension(moveExtData)
     fayeClient.addExtension(sendingMessages)
 
     fayeClient
