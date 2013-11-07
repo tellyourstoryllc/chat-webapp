@@ -52,6 +52,11 @@ App.RoomsView = Ember.View.extend
     @$('.rooms-list').css
       height: height
 
+    # The list of members needs an explicit height so that it can be scrollable.
+    height = $window.height()
+    @$('.room-members').css
+      height: height - @$('.room-members-sidebar .title').outerHeight(true)
+
   documentClick: (event) ->
     Ember.run @, ->
       @closeChooseStatusMenu()

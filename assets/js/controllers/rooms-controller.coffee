@@ -11,3 +11,18 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   activeRoom: (->
     App.get('currentlyViewingRoom')
   ).property('App.currentlyViewingRoom')
+
+  usersLoaded: (->
+    # TODO: Load all contacts.
+    room = @get('activeRoom')
+    ! room? || room.get('usersLoaded')
+  ).property('activeRoom.usersLoaded')
+
+  arrangedMembers: (->
+    room = @get('activeRoom')
+    if room?
+      room.get('arrangedMembers')
+    else
+      # TODO: Sort.
+      App.User.all()
+  ).property('activeRoom.arrangedMembers')
