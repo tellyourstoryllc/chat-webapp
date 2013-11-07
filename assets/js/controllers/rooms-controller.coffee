@@ -23,6 +23,5 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     if room?
       room.get('arrangedMembers')
     else
-      # TODO: Sort.
-      App.User.all()
+      App.User.allArrangedByName()
   ).property('activeRoom.arrangedMembers')
