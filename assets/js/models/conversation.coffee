@@ -320,9 +320,12 @@ App.Conversation = Ember.Mixin.create
   minNumericMessageId: Ember.reduceComputed.call null, 'messageIds',
     initialValue: Infinity
     addedItem: (accumulatedValue, item, changeMeta, instanceMeta) ->
-      Math.min(accumulatedValue, parseInt(item))
+      n = parseInt(item)
+      return accumulatedValue if ! n? || _.isNaN(n)
+      Math.min(accumulatedValue, n)
     removedItem: (accumulatedValue, item, changeMeta, instanceMeta) ->
-      return accumulatedValue if parseInt(item) > accumulatedValue
+      n = parseInt(item)
+      return accumulatedValue if _.isNaN(n) || n > accumulatedValue
       return undefined
 
   fetchAndLoadEarlierMessages: ->
