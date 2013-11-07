@@ -6,6 +6,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Faye subscription to listen for updates.
   subscription: null
 
+  # Show the UI to set topics.
+  canSetTopic: true
+
   isCurrentUserAdmin: (->
     @get('adminIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'adminIds.@each')
@@ -51,6 +54,20 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
       Ember.run @, ->
         @didReceiveUpdateFromFaye(json)
     @set('subscription', subscription)
+
+  updateTopic: (newTopic) ->
+    if @isPropertyLocked('topic')
+      Ember.Logger.warn "I can't change the topic of a group when I'm still waiting for a response from the server."
+      return
+
+    data =
+      topic: newTopic
+    oldTopic = @get('topic')
+    url = App.get('api').buildURL("/groups/#{@get('id')}/update")
+    @withLockedPropertyTransaction url, 'POST', { data: data }, 'topic', =>
+      @set('topic', newTopic)
+    , =>
+      @set('topic', oldTopic)
 
   mostRecentMessagesUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}/messages")

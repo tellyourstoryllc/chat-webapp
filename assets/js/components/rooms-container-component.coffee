@@ -1,9 +1,13 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
-App.RoomsContainerComponent = Ember.Component.extend
+App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
   activeRoom: null
+
+  newRoomTopic: null
+
+  isEditingTopic: false
 
   init: ->
     @_super(arguments...)
@@ -52,6 +56,9 @@ App.RoomsContainerComponent = Ember.Component.extend
   roomChanged: (->
     # Hide autocomplete suggestions.
     @set('suggestionsShowing', false)
+
+    # If user was editing topic, cancel it.
+    @set('isEditingTopic', false)
 
     Ember.run.schedule 'afterRender', @, ->
       @setFocus()
@@ -113,6 +120,15 @@ App.RoomsContainerComponent = Ember.Component.extend
     if App.doesBrowserSupportAjaxFileUpload()
       @$('.send-message-file-button').css
         right: @$('.send-button').outerWidth() + 10
+
+  showSetTopicLink: (->
+    @get('activeRoom.canSetTopic') && Ember.isEmpty(@get('activeRoom.topic')) &&
+      ! @get('isEditingTopic')
+  ).property('activeRoom.canSetTopic', 'activeRoom.topic', 'isEditingTopic')
+
+  showTopicRow: (->
+    ! Ember.isEmpty(@get('activeRoom.topic')) || @get('isEditingTopic')
+  ).property('activeRoom.topic', 'isEditingTopic')
 
   setFocus: ->
     @$('.send-message-text')?.focus()
@@ -306,6 +322,22 @@ App.RoomsContainerComponent = Ember.Component.extend
     @set('activeRoom.newMessageFile', null)
 
   actions:
+
+    editTopic: ->
+      @setProperties(isEditingTopic: true, newRoomTopic: @get('activeRoom.topic'))
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.edit-topic').focus().textrange('set') # Select all.
+      return undefined
+
+    cancelEditingTopic: ->
+      @set('isEditingTopic', false)
+      return undefined
+
+    saveTopic: ->
+      @set('isEditingTopic', false)
+      room = @get('activeRoom')
+      room.updateTopic(@get('newRoomTopic'))
+      return undefined
 
     chooseFile: ->
       @$('.send-message-file').trigger('click')

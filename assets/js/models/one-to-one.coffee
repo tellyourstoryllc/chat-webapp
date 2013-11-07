@@ -5,6 +5,9 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   name: Ember.computed.alias('otherUser.name')
 
+  # OneToOnes don't have topics.
+  canSetTopic: false
+
   otherUserId: (->
     id = @get('id')
     return null unless id?
