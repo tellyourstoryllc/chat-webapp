@@ -46,11 +46,16 @@ App.RoomsView = Ember.View.extend
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
+    isMembersVisible = $window.width() > 700
+
     height = $window.height()
     height -= $('.navbar:first').outerHeight() ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
       height: height
+
+    @$('.room-members-sidebar').css
+      display: if isMembersVisible then 'block' else 'none'
 
     # The list of members needs an explicit height so that it can be scrollable.
     height = $window.height()

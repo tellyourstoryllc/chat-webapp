@@ -99,9 +99,6 @@ App.RoomsContainerComponent = Ember.Component.extend
       width: width
       height: height
 
-    @$('.room-members-sidebar').css
-      display: if isMembersVisible then 'block' else 'none'
-
     # The connecting status bar.
     connectingBuffer = 60
     @$('.connecting-status-bar').css
