@@ -113,7 +113,7 @@ App.Group.reopenClass
   fetchById: (id) ->
     api = App.get('api')
     data =
-      limit: 100
+      limit: 40
     api.ajax(api.buildURL("/groups/#{id}"), 'GET', data: data)
 
   createRecord: (data) ->
