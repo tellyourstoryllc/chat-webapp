@@ -51,24 +51,22 @@ App.RoomsRoomRoute = Ember.Route.extend
       model.set('isOpen', true)
 
     if ! model?.get('associationsLoaded')
-      if isOneToOne
-        App.OneToOne.fetchAndLoadSingle(modelId)
-        .then (oneToOne) =>
-          controller.set('model', oneToOne)
-          App.set('currentlyViewingRoom', oneToOne)
+      type = if isOneToOne
+        App.OneToOne
       else
-        App.Group.fetchById(modelId)
-        .then (json) =>
-          if ! json.error?
-            # Load everything from the response.
-            group = App.Group.loadSingle(json)
+        App.Group
+      type.fetchAndLoadSingle(modelId)
+      .then (room) =>
+        # If we landed on this route, this is the first time we have the full
+        # Group or OneToOne instance, so set it on the controller.
+        if ! model?
+          controller.set('model', room)
+          App.set('currentlyViewingRoom', room)
 
-            # If we landed on this route, this is the first time we have the full
-            # Group instance, so set it on the controller.
-            if ! model?
-              model = group
-              controller.set('model', model)
-              App.set('currentlyViewingRoom', model)
+        # It's possible that this isn't included in /conversations so need to
+        # make sure that we're subscribed and have all messages.
+        room.subscribeToMessages().then =>
+          room.reload()
 
   _typeFromRoomId: (id) ->
     if /-/.test(id)

@@ -6,6 +6,7 @@
 #= require vendor/moment
 #= require vendor/jquery-textrange
 #= require vendor/sjcl
+#= require rsvp-ext
 #= require desktop-notify
 #= require platform-tests
 #

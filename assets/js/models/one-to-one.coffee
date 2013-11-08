@@ -58,7 +58,10 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     if ! id?
       throw new Error("Can't reload a record when it doesn't have an id.")
 
+    @set('isReloading', true)
     @constructor.fetchAndLoadSingle(id)
+    .always =>
+      @set('isReloading', false)
 
 
 App.OneToOne.reopenClass

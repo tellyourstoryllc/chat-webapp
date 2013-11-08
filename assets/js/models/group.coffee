@@ -89,7 +89,16 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     if ! id?
       throw new Error("Can't reload a record when it doesn't have an id.")
 
-    @constructor.fetchAndLoadSingle(id)
+    reloadingPromise = @get('isReloading')
+    if reloadingPromise
+      Ember.Logger.info "Already reloading #{@constructor}:#{@get('id')}; ignoring."
+      return reloadingPromise
+
+    promise = @constructor.fetchAndLoadSingle(id).always =>
+      @set('isReloading', null)
+    @set('isReloading', promise)
+
+    promise
 
 
 App.Group.reopenClass
