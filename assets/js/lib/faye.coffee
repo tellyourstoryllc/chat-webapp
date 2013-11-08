@@ -15,11 +15,11 @@ App.Faye.reopenClass
         message.ext.token = App.get('token')
 
         # Carry on and send the message to the server
-        Ember.Logger.log "faye outgoing", message
+        Ember.Logger.log "faye outgoing", new Date(), message
         callback(message)
 
       incoming: (message, callback) ->
-        Ember.Logger.log "faye incoming", message
+        Ember.Logger.log "faye incoming", new Date(), message
         callback(message)
 
     # Allow application to specify metadata in the `ext` property of the
