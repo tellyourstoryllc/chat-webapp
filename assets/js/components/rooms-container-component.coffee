@@ -82,6 +82,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       bottom: bottom
   ).observes('App.isFayeClientConnected')
 
+  anyRoomTopicChanged: (->
+    # A topic change can affect the height of messages list.
+    Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
+  ).observes('rooms.@each.topic', 'isEditingTopic')
+
   resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()
@@ -95,16 +100,17 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
-    isMembersVisible = $window.width() > 700
-    membersSidebarWidth = 200 # .room-members-sidebar
 
     height = $window.height()
-    width = $window.width()
-    width -= ($('.rooms-sidebar').outerWidth() ? 0)
-    width -= membersSidebarWidth if isMembersVisible
+    width = @messagesWidth($window)
     @$('.room-container').css
       width: width
       height: height
+
+    @$('.room-name-info-container').css
+      width: Math.floor(width * 0.4)
+    @$('.invite-link-container').css
+      width: Math.floor(width * 0.6)
 
     # The send message area, including textarea and send button.
     @$('.send-message-area').css
@@ -120,6 +126,42 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     if App.doesBrowserSupportAjaxFileUpload()
       @$('.send-message-file-button').css
         right: @$('.send-button').outerWidth() + 10
+
+    @updateMessagesSize($window)
+
+  updateMessagesSize: ($window = $(window), messagesWidth = @messagesWidth($window)) ->
+    # This method needs to work for multiple message view elements.
+
+    height = $window.height()
+    height -= 20 # .room-info outerHeight() without topic.
+    height -= @$('.send-message-area').outerHeight(true) ? 0
+
+    roomMessagesViewFromElement = ($e) ->
+      App._viewFromElement($e.closest('.room-messages-view'))
+
+    isEditingTopic = @get('isEditingTopic')
+    activeRoom = @get('activeRoom')
+    $('.messages').each ->
+      $e = $(@)
+      # Don't modify the height of message lists if they don't need to be
+      # changed.  That would screw up the scroll position.
+      view = roomMessagesViewFromElement($e)
+      view.updateSize(height, activeRoom, isEditingTopic, $e)
+
+    # Loading more messages bar at the top.
+    $loadingMoreMessages = $('.loading-more-messages')
+    loadingMessagesWidth = $loadingMoreMessages.width()
+    $loadingMoreMessages.css
+      left: Math.round((messagesWidth - loadingMessagesWidth) / 2)
+
+  # Returns the width of the list of messages in pixels.
+  messagesWidth: ($window = $(window)) ->
+    isMembersVisible = $window.width() > 700
+    membersSidebarWidth = 200 # .room-members-sidebar
+    width = $window.width()
+    width -= ($('.rooms-sidebar').outerWidth() ? 0)
+    width -= membersSidebarWidth if isMembersVisible
+    width
 
   showSetTopicLink: (->
     @get('activeRoom.canSetTopic') && Ember.isEmpty(@get('activeRoom.topic')) &&

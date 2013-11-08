@@ -393,15 +393,6 @@ room-members-sidebar-width = 200px
     border 1px solid #B4B4B4
     background-color #E6E6E6
 
-  .room-info-table
-    width 100%
-
-    td
-      padding 2px 5px
-
-  .room-name-info
-    width 40%
-
   .edit-topic-link
     color #aaa
     font-size 11px
@@ -413,13 +404,39 @@ room-members-sidebar-width = 200px
   .edit-topic
     width 70%
 
+  .room-info-table
+    width 100%
+
+  .room-name-info-container, .invite-link-container, .topic-container
+    box-sizing border-box
+    padding 2px 5px
+
+  .room-name-info-container
+    overflow ellipsis
+
   .room-permalink
     text-decoration none
 
-  .invite-link
+  .invite-link-container
+    overflow ellipsis
     text-align right
 
   .topic-cell
+    // Set explicit height so that it doesn't change when editing topic.
+    height 23px
+    // Center vertically.
+    vertical-align middle
+
+  .topic-container
+    // Remove top and bottom padding so we can use it for the text box which
+    // takes up more vertical space.
+    padding-top 0
+    padding-bottom 0
+
+    font-size 13px
+
+  .edit-topic-form
+    margin 0
     font-size 12px
 
 .messages

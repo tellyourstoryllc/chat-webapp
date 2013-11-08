@@ -146,6 +146,15 @@ window.App = App = Ember.Application.create
   _getRouter: ->
     @__container__.lookup('router:main')
 
+  # Returns the view instance from a given HTML element id.  You should only
+  # call this as a last resort.
+  _viewFromElement: (idOrJqueryElement) ->
+    id = if Ember.typeOf(idOrJqueryElement) == 'string'
+      idOrJqueryElement
+    else
+      idOrJqueryElement.attr('id')
+    Ember.View.views[id]
+
   isLoggedIn: -> @get('currentUser')?
 
   login: (token, user) ->

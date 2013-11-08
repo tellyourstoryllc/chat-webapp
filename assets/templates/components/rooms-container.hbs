@@ -4,33 +4,39 @@
       <div class='room-info'>
         <table class='room-info-table'>
           <tr>
-            <td class='room-name-info'>
-              {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
-              {{#if roomsContainer.showSetTopicLink}}
-                <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'><nobr>Set Topic</nobr></a>
-              {{/if}}
+            <td class='room-info-cell room-name-info-cell'>
+              <div class='room-name-info-container'>
+                {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+                {{#if roomsContainer.showSetTopicLink}}
+                  <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'><nobr>Set Topic</nobr></a>
+                {{/if}}
+              </div>
             </td>
-            <td class='invite-link'>
-              {{#if activeRoom.joinUrl}}
-                Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
-              {{/if}}
+            <td class='room-info-cell invite-link-cell'>
+              <div class='invite-link-container'>
+                {{#if activeRoom.joinUrl}}
+                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
+                {{/if}}
+              </div>
             </td>
           </tr>
           {{#if roomsContainer.showTopicRow}}
             <tr>
-              <td colspan='2' class='topic-cell'>
-                {{#if roomsContainer.isEditingTopic}}
-                  <form>
-                    {{input type='text' value=roomsContainer.newRoomTopic
-                      class='edit-topic'
-                      placeholder='New Topic' maxlength='160'}}
-                    <button type='submit' {{action 'saveTopic' target=roomsContainer}} class='save-topic-button'>Save</button>
-                    <a href='#' {{action 'cancelEditingTopic' target=roomsContainer}} class='edit-topic-link'>Cancel</a>
-                  </form>
-                {{else}}
-                  {{activeRoom.topic}}
-                  <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
-                {{/if}}
+              <td colspan='2' class='room-info-cell topic-cell'>
+                <div class='topic-container'>
+                  {{#if roomsContainer.isEditingTopic}}
+                    <form class='edit-topic-form'>
+                      {{input type='text' value=roomsContainer.newRoomTopic
+                        class='edit-topic'
+                        placeholder='New Topic' maxlength='160'}}
+                      <button type='submit' {{action 'saveTopic' target=roomsContainer}} class='save-topic-button'>Save</button>
+                      <a href='#' {{action 'cancelEditingTopic' target=roomsContainer}} class='edit-topic-link'>Cancel</a>
+                    </form>
+                  {{else}}
+                    {{activeRoom.topic}}
+                    <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
+                  {{/if}}
+                </div>
               </td>
             </tr>
           {{/if}}

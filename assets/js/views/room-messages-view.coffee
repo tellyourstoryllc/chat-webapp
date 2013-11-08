@@ -3,6 +3,7 @@
 # user isn't viewing the associated room.  It is shown and hidden when the user
 # switches to the room.
 App.RoomMessagesView = Ember.View.extend
+  classNames: ['room-messages-view']
 
   # Caller should bind this to the room.
   room: null
@@ -18,52 +19,28 @@ App.RoomMessagesView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'scrollMessages')
+    _.bindAll(@, 'scrollMessages')
 
   didInsertElement: ->
-    $(window).on 'resize', @resize
     @$('.messages').on 'scroll', @scrollMessages
     Ember.run.schedule 'afterRender', @, ->
-      @updateSize()
       @scrollToLastMessage(true)
 
   willDestroyElement: ->
-    $(window).off 'resize', @resize
     @$('.messages').off 'scroll', @scrollMessages
 
-  resize: _.debounce (event) ->
-    Ember.run @, ->
-      @updateSize()
-  , 5
-
-  roomTopicChanged: (->
-    isScrolledToLastMessage = @isScrolledToLastMessage()
-    Ember.run.schedule 'afterRender', @, ->
-      @updateSize()
-      @scrollToLastMessage(false) if isScrolledToLastMessage
-  ).observes('room.topic')
-
-  updateSize: ->
+  updateSize: (height, activeRoom, isEditingTopic, $messages) ->
     return unless @currentState == Ember.View.states.inDOM
-    $window = $(window)
-    isMembersVisible = $window.width() > 700
-    membersSidebarWidth = 200 # .room-members-sidebar
+    room = @get('room')
+    hasVisibleTopic = room == activeRoom && isEditingTopic || ! Ember.isEmpty(room.get('topic'))
+    messagesHeight = height
+    messagesHeight -= 23 if hasVisibleTopic # .topic-cell outerHeight()
+    isScrolledToLastMessage = @isScrolledToLastMessage()
+    $messages.css
+      height: messagesHeight
 
-    height = $window.height()
-    height -= $('.room-info').outerHeight() ? 0
-    height -= $('.send-message-area').outerHeight(true) ? 0
-
-    @$('.messages').css
-      height: height
-
-    width = $window.width()
-    width -= ($('.rooms-sidebar').outerWidth() ? 0)
-    width -= membersSidebarWidth if isMembersVisible
-
-    # Loading more messages bar at the top.
-    loadingMessagesWidth = @$('.loading-more-messages').width()
-    @$('.loading-more-messages').css
-      left: Math.round((width - loadingMessagesWidth) / 2)
+    if isScrolledToLastMessage
+      @scrollToLastMessage(false)
 
   roomWillChange: (->
     room = @get('room')
