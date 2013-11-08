@@ -33,7 +33,13 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   isSubscribedToUpdates: true
 
   subscribeToMessages: ->
-    # Ignore.  Assume we're already listening on the user channel.
+    # Assume we're already listening on the user channel.  Return that.
+    App.get('userChannelSubscription')
+
+  willSendMessageToChannel: (message, data) ->
+    # For OneToOnes, the server expects us to set the action.
+    data.ext ?= {}
+    data.ext.action = 'create_one_to_one_message'
 
   mostRecentMessagesUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
@@ -65,7 +71,7 @@ App.OneToOne.reopenClass
 
   propertiesFromRawAttrs: (json) ->
     id: @coerceId(json.id)
-    memberIds: (json.member_ids ? []).map (id) -> @coerceId(id)
+    memberIds: (json.member_ids ? []).map (id) => @coerceId(id)
 
   lookupOrCreate: (id) ->
     id = @coerceId(id)
@@ -102,7 +108,7 @@ App.OneToOne.reopenClass
   fetchById: (id) ->
     api = App.get('api')
     data =
-      limit: 100
+      limit: 40
     api.ajax(api.buildURL("/one_to_ones/#{id}"), 'GET', data: data)
 
   # Given json for a OneToOne and all its associations, load it, and return the

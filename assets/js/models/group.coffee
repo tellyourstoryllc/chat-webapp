@@ -42,18 +42,21 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   subscribeToMessages: ->
     # If we already have a subscription, we're done.
-    return if @get('subscription')?
+    subscription = @get('subscription')
+    return subscription if subscription?
 
     client = App.get('fayeClient')
     groupId = @get('id')
     if ! groupId?
       Ember.Logger.warn "I can't subscribe to messages without a group ID."
-      return
+      return null
 
     subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
       Ember.run @, ->
         @didReceiveUpdateFromFaye(json)
     @set('subscription', subscription)
+
+    return subscription
 
   updateTopic: (newTopic) ->
     if @isPropertyLocked('topic')
@@ -81,6 +84,14 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   publishMessageChannelName: ->
     "/groups/#{@get('id')}/messages"
 
+  reload: ->
+    id = @get('id')
+    if ! id?
+      throw new Error("Can't reload a record when it doesn't have an id.")
+
+    @constructor.fetchAndLoadSingle(id)
+
+
 App.Group.reopenClass
 
   # Array of all instances.  Public access is with `all()`.
@@ -99,9 +110,18 @@ App.Group.reopenClass
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
 
+  # Fetches a Group by id and returns a promise that resolves to the Group
+  # instance.
+  fetchAndLoadSingle: (id) ->
+    @fetchById(id)
+    .then (json) =>
+      if ! json? || json.error?
+        throw json
+      return @loadSingle(json)
+
   # Given json for a Group and all its associations, load it, and return the
   # `App.Group` instance.
-  loadSingleGroup: (json) ->
+  loadSingle: (json) ->
     instances = App.loadAll(json)
     group = instances.find (o) -> o instanceof App.Group
     group.didLoadMembers()
@@ -110,22 +130,10 @@ App.Group.reopenClass
 
     group
 
-  fetchAll: ->
-    api = App.get('api')
-    api.ajax(api.buildURL('/groups'), 'GET', data: {})
-    .then (json) =>
-      if ! json?.error?
-        json = Ember.makeArray(json)
-        groupObjs = json.filter (o) -> o.object_type == 'group'
-        groups = groupObjs.map (g) -> App.Group.loadRaw(g)
-        return groups
-      else
-        throw new Error(json)
-
   fetchById: (id) ->
     api = App.get('api')
     data =
-      limit: 100
+      limit: 40
     api.ajax(api.buildURL("/groups/#{id}"), 'GET', data: data)
 
   createRecord: (data) ->

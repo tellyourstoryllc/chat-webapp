@@ -103,6 +103,16 @@ App.RemoteApi = Ember.Object.extend
   joinGroup: (joinCode) ->
     @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', {})
 
+  fetchAllConversations: ->
+    api = App.get('api')
+    api.ajax(api.buildURL('/conversations'), 'GET', data: {})
+    .then (json) =>
+      if json.error?
+        throw json
+
+      instances = App.loadAll(json)
+      return instances.filter (o) -> o.get('actsLikeConversation')
+
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
       serialized * 1000

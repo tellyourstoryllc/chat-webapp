@@ -7,12 +7,14 @@ App.RoomsRoute = Ember.Route.extend
   setupController: (controller, model) ->
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
-    App.Group.fetchAll()
-    .then (groups) =>
-      if groups?
+    App.get('api').fetchAllConversations()
+    .then (rooms) =>
+      if rooms?
         controller.set('roomsLoaded', true)
-        for group in groups
-          group.subscribeToMessages()
+        # Fetch all Conversations after subscribing.
+        rooms.forEach (room) =>
+          room.subscribeToMessages().then =>
+            room.reload()
 
   # Returns a pair where the first is a list representing the rooms list in the
   # UI, and the second is the lobby object.
@@ -36,7 +38,7 @@ App.RoomsRoute = Ember.Route.extend
         index--
         index = uiGroups.length - 1 if index < 0
         inst = uiGroups.objectAt(index)
-        if inst instanceof App.Group
+        if inst.get('actsLikeConversation')
           @transitionTo('rooms.room', inst)
         else
           @transitionTo(inst.get('transitionToArgs')...)
@@ -49,7 +51,7 @@ App.RoomsRoute = Ember.Route.extend
         index++
         index = 0 if index >= uiGroups.length
         inst = uiGroups.objectAt(index)
-        if inst instanceof App.Group
+        if inst.get('actsLikeConversation')
           @transitionTo('rooms.room', inst)
         else
           @transitionTo(inst.get('transitionToArgs')...)

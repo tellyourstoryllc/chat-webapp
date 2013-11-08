@@ -66,6 +66,9 @@ App.Conversation = Ember.Mixin.create
 
     @setProperties(props)
 
+  # Marks a class as a conversation.
+  actsLikeConversation: true
+
   associationsLoaded: Ember.computed.alias('usersLoaded')
 
   members: (->
@@ -353,6 +356,10 @@ App.Conversation = Ember.Mixin.create
     , (e) =>
       @set('isLoadingEarlierMessages', false)
       throw e
+
+  # Hook that gets called with the App.Message and the payload (faye data built
+  # from the message) just before it is published to the channel via socket.
+  willSendMessageToChannel: Ember.K
 
   processIncomingMessageText: (message, text) ->
     newText = text
