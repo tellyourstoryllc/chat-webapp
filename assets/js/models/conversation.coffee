@@ -152,8 +152,8 @@ App.Conversation = Ember.Mixin.create
     promise
 
   isFayeClientConnectedChanged: (->
-    if ! @get('isSubscribedToUpdates')
-      # If we're not listening, we don't care.
+    if ! @get('associationsLoaded') || ! @get('isSubscribedToUpdates')
+      # If we're not loaded or not listening, we don't care.
       return
 
     if App.get('isFayeClientConnected')
