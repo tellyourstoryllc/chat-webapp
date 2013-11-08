@@ -331,13 +331,17 @@ App.Conversation = Ember.Mixin.create
   fetchAndLoadEarlierMessages: ->
     return unless @get('usersLoaded') && @get('canLoadEarlierMessages')
     return if @get('isLoadingEarlierMessages')
+    minMessageId = @get('minNumericMessageId')
+
+    # Don't do anything if we don't already have a message to query from.  If we
+    # don't, it means the conversation isn't loaded yet.
+    return unless minMessageId? && minMessageId < Infinity
 
     api = App.get('api')
     groupId = @get('id')
     data =
       limit: @get('messagesPageSize')
-    minMessageId = @get('minNumericMessageId')
-    data.last_message_id = minMessageId if minMessageId < Infinity
+      last_message_id: minMessageId
 
     @set('isLoadingEarlierMessages', true)
     api.ajax(@earlierMessagesUrl(), 'GET', data: data)
