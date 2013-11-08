@@ -116,7 +116,7 @@ App.RoomsView = Ember.View.extend
           $link.addClass 'active'
         else
           $link.removeClass 'active'
-  ).observes('App.currentlyViewingRoom')
+  ).observes('App.currentlyViewingRoom', 'controller.roomsLoaded')
 
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)
