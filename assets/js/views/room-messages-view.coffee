@@ -124,7 +124,8 @@ App.RoomMessagesView = Ember.View.extend
   # Raw event handler called in the context of the DOM element.  We need to do
   # it this way since there are multiple instances visible at the same time.
   onScrollMessages: (event) ->
-    App._viewFromElement($(@).closest('.room-messages-view')).scrollMessages(arguments...)
+    view = App._viewFromElement($(@).closest('.room-messages-view'))
+    view?.scrollMessages(arguments...)
 
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->
