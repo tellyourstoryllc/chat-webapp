@@ -87,6 +87,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
   ).observes('rooms.@each.topic', 'isEditingTopic')
 
+  roomsChanged: (->
+    # If a room gets added later, it needs to get sized.
+    Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
+  ).observes('rooms.@each.associationsLoaded')
+
   resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()
@@ -102,7 +107,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $window = $(window)
 
     height = $window.height()
-    width = @messagesWidth($window)
+    messagesWidth = @messagesWidth($window)
+    width = messagesWidth
     @$('.room-container').css
       width: width
       height: height
@@ -127,7 +133,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.send-message-file-button').css
         right: @$('.send-button').outerWidth() + 10
 
-    @updateMessagesSize($window)
+    @updateMessagesSize($window, messagesWidth)
 
   updateMessagesSize: ($window = $(window), messagesWidth = @messagesWidth($window)) ->
     # This method needs to work for multiple message view elements.
