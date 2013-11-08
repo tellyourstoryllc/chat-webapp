@@ -311,8 +311,6 @@ App.Message.reopenClass
         throw xhr.responseJSON
     else
       convo.willSendMessageToChannel(message, data)
-      # The instance is used by the faye extension.
-      data.messageInstance = message
       # Wrap Faye's promise in an RSVP.Promise.
       return new Ember.RSVP.Promise (resolve, reject) =>
         # Publish the message via the socket.
