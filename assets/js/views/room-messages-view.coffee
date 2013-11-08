@@ -19,15 +19,13 @@ App.RoomMessagesView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'scrollMessages')
 
   didInsertElement: ->
-    @$('.messages').on 'scroll', @scrollMessages
+    @$('.messages').on 'scroll', @onScrollMessages
     Ember.run.schedule 'afterRender', @, ->
       @scrollToLastMessage(true)
 
   willDestroyElement: ->
-    @$('.messages').off 'scroll', @scrollMessages
 
   updateSize: (height, activeRoom, isEditingTopic, $messages) ->
     return unless @currentState == Ember.View.states.inDOM
@@ -122,6 +120,11 @@ App.RoomMessagesView = Ember.View.extend
     return false if index < 0 || cursorIndex < 0
     index < cursorIndex
   ).property('rooms.@each', 'room', 'App.currentlyViewingRoom')
+
+  # Raw event handler called in the context of the DOM element.  We need to do
+  # it this way since there are multiple instances visible at the same time.
+  onScrollMessages: (event) ->
+    App._viewFromElement($(@).closest('.room-messages-view')).scrollMessages(arguments...)
 
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->
