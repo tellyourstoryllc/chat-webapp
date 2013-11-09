@@ -338,9 +338,18 @@ App.Message.reopenClass
       @_all.pushObject(message)
       @_allById[message.get('id')] = message
 
+  # Given the text for a new message in a conversation, returns array of
+  # mentioned user IDs.
+  mentionedIdsForNewMessage: (text, conversation) ->
+    # Always treat 1-1 as a mention.
+    if conversation instanceof App.OneToOne
+      return [conversation.get('otherUserId')]
+
+    @mentionedIdsInText(text, conversation)
+
   # Parses text and returns users from the given set who were mentioned.  This
   # is helpful when creating new messages.
-  mentionedIdsInText: (text, users) ->
+  mentionedIdsInText: (text, conversation) ->
     return [] unless text?
 
     if /@all\b/i.test(text)
@@ -348,7 +357,7 @@ App.Message.reopenClass
       return [@mentionAllId]
 
     lowerCasedText = text.toLowerCase()
-    users.filter (user) ->
+    conversation.get('members').filter (user) ->
       mentionName = user.get('mentionName')
       regexp = new RegExp("@#{App.Util.escapeRegexp(mentionName)}\\b", 'i')
       regexp.test(text)
