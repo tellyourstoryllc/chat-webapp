@@ -18,7 +18,11 @@ App.Conversation = Ember.Mixin.create
   canLoadEarlierMessages: true
   isLoadingEarlierMessages: false
 
-  messagesPageSize: 100
+  messagesPageSize: 60
+
+  # This should be less than or equal to the initial fetch limit.  Otherwise it
+  # causes duplicates.
+  messagesLimitOnReconnect: 40
 
   usersLoaded: false
 
@@ -193,7 +197,7 @@ App.Conversation = Ember.Mixin.create
   fetchMostRecentMessages: ->
     api = App.get('api')
     data =
-      limit: @get('messagesPageSize')
+      limit: @get('messagesLimitOnReconnect')
     api.ajax(@mostRecentMessagesUrl(), 'GET', data: data)
     .then (json) =>
       if ! json? || json.error?
