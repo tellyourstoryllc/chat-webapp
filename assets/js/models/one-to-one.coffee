@@ -106,6 +106,16 @@ App.OneToOne.reopenClass
     .then (json) =>
       if ! json? || json.error?
         throw json
+
+      json = Ember.makeArray(json)
+      # If the API didn't return a OneToOne, but only its users, then synthesize
+      # one.
+      if ! json.find((o) -> o.object_type == 'one_to_one')
+        # Build the JSON for a one to one.
+        json.push
+          object_type: 'one_to_one'
+          id: id
+          member_ids: json.filter((o) -> o.object_type == 'user').map((o) -> o.id)
       return @loadSingle(json)
 
   fetchById: (id) ->
