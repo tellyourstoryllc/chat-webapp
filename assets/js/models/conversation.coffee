@@ -260,7 +260,7 @@ App.Conversation = Ember.Mixin.create
         @playMentionSound()
 
       if ! fromCurrentUser &&
-      (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @)
+      (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
         if wasMentioned
           @createDesktopNotification(message)
         else
