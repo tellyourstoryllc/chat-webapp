@@ -32,7 +32,14 @@ App.Faye.reopenClass
           delete message.data.ext
         callback(message)
 
+    implementSaneConnectEvent =
+      incoming: (message, callback) ->
+        if message.channel == Faye.Channel.HANDSHAKE && message.successful
+          fayeClient.trigger('app:connect')
+        callback(message)
+
     fayeClient.addExtension(clientAuth)
     fayeClient.addExtension(moveExtData)
+    fayeClient.addExtension(implementSaneConnectEvent)
 
     fayeClient
