@@ -135,16 +135,17 @@ window.App = App = Ember.Application.create
       Ember.Logger.log "faye app:connect", new Date()
       @set('isFayeClientConnected', true)
       @updateStatusAfterConnect()
+      @get('eventTarget').trigger('didConnect')
       return undefined
 
   onFayeTransportUp: ->
     Ember.run @, ->
       Ember.Logger.log "faye transport:up", new Date()
+      return undefined
 
   onFayeTransportDown: ->
     Ember.run @, ->
       Ember.Logger.log "faye transport:down", new Date()
-      @set('isFayeClientConnected', false)
       return undefined
 
   # Returns the router.  You should only call this as a last resort.

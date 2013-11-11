@@ -15,6 +15,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
+    App.get('eventTarget').on 'didConnect', @, @didConnect
 
   didInsertElement: ->
     App.set('roomsContainerView', @)
@@ -72,7 +73,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isSendDisabled: Ember.computed.not('activeRoom.associationsLoaded')
 
-  isFayeClientConnectedChanged: (->
+  didConnect: ->
     bottom = if App.get('isFayeClientConnected')
       '0'
     else
@@ -80,7 +81,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     @$('.connecting-status-bar').css
       bottom: bottom
-  ).observes('App.isFayeClientConnected')
 
   anyRoomTopicChanged: (->
     # A topic change can affect the height of messages list.
