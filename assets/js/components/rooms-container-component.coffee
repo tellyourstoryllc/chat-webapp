@@ -423,7 +423,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         oneToOneId: convo instanceof App.OneToOne && convo.get('id')
         localText: text
         imageFile: file
-        mentionedUserIds: App.Message.mentionedIdsForNewMessage(text, convo)
+        mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
         Ember.Logger.error e
