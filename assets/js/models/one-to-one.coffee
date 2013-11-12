@@ -5,6 +5,8 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   name: Ember.computed.alias('otherUser.name')
 
+  avatarUrl: Ember.computed.alias('otherUser.avatarUrl')
+
   # OneToOnes don't have topics.
   canSetTopic: false
 

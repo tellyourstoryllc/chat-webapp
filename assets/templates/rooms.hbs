@@ -18,6 +18,7 @@
         <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
             {{room-icon room=room}}
+            {{room-avatar room=room}}
             {{room.name}}
             <span {{action 'closeRoom' room}} class='close-room'>&times;</span>
           {{/link-to}}
@@ -60,7 +61,9 @@
         <li class='room-member'>
           {{#link-to 'rooms.room' user}}
             <div>
-              <span {{bind-attr class=':status-dot user.computedStatus'}}></span> {{user.name}}
+              <span {{bind-attr class=':status-dot user.computedStatus'}}></span>
+              <img {{bind-attr src='user.avatarUrl'}} class='small-avatar'>
+              {{user.name}}
             </div>
             {{#if user.isIdle}}
               <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>

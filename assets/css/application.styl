@@ -96,6 +96,14 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   width auto
   vertical-align middle
 
+.small-avatar
+  height 20px
+  width auto
+  vertical-align middle
+
+  &.not-displayed
+    display none
+
 
 html
   min-height 100%
@@ -239,7 +247,7 @@ body.logged-out
     &:hover
       color #eee !important
 
-  .room-icon.status-dot
+  .room-icon.status-dot, .room-avatar
     margin-right 5px
 
 .current-user-status-bar

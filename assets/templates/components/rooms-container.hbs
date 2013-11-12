@@ -57,7 +57,10 @@
                 <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}} {{bind-attr data-message-id='message.id'}}>
                   <div class='message-table'>
                     <div class='sender-cell'>
-                      <div class='sender'>{{message.user.name}}</div>
+                      <div class='sender'>
+                        {{message.user.name}}
+                        <img class='small-avatar' src='{{unbound message.user.avatarUrl}}'>
+                      </div>
                     </div>
                     <div class='body-cell'>
                       <span class='status'>

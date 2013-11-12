@@ -59,6 +59,7 @@ App.User.reopenClass
 
   propertiesFromRawAttrs: (json) ->
     id: App.BaseModel.coerceId(json.id)
+    avatarUrl: json.avatar_url
     name: json.name
     status: json.status
     statusText: json.status_text
