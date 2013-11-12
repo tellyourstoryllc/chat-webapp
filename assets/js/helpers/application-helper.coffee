@@ -45,13 +45,6 @@ Ember.Handlebars.registerBoundHelper 'compact-timestamp-element', (date, options
   "<span#{attrs} title='#{escape(tooltipTime)}'>#{escape(relativeTime)}</span>".htmlSafe()
 
 
-# This converts named arguments that are unquoted to bindings.
-normalizeHash = (hash, hashTypes) ->
-  for prop of hash
-    if hashTypes[prop] == 'ID'
-      hash[prop + 'Binding'] = hash[prop]
-      delete hash[prop]
-
 # Copied and adapted from `textarea` helper from `ember.js/packages/ember-
 # handlebars/lib/controls.js`
 Ember.Handlebars.registerHelper 'actionable-textarea', (options) ->
@@ -60,5 +53,4 @@ Ember.Handlebars.registerHelper 'actionable-textarea', (options) ->
   hash = options.hash
   types = options.hashTypes
 
-  normalizeHash(hash, types)
   Ember.Handlebars.helpers.view.call(@, App.ActionableTextareaComponent, options)
