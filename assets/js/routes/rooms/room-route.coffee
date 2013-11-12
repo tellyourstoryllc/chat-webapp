@@ -67,6 +67,7 @@ App.RoomsRoomRoute = Ember.Route.extend
         # make sure that we're subscribed and have all messages.
         room.subscribeToMessages().then =>
           room.reload()
+      .then null, App.rejectionHandler
 
   _typeFromRoomId: (id) ->
     if /-/.test(id)

@@ -131,6 +131,17 @@ window.App = App = Ember.Application.create
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
 
+  # Common promise rejection handler.  Use this as the final handler whenever
+  # you create a promise so that errors don't get swallowed.  For example:
+  #
+  #     somethingAsync()
+  #     .then (result) ->
+  #       coolStuff(result) # This could accidentally throw an exception.
+  #     .then null, App.rejectionHandler
+  rejectionHandler: (e) ->
+    Ember.Logger.error(e, e?.message)
+    throw e
+
   onFayeConnect: ->
     Ember.run @, ->
       Ember.Logger.log "faye app:connect", new Date()

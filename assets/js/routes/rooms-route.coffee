@@ -15,6 +15,7 @@ App.RoomsRoute = Ember.Route.extend
         rooms.forEach (room) =>
           room.subscribeToMessages().then =>
             room.reload()
+    .then null, App.rejectionHandler
 
   # Returns a pair where the first is a list representing the rooms list in the
   # UI, and the second is the lobby object.

@@ -35,3 +35,4 @@ App.JoinRoute = Ember.Route.extend
         msg = xhr?.responseJSON?.error?.message
         if msg?
           controller.set('userMessage', msg)
+      .then null, App.rejectionHandler
