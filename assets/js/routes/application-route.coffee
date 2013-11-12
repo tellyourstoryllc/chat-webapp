@@ -18,3 +18,7 @@ App.ApplicationRoute = Ember.Route.extend
 
     logOut: ->
       @transitionTo('logout')
+
+    error: (reason) ->
+      Ember.Logger.error(reason)
+      return undefined
