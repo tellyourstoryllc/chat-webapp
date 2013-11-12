@@ -62,7 +62,7 @@
           {{#link-to 'rooms.room' user}}
             <div>
               <span {{bind-attr class=':status-dot user.computedStatus'}}></span>
-              <img {{bind-attr src='user.avatarUrl'}} class='small-avatar'>
+              <img {{bind-attr src='user.avatarUrl'}} {{bind-attr class=':small-avatar App.preferences.showAvatars::avatars-off'}}>
               {{user.name}}
             </div>
             {{#if user.isIdle}}

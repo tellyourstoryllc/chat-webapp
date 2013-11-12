@@ -47,6 +47,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
     @$('.send-message-file').off 'change', @fileChange
 
+  avatarClassNames: (->
+    classes = ['small-avatar']
+    if ! App.get('preferences.showAvatars')
+      classes.push('avatars-off')
+    classes.join(' ')
+  ).property('App.preferences.showAvatars')
+
   bodyKeyDown: (event) ->
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
