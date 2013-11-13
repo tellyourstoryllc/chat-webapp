@@ -12,7 +12,7 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
   computedStatus: (->
     clientType = @get('clientType')
-    return clientType if clientType in ['mobile', 'phone', 'tablet']
+    return clientType if clientType in ['phone', 'tablet']
     @get('status')
   ).property('clientType', 'status')
 
