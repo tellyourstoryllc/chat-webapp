@@ -38,17 +38,8 @@ App.Faye.reopenClass
           fayeClient.trigger('app:connect')
         callback(message)
 
-    staleClientDetection =
-      incoming: (message, callback) ->
-        if /^1000:/.test("#{message.error}") # Stale client.
-          _.defer =>
-            fayeClient.connect (->), @
-
-        callback(message)
-
     fayeClient.addExtension(clientAuth)
     fayeClient.addExtension(moveExtData)
     fayeClient.addExtension(implementSaneConnectEvent)
-    fayeClient.addExtension(staleClientDetection)
 
     fayeClient
