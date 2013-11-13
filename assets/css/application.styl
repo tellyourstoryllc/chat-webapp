@@ -15,6 +15,20 @@ error-text-color       = #b94a48
 error-background-color = #f2dede
 error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
+// Mixins
+
+grayscale-image()
+  filter url(/images/filters.svg#grayscale) // Firefox 3.5+
+  filter gray // IE6-9
+  -webkit-filter: grayscale(1) // Chrome, Safari 6+, Opera 15+
+  filter: grayscale(100%) // Current draft standard.
+
+disable-grayscale-image()
+  filter none
+  -webkit-filter: grayscale(0)
+
+///////////////////////////////////////////////////////////
+
 .pull-left
   float left
 
@@ -623,6 +637,13 @@ room-members-sidebar-width = 200px
 
     color #686868
     font-weight bold
+
+    > .small-avatar
+      grayscale-image()
+
+    &:hover
+      > .small-avatar
+        disable-grayscale-image()
 
   .message-body
     overflow hidden
