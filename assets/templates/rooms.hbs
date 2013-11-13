@@ -34,6 +34,9 @@
       <span {{bind-attr class=':status-icon currentUser.status'}}></span> {{humanize currentUser.status}}
       <span class='idle-time'>{{App.idleForSeconds}}s</span>
     </div>
+    <div class='settings-icon-cell' {{action 'showSettings'}}>
+      <img class='settings-icon' src='/images/settings-icon.png'>
+    </div>
   </div>
 </div>
 

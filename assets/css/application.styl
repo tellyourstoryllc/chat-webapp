@@ -110,6 +110,49 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   &.not-displayed, &.avatars-off
     display none
 
+.page-overlay
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  background-color rgba(0,0,0, .75)
+  z-index 1000
+
+  transition opacity 0.3s ease-out, visibility 0.3s ease-out
+
+  &.hidden
+    visibility hidden
+    opacity 0
+
+.modal
+  position fixed
+  top 10%
+  left 50%
+  overflow hidden
+  z-index 1001 // Higher than .page-overlay
+  border-radius 6px
+  background-color #EDEDED
+  box-shadow 0 0 10px rgba(0,0,0, .5)
+
+.settings-dialog
+  .header
+    padding 10px
+    border-bottom 1px solid #B7B7B7
+    background-color #E3E3E3
+
+    .close
+      float right
+      cursor pointer
+
+  .content
+    padding 10px
+
+  .avatar-image
+    width auto
+    height 20px
+    vertical-align middle
+
 
 html
   min-height 100%
@@ -258,6 +301,7 @@ body.logged-out
 
 .current-user-status-bar
   position fixed
+  display table
   left 0
   bottom 0
   box-sizing border-box
@@ -266,6 +310,7 @@ body.logged-out
   color #aaa
 
 .current-user-status
+  display table-cell
   padding 10px
   // Clickable.
   cursor pointer
@@ -281,6 +326,23 @@ body.logged-out
   left 5px
   bottom 37px
   width room-sidebar-width - 10px
+
+.settings-icon-cell
+  display table-cell
+  width 18px
+  padding 8px 10px
+  text-align right
+  vertical-align middle
+  cursor pointer
+
+  &:hover > .settings-icon
+    opacity 1
+
+.settings-icon
+  width 18px
+  height 20px
+  vertical-align middle
+  opacity .7
 
 .room-content
   position fixed

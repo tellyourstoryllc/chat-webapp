@@ -1,0 +1,18 @@
+<div class='header'>
+  <div class='close' {{action 'hideDialog'}}>&times;</div>
+  <h3>Settings</h3>
+</div>
+<div class='content'>
+  {{#if doesBrowserSupportAjaxFileUpload}}
+    <img {{bind-attr src='App.currentUser.avatarUrl'}} class='avatar-image'>
+    <button type='button' {{action 'chooseAvatarFile'}}
+      {{bind-attr disabled='isSendingAvatar'}}>
+      {{#if isSendingAvatar}}
+        Uploading...
+      {{else}}
+        Change
+      {{/if}}
+    </button>
+    <input type='file' class='avatar-file-input' style='display: none'>
+  {{/if}}
+</div>

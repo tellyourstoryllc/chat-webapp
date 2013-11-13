@@ -17,6 +17,17 @@ App.RoomsRoute = Ember.Route.extend
             room.reload()
     .then null, App.rejectionHandler
 
+  renderTemplate: (controller, model) ->
+    @_super(arguments...)
+    # Render the settings-modal template into the application template's modal
+    # outlet.
+    @render 'settings-modal',
+      into: 'application'
+      outlet: 'modal'
+      view: 'settingsModal'
+      controller: 'settingsModal'
+    return undefined
+
   # Returns a pair where the first is a list representing the rooms list in the
   # UI, and the second is the lobby object.
   _uiGroups: ->
@@ -76,4 +87,8 @@ App.RoomsRoute = Ember.Route.extend
             @transitionTo('rooms.index')
 
       room.set('isOpen', false)
+      return undefined
+
+    showSettings: ->
+      @controllerFor('settingsModal').send('show')
       return undefined
