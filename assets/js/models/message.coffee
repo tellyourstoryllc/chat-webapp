@@ -163,6 +163,14 @@ App.Message = App.BaseModel.extend
     userId? && userId == App.get('currentUser.id')
   ).property('userId', 'App.currentUser.id')
 
+  sentByClassName: (->
+    userId = @get('userId')
+    return null unless userId?
+    "sent-by-#{userId}"
+  # Note: userId should never change, so not using it as dependent key for
+  # performance.
+  ).property()
+
   fetchAndLoadAssociations: ->
     @get('conversation').fetchAndLoadAssociations()
 

@@ -48,6 +48,12 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
     now ?= new Date()
     seconds + (now.getTime() - asOf.getTime()) / 1000
 
+  avatarUrlChanged: (->
+    id = @get('id')
+    return unless id?
+    $(".sent-by-#{id} .small-avatar").prop('src', @get('avatarUrl'))
+  ).observes('id', 'avatarUrl')
+
 
 App.User.reopenClass
 

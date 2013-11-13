@@ -54,7 +54,8 @@
               </div>
 
               {{#each message in messages}}
-                <div {{bind-attr class=':message message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}} {{bind-attr data-message-id='message.id'}}>
+                <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
+                  {{bind-attr data-message-id='message.id'}}>
                   <div class='message-table'>
                     <div class='sender-cell'>
                       <div class='sender'>
