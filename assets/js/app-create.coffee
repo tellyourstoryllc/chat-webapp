@@ -56,6 +56,9 @@ window.App = App = Ember.Application.create
   # The faye subscription to the current user's channel.
   userChannelSubscription: null
 
+  # True when the `userChannelSubscription` is fully subscribed.
+  isSubscribedToUserChannel: false
+
   # The `App.RoomsContainerComponent` currently being displayed.
   roomsContainerView: null
 
@@ -213,6 +216,7 @@ window.App = App = Ember.Application.create
     @set('userChannelSubscription', subscription)
 
     subscription.then =>
+      @set('isSubscribedToUserChannel', true)
       # Update our own status after we ensure that we're listening for status
       # updates.
       @updateStatusAfterConnect() if @get('isFayeClientConnected')
@@ -234,7 +238,7 @@ window.App = App = Ember.Application.create
     @publishClientStatus()
 
   publishClientStatus: ->
-    return unless @isLoggedIn()
+    return unless @isLoggedIn() && @get('isSubscribedToUserChannel')
     data = if App.get('isIdle')
       status: 'idle'
       idle_duration: App.get('idleForSeconds')
