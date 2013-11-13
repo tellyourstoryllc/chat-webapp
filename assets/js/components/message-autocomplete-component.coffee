@@ -96,7 +96,7 @@ App.MessageAutocompleteItemView = Ember.View.extend
       display = escapedName + " (#{escapedValue})"
       user = suggestion.get('user')
       if user?
-        display = "<span class='status-dot #{user.get('computedStatus')}'></span> " + display
+        display = "<span class='status-icon #{user.get('computedStatus')}'></span> " + display
     else if suggestion.get('imageUrl')
       img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
       display = img + " #{escapedValue}"

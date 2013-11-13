@@ -7,6 +7,12 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   avatarUrl: Ember.computed.alias('otherUser.avatarUrl')
 
+  hasStatusIcon: Ember.computed.alias('otherUser.hasStatusIcon')
+
+  clientType: Ember.computed.alias('otherUser.clientType')
+
+  computedStatus: Ember.computed.alias('otherUser.computedStatus')
+
   # OneToOnes don't have topics.
   canSetTopic: false
 

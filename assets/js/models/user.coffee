@@ -5,15 +5,19 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Most recently calculated idle duration in seconds.
   mostRecentIdleDuration: null
 
+  # Status icon duck typing.
+  hasStatusIcon: true
+
   isIdle: Ember.computed.equal('status', 'idle')
 
-  # TODO: this should take into account device status.
   computedStatus: (->
+    clientType = @get('clientType')
+    return clientType if clientType in ['mobile', 'phone', 'tablet']
     @get('status')
-  ).property('status')
+  ).property('clientType', 'status')
 
   sortableComputedStatus: (->
-    switch @get('computedStatus')
+    switch @get('status')
       when 'available'
         0
       when 'away', 'idle'
@@ -22,7 +26,7 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
         2
       else
         3
-  ).property('computedStatus')
+  ).property('status')
 
   mentionName: (->
     @get('name').replace(/\s/g, '')
@@ -61,6 +65,7 @@ App.User.reopenClass
     id: App.BaseModel.coerceId(json.id)
     avatarUrl: json.avatar_url
     name: json.name
+    clientType: json.client_type
     status: json.status
     statusText: json.status_text
     idleDuration: json.idle_duration

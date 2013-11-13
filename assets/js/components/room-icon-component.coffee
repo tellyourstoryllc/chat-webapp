@@ -1,16 +1,14 @@
 App.RoomIconComponent = Ember.Component.extend
   tagName: 'span'
   classNames: ['room-icon']
-  classNameBindings: ['hasStatus:status-dot', 'computedStatus']
+  classNameBindings: ['hasStatus:status-icon', 'computedStatus']
 
-  hasStatus: (->
-    @get('room') instanceof App.OneToOne
-  ).property('room')
+  hasStatus: Ember.computed.alias('room.hasStatusIcon')
 
   computedStatus: (->
     room = @get('room')
-    if room instanceof App.OneToOne
-      room.get('otherUser.computedStatus')
+    if room.get('hasStatusIcon')
+      room.get('computedStatus')
     else
       null
-  ).property('room.otherUser.computedStatus')
+  ).property('room.hasStatusIcon', 'room.computedStatus')

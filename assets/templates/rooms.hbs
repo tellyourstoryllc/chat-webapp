@@ -31,7 +31,7 @@
 
   <div class='current-user-status-bar'>
     <div class='current-user-status' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
-      <span {{bind-attr class=':status-dot currentUser.computedStatus'}}></span> {{humanize currentUser.status}}
+      <span {{bind-attr class=':status-icon currentUser.status'}}></span> {{humanize currentUser.status}}
       <span class='idle-time'>{{App.idleForSeconds}}s</span>
     </div>
   </div>
@@ -40,7 +40,7 @@
 <ul class='menu choose-status-menu' role='menu'>
   {{#each status in App.User.statuses}}
     <li class='menu-item' {{action 'setStatus' status target='view'}}>
-      <span {{bind-attr class=':status-dot status.name'}}></span> {{status.title}}
+      <span {{bind-attr class=':status-icon status.name'}}></span> {{status.title}}
     </li>
   {{/each}}
   <li class='separator'></li>
@@ -61,7 +61,7 @@
         <li class='room-member'>
           {{#link-to 'rooms.room' user}}
             <div>
-              <span {{bind-attr class=':status-dot user.computedStatus'}}></span>
+              {{room-icon room=user}}
               <img {{bind-attr src='user.avatarUrl'}} {{bind-attr class=':small-avatar App.preferences.showAvatars::avatars-off'}}>
               {{user.name}}
             </div>
