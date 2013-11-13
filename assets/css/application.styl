@@ -127,8 +127,8 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
 .modal
   position fixed
-  top 10%
-  left 50%
+  top 40%
+  left 42%
   overflow hidden
   z-index 1001 // Higher than .page-overlay
   border-radius 6px
@@ -136,6 +136,8 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
   box-shadow 0 0 10px rgba(0,0,0, .5)
 
 .settings-dialog
+  width 200px
+
   .header
     padding 10px
     border-bottom 1px solid #B7B7B7
@@ -147,6 +149,15 @@ error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
   .content
     padding 10px
+    font-size 12px
+
+  .label-cell, .control-cell
+    padding-bottom 5px
+    vertical-align top
+
+  .label-cell
+    padding-right 5px
+    text-align right
 
   .avatar-image
     width auto
