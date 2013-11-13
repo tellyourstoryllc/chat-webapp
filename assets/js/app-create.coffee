@@ -244,6 +244,7 @@ window.App = App = Ember.Application.create
       idle_duration: App.get('idleForSeconds')
     else
       status: 'active'
+    data.client_type = 'web'
     App.get('fayeClient').publish('/clients/update', data)
 
   userStatusParams: ->
