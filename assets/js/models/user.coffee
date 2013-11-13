@@ -8,8 +8,6 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Status icon duck typing.
   hasStatusIcon: true
 
-  isIdle: Ember.computed.equal('status', 'idle')
-
   computedStatus: (->
     clientType = @get('clientType')
     return clientType if clientType in ['phone', 'tablet']
@@ -38,6 +36,10 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
     [@get('mentionName')].concat(@get('name').split(/\s+/))
     .map (s) -> s.toLowerCase()
   ).property('mentionName', 'name')
+
+  shouldDisplayIdleDuration: (->
+    @get('clientType') not in ['phone', 'tablet'] && @get('status') == 'idle'
+  ).property('clientType', 'status')
 
   idleDurationAsOfNow: (now = null) ->
     seconds = @get('idleDuration')

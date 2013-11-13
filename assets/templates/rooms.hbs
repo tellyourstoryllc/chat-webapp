@@ -65,7 +65,7 @@
               <img {{bind-attr src='user.avatarUrl'}} {{bind-attr class=':small-avatar App.preferences.showAvatars::avatars-off'}}>
               {{user.name}}
             </div>
-            {{#if user.isIdle}}
+            {{#if user.shouldDisplayIdleDuration}}
               <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>
             {{/if}}
             {{#if user.statusText}}
