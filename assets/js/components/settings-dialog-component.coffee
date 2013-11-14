@@ -13,6 +13,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   willDestroyElement: ->
     @$('.avatar-file-input').off 'change', @fileChange
 
+  isHiddenChanged: (->
+    if @get('isHidden')
+      @$().removeClass('expand-in')
+    else
+      @$().addClass('expand-in')
+  ).observes('isHidden')
+
   fileChange: (event) ->
     Ember.run @, ->
       file = event.target.files?[0]

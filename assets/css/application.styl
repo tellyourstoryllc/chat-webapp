@@ -28,6 +28,28 @@ disable-grayscale-image()
   -webkit-filter: grayscale(0)
 
 ///////////////////////////////////////////////////////////
+// Animations
+
+.expand-in
+  animation-name expand-in
+  animation-duration .5s
+  animation-timing-function ease-in-out
+  visibility visible !important
+
+@keyframes expand-in
+  0%
+    transform scale(0)
+    opacity 0.0
+  60%
+    transform scale(1.1)
+  80%
+    transform scale(0.9)
+    opacity 1
+  100%
+    transform scale(1)
+    opacity 1
+
+///////////////////////////////////////////////////////////
 
 .pull-left
   float left
@@ -133,7 +155,7 @@ disable-grayscale-image()
   background-color rgba(0,0,0, .75)
   z-index 1000
 
-  transition opacity 0.3s ease-out, visibility 0.3s ease-out
+  transition opacity 0.2s ease-out, visibility 0.2s ease-out
 
   &.hidden
     visibility hidden
@@ -151,6 +173,7 @@ disable-grayscale-image()
 
 .settings-dialog
   width 225px
+  visibility hidden // Initially hidden.
 
   .header
     padding 10px
