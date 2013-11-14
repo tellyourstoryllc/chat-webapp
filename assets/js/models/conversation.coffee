@@ -238,12 +238,18 @@ App.Conversation = Ember.Mixin.create
           @didReceiveMessage(message, suppressNotifications: true)
       newMemberIds.forEach (newId) =>
         if ! oldMemberIds.contains(newId)
-          # TODO: The user might not be loaded yet here.  Fetch the user
-          # before proceeding.
-          user = App.User.lookup(newId)
-          if user?
+          foundUser = (user) =>
             message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
             @didReceiveMessage(message, suppressNotifications: true)
+          # The user might not be loaded yet here.  Fetch the user if necessary.
+          user = App.User.lookup(newId)
+          if user?
+            foundUser(user)
+          else
+            App.User.fetchAndLoadSingle(newId).then (user) =>
+              # Invalidate the cache of members.
+              @incrementProperty('_membersAssociationLoaded')
+              foundUser(user)
 
   didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.

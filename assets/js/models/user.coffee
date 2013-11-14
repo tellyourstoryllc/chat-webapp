@@ -80,6 +80,13 @@ App.User.reopenClass
     idleDurationReceivedAt: new Date()
     mostRecentIdleDuration: json.idle_duration
 
+  fetchById: (id) ->
+    ids = Ember.makeArray(id)
+    api = App.get('api')
+    data =
+      ids: ids.join(',')
+    api.ajax(api.buildURL("/users"), 'GET', data: data)
+
   userMentionedInGroup: (name, groupOrUsers) ->
     lowerCaseName = name.toLowerCase()
     users = if groupOrUsers instanceof App.Group
