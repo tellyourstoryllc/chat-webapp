@@ -97,18 +97,10 @@ App.OneToOne.reopenClass
 
     inst
 
-  # Lookup by id.  If we don't have it, fetch and load.  Returns a promise that
-  # resolves to the model instance.
-  find: (id) ->
-    new Ember.RSVP.Promise (resolve, reject) =>
-      inst = @lookup(id)
-      if inst?
-        resolve(inst)
-      else
-        resolve(@fetchAndLoadSingle(id))
-
   # Fetches a OneToOne by id and returns a promise that resolves to the OneToOne
-  # instance.
+  # instance.  This is different from the base class since it must handle the
+  # return being only Users in the case that the OneToOne hasn't been created
+  # yet.
   fetchAndLoadSingle: (id) ->
     @fetchById(id)
     .then (json) =>
