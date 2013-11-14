@@ -183,6 +183,21 @@ window.App = App = Ember.Application.create
     @set('token', token)
     window.localStorage['token'] = token
 
+    afterCheckin = =>
+      @didCheckIn()
+
+    if App.get('emoticonsVersion')?
+      afterCheckin()
+    else
+      # In the case of logging in for the first time, we haven't called checkin
+      # yet.
+      App.get('api').checkin(token: token).then (user) =>
+        afterCheckin()
+
+  # This is triggered after logging in and checking in.
+  didCheckIn: ->
+    user = @get('currentUser')
+
     # Trigger didLogIn event after we've set up the token and logged in state.
     @get('eventTarget').trigger('didLogIn')
 
