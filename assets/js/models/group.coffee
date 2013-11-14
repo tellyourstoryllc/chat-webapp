@@ -58,6 +58,16 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
     return subscription
 
+  topicDidChange: (->
+    topic = @get('topic')
+    text = if Ember.isEmpty(topic)
+      "The topic was cleared."
+    else
+      "The topic was changed to: #{topic}"
+    message = App.SystemMessage.create(localText: text)
+    @didReceiveMessage(message, suppressNotifications: true)
+  ).observes('topic')
+
   updateTopic: (newTopic) ->
     if @isPropertyLocked('topic')
       Ember.Logger.warn "I can't change the topic of a group when I'm still waiting for a response from the server."
