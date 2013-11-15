@@ -39,10 +39,8 @@
     <tr>
       <td>
         <label for='show-join-leave-messages-checkbox'>
-          {{! Don't use input helper since we can't set the id for the label. }}
           <input type='checkbox' id='show-join-leave-messages-checkbox' class='checkbox'
-            {{action 'changeClientPref' on='change'}}
-            {{bind-attr checked=preferences.clientWeb.showJoinLeaveMessages}}>
+            {{action 'changeClientPreference' 'showJoinLeaveMessages' on='change'}}>
           Show Join and Leave Messages
         </label>
       </td>
@@ -50,10 +48,8 @@
     <tr>
       <td>
         <label for='show-avatars-checkbox'>
-          {{! Don't use input helper since we can't set the id for the label. }}
           <input type='checkbox' id='show-avatars-checkbox' class='checkbox'
-            {{action 'changeClientPref' on='change'}}
-            {{bind-attr checked=preferences.clientWeb.showAvatars}}>
+            {{action 'changeClientPreference' 'showAvatars' on='change'}}>
           Show Avatars
         </label>
       </td>
@@ -72,19 +68,23 @@
     <tr>
       <td class='label-cell'>When Receiving a Message</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMessageReceive}}
+        <input type='checkbox' class='play-sound-on-message-receive-checkbox'
+          {{action 'changeClientPreference' 'playSoundOnMessageReceive' on='change'}}>
       </td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMessageReceive}}
+        <input type='checkbox' class='show-notification-on-message-receive-checkbox'
+          {{action 'changeClientPreference' 'showNotificationOnMessageReceive' on='change'}}>
       </td>
     </tr>
     <tr>
       <td class='label-cell'>When Mentioned</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMention}}
+        <input type='checkbox' class='play-sound-on-mention-checkbox'
+          {{action 'changeClientPreference' 'playSoundOnMention' on='change'}}>
       </td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMention}}
+        <input type='checkbox' class='show-notification-on-mention-checkbox'
+          {{action 'changeClientPreference' 'showNotificationOnMention' on='change'}}>
       </td>
     </tr>
   </table>

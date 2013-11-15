@@ -47,9 +47,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isSendingAvatar', false)
 
   clientWebPreferencesDidChange: (->
-    data =
-      client_web: JSON.stringify(@get('preferences.clientWeb'))
-    App.get('api').updatePreferences(data)
+    # When the global preferences change, sync the UI.
+    @_updateUi()
   ).observes('preferences.clientWeb.playSoundOnMessageReceive',
              'preferences.clientWeb.showNotificationOnMessageReceive',
              'preferences.clientWeb.playSoundOnMention',
@@ -66,6 +65,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   _updateUi: ->
     Ember.run.schedule 'afterRender', @, ->
       prefs = @get('preferences')
+      clientPrefs = prefs.get('clientWeb')
+      @$('#show-join-leave-messages-checkbox').prop('checked', clientPrefs.get('showJoinLeaveMessages'))
+      @$('#show-avatars-checkbox').prop('checked', clientPrefs.get('showAvatars'))
+      @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
+      @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
+      @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
+      @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
       @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
       @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
 
@@ -79,9 +85,21 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @get('targetObject').send('hide')
       return undefined
 
-    changeClientPref: ->
-      @set('preferences.clientWeb.showJoinLeaveMessages', @$('#show-join-leave-messages-checkbox').is(':checked'))
-      @set('preferences.clientWeb.showAvatars', @$('#show-avatars-checkbox').is(':checked'))
+    changeClientPreference: (key) ->
+      clientPrefs = @get('preferences.clientWeb')
+      clientPrefs.setProperties
+        showJoinLeaveMessages: @$('#show-join-leave-messages-checkbox').is(':checked')
+        showAvatars: @$('#show-avatars-checkbox').is(':checked')
+        playSoundOnMessageReceive: @$('.play-sound-on-message-receive-checkbox').is(':checked')
+        showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
+        playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')
+        showNotificationOnMention: @$('.show-notification-on-mention-checkbox').is(':checked')
+      # Save to localStorage.
+      window.localStorage.setItem(key, clientPrefs.get(key))
+      # Save to server.
+      data =
+        client_web: JSON.stringify(clientPrefs)
+      App.get('api').updatePreferences(data)
       return undefined
 
     changeServerPreference: ->
