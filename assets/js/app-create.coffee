@@ -190,19 +190,12 @@ window.App = App = Ember.Application.create
     # Setup preferences.
     prefs = App.Preferences.all()[0]
     clientPrefs = prefs.get('clientWeb')
-    clientPrefsDefaults =
-      playSoundOnMessageReceive: true
-      showNotificationOnMessageReceive: true
-      playSoundOnMention: true
-      showNotificationOnMention: true
-      showJoinLeaveMessages: true
-      showAvatars: true
-    for key, defaultVal of clientPrefsDefaults
+    for key, defaultVal of App.Preferences.clientPrefsDefaults
       val = undefined
       # Prefer localStorage value.
       strVal = window.localStorage.getItem(key)
       if strVal?
-        val ?= ! (strVal in ['0', 'false'])
+        val ?= App.Preferences.coerceValueFromStorage(key, strVal)
       val ?= clientPrefs.get(key)
       val ?= defaultVal
       clientPrefs.set(key, val)

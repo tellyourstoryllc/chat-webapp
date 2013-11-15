@@ -12,6 +12,14 @@ App.Preferences.reopenClass
   # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
 
+  clientPrefsDefaults:
+    playSoundOnMessageReceive: true
+    showNotificationOnMessageReceive: true
+    playSoundOnMention: true
+    showNotificationOnMention: true
+    showJoinLeaveMessages: true
+    showAvatars: true
+
   propertiesFromRawAttrs: (json) ->
     props =
       id: @coerceId(json.id)
@@ -24,3 +32,7 @@ App.Preferences.reopenClass
     props.clientWeb = Ember.Object.create(clientWebProps) if clientWebProps?
 
     props
+
+  coerceValueFromStorage: (key, value) ->
+    # Right now, all values are booleans, but this will change.
+    ! (value in ['0', 'false'])

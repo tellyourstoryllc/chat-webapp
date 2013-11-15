@@ -5,13 +5,14 @@ App.ApplicationView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'focus', 'blur')
+    _.bindAll(@, 'focus', 'blur', 'onStorage')
     Ember.run.schedule 'afterRender', @, ->
       @setupUi()
 
   didInsertElement: ->
     $(window).focus @focus
     $(window).blur @blur
+    $(window).on 'storage', @onStorage
 
   focus: ->
     Ember.run @, ->
@@ -22,6 +23,16 @@ App.ApplicationView = Ember.View.extend
   blur: ->
     Ember.run @, ->
       App.set('hasFocus', false)
+
+  onStorage: (event) ->
+    Ember.run @, ->
+      storageEvent = event.originalEvent
+      key = storageEvent.key
+      return unless key? && key of App.Preferences.clientPrefsDefaults
+      # Another window changed localStorage preferences.  Load them.
+      clientPrefs = App.get('preferences.clientWeb')
+      return unless clientPrefs?
+      clientPrefs.set(key, App.Preferences.coerceValueFromStorage(key, storageEvent.newValue))
 
   loggedInChanged: (->
     @setupUi()
