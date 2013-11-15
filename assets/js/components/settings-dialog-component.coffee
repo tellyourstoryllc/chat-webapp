@@ -54,6 +54,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
              'preferences.clientWeb.playSoundOnMention',
              'preferences.clientWeb.showNotificationOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
+             'preferences.clientWeb.showOnlineOfflineMessages',
              'preferences.clientWeb.showAvatars')
 
   actions:
@@ -68,5 +69,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     changeClientPref: ->
       @set('preferences.clientWeb.showJoinLeaveMessages', @$('#show-join-leave-messages-checkbox').is(':checked'))
+      @set('preferences.clientWeb.showOnlineOfflineMessages', @$('#show-online-offline-messages-checkbox').is(':checked'))
       @set('preferences.clientWeb.showAvatars', @$('#show-avatars-checkbox').is(':checked'))
       return undefined

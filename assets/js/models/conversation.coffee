@@ -220,12 +220,13 @@ App.Conversation = Ember.Mixin.create
       Ember.Logger.warn "Got notified of a user not in this conversation.  Ignoring.", user.id
       return
 
-    text = if user.get('isOnline')
-      " came online."
-    else
-      " went offline."
-    message = App.SystemMessage.create(localText: "#{user.name}#{text}")
-    @didReceiveMessage(message, suppressNotifications: true)
+    if App.get('preferences.clientWeb.showOnlineOfflineMessages')
+      text = if user.get('isOnline')
+        " came online."
+      else
+        " went offline."
+      message = App.SystemMessage.create(localText: "#{user.name}#{text}")
+      @didReceiveMessage(message, suppressNotifications: true)
 
   didReceiveUpdateFromFaye: (json) ->
     Ember.Logger.log "received packet", json
