@@ -264,15 +264,15 @@ App.Conversation = Ember.Mixin.create
       wasMentioned = message.doesMentionUser(App.get('currentUser'))
       if ! fromCurrentUser && wasMentioned
         # The current user was mentioned.  Play sound.
-        @playMentionSound()
+        @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
 
       if ! fromCurrentUser &&
       (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
         if wasMentioned
-          @createDesktopNotification(message)
+          @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
         else
-          @playRecieveMessageSound() if App.get('preferences.playSoundOnMessageReceive')
-          @createDesktopNotification(message) if App.get('preferences.showNotificationOnMessageReceive')
+          @playRecieveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
+          @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
 
       if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
         # Mark the room as unread.

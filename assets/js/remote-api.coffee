@@ -62,6 +62,9 @@ App.RemoteApi = Ember.Object.extend
         objs = json.filter (o) -> o.object_type == 'emoticon'
         emoticons = objs.map (o) -> App.Emoticon.loadRaw(o)
 
+        objs = json.filter (o) -> o.object_type == 'preferences'
+        prefs = objs.map (o) -> App.Preferences.loadRaw(o)
+
         userAttrs = json.find (o) -> o.object_type == 'user'
         throw new Error("Expected to find user in checkin result but didn't") unless userAttrs?
         user = App.User.loadRaw(userAttrs)
@@ -112,6 +115,9 @@ App.RemoteApi = Ember.Object.extend
 
       instances = App.loadAll(json)
       return instances.filter (o) -> o.get('actsLikeConversation')
+
+  updatePreferences: (data) ->
+    @ajax(@buildURL('/preferences/update'), 'POST', data: data)
 
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'

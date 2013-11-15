@@ -3,6 +3,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isSendingAvatar: false
 
+  preferences: (->
+    App.get('preferences')
+  ).property('App.preferences')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'fileChange')
@@ -40,6 +44,15 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     )
     .always =>
       @set('isSendingAvatar', false)
+
+  clientWebPreferencesDidChange: (->
+    data =
+      client_web: JSON.stringify(@get('preferences.clientWeb'))
+    App.get('api').updatePreferences(data)
+  ).observes('preferences.clientWeb.playSoundOnMessageReceive',
+             'preferences.clientWeb.showNotificationOnMessageReceive',
+             'preferences.clientWeb.playSoundOnMention',
+             'preferences.clientWeb.showNotificationOnMention')
 
   actions:
 

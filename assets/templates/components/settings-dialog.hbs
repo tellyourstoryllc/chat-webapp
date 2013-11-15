@@ -3,7 +3,8 @@
   <h3>Settings</h3>
 </div>
 <div class='content'>
-  <table style='width: 100%; margin-bottom: 10px;'>
+  <h4 class='subtitle'>Profile</h4>
+  <table class='settings-table'>
     <tr>
       <td class='label-cell'>Name</td>
       <td class='control-cell'>{{App.currentUser.name}}</td>
@@ -27,6 +28,33 @@
           </button>
           <input type='file' class='avatar-file-input' style='display: none'>
         {{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <h4 class='subtitle'>Notifications</h4>
+  <table class='settings-table'>
+    <tr>
+      <th></th>
+      <th>Play Sound</th>
+      <th>Show Desktop<br> Notification</th>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Receiving a Message</td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMessageReceive}}
+      </td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMessageReceive}}
+      </td>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Mentioned</td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMention}}
+      </td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMention}}
       </td>
     </tr>
   </table>

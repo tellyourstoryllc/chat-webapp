@@ -163,8 +163,8 @@ disable-grayscale-image()
 
 .modal
   position fixed
-  top 40%
-  left 42%
+  top 32%
+  left 50%
   overflow hidden
   z-index 1001 // Higher than .page-overlay
   border-radius 6px
@@ -172,8 +172,14 @@ disable-grayscale-image()
   box-shadow 0 0 40px rgba(0,0,0, 1)
 
 .settings-dialog
-  width 225px
+  dialog-width = 380px
+  width dialog-width
+  margin-left -(dialog-width / 2)
   visibility hidden // Initially hidden.
+
+  .settings-table
+    width 100%
+    margin-bottom 10px
 
   .header
     padding 10px
@@ -188,6 +194,10 @@ disable-grayscale-image()
     padding 10px
     font-size 12px
 
+  .subtitle
+    font-size 14px
+    text-shadow 0 1px 0 #fff
+
   .label-cell, .control-cell
     padding-bottom 5px
     vertical-align top
@@ -195,6 +205,9 @@ disable-grayscale-image()
   .label-cell
     padding-right 5px
     text-align right
+
+  .checkbox-control-cell
+    text-align center
 
   .avatar-image
     width auto

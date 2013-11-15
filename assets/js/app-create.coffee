@@ -90,12 +90,6 @@ window.App = App = Ember.Application.create
 
     @set('lastActiveAt', new Date())
 
-    prefs = Ember.Object.create
-      playSoundOnMessageReceive: !(window.localStorage['playSoundOnMessageReceive'] in ['0', 'false'])
-      showNotificationOnMessageReceive: !(window.localStorage['showNotificationOnMessageReceive'] in ['0', 'false'])
-      showAvatars: !(window.localStorage['showAvatars'] in ['0', 'false'])
-    @set('preferences', prefs)
-
     @set('roomMessagesViews', Ember.Map.create())
 
     # Setup Faye client.
@@ -184,6 +178,19 @@ window.App = App = Ember.Application.create
     window.localStorage['token'] = token
 
     afterCheckin = =>
+      # Setup preferences.
+      prefs = App.Preferences.all()[0]
+      clientPrefs = prefs.get('clientWeb')
+      for key in ['playSoundOnMessageReceive', 'showNotificationOnMessageReceive', 'playSoundOnMention', 'showNotificationOnMention']
+        val = clientPrefs.get(key)
+        # Load from localStorage if not set.
+        if ! val?
+          strVal = window.localStorage.getItem(key)
+          val = ! (strVal in ['0', 'false'])
+        clientPrefs.set(key, val)
+      @set('preferences', prefs)
+
+      # Finish the login process.
       @didCheckIn()
 
     if App.get('emoticonsVersion')?
@@ -330,6 +337,8 @@ window.App = App = Ember.Application.create
         App.Message
       when 'one_to_one'
         App.OneToOne
+      when 'preferences'
+        App.Preferences
       when 'user'
         App.User
 
