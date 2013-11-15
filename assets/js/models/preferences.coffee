@@ -19,6 +19,7 @@ App.Preferences.reopenClass
     showNotificationOnMention: true
     showJoinLeaveMessages: true
     showAvatars: true
+    notificationVolume: 100
 
   propertiesFromRawAttrs: (json) ->
     props =
@@ -34,5 +35,16 @@ App.Preferences.reopenClass
     props
 
   coerceValueFromStorage: (key, value) ->
-    # Right now, all values are booleans, but this will change.
+    # Parse an int but never return NaN.
+    parseIntWithDefault = (str, defaultVal) ->
+      n = parseInt(str)
+      n = defaultVal if _.isNaN(n)
+      n
+
+    if key == 'notificationVolume'
+      # Integer in the range [0, 100].
+      n = parseIntWithDefault(value, 100)
+      return Math.min(100, Math.max(0, n))
+
+    # All other values are booleans.
     ! (value in ['0', 'false'])

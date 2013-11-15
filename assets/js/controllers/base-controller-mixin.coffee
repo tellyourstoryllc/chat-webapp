@@ -19,3 +19,7 @@ App.BaseControllerMixin = Ember.Mixin.create
   doesBrowserSupportAjaxFileUpload: (->
     App.doesBrowserSupportAjaxFileUpload()
   ).property()
+
+  doesBrowserSupportRangeInput: (->
+    Modernizr.inputtypes.range
+  ).property()

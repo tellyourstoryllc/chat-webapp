@@ -1,5 +1,5 @@
 /* Modernizr 2.6.3 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-audio-addtest-domprefixes-file_api-forms_fileinput
+ * Build: http://modernizr.com/download/#-history-audio-inputtypes-addtest-domprefixes-file_api-forms_fileinput
  */
 ;
 
@@ -18,8 +18,9 @@ window.Modernizr = (function( window, document, undefined ) {
     modElem = document.createElement(mod),
     mStyle = modElem.style,
 
-    inputElem  ,
+    inputElem  = document.createElement('input')  ,
 
+    smile = ':)',
 
     toString = {}.toString,    omPrefixes = 'Webkit Moz O ms',
 
@@ -150,7 +151,45 @@ window.Modernizr = (function( window, document, undefined ) {
         } catch(e) { }
 
         return bool;
-    };    for ( var feature in tests ) {
+    };    function webforms() {
+                            Modernizr['inputtypes'] = (function(props) {
+
+            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
+
+                inputElem.setAttribute('type', inputElemType = props[i]);
+                bool = inputElem.type !== 'text';
+
+                                                    if ( bool ) {
+
+                    inputElem.value         = smile;
+                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
+
+                      docElement.appendChild(inputElem);
+                      defaultView = document.defaultView;
+
+                                        bool =  defaultView.getComputedStyle &&
+                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+                                                                                  (inputElem.offsetHeight !== 0);
+
+                      docElement.removeChild(inputElem);
+
+                    } else if ( /^(search|tel)$/.test(inputElemType) ){
+                                                                                    } else if ( /^(url|email)$/.test(inputElemType) ) {
+                                        bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+                    } else {
+                                        bool = inputElem.value != smile;
+                    }
+                }
+
+                inputs[ props[i] ] = !!bool;
+            }
+            return inputs;
+        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
+        }
+    for ( var feature in tests ) {
         if ( hasOwnProp(tests, feature) ) {
                                     featureName  = feature.toLowerCase();
             Modernizr[featureName] = tests[feature]();
@@ -159,6 +198,7 @@ window.Modernizr = (function( window, document, undefined ) {
         }
     }
 
+    Modernizr.input || webforms();
 
 
      Modernizr.addTest = function ( feature, test ) {

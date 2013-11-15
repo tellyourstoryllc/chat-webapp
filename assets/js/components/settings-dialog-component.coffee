@@ -54,7 +54,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
              'preferences.clientWeb.playSoundOnMention',
              'preferences.clientWeb.showNotificationOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
-             'preferences.clientWeb.showAvatars')
+             'preferences.clientWeb.showAvatars',
+             'preferences.clientWeb.notificationVolume')
 
   serverPreferencesDidChange: (->
     # When the global preferences change, sync the UI.
@@ -72,6 +73,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
       @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
+      @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
       @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
       @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
 
@@ -85,6 +87,12 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @get('targetObject').send('hide')
       return undefined
 
+    changeVolumePreference: _.debounce (key) ->
+      # This gets triggered as you slide, so need to debounce.
+      @send('changeClientPreference', key)
+      return undefined
+    , 200
+
     changeClientPreference: (key) ->
       clientPrefs = @get('preferences.clientWeb')
       clientPrefs.setProperties
@@ -94,6 +102,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
         playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')
         showNotificationOnMention: @$('.show-notification-on-mention-checkbox').is(':checked')
+        notificationVolume: parseInt(@$('.notification-volume').val())
       # Save to localStorage.
       window.localStorage.setItem(key, clientPrefs.get(key))
       # Save to server.
