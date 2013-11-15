@@ -199,12 +199,12 @@ window.App = App = Ember.Application.create
       showOnlineOfflineMessages: false
       showAvatars: true
     for key, defaultVal of clientPrefsDefaults
-      val = clientPrefs.get(key)
-      # Load from localStorage if not set.
-      if ! val?
-        strVal = window.localStorage.getItem(key)
-        if strVal?
-          val = ! (strVal in ['0', 'false'])
+      val = undefined
+      # Prefer localStorage value.
+      strVal = window.localStorage.getItem(key)
+      if strVal?
+        val ?= ! (strVal in ['0', 'false'])
+      val ?= clientPrefs.get(key)
       val ?= defaultVal
       clientPrefs.set(key, val)
     @set('preferences', prefs)
