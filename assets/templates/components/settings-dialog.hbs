@@ -32,6 +32,25 @@
     </tr>
   </table>
 
+  <hr>
+
+  <h4 class='subtitle'>Settings</h4>
+  <table class='settings-table'>
+    <tr>
+      <td>
+        <label for='show-avatars-checkbox'>
+          {{! Don't use input helper since we can't set the id for the label. }}
+          <input type='checkbox' id='show-avatars-checkbox' class='checkbox'
+            {{action 'changeClientPref' on='change'}}
+            {{bind-attr checked=preferences.clientWeb.showAvatars}}>
+          Show Avatars
+        </label>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+
   <h4 class='subtitle'>Notifications</h4>
   <table class='settings-table'>
     <tr>

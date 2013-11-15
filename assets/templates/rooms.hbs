@@ -65,7 +65,7 @@
           {{#link-to 'rooms.room' user}}
             <div>
               {{room-icon room=user}}
-              <img {{bind-attr src='user.avatarUrl'}} {{bind-attr class=':small-avatar App.preferences.showAvatars::avatars-off'}}>
+              <img {{bind-attr src='user.avatarUrl'}} {{bind-attr class=':small-avatar App.preferences.clientWeb.showAvatars::avatars-off'}}>
               {{user.name}}
             </div>
             {{#if user.shouldDisplayIdleDuration}}

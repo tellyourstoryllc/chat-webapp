@@ -7,8 +7,8 @@ App.ApplicationController = Ember.Controller.extend App.BaseControllerMixin,
   ).observes('App.isIdle')
 
   showAvatarsChanged: (->
-    if App.get('preferences.showAvatars')
+    if App.get('preferences.clientWeb.showAvatars')
       $('.small-avatar').removeClass('avatars-off')
     else
       $('.small-avatar').addClass('avatars-off')
-  ).observes('App.preferences.showAvatars')
+  ).observes('App.preferences.clientWeb.showAvatars')

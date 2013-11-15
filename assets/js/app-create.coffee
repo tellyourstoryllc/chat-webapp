@@ -181,7 +181,15 @@ window.App = App = Ember.Application.create
       # Setup preferences.
       prefs = App.Preferences.all()[0]
       clientPrefs = prefs.get('clientWeb')
-      for key in ['playSoundOnMessageReceive', 'showNotificationOnMessageReceive', 'playSoundOnMention', 'showNotificationOnMention']
+      clientPrefsKeys =
+        [
+          'playSoundOnMessageReceive'
+          'showNotificationOnMessageReceive'
+          'playSoundOnMention'
+          'showNotificationOnMention'
+          'showAvatars'
+        ]
+      for key in clientPrefsKeys
         val = clientPrefs.get(key)
         # Load from localStorage if not set.
         if ! val?

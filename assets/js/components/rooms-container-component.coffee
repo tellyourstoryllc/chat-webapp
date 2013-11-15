@@ -49,10 +49,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   avatarClassNames: (->
     classes = ['small-avatar']
-    if ! App.get('preferences.showAvatars')
+    if ! App.get('preferences.clientWeb.showAvatars')
       classes.push('avatars-off')
     classes.join(' ')
-  ).property('App.preferences.showAvatars')
+  ).property('App.preferences.clientWeb.showAvatars')
 
   bodyKeyDown: (event) ->
     # No key modifiers.

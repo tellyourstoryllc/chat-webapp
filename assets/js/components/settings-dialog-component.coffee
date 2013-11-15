@@ -52,7 +52,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   ).observes('preferences.clientWeb.playSoundOnMessageReceive',
              'preferences.clientWeb.showNotificationOnMessageReceive',
              'preferences.clientWeb.playSoundOnMention',
-             'preferences.clientWeb.showNotificationOnMention')
+             'preferences.clientWeb.showNotificationOnMention',
+             'preferences.clientWeb.showAvatars')
 
   actions:
 
@@ -62,4 +63,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     hideDialog: ->
       @get('targetObject').send('hide')
+      return undefined
+
+    changeClientPref: ->
+      @set('preferences.clientWeb.showAvatars', @$('#show-avatars-checkbox').is(':checked'))
       return undefined
