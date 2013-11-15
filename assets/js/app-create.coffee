@@ -177,43 +177,39 @@ window.App = App = Ember.Application.create
     @set('token', token)
     window.localStorage['token'] = token
 
-    afterCheckin = =>
-      # Setup preferences.
-      prefs = App.Preferences.all()[0]
-      clientPrefs = prefs.get('clientWeb')
-      clientPrefsDefaults =
-        playSoundOnMessageReceive: true
-        showNotificationOnMessageReceive: true
-        playSoundOnMention: true
-        showNotificationOnMention: true
-        showJoinLeaveMessages: true
-        showOnlineOfflineMessages: true
-        showOnlineOfflineMessages: false
-        showAvatars: true
-      for key, defaultVal of clientPrefsDefaults
-        val = clientPrefs.get(key)
-        # Load from localStorage if not set.
-        if ! val?
-          strVal = window.localStorage.getItem(key)
-          if strVal?
-            val = ! (strVal in ['0', 'false'])
-        val ?= defaultVal
-        clientPrefs.set(key, val)
-      @set('preferences', prefs)
-
-      # Finish the login process.
-      @didCheckIn()
-
     if App.get('emoticonsVersion')?
-      afterCheckin()
+      @didCheckIn()
     else
       # In the case of logging in for the first time, we haven't called checkin
       # yet.
       App.get('api').checkin(token: token).then (user) =>
-        afterCheckin()
+        @didCheckIn()
 
   # This is triggered after logging in and checking in.
   didCheckIn: ->
+    # Setup preferences.
+    prefs = App.Preferences.all()[0]
+    clientPrefs = prefs.get('clientWeb')
+    clientPrefsDefaults =
+      playSoundOnMessageReceive: true
+      showNotificationOnMessageReceive: true
+      playSoundOnMention: true
+      showNotificationOnMention: true
+      showJoinLeaveMessages: true
+      showOnlineOfflineMessages: true
+      showOnlineOfflineMessages: false
+      showAvatars: true
+    for key, defaultVal of clientPrefsDefaults
+      val = clientPrefs.get(key)
+      # Load from localStorage if not set.
+      if ! val?
+        strVal = window.localStorage.getItem(key)
+        if strVal?
+          val = ! (strVal in ['0', 'false'])
+      val ?= defaultVal
+      clientPrefs.set(key, val)
+    @set('preferences', prefs)
+
     user = @get('currentUser')
 
     # Trigger didLogIn event after we've set up the token and logged in state.
