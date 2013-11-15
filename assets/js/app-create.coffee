@@ -187,6 +187,7 @@ window.App = App = Ember.Application.create
           'showNotificationOnMessageReceive'
           'playSoundOnMention'
           'showNotificationOnMention'
+          'showJoinLeaveMessages'
           'showAvatars'
         ]
       for key in clientPrefsKeys

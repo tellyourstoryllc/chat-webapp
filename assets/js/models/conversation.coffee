@@ -229,27 +229,33 @@ App.Conversation = Ember.Mixin.create
       # Load the new data.
       @constructor.loadRawWithMetaData(json)
 
-      # Create join and leave messages here.
+      # Find users that joined or left the group.
       newMemberIds = convo.get('memberIds')
       oldMemberIds.forEach (oldId) =>
         if ! newMemberIds.contains(oldId)
           user = App.User.lookup(oldId)
-          message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
-          @didReceiveMessage(message, suppressNotifications: true)
+          @userDidLeave(user)
       newMemberIds.forEach (newId) =>
         if ! oldMemberIds.contains(newId)
-          foundUser = (user) =>
-            message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
-            @didReceiveMessage(message, suppressNotifications: true)
           # The user might not be loaded yet here.  Fetch the user if necessary.
           user = App.User.lookup(newId)
           if user?
-            foundUser(user)
+            @userDidJoin(user)
           else
             App.User.fetchAndLoadSingle(newId).then (user) =>
               # Invalidate the cache of members.
               @incrementProperty('_membersAssociationLoaded')
-              foundUser(user)
+              @userDidJoin(user)
+
+  userDidJoin: (user) ->
+    if App.get('preferences.clientWeb.showJoinLeaveMessages')
+      message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
+      @didReceiveMessage(message, suppressNotifications: true)
+
+  userDidLeave: (user) ->
+    if App.get('preferences.clientWeb.showJoinLeaveMessages')
+      message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
+      @didReceiveMessage(message, suppressNotifications: true)
 
   didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.
