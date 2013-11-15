@@ -49,6 +49,17 @@
     </tr>
     <tr>
       <td>
+        <label for='show-online-offline-messages-checkbox'>
+          {{! Don't use input helper since we can't set the id for the label. }}
+          <input type='checkbox' id='show-online-offline-messages-checkbox' class='checkbox'
+            {{action 'changeClientPref' on='change'}}
+            {{bind-attr checked=preferences.clientWeb.showOnlineOfflineMessages}}>
+          Show User Online and Offline Messages
+        </label>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <label for='show-avatars-checkbox'>
           {{! Don't use input helper since we can't set the id for the label. }}
           <input type='checkbox' id='show-avatars-checkbox' class='checkbox'

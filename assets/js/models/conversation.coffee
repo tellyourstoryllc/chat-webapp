@@ -208,6 +208,26 @@ App.Conversation = Ember.Mixin.create
         # Load everything from the response.
         return App.loadAllWithMetaData(json)
 
+  membersDidChange: (->
+    # Add array observer for each member we can see what in the array changed.
+    @get('members').forEach (user) =>
+      user.on 'isOnlineDidChange', @, 'memberOnlineChanged'
+  ).observes('members.[]').on('init')
+
+  memberOnlineChanged: (user) ->
+    return unless user?
+    if ! @get('members').contains(user)
+      Ember.Logger.warn "Got notified of a user not in this conversation.  Ignoring.", user.id
+      return
+
+    if App.get('preferences.clientWeb.showOnlineOfflineMessages')
+      text = if user.get('isOnline')
+        " came online."
+      else
+        " went offline."
+      message = App.SystemMessage.create(localText: "#{user.name}#{text}")
+      @didReceiveMessage(message, suppressNotifications: true)
+
   didReceiveUpdateFromFaye: (json) ->
     Ember.Logger.log "received packet", json
     if ! json? || json.error?
@@ -253,6 +273,7 @@ App.Conversation = Ember.Mixin.create
       @didReceiveMessage(message, suppressNotifications: true)
 
   userDidLeave: (user) ->
+    user.off 'isOnlineDidChange', @, 'memberOnlineChanged'
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
       message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
       @didReceiveMessage(message, suppressNotifications: true)

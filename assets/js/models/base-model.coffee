@@ -1,4 +1,4 @@
-App.BaseModel = Ember.Object.extend
+App.BaseModel = Ember.Object.extend Ember.Evented,
 
   isLoading: false
   isLoaded: false
