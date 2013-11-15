@@ -196,7 +196,6 @@ window.App = App = Ember.Application.create
       playSoundOnMention: true
       showNotificationOnMention: true
       showJoinLeaveMessages: true
-      showOnlineOfflineMessages: true
       showOnlineOfflineMessages: false
       showAvatars: true
     for key, defaultVal of clientPrefsDefaults
