@@ -99,4 +99,26 @@
       </td>
     </tr>
   </table>
+
+  <hr>
+
+  <h4 class='subtitle'>Notifications When Offline, Idle, or Away</h4>
+  <table class='settings-table'>
+    <tr>
+      <th></th>
+      <th>Email</th>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Mentioned</td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.serverMentionEmail}}
+      </td>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Receiving 1-1 Message</td>
+      <td class='control-cell checkbox-control-cell'>
+        {{input type='checkbox' checked=preferences.serverOneToOneEmail}}
+      </td>
+    </tr>
+  </table>
 </div>

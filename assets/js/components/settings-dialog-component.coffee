@@ -57,6 +57,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
              'preferences.clientWeb.showOnlineOfflineMessages',
              'preferences.clientWeb.showAvatars')
 
+  serverPreferencesDidChange: (->
+    data =
+      server_mention_email: @get('preferences.serverMentionEmail')
+      server_one_to_one_email: @get('preferences.serverOneToOneEmail')
+    App.get('api').updatePreferences(data)
+  ).observes('preferences.serverMentionEmail',
+             'preferences.serverOneToOneEmail')
+
   actions:
 
     chooseAvatarFile: ->
