@@ -244,6 +244,10 @@ window.App = App = Ember.Application.create
           else
             # This is a OneToOne we've never seen before, so just load it.
             App.loadAll(json)
+        else if json.object_type == 'preferences'
+          # Don't synchronize the client preferences; only server preferences.
+          delete json.client_web
+          App.loadAll(json)
         return undefined
     @set('userChannelSubscription', subscription)
 

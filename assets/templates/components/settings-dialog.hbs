@@ -111,13 +111,13 @@
     <tr>
       <td class='label-cell'>When Mentioned</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.serverMentionEmail}}
+        <input type='checkbox' class='server-mention-email-checkbox' {{action 'changeServerPreference' on='change'}}>
       </td>
     </tr>
     <tr>
       <td class='label-cell'>When Receiving 1-1 Message</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.serverOneToOneEmail}}
+        <input type='checkbox' class='server-one-to-one-email-checkbox' {{action 'changeServerPreference' on='change'}}>
       </td>
     </tr>
   </table>

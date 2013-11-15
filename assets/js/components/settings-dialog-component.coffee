@@ -13,6 +13,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   didInsertElement: ->
     @$('.avatar-file-input').on 'change', @fileChange
+    @_updateUi()
 
   willDestroyElement: ->
     @$('.avatar-file-input').off 'change', @fileChange
@@ -58,12 +59,16 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
              'preferences.clientWeb.showAvatars')
 
   serverPreferencesDidChange: (->
-    data =
-      server_mention_email: @get('preferences.serverMentionEmail')
-      server_one_to_one_email: @get('preferences.serverOneToOneEmail')
-    App.get('api').updatePreferences(data)
+    # When the global preferences change, sync the UI.
+    @_updateUi()
   ).observes('preferences.serverMentionEmail',
              'preferences.serverOneToOneEmail')
+
+  _updateUi: ->
+    Ember.run.schedule 'afterRender', @, ->
+      prefs = @get('preferences')
+      @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
+      @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
 
   actions:
 
@@ -79,4 +84,11 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('preferences.clientWeb.showJoinLeaveMessages', @$('#show-join-leave-messages-checkbox').is(':checked'))
       @set('preferences.clientWeb.showOnlineOfflineMessages', @$('#show-online-offline-messages-checkbox').is(':checked'))
       @set('preferences.clientWeb.showAvatars', @$('#show-avatars-checkbox').is(':checked'))
+      return undefined
+
+    changeServerPreference: ->
+      data =
+        server_mention_email: @$('.server-mention-email-checkbox').is(':checked')
+        server_one_to_one_email: @$('.server-one-to-one-email-checkbox').is(':checked')
+      App.get('api').updatePreferences(data)
       return undefined
