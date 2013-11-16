@@ -1,6 +1,10 @@
 #= require base-model
 
-App.Preferences = App.BaseModel.extend()
+App.Preferences = App.BaseModel.extend
+
+  init: ->
+    @_super(arguments...)
+    @set('clientWeb', Ember.Object.create()) if ! @get('clientWeb')?
 
 
 
