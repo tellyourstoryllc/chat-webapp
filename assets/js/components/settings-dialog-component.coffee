@@ -67,10 +67,18 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   ).observes('preferences.serverMentionEmail',
              'preferences.serverOneToOneEmail')
 
+  preferencesChanged: (->
+    @_updateUi()
+  ).observes('preferences', 'preferences.clientWeb')
+
   _updateUi: ->
     Ember.run.schedule 'afterRender', @, ->
       prefs = @get('preferences')
+      return unless prefs?
+      @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
+      @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
       clientPrefs = prefs.get('clientWeb')
+      return unless clientPrefs?
       @$('#show-join-leave-messages-checkbox').prop('checked', clientPrefs.get('showJoinLeaveMessages'))
       @$('#show-avatars-checkbox').prop('checked', clientPrefs.get('showAvatars'))
       @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
@@ -78,8 +86,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
       @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
-      @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
-      @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
 
   actions:
 
