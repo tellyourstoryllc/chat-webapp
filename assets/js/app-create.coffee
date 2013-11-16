@@ -136,7 +136,7 @@ window.App = App = Ember.Application.create
   #       coolStuff(result) # This could accidentally throw an exception.
   #     .then null, App.rejectionHandler
   rejectionHandler: (e) ->
-    Ember.Logger.error(e, e?.message)
+    Ember.Logger.error(e, e?.message, e?.stack ? e?.stacktrace)
     throw e
 
   onFayeConnect: ->
