@@ -170,14 +170,14 @@ window.App = App = Ember.Application.create
       idOrJqueryElement.attr('id')
     Ember.View.views[id]
 
-  isLoggedIn: -> @get('currentUser')?
+  isLoggedIn: -> @get('currentUser')? && @get('userChannelSubscription')?
 
   login: (token, user) ->
     @set('currentUser', user)
     @set('token', token)
     window.localStorage['token'] = token
 
-    if App.get('emoticonsVersion')?
+    if App.Preferences.all().length > 0
       @didCheckIn()
     else
       # In the case of logging in for the first time, we haven't called checkin
@@ -202,9 +202,6 @@ window.App = App = Ember.Application.create
     @set('preferences', prefs)
 
     user = @get('currentUser')
-
-    # Trigger didLogIn event after we've set up the token and logged in state.
-    @get('eventTarget').trigger('didLogIn')
 
     # Listen for status updates from other users, echoes of our own status, and
     # one to one messages.
@@ -244,6 +241,9 @@ window.App = App = Ember.Application.create
       # Update our own status after we ensure that we're listening for status
       # updates.
       @updateStatusAfterConnect() if @get('isFayeClientConnected')
+
+    # Trigger didLogIn event after we've set up the token and logged in state.
+    @get('eventTarget').trigger('didLogIn')
 
   # Runs callback asynchronously.  If condition is true, runs in next iteration
   # of the run loop.  Otherwise, it runs when the event triggers.
