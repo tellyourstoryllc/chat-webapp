@@ -10,28 +10,12 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
   init: ->
     @_super(arguments...)
-    # Force computed properties.
-    @get('isOnline')
 
   computedStatus: (->
     clientType = @get('clientType')
     return clientType if clientType in ['phone', 'tablet']
     @get('status')
   ).property('clientType', 'status')
-
-  isOnline: (->
-    @get('computedStatus') != 'unavailable'
-  ).property('computedStatus')
-
-  isOnlineWillChange: (->
-    @set('_previousIsOnline', @get('isOnline'))
-  ).observesBefore('isOnline')
-
-  isOnlineDidChange: (->
-    prev = @get('_previousIsOnline')
-    if prev? && prev != @get('isOnline')
-      @trigger('isOnlineDidChange', @)
-  ).observes('isOnline')
 
   sortableComputedStatus: (->
     switch @get('status')

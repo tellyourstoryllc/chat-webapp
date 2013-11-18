@@ -6,8 +6,19 @@
   <h4 class='subtitle'>Profile</h4>
   <table class='settings-table'>
     <tr>
-      <td class='label-cell'>Name</td>
-      <td class='control-cell'>{{App.currentUser.name}}</td>
+      <td class='label-cell profile-first-column'>Name</td>
+      <td class='control-cell'>
+        {{#if isEditingName}}
+          <form> {{! Capture enter key. }}
+            {{input type='text' classNames='name-input' value=newName on-enter='saveName'}}
+            <button type='submit' class='save-name-button' {{action 'saveName'}}>Save</button>
+            <a href='#' {{action 'cancelEditingName'}}>Cancel</a>
+          </form>
+        {{else}}
+          {{App.currentUser.name}}
+          <a href='#' {{action 'editName'}}>Edit</a>
+        {{/if}}
+      </td>
     </tr>
     <tr>
       <td class='label-cell'>Mention Name</td>
@@ -39,32 +50,17 @@
     <tr>
       <td>
         <label for='show-join-leave-messages-checkbox'>
-          {{! Don't use input helper since we can't set the id for the label. }}
           <input type='checkbox' id='show-join-leave-messages-checkbox' class='checkbox'
-            {{action 'changeClientPref' on='change'}}
-            {{bind-attr checked=preferences.clientWeb.showJoinLeaveMessages}}>
+            {{action 'changeClientPreference' 'showJoinLeaveMessages' on='change'}}>
           Show Join and Leave Messages
         </label>
       </td>
     </tr>
     <tr>
       <td>
-        <label for='show-online-offline-messages-checkbox'>
-          {{! Don't use input helper since we can't set the id for the label. }}
-          <input type='checkbox' id='show-online-offline-messages-checkbox' class='checkbox'
-            {{action 'changeClientPref' on='change'}}
-            {{bind-attr checked=preferences.clientWeb.showOnlineOfflineMessages}}>
-          Show User Online and Offline Messages
-        </label>
-      </td>
-    </tr>
-    <tr>
-      <td>
         <label for='show-avatars-checkbox'>
-          {{! Don't use input helper since we can't set the id for the label. }}
           <input type='checkbox' id='show-avatars-checkbox' class='checkbox'
-            {{action 'changeClientPref' on='change'}}
-            {{bind-attr checked=preferences.clientWeb.showAvatars}}>
+            {{action 'changeClientPreference' 'showAvatars' on='change'}}>
           Show Avatars
         </label>
       </td>
@@ -83,19 +79,54 @@
     <tr>
       <td class='label-cell'>When Receiving a Message</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMessageReceive}}
+        <input type='checkbox' class='play-sound-on-message-receive-checkbox'
+          {{action 'changeClientPreference' 'playSoundOnMessageReceive' on='change'}}>
       </td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMessageReceive}}
+        <input type='checkbox' class='show-notification-on-message-receive-checkbox'
+          {{action 'changeClientPreference' 'showNotificationOnMessageReceive' on='change'}}>
       </td>
     </tr>
     <tr>
       <td class='label-cell'>When Mentioned</td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.playSoundOnMention}}
+        <input type='checkbox' class='play-sound-on-mention-checkbox'
+          {{action 'changeClientPreference' 'playSoundOnMention' on='change'}}>
       </td>
       <td class='control-cell checkbox-control-cell'>
-        {{input type='checkbox' checked=preferences.clientWeb.showNotificationOnMention}}
+        <input type='checkbox' class='show-notification-on-mention-checkbox'
+          {{action 'changeClientPreference' 'showNotificationOnMention' on='change'}}>
+      </td>
+    </tr>
+    {{#if doesBrowserSupportRangeInput}}
+      <tr>
+        <td class='label-cell'>Volume</td>
+        <td colspan='2' class='control-cell'>
+          <input type='range' min='0' max='100' value='100' class='notification-volume'
+            {{action 'changeVolumePreference' 'notificationVolume' on='change'}}>
+        </td>
+      </tr>
+    {{/if}}
+  </table>
+
+  <hr>
+
+  <h4 class='subtitle'>Notifications When Offline, Idle, or Away</h4>
+  <table class='settings-table'>
+    <tr>
+      <th></th>
+      <th>Email</th>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Mentioned</td>
+      <td class='control-cell checkbox-control-cell'>
+        <input type='checkbox' class='server-mention-email-checkbox' {{action 'changeServerPreference' on='change'}}>
+      </td>
+    </tr>
+    <tr>
+      <td class='label-cell'>When Receiving 1-1 Message</td>
+      <td class='control-cell checkbox-control-cell'>
+        <input type='checkbox' class='server-one-to-one-email-checkbox' {{action 'changeServerPreference' on='change'}}>
       </td>
     </tr>
   </table>

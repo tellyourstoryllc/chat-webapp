@@ -1,6 +1,8 @@
 App.LoginController = Ember.Controller.extend
 
-  isLoginDisabled: Ember.computed.bool('isChecking')
+  isLoggingIn: false
+
+  isLoginDisabled: Ember.computed.or('isChecking', 'isLoggingIn')
 
   errorMessage: null
 
@@ -31,8 +33,11 @@ App.LoginController = Ember.Controller.extend
 
           user = App.User.loadRaw(userJson)
           if token?
+            @set('isLoggingIn', true)
             App.login(token, user)
-            @transitionToRoute('rooms.index')
+            App.whenLoggedIn @, ->
+              @transitionToRoute('rooms.index')
+              @set('isLoggingIn', false)
 
       , (e) =>
         @set('isChecking', false)

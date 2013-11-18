@@ -166,7 +166,7 @@ label.checkbox
 
 .modal
   position fixed
-  top 32%
+  top 50%
   left 50%
   overflow hidden
   z-index 1001 // Higher than .page-overlay
@@ -178,6 +178,7 @@ label.checkbox
   dialog-width = 380px
   width dialog-width
   margin-left -(dialog-width / 2)
+  margin-top -220px // Negative height divided by 2.
   visibility hidden // Initially hidden.
 
   .settings-table
@@ -188,6 +189,8 @@ label.checkbox
     padding 10px
     border-bottom 1px solid #B7B7B7
     background-color #E3E3E3
+    text-shadow 0 1px 0 #fff
+    font-weight bold
 
     .close
       float right
@@ -199,8 +202,9 @@ label.checkbox
 
   .subtitle
     margin-bottom 5px
-    font-size 14px
+    font-size 13px
     text-shadow 0 1px 0 #fff
+    font-weight bold
 
   .label-cell, .control-cell
     padding-bottom 5px
@@ -209,6 +213,9 @@ label.checkbox
   .label-cell
     padding-right 5px
     text-align right
+
+  .profile-first-column
+    width 85px
 
   .checkbox-control-cell
     text-align center

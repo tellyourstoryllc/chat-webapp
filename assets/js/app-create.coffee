@@ -111,17 +111,18 @@ window.App = App = Ember.Application.create
 
         App.login(token, user)
 
-        # Automatically transition to somewhere more interesting.
-        transition = App.get('continueTransition')
-        if transition?
-          transition.retry()
-          App.set('continueTransition', null)
-        else
-          appController = App.__container__.lookup('controller:application')
-          # We're currently on the login or home page, so go to the default
-          # place.
-          if appController.get('currentPath') in ['index', 'login']
-            App._getRouter().transitionTo('rooms.index')
+        @whenLoggedIn =>
+          # Automatically transition to somewhere more interesting.
+          transition = App.get('continueTransition')
+          if transition?
+            transition.retry()
+            App.set('continueTransition', null)
+          else
+            appController = App.__container__.lookup('controller:application')
+            # We're currently on the login or home page, so go to the default
+            # place.
+            if appController.get('currentPath') in ['index', 'login']
+              App._getRouter().transitionTo('rooms.index')
       , (e) =>
         App.set('isLoggingIn', false)
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
@@ -136,7 +137,7 @@ window.App = App = Ember.Application.create
   #       coolStuff(result) # This could accidentally throw an exception.
   #     .then null, App.rejectionHandler
   rejectionHandler: (e) ->
-    Ember.Logger.error(e, e?.message)
+    Ember.Logger.error(e, e?.message, e?.stack ? e?.stacktrace)
     throw e
 
   onFayeConnect: ->
@@ -170,53 +171,38 @@ window.App = App = Ember.Application.create
       idOrJqueryElement.attr('id')
     Ember.View.views[id]
 
-  isLoggedIn: -> @get('currentUser')?
+  isLoggedIn: -> @get('currentUser')? && @get('userChannelSubscription')?
 
   login: (token, user) ->
     @set('currentUser', user)
     @set('token', token)
     window.localStorage['token'] = token
 
-    afterCheckin = =>
-      # Setup preferences.
-      prefs = App.Preferences.all()[0]
-      clientPrefs = prefs.get('clientWeb')
-      clientPrefsKeys =
-        [
-          'playSoundOnMessageReceive'
-          'showNotificationOnMessageReceive'
-          'playSoundOnMention'
-          'showNotificationOnMention'
-          'showJoinLeaveMessages'
-          'showOnlineOfflineMessages'
-          'showAvatars'
-        ]
-      for key in clientPrefsKeys
-        val = clientPrefs.get(key)
-        # Load from localStorage if not set.
-        if ! val?
-          strVal = window.localStorage.getItem(key)
-          val = ! (strVal in ['0', 'false'])
-        clientPrefs.set(key, val)
-      @set('preferences', prefs)
-
-      # Finish the login process.
+    if App.Preferences.all().length > 0
       @didCheckIn()
-
-    if App.get('emoticonsVersion')?
-      afterCheckin()
     else
       # In the case of logging in for the first time, we haven't called checkin
       # yet.
       App.get('api').checkin(token: token).then (user) =>
-        afterCheckin()
+        @didCheckIn()
 
   # This is triggered after logging in and checking in.
   didCheckIn: ->
-    user = @get('currentUser')
+    # Setup preferences.
+    prefs = App.Preferences.all()[0]
+    clientPrefs = prefs.get('clientWeb')
+    for key, defaultVal of App.Preferences.clientPrefsDefaults
+      val = undefined
+      # Prefer localStorage value.
+      strVal = window.localStorage.getItem(key)
+      if strVal?
+        val ?= App.Preferences.coerceValueFromStorage(key, strVal)
+      val ?= clientPrefs.get(key)
+      val ?= defaultVal
+      clientPrefs.set(key, val)
+    @set('preferences', prefs)
 
-    # Trigger didLogIn event after we've set up the token and logged in state.
-    @get('eventTarget').trigger('didLogIn')
+    user = @get('currentUser')
 
     # Listen for status updates from other users, echoes of our own status, and
     # one to one messages.
@@ -244,6 +230,10 @@ window.App = App = Ember.Application.create
           else
             # This is a OneToOne we've never seen before, so just load it.
             App.loadAll(json)
+        else if json.object_type == 'preferences'
+          # Don't synchronize the client preferences; only server preferences.
+          delete json.client_web
+          App.loadAll(json)
         return undefined
     @set('userChannelSubscription', subscription)
 
@@ -252,6 +242,9 @@ window.App = App = Ember.Application.create
       # Update our own status after we ensure that we're listening for status
       # updates.
       @updateStatusAfterConnect() if @get('isFayeClientConnected')
+
+    # Trigger didLogIn event after we've set up the token and logged in state.
+    @get('eventTarget').trigger('didLogIn')
 
   # Runs callback asynchronously.  If condition is true, runs in next iteration
   # of the run loop.  Otherwise, it runs when the event triggers.

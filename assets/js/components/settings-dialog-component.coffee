@@ -1,6 +1,10 @@
 App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   classNames: ['modal', 'settings-dialog']
 
+  isEditingName: false
+
+  newName: ''
+
   isSendingAvatar: false
 
   preferences: (->
@@ -13,6 +17,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   didInsertElement: ->
     @$('.avatar-file-input').on 'change', @fileChange
+    @_updateUi()
 
   willDestroyElement: ->
     @$('.avatar-file-input').off 'change', @fileChange
@@ -46,16 +51,41 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isSendingAvatar', false)
 
   clientWebPreferencesDidChange: (->
-    data =
-      client_web: JSON.stringify(@get('preferences.clientWeb'))
-    App.get('api').updatePreferences(data)
+    # When the global preferences change, sync the UI.
+    @_updateUi()
   ).observes('preferences.clientWeb.playSoundOnMessageReceive',
              'preferences.clientWeb.showNotificationOnMessageReceive',
              'preferences.clientWeb.playSoundOnMention',
              'preferences.clientWeb.showNotificationOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
-             'preferences.clientWeb.showOnlineOfflineMessages',
-             'preferences.clientWeb.showAvatars')
+             'preferences.clientWeb.showAvatars',
+             'preferences.clientWeb.notificationVolume')
+
+  serverPreferencesDidChange: (->
+    # When the global preferences change, sync the UI.
+    @_updateUi()
+  ).observes('preferences.serverMentionEmail',
+             'preferences.serverOneToOneEmail')
+
+  preferencesChanged: (->
+    @_updateUi()
+  ).observes('preferences', 'preferences.clientWeb')
+
+  _updateUi: ->
+    Ember.run.schedule 'afterRender', @, ->
+      prefs = @get('preferences')
+      return unless prefs?
+      @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
+      @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
+      clientPrefs = prefs.get('clientWeb')
+      return unless clientPrefs?
+      @$('#show-join-leave-messages-checkbox').prop('checked', clientPrefs.get('showJoinLeaveMessages'))
+      @$('#show-avatars-checkbox').prop('checked', clientPrefs.get('showAvatars'))
+      @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
+      @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
+      @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
+      @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
+      @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
 
   actions:
 
@@ -67,8 +97,68 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @get('targetObject').send('hide')
       return undefined
 
-    changeClientPref: ->
-      @set('preferences.clientWeb.showJoinLeaveMessages', @$('#show-join-leave-messages-checkbox').is(':checked'))
-      @set('preferences.clientWeb.showOnlineOfflineMessages', @$('#show-online-offline-messages-checkbox').is(':checked'))
-      @set('preferences.clientWeb.showAvatars', @$('#show-avatars-checkbox').is(':checked'))
+    editName: ->
+      @set('isEditingName', true)
+      @set('newName', App.get('currentUser.name'))
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.name-input').textrange('set') # Select all.
+      return undefined
+
+    cancelEditingName: ->
+      @set('isEditingName', false)
+      return undefined
+
+    saveName: ->
+      newName = @get('newName')
+      return if Ember.isEmpty(newName)
+
+      user = App.get('currentUser')
+      oldName = user.get('name')
+      if user.isPropertyLocked('name')
+        Ember.Logger.log "Can't change user name when it's locked."
+        return
+
+      @set('isEditingName', false)
+      # If name didn't change, we're done.
+      return if oldName == newName
+
+      data =
+        name: newName
+      url = App.get('api').buildURL('/users/update')
+      user.withLockedPropertyTransaction url, 'POST', { data: data }, 'name', =>
+        user.set('name', newName)
+      , =>
+        user.set('name', oldName)
+
+      return undefined
+
+    changeVolumePreference: _.debounce (key) ->
+      # This gets triggered as you slide, so need to debounce.
+      @send('changeClientPreference', key)
+      return undefined
+    , 200
+
+    changeClientPreference: (key) ->
+      clientPrefs = @get('preferences.clientWeb')
+      clientPrefs.setProperties
+        showJoinLeaveMessages: @$('#show-join-leave-messages-checkbox').is(':checked')
+        showAvatars: @$('#show-avatars-checkbox').is(':checked')
+        playSoundOnMessageReceive: @$('.play-sound-on-message-receive-checkbox').is(':checked')
+        showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
+        playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')
+        showNotificationOnMention: @$('.show-notification-on-mention-checkbox').is(':checked')
+        notificationVolume: parseInt(@$('.notification-volume').val())
+      # Save to localStorage.
+      window.localStorage.setItem(key, clientPrefs.get(key))
+      # Save to server.
+      data =
+        client_web: JSON.stringify(clientPrefs)
+      App.get('api').updatePreferences(data)
+      return undefined
+
+    changeServerPreference: ->
+      data =
+        server_mention_email: @$('.server-mention-email-checkbox').is(':checked')
+        server_one_to_one_email: @$('.server-one-to-one-email-checkbox').is(':checked')
+      App.get('api').updatePreferences(data)
       return undefined

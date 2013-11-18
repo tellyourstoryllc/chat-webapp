@@ -118,6 +118,11 @@ App.RoomsView = Ember.View.extend
           $link.removeClass 'active'
   ).observes('App.currentlyViewingRoom', 'controller.roomsLoaded')
 
+  notificationVolumeChanged: (->
+    $audio = @$('.mention-sound, .receive-message-sound')
+    $audio.prop('volume', App.get('preferences.clientWeb.notificationVolume') / 100.0)
+  ).observes('App.preferences.clientWeb.notificationVolume')
+
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)
     @set('isChooseStatusMenuVisible', true)
