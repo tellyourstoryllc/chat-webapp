@@ -39,10 +39,6 @@ window.App = App = Ember.Application.create
   # device.
   idleForSeconds: 0
 
-  # The number of minutes of inactivity after which the client is considered
-  # idle on this device.
-  showIdleAfterMinutes: 5
-
   # Boolean whether the current user is idle on this device.
   isIdle: false
 

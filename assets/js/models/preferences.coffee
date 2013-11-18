@@ -22,6 +22,9 @@ App.Preferences.reopenClass
     playSoundOnMention: true
     showNotificationOnMention: true
     showJoinLeaveMessages: true
+    # The number of minutes of inactivity after which the client is considered
+    # idle on this device.
+    showIdleAfterMinutes: 5
     showAvatars: true
     notificationVolume: 100
 
@@ -49,6 +52,11 @@ App.Preferences.reopenClass
       # Integer in the range [0, 100].
       n = parseIntWithDefault(value, 100)
       return Math.min(100, Math.max(0, n))
+
+    if key == 'showIdleAfterMinutes'
+      # Integer in the range [1, 480].
+      n = parseIntWithDefault(value, 5)
+      return Math.min(480, Math.max(1, n))
 
     # All other values are booleans.
     ! (value in ['0', 'false'])

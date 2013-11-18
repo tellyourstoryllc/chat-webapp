@@ -92,7 +92,7 @@ App.RoomsView = Ember.View.extend
     msDiff = new Date().getTime() - lastActiveAt.getTime()
     secDiff = Math.round(msDiff / 1000)
     App.set('idleForSeconds', secDiff)
-    App.set('isIdle', secDiff >= 60 * App.get('showIdleAfterMinutes'))
+    App.set('isIdle', secDiff >= 60 * App.get('preferences.clientWeb.showIdleAfterMinutes'))
 
   updateUserIdleDurations: ->
     now = new Date()
