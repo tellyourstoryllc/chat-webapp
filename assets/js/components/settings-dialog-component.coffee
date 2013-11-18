@@ -7,6 +7,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isSendingAvatar: false
 
+  selectedTab: 'general'
+
   preferences: (->
     App.get('preferences')
   ).property('App.preferences')
@@ -21,6 +23,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   willDestroyElement: ->
     @$('.avatar-file-input').off 'change', @fileChange
+
+  isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
 
   isHiddenChanged: (->
     if @get('isHidden')
