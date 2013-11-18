@@ -19,13 +19,15 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'fileChange')
+    _.bindAll(@, 'onBodyKeyDown', 'fileChange')
 
   didInsertElement: ->
+    $('body').on 'keydown', @onBodyKeyDown
     @$('.avatar-file-input').on 'change', @fileChange
     @_updateUi()
 
   willDestroyElement: ->
+    $('body').off 'keydown', @onBodyKeyDown
     @$('.avatar-file-input').off 'change', @fileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
@@ -37,6 +39,20 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       isEditingEmail: false
     @_updateUi()
   ).observes('selectedTab')
+
+  onBodyKeyDown: (event) ->
+    Ember.run @, ->
+      # No key modifiers.
+      if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
+        if event.which == 27 # Escape.
+          # Stop editing.
+          if @get('isEditingName')
+            @send('cancelEditingName')
+          else if @get('isEditingEmail')
+            @send('cancelEditingEmail')
+          else
+            # Close the dialog.
+            @send('hideDialog')
 
   isHiddenChanged: (->
     if @get('isHidden')
