@@ -3,7 +3,19 @@
   <h3>Settings</h3>
 </div>
 <div class='content'>
+  <div class='tab-handles'>
+    <div {{bind-attr class=':tab-handle isShowingGeneralTab:active'}} {{action 'showTab' 'general'}}>
+      General
+    </div>
+    <div {{bind-attr class=':tab-handle isShowingAccountTab:active'}} {{action 'showTab' 'account'}}>
+      Account
+    </div>
+  </div>
   {{#if isShowingGeneralTab}}
     {{partial 'components/settings-dialog-general-tab'}}
+  {{else}}
+    {{#if isShowingAccountTab}}
+      {{partial 'components/settings-dialog-account-tab'}}
+    {{/if}}
   {{/if}}
 </div>

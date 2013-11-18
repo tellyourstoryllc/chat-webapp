@@ -1,0 +1,31 @@
+<h4 class='subtitle'>General</h4>
+<table class='settings-table'>
+  <tr>
+    <td class='label-cell editable-label-cell account-first-column'>Email</td>
+    <td class='control-cell'>
+      {{#if isEditingEmail}}
+        <form> {{! Capture enter key. }}
+          {{#if emailErrorMessage}}
+            <div class='alert alert-error'>
+              {{emailErrorMessage}}
+            </div>
+          {{/if}}
+          {{input type='email' classNames='email-input' value=newEmail on-enter='saveEmail'
+            placeholder='New Email'}}
+          <br>
+          <input type='password' class='password-input' placeholder='Current Password'>
+          <button type='submit' class='save-email-button' {{action 'saveEmail'}}
+            {{bind-attr disabled='isSendingEmail'}}>
+            {{#if isSendingEmail}}Saving...{{else}}Save{{/if}}
+          </button>
+          <a href='#' {{action 'cancelEditingEmail'}}>Cancel</a>
+        </form>
+      {{else}}
+        <div class='editable-display'>
+          {{App.currentUser.account.email}}
+          <a href='#' {{action 'editEmail'}}>Edit</a>
+        </div>
+      {{/if}}
+    </td>
+  </tr>
+</table>

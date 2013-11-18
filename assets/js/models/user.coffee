@@ -2,6 +2,8 @@
 
 App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
+  account: null
+
   # Most recently calculated idle duration in seconds.
   mostRecentIdleDuration: null
 

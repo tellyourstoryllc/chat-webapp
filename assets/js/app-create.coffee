@@ -328,6 +328,8 @@ window.App = App = Ember.Application.create
 
   classFromRawObject: (obj) ->
     switch obj.object_type
+      when 'account'
+        App.Account
       when 'emoticon'
         App.Emoticon
       when 'group'

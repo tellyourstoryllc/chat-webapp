@@ -56,13 +56,15 @@ App.LockableApiModelMixin = Ember.Mixin.create
     .then (json) =>
       if ! json? || json.error?
         Ember.Logger.error "API error committing locked property transaction: #{json?.error.message}"
+        isSuccessful = false
         rollback(json)
       else
         # For success, ignore the result.  Assume it worked.
+        isSuccessful = true
 
       # Always unlock the properties.
       @unlockProperties(properties)
-      return json
+      return [isSuccessful, json]
 
     , (xhr) =>
       rollback(xhr)

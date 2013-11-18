@@ -2,8 +2,12 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   classNames: ['modal', 'settings-dialog']
 
   isEditingName: false
-
   newName: ''
+
+  isEditingEmail: false
+  isSendingEmail: false
+  newEmail: ''
+  emailErrorMessage: null
 
   isSendingAvatar: false
 
@@ -25,6 +29,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.avatar-file-input').off 'change', @fileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
+  isShowingAccountTab: Ember.computed.equal('selectedTab', 'account')
+
+  selectedTabChanged: (->
+    @setProperties
+      isEditingName: false
+      isEditingEmail: false
+    @_updateUi()
+  ).observes('selectedTab')
 
   isHiddenChanged: (->
     if @get('isHidden')
@@ -93,6 +105,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   actions:
 
+    showTab: (tabName) ->
+      @set('selectedTab', tabName)
+      return undefined
+
     chooseAvatarFile: ->
       @$('.avatar-file-input').trigger('click')
       return undefined
@@ -133,6 +149,54 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         user.set('name', newName)
       , =>
         user.set('name', oldName)
+
+      return undefined
+
+    editEmail: ->
+      @set('isEditingEmail', true)
+      @set('newEmail', App.get('currentUser.account.email'))
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.email-input').textrange('set') # Select all.
+      return undefined
+
+    cancelEditingEmail: ->
+      @set('isEditingEmail', false)
+      @set('emailErrorMessage', null)
+      return undefined
+
+    saveEmail: ->
+      newEmail = @get('newEmail')
+      return if Ember.isEmpty(newEmail)
+
+      @set('emailErrorMessage', null)
+      user = App.get('currentUser')
+      account = user.get('account')
+      oldEmail = account.get('email')
+      if account.isPropertyLocked('email')
+        Ember.Logger.log "Can't change account email when it's locked."
+        return
+
+      # If name didn't change, we're done.
+      if oldEmail == newEmail
+        @set('isEditingEmail', false)
+        return
+
+      @set('isSendingEmail', true)
+      data =
+        email: newEmail
+        password: @$('.password-input').val()
+      url = App.get('api').buildURL('/accounts/update')
+      account.withLockedPropertyTransaction url, 'POST', { data: data }, 'email', =>
+        account.set('email', newEmail)
+      , (xhrOrJson) =>
+        account.set('email', oldEmail)
+        if xhrOrJson.status == 401
+          @set('emailErrorMessage', "Invalid password.")
+        else
+          @set('emailErrorMessage', "Unknown error occurred.  Please try again.")
+      .then ([isSuccessful, json]) =>
+        @set('isSendingEmail', false)
+        @set('isEditingEmail', false) if isSuccessful
 
       return undefined
 

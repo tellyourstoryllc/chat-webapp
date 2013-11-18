@@ -62,12 +62,18 @@ App.RemoteApi = Ember.Object.extend
         objs = json.filter (o) -> o.object_type == 'emoticon'
         emoticons = objs.map (o) -> App.Emoticon.loadRaw(o)
 
+        obj = json.find (o) -> o.object_type == 'account'
+        throw new Error("Expected to find account in checkin result but didn't") unless obj?
+        account = App.Account.loadRaw(obj)
+
         objs = json.filter (o) -> o.object_type == 'preferences'
         prefs = objs.map (o) -> App.Preferences.loadRaw(o)
 
         userAttrs = json.find (o) -> o.object_type == 'user'
         throw new Error("Expected to find user in checkin result but didn't") unless userAttrs?
         user = App.User.loadRaw(userAttrs)
+
+        user.set('account', account)
 
         return user
 
