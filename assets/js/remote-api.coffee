@@ -73,7 +73,7 @@ App.RemoteApi = Ember.Object.extend
         throw new Error("Expected to find user in checkin result but didn't") unless userAttrs?
         user = App.User.loadRaw(userAttrs)
 
-        user.set('account', account)
+        user.set('_account', account)
 
         return user
 

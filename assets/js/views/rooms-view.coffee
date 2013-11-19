@@ -1,10 +1,16 @@
 App.RoomsView = Ember.View.extend
 
+  isRoomMenuVisible: false
+
   isChooseStatusMenuVisible: false
+
+  isSendingRoomWallpaper: false
+
+  activeRoom: Ember.computed.alias('controller.activeRoom')
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown')
+    _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown', 'onChangeRoomWallpaperFile')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
@@ -12,6 +18,7 @@ App.RoomsView = Ember.View.extend
     $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
+    @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -59,11 +66,14 @@ App.RoomsView = Ember.View.extend
 
     # The list of members needs an explicit height so that it can be scrollable.
     height = $window.height()
+    height -= @$('.room-actions').outerHeight(true) ? 0
+    height -= @$('.room-members-sidebar .title').outerHeight(true) ? 0
     @$('.room-members').css
-      height: height - @$('.room-members-sidebar .title').outerHeight(true)
+      height: height
 
   documentClick: (event) ->
     Ember.run @, ->
+      @closeRoomMenu()
       @closeChooseStatusMenu()
 
   # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
@@ -123,6 +133,44 @@ App.RoomsView = Ember.View.extend
     $audio.prop('volume', App.get('preferences.clientWeb.notificationVolume') / 100.0)
   ).observes('App.preferences.clientWeb.notificationVolume')
 
+  canUpdateRoomWallpaper: (->
+    room = @get('activeRoom')
+    room instanceof App.Group && ! @get('isSendingRoomWallpaper') &&
+      room.get('isCurrentUserAdmin')
+  ).property('activeRoom', 'activeRoom.isCurrentUserAdmin', 'isSendingRoomWallpaper')
+
+  onChangeRoomWallpaperFile: (event) ->
+    Ember.run @, ->
+      file = event.target.files?[0]
+      @_updateRoomWallpaper(file) if file?
+
+  _updateRoomWallpaper: (file) ->
+    api = App.get('api')
+    formData = new FormData()
+    formData.append(k, v) for k,v of api.defaultParams()
+    formData.append('wallpaper_image_file', file)
+    @set('isSendingRoomWallpaper', true)
+    room = @get('activeRoom')
+    api.ajax(room.updateWallpaperUrl(), 'POST',
+      data: formData
+      processData: false
+      contentType: false
+    )
+    .always =>
+      @set('isSendingRoomWallpaper', false)
+    .then (json) =>
+      if ! json || json.error?
+        throw json
+      App.loadAll(json)
+
+  showRoomMenu: ->
+    @$('.room-menu').fadeIn(50)
+    @set('isRoomMenuVisible', true)
+
+  closeRoomMenu: ->
+    @$('.room-menu').fadeOut(300)
+    @set('isRoomMenuVisible', false)
+
   showChooseStatusMenu: ->
     @$('.choose-status-menu').fadeIn(50)
     @set('isChooseStatusMenuVisible', true)
@@ -132,6 +180,25 @@ App.RoomsView = Ember.View.extend
     @set('isChooseStatusMenuVisible', false)
 
   actions:
+
+    toggleRoomMenu: ->
+      if @get('isRoomMenuVisible')
+        @closeRoomMenu()
+      else
+        @showRoomMenu()
+      return undefined
+
+    chooseRoomWallpaper: ->
+      activeRoom = @get('activeRoom')
+      if ! activeRoom.get('isCurrentUserAdmin')
+        if activeRoom instanceof App.OneToOne
+          alert "The room wallpaper you see is set by the other user."
+        else
+          alert "You must be an admin to change the room wallpaper."
+        return
+      return unless @get('canUpdateRoomWallpaper')
+      @$('.room-wallpaper-file').trigger('click')
+      return undefined
 
     toggleChooseStatusMenu: ->
       if @get('isChooseStatusMenuVisible')

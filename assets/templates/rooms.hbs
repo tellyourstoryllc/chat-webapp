@@ -57,6 +57,12 @@
 </div>
 
 <div class='room-members-sidebar'>
+  <div class='room-actions'>
+    <img class='room-actions-icon' src='/images/settings-icon.png'
+      {{action 'toggleRoomMenu' target=view bubbles=false}}>
+    <input type='file' class='room-wallpaper-file' style='display: none;'>
+  </div>
+
   <div class='title'>People</div>
   {{#if usersLoaded}}
     <ul class='room-members'>
@@ -84,3 +90,8 @@
     </div>
   {{/if}}
 </div>
+
+<ul class='menu room-menu' role='menu'>
+  <li {{bind-attr class=':menu-item view.canUpdateRoomWallpaper::disabled'}}
+    {{action 'chooseRoomWallpaper' target=view}}>Change Wallpaper...</li>
+</ul>

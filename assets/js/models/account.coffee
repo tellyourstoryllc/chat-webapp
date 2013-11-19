@@ -12,6 +12,8 @@ App.Account.reopenClass
   _allById: {}
 
   propertiesFromRawAttrs: (json) ->
-    id: @coerceId(json.id)
+    # Note: we're using the userId as the ID so we don't need to store multiple
+    # map caches.
+    id: @coerceId(json.user_id)
     email: json.email
     oneToOneWallpaperUrl: json.one_to_one_wallpaper_url

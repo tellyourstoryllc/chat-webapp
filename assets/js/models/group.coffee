@@ -94,6 +94,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   publishMessageChannelName: ->
     "/groups/#{@get('id')}/messages"
 
+  updateWallpaperUrl: ->
+    App.get('api').buildURL("/groups/#{@get('id')}/update")
+
   reload: ->
     id = @get('id')
     if ! id?
@@ -126,6 +129,7 @@ App.Group.reopenClass
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
+    wallpaperUrl: json.wallpaper_url
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
 

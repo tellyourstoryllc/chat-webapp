@@ -2,16 +2,16 @@
 
 App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
-  account: null
-
   # Most recently calculated idle duration in seconds.
   mostRecentIdleDuration: null
 
   # Status icon duck typing.
   hasStatusIcon: true
 
-  init: ->
-    @_super(arguments...)
+  # Account object.
+  _account: null
+
+  wallpaperUrl: Ember.computed.alias('account.wallpaperUrl')
 
   computedStatus: (->
     clientType = @get('clientType')
@@ -30,6 +30,14 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
       else
         3
   ).property('status')
+
+  account: (->
+    account = @get('_account')
+    return account if account?
+    account = App.Account.lookup(@get('id'))
+    @set('_account', account)
+    account
+  ).property('_account')
 
   mentionName: (->
     @get('name').replace(/\s/g, '')

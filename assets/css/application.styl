@@ -522,6 +522,12 @@ body.logged-out
 
 room-members-sidebar-width = 200px
 
+.room-menu
+  position fixed
+  right 5px
+  top 30px
+  width room-members-sidebar-width - 10px
+
 .room-members-sidebar
   position fixed
   right 0
@@ -533,6 +539,14 @@ room-members-sidebar-width = 200px
   background-color #fff
   font-size 12px
   line-height 1.2em
+
+  .room-actions
+    padding 5px
+    background-color #E6E6E6
+    text-align right
+
+  .room-actions-icon
+    cursor pointer
 
   .title, .loading
     margin 5px 10px 10px 10px
@@ -653,7 +667,7 @@ room-members-sidebar-width = 200px
     opacity 0
 
 .message
-  border-top 1px solid #E1E1E1
+  // border-top 1px solid #E1E1E1
   font-size 14px
 
   .message-table
@@ -668,30 +682,30 @@ room-members-sidebar-width = 200px
 
   .sender-cell
     width 150px
-    border-top 1px solid #fff
-    border-right 1px solid #fff
-    background-color #F7F7F7
+    // border-top 1px solid #fff
+    // border-right 1px solid #fff
+    // background-color #F7F7F7
     text-align right
 
-  .body-cell
-    border-left 1px solid #E1E1E1
+  // .body-cell
+  //   border-left 1px solid #E1E1E1
 
-  &.sent-by-you
-    border-color #BFD6EA
+  // &.sent-by-you
+  //   border-color #BFD6EA
 
-    .sender-cell
-      border-color #F3F7FB
-      background-color #E4ECF6
+  //   .sender-cell
+  //     border-color #F3F7FB
+  //     background-color #E4ECF6
 
-    .body-cell
-      border-color #BFD6EA
-      background-color #F3F7FB
+  //   .body-cell
+  //     border-color #BFD6EA
+  //     background-color #F3F7FB
 
   &.system-message
 
     .sender-cell
       border-right-color transparent
-      background-color #fff
+      // background-color #fff
 
     .body-cell
       border-left-color transparent
