@@ -94,4 +94,8 @@
 <ul class='menu room-menu' role='menu'>
   <li {{bind-attr class=':menu-item view.canUpdateRoomWallpaper::disabled'}}
     {{action 'chooseRoomWallpaper' target=view}}>Change Wallpaper...</li>
+  {{#if view.hasRoomWallpaper}}
+    <li {{bind-attr class=':menu-item view.canUpdateRoomWallpaper::disabled'}}
+      {{action 'removeRoomWallpaper' target=view}}>Remove Wallpaper</li>
+  {{/if}}
 </ul>

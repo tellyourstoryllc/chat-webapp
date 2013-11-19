@@ -133,6 +133,8 @@ App.RoomsView = Ember.View.extend
     $audio.prop('volume', App.get('preferences.clientWeb.notificationVolume') / 100.0)
   ).observes('App.preferences.clientWeb.notificationVolume')
 
+  hasRoomWallpaper: Ember.computed.notEmpty('activeRoom.wallpaperUrl')
+
   canUpdateRoomWallpaper: (->
     room = @get('activeRoom')
     room instanceof App.Group && ! @get('isSendingRoomWallpaper') &&
@@ -144,7 +146,9 @@ App.RoomsView = Ember.View.extend
       file = event.target.files?[0]
       @_updateRoomWallpaper(file) if file?
 
+  # Persists the file to the API.  Use `null` file to remove it.
   _updateRoomWallpaper: (file) ->
+    return if @get('isSendingRoomWallpaper')
     api = App.get('api')
     formData = new FormData()
     formData.append(k, v) for k,v of api.defaultParams()
@@ -198,6 +202,10 @@ App.RoomsView = Ember.View.extend
         return
       return unless @get('canUpdateRoomWallpaper')
       @$('.room-wallpaper-file').trigger('click')
+      return undefined
+
+    removeRoomWallpaper: ->
+      @_updateRoomWallpaper(null)
       return undefined
 
     toggleChooseStatusMenu: ->
