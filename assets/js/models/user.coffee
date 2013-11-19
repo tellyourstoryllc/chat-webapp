@@ -11,7 +11,7 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Account object.
   _account: null
 
-  wallpaperUrl: Ember.computed.alias('account.wallpaperUrl')
+  oneToOneWallpaperUrl: Ember.computed.alias('account.oneToOneWallpaperUrl')
 
   computedStatus: (->
     clientType = @get('clientType')

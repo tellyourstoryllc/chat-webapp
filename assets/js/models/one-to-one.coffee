@@ -7,7 +7,7 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   avatarUrl: Ember.computed.alias('otherUser.avatarUrl')
 
-  wallpaperUrl: Ember.computed.alias('otherUser.wallpaperUrl')
+  wallpaperUrl: Ember.computed.alias('otherUser.oneToOneWallpaperUrl')
 
   hasStatusIcon: Ember.computed.alias('otherUser.hasStatusIcon')
 

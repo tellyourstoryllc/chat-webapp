@@ -10,6 +10,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   emailErrorMessage: null
 
   isSendingAvatar: false
+  isSendingOneToOneWallpaper: false
 
   selectedTab: 'general'
 
@@ -19,16 +20,18 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown', 'fileChange')
+    _.bindAll(@, 'onBodyKeyDown', 'fileChange', 'onOneToOneWallpaperFileChange')
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
     @$('.avatar-file-input').on 'change', @fileChange
+    @$('.one-to-one-wallpaper-file-input').on 'change', @onOneToOneWallpaperFileChange
     @_updateUi()
 
   willDestroyElement: ->
     $('body').off 'keydown', @onBodyKeyDown
     @$('.avatar-file-input').off 'change', @fileChange
+    @$('.one-to-one-wallpaper-file-input').off 'change', @onOneToOneWallpaperFileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
   isShowingAccountTab: Ember.computed.equal('selectedTab', 'account')
@@ -82,6 +85,31 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     .always =>
       @set('isSendingAvatar', false)
 
+  onOneToOneWallpaperFileChange: (event) ->
+    Ember.run @, ->
+      file = event.target.files?[0]
+      return unless file?
+
+      @updateOneToOneWallpaper(file)
+
+  # Persists the file to the API.  Use `null` file to remove it.
+  updateOneToOneWallpaper: (file) ->
+    return if @get('isSendingOneToOneWallpaper')
+    api = App.get('api')
+    formData = new FormData()
+    formData.append(k, v) for k,v of api.defaultParams()
+    formData.append('one_to_one_wallpaper_image_file', file)
+    @set('isSendingOneToOneWallpaper', true)
+    api.ajax(api.buildURL('/accounts/update'), 'POST',
+      data: formData
+      processData: false
+      contentType: false
+    )
+    .always =>
+      @set('isSendingOneToOneWallpaper', false)
+    .then (json) =>
+      App.loadAll(json)
+
   clientWebPreferencesDidChange: (->
     # When the global preferences change, sync the UI.
     @_updateUi()
@@ -127,6 +155,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     chooseAvatarFile: ->
       @$('.avatar-file-input').trigger('click')
+      return undefined
+
+    chooseOneToOneWallpaperFile: ->
+      @$('.one-to-one-wallpaper-file-input').trigger('click')
+      return undefined
+
+    removeOneToOneWallpaper: ->
+      @updateOneToOneWallpaper(null)
       return undefined
 
     hideDialog: ->

@@ -20,7 +20,7 @@
     <td class='control-cell'>@{{App.currentUser.mentionName}}</td>
   </tr>
   <tr>
-    <td class='label-cell'>Avatar</td>
+    <td class='label-cell image-label-cell'>Avatar</td>
     <td class='control-cell'>
       {{#if doesBrowserSupportAjaxFileUpload}}
         <img {{bind-attr src='App.currentUser.avatarUrl'}} class='small-avatar avatar-image'>
@@ -36,6 +36,31 @@
       {{/if}}
     </td>
   </tr>
+  {{#if doesBrowserSupportAjaxFileUpload}}
+    <tr>
+      <td class='label-cell image-label-cell'>1-1 Wallpaper</td>
+      <td class='control-cell'>
+        {{#if App.currentUser.oneToOneWallpaperUrl}}
+          <img {{bind-attr src='App.currentUser.oneToOneWallpaperUrl'}} class='wallpaper-thumbnail-image'>
+        {{else}}
+          (none set)
+        {{/if}}
+        <button type='button' {{action 'chooseOneToOneWallpaperFile'}}
+          {{bind-attr disabled='isSendingOneToOneWallpaper'}}>
+          {{#if isSendingOneToOneWallpaper}}
+            Uploading...
+          {{else}}
+            Change
+          {{/if}}
+        </button>
+        {{#if App.currentUser.oneToOneWallpaperUrl}}
+          <button type='button' {{action 'removeOneToOneWallpaper'}}
+            {{bind-attr disabled='isSendingOneToOneWallpaper'}}>Remove</button>
+        {{/if}}
+        <input type='file' class='one-to-one-wallpaper-file-input' style='display: none'>
+      </td>
+    </tr>
+  {{/if}}
 </table>
 
 <hr>
