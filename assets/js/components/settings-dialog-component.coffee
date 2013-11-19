@@ -9,6 +9,12 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   newEmail: ''
   emailErrorMessage: null
 
+  isEditingPassword: false
+  isSendingPassword: false
+  newPassword: ''
+  confirmPassword: ''
+  passwordErrorMessage: null
+
   isSendingAvatar: false
   isSendingOneToOneWallpaper: false
 
@@ -40,6 +46,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     @setProperties
       isEditingName: false
       isEditingEmail: false
+      isEditingPassword: false
     @_updateUi()
   ).observes('selectedTab')
 
@@ -53,6 +60,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
             @send('cancelEditingName')
           else if @get('isEditingEmail')
             @send('cancelEditingEmail')
+          else if @get('isEditingPassword')
+            @send('cancelEditingPassword')
           else
             # Close the dialog.
             @send('hideDialog')
@@ -249,6 +258,55 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       .then ([isSuccessful, json]) =>
         @set('isSendingEmail', false)
         @set('isEditingEmail', false) if isSuccessful
+
+      return undefined
+
+    editPassword: ->
+      @set('isEditingPassword', true)
+      @set('newPassword', '')
+      @set('confirmPassword', '')
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.current-password-input').focus()
+      return undefined
+
+    cancelEditingPassword: ->
+      @set('isEditingPassword', false)
+      @set('passwordErrorMessage', null)
+      return undefined
+
+    savePassword: ->
+      newPassword = @get('newPassword') ? ''
+      confirmPassword = @get('confirmPassword') ? ''
+
+      if newPassword.length < 6
+        @set('passwordErrorMessage', "New password must be at least 6 characters.")
+        return
+
+      if newPassword != confirmPassword
+        @set('passwordErrorMessage', "Passwords must match.")
+        return
+
+      @set('passwordErrorMessage', null)
+
+      @set('isSendingPassword', true)
+      data =
+        password: @$('.current-password-input').val()
+        new_password: newPassword
+      url = App.get('api').buildURL('/accounts/update')
+      App.get('api').ajax(url, 'POST', data: data)
+      .always =>
+        @set('isSendingPassword', false)
+      .then (json) =>
+        if ! json? || json.error?
+          throw json
+        # Success.
+        @set('isEditingPassword', false)
+      .fail (xhrOrJson) =>
+        Ember.Logger.error xhrOrJson
+        if xhrOrJson.status == 401
+          @set('passwordErrorMessage', "Invalid current password.")
+        else
+          @set('passwordErrorMessage', "Unknown error occurred.  Please try again.")
 
       return undefined
 
