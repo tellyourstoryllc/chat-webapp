@@ -77,62 +77,36 @@ App.Message = App.BaseModel.extend
 
     # When the current user sends a message, show his or her text prior to
     # processing.
-    userFacingText = @get('userFacingText')
+    userFacingText = @get('userFacingText') ? ''
 
     escape = Ember.Handlebars.Utils.escapeExpression
-    escapedText = escape(userFacingText)
 
-    # Link to URLs.  I know this looks overly complicated, but there's a reason.
-    # See http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html We
-    # whitelist characters to prevent XSS injection.  We match both full URLs
-    # and bare domains at the same time since one would expand into matches of
-    # the other.
-    urlRegexp = ///
-      \(?\b                              # Optional open-paren at the beginning.
-        (
-          (https?|ftp)://                  # Protocol.
-          [-A-Za-z0-9+&@\#/%?=~_()|!:,.;]* # Whitelist URL characters.
-          [-A-Za-z0-9+&@\#/%=~_()|]        # Don't include punctuation at the end.
-        | ( (?:[A-Za-z0-9][-A-Za-z0-9]{0,61}[a-zA-Z0-9]\.)+ # Domain characters.
-            [a-zA-Z0-9]{2,6}               # Only top-level domains at the end.
-          )
-          ([^a-zA-Z0-9]|$)       # Make sure it's followed by non-domain char.
-        )
-    ///g
-    evaledText = escapedText.replace urlRegexp, (fullMatch, urlOrDomain, protocol, bareDomain, trailingChar) ->
-      prefix = ''
-      suffix = ''
-      if protocol
-        display = urlOrDomain
-        url = urlOrDomain
-        useTruncation = true
-      else
-        url = "http://#{bareDomain}/"
-        display = bareDomain
-        # Make sure to carry over trailing character.
-        suffix = trailingChar ? ''
+    # Link to URLs.
+    linkedText = linkify userFacingText,
+      callback: (chunk, href, options) =>
+        # No link, just text.
+        return escape(chunk) if ! href?
 
-      if fullMatch[0] == '('
-        prefix = '('
-        if url.slice(-1) == ')'
-          # The whole URL is inside parentheses.
-          url = url[0 ... -1]
-          display = display[0 ... -1]
-          suffix = ')'
+        display = chunk
+        # Truncate before escaping.
+        if display.length > 100
+          attrs = " title='#{escape(display)}'"
+          display = "#{display[0...100]}..."
 
-      if useTruncation && display.length > 100
-        attrs = " title='#{display}'"
-        display = "#{display[0...100]}..."
-        # Allow soft line break after slashes in a URL.
-        display = display.replace /\//g, '/<wbr>'
+        # Escape the display.
+        escapedDisplay = escape(display)
 
-      "#{prefix}<a href='#{url}'#{attrs} target='_blank'>#{display}</a>#{suffix}"
+        # Allow soft line break after slashes in a URL.  Must be after escaping
+        # so that our wbr tags don't get lost.
+        escapedDisplay = escapedDisplay.replace /\//g, '/<wbr>'
+
+        "<a href='" + escape(href) + "'" + attrs + " target='_blank'>" + escapedDisplay + '</a>'
 
     # Mentions.
     currentUser = App.get('currentUser')
     convo = @get('conversation')
     groupMembers = convo.get('members')
-    evaledText = evaledText.replace /@(\w+)/g, (fullMatch, name) ->
+    evaledText = linkedText.replace /@(\w+)/g, (fullMatch, name) ->
       user = App.User.userMentionedInGroup(name, groupMembers)
       isAll = /^all$/i.test(name)
       if user? || isAll
