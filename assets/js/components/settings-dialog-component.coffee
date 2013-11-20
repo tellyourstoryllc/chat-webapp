@@ -278,8 +278,9 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       newPassword = @get('newPassword') ? ''
       confirmPassword = @get('confirmPassword') ? ''
 
-      if newPassword.length < 6
-        @set('passwordErrorMessage', "New password must be at least 6 characters.")
+      minPasswordLength = App.Account.minPasswordLength()
+      if newPassword.length < minPasswordLength
+        @set('passwordErrorMessage', "New password must be at least #{minPasswordLength} characters.")
         return
 
       if newPassword != confirmPassword

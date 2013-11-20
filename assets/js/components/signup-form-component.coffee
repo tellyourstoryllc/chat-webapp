@@ -17,10 +17,17 @@ App.SignupFormComponent = Ember.Component.extend
 
     attemptSignup: ->
       return if @get('isCreatingUser')
+
+      password = @get('password') ? ''
+      minPasswordLength = App.Account.minPasswordLength()
+      if password.length < minPasswordLength
+        @set('errorMessage', "Password must be at least #{minPasswordLength} characters.")
+        return
+
       @set('isCreatingUser', true)
       @set('errorMessage', null)
 
-      App.get('api').createUser(@get('email'), @get('password'), @get('name'))
+      App.get('api').createUser(@get('email'), password, @get('name'))
       .then (json) =>
         @set('isCreatingUser', false)
 
