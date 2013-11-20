@@ -6,8 +6,6 @@ App.ApplicationView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'focus', 'blur', 'onStorage')
-    Ember.run.schedule 'afterRender', @, ->
-      @setupUi()
 
   didInsertElement: ->
     $(window).focus @focus
@@ -36,7 +34,7 @@ App.ApplicationView = Ember.View.extend
 
   loggedInChanged: (->
     @setupUi()
-  ).observes('controller.isLoggedIn')
+  ).observes('controller.isLoggedIn').on('didInsertElement')
 
   setupUi: ->
     if App.isLoggedIn()

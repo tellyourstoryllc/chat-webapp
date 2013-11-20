@@ -9,6 +9,7 @@ App.LogoutRoute = Ember.Route.extend
       App.setProperties
         token: null
         currentUser: null
+        _isLoggedIn: false
 
       # Set the URL and reload the page to clear everything in memory.
       routerLocation = App._getRouter().location

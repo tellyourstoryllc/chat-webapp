@@ -1,8 +1,13 @@
 App.BaseControllerMixin = Ember.Mixin.create
 
+  init: ->
+    @_super(arguments...)
+    # Force computed properties.
+    @get('isLoggedIn')
+
   isLoggedIn: (->
     App.isLoggedIn()
-  ).property('App.currentUser')
+  ).property('App._isLoggedIn')
 
   # Note: Ember.computed.alias doesn't work here.
   currentUser: (->

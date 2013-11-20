@@ -16,6 +16,8 @@ window.App = App = Ember.Application.create
 
   currentUser: null
 
+  _isLoggedIn: false
+
   fayeClient: null
 
   isFayeClientConnected: false
@@ -167,7 +169,7 @@ window.App = App = Ember.Application.create
       idOrJqueryElement.attr('id')
     Ember.View.views[id]
 
-  isLoggedIn: -> @get('currentUser')? && @get('userChannelSubscription')?
+  isLoggedIn: -> @get('_isLoggedIn')
 
   login: (token, user) ->
     @set('currentUser', user)
@@ -238,6 +240,8 @@ window.App = App = Ember.Application.create
       # Update our own status after we ensure that we're listening for status
       # updates.
       @updateStatusAfterConnect() if @get('isFayeClientConnected')
+
+    @set('_isLoggedIn', true)
 
     # Trigger didLogIn event after we've set up the token and logged in state.
     @get('eventTarget').trigger('didLogIn')
