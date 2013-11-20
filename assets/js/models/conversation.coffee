@@ -331,10 +331,10 @@ App.Conversation = Ember.Mixin.create
         objs = titleObjs.filterBy('id', tag)
         titleObjs.removeObjects(objs)
 
-  messageIds: Ember.computed.mapBy('messages', 'id')
+  messageRanks: Ember.computed.mapBy('messages', 'rank')
 
-  # The min message ID stored as a number.
-  minNumericMessageId: Ember.reduceComputed.call null, 'messageIds',
+  # The min message rank.
+  minMessageRank: Ember.reduceComputed.call null, 'messageRanks',
     initialValue: Infinity
     addedItem: (accumulatedValue, item, changeMeta, instanceMeta) ->
       n = parseInt(item)
@@ -348,17 +348,19 @@ App.Conversation = Ember.Mixin.create
   fetchAndLoadEarlierMessages: ->
     return unless @get('usersLoaded') && @get('canLoadEarlierMessages')
     return if @get('isLoadingEarlierMessages')
-    minMessageId = @get('minNumericMessageId')
+    minMessageRank = @get('minMessageRank')
 
     # Don't do anything if we don't already have a message to query from.  If we
     # don't, it means the conversation isn't loaded yet.
-    return unless minMessageId? && minMessageId < Infinity
+    return unless minMessageRank? && minMessageRank < Infinity
 
     api = App.get('api')
     groupId = @get('id')
     data =
       limit: @get('messagesPageSize')
-      last_message_id: minMessageId
+      below_rank: minMessageRank
+      # TODO: remove this after the upgrade.
+      last_message_id: minMessageRank
 
     @set('isLoadingEarlierMessages', true)
     api.ajax(@earlierMessagesUrl(), 'GET', data: data)

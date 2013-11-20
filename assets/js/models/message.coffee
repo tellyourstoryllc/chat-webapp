@@ -203,6 +203,7 @@ App.Message.reopenClass
     oneToOneId: App.BaseModel.coerceId(json.one_to_one_id)
     userId: App.BaseModel.coerceId(json.user_id)
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
+    rank: json.rank ? parseInt(json.id)  # TODO: Remove json.id after upgrade.
     text: json.text
     imageUrl: json.image_url
     imageThumbUrl: json.image_thumb_url
