@@ -322,7 +322,7 @@ App.Conversation = Ember.Mixin.create
         # room.
         $(window).focus()
         applicationController = App.__container__.lookup('controller:application')
-        applicationController.send('goToRoom', message.get('group'))
+        applicationController.send('goToRoom', message.get('conversation'))
 
       result.nativeNotification.addEventListener 'close', (event) ->
         # The user closed the notification.  Stop flashing that message.
