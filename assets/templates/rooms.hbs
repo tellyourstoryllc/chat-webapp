@@ -57,8 +57,10 @@
 
 <div class='room-members-sidebar'>
   <div class='room-actions'>
-    <img class='room-actions-icon' src='/images/settings-icon.png'
-      {{action 'toggleRoomMenu' target=view bubbles=false}}>
+    {{#if activeRoom}}
+      <img class='room-actions-icon' src='/images/settings-icon.png'
+        {{action 'toggleRoomMenu' target=view bubbles=false}}>
+    {{/if}}
     <input type='file' class='room-wallpaper-file' style='display: none;'>
   </div>
 

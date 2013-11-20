@@ -113,6 +113,9 @@ App.RoomsView = Ember.View.extend
     Ember.run.schedule 'afterRender', @, ->
       return unless @currentState == Ember.View.states.inDOM
 
+      # Make sure the room menu is closed.
+      @closeRoomMenu() if @get('isRoomMenuVisible')
+
       roomId = App.get('currentlyViewingRoom.id')
       if roomId?
         regexp = new RegExp("/#{App.Util.escapeRegexp(roomId)}$")
