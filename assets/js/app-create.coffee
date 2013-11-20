@@ -367,6 +367,7 @@ App.Router.map ->
   @route 'signup', path: '/signup'
 
   @route 'forgot-password', path: '/forgot-password'
+  @route 'password-reset', path: '/password/reset/:token'
 
   @resource 'rooms', path: '/rooms', ->
     @route 'room', path: '/:room_id'

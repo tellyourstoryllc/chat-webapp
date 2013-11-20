@@ -11,6 +11,8 @@ App.Account.reopenClass
   # Identity map of model instances by ID.  Public access is with `lookup()`.
   _allById: {}
 
+  minPasswordLength: -> 6
+
   propertiesFromRawAttrs: (json) ->
     # Note: we're using the userId as the ID so we don't need to store multiple
     # map caches.

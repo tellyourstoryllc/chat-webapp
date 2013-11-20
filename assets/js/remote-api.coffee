@@ -130,6 +130,11 @@ App.RemoteApi = Ember.Object.extend
       login: login
     @ajax(@buildURL('/password/reset_email'), 'POST', data: data)
 
+  resetPassword: (token, newPassword) ->
+    data =
+      new_password: newPassword
+    @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data)
+
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
       serialized * 1000
