@@ -154,10 +154,14 @@ App.Message = App.BaseModel.extend
   ).property('conversation.id')
 
   toNotification: ->
+    text = @get('userFacingText')
+    if Ember.isEmpty(text) && @get('imageUrl')?
+      text = "(file attached)"
+
     # TODO: icon field.
     tag: @get('notificationTag')
     title: @get('title')
-    body: @get('userFacingText')
+    body: text
     icon: {}
 
 
