@@ -916,6 +916,9 @@ room-members-sidebar-width = 200px
     font-size 14px
     width 70px
 
+    &:hover
+      background-color lighten(#EEF0F0, 50%)
+
     &:active
       outline 0
       box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
@@ -936,8 +939,14 @@ room-members-sidebar-width = 200px
     color #8E929E
     font-size 14px
 
+    &:hover
+      background-color lighten(#EEF0F0, 50%)
+
     &.encrypted-send-button
-      background-color #00A053
+      background-color #56C0A5
+
+      &:hover
+        background-color lighten(#56C0A5, 50%)
 
       &:after
         content " Encrypted"
