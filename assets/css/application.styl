@@ -3,6 +3,9 @@
 @import 'nib/overflow'
 @import 'nib/vendor'
 
+app-purple = #341B45
+app-dark-purple = #2E1C38
+
 link-color = #417ACE
 
 base-line-height = 20px
@@ -328,7 +331,7 @@ room-sidebar-width = 200px
   width room-sidebar-width
   border-top 2px solid #26BE9D
   padding 10px 10px 0
-  background-color #341B45
+  background-color app-purple
 
   a
     color #fff
@@ -424,7 +427,7 @@ body.logged-out
   box-sizing border-box
   width room-sidebar-width
   height 100%
-  background-color #313947
+  background-color app-purple
 
 .rooms-list
   box-sizing border-box
@@ -440,7 +443,7 @@ body.logged-out
     border-top 1px solid rgba(255,255,255, .2)
     border-bottom 1px solid rgba(0,0,0, .15)
     padding 10px
-    color #aaa
+    color rgba(254, 255, 255, 0.65)
     text-decoration none
 
     &:hover
@@ -450,7 +453,7 @@ body.logged-out
         color #aaa
 
     &.active
-      background-color #242B37
+      background-color #3E274D
       color #eee
       border-top-color transparent
       border-bottom-color transparent
@@ -481,7 +484,7 @@ body.logged-out
   bottom 0
   box-sizing border-box
   width room-sidebar-width
-  background-color #3F4755
+  background-color app-dark-purple
   color #aaa
 
 .current-user-status
@@ -769,11 +772,11 @@ room-members-sidebar-width = 200px
 
     .sender-cell
       // border-color #F3F7FB
-      background-color hsla(213, 50%, 87%, .5)
+      background-color hsla(191, 58%, 90%, 0.5)
 
     .body-cell
       // border-color #BFD6EA
-      background-color hsla(209, 49%, 94%, 0.5)
+      background-color hsla(191, 58%, 90%, 0.5)
 
   &.system-message
 
