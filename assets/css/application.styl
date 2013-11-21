@@ -345,7 +345,7 @@ room-sidebar-width = 200px
     color #fff
 
 body.logged-out
-  background-color #EDEDED
+  background-color #E4E6E8
   .navbar
     width auto
 
@@ -600,7 +600,7 @@ room-members-sidebar-width = 200px
 .room-menu
   position fixed
   right 5px
-  top 30px
+  top 58px
   width room-members-sidebar-width - 10px
 
 .room-members-sidebar
@@ -611,7 +611,7 @@ room-members-sidebar-width = 200px
   width room-members-sidebar-width
   height 100%
   overflow hidden
-  background-color #fff
+  background-color #EEF0F0
   font-size 12px
   line-height 1.2em
 
@@ -619,14 +619,25 @@ room-members-sidebar-width = 200px
     box-sizing border-box
     height 33px
     padding 5px
-    background-color #E6E6E6
-    text-align right
-
-  .room-actions-icon
+    background-color #EEF0F0
     cursor pointer
 
-  .title, .loading
+    &:hover
+      background-color #F8F8F8
+
+  .room-actions-icon
+    vertical-align text-bottom
+
+  .loading
     margin 5px 10px 10px 10px
+
+  .title
+    padding 5px 10px
+    border-top 1px solid #BDC2C7
+    border-bottom 1px solid #BDC2C7
+    background-color #E5E6E7
+    color #3C495A
+    font-weight bold
 
   .room-members
     overflow auto // Scrollable.
@@ -639,7 +650,7 @@ room-members-sidebar-width = 200px
     text-decoration none
 
     &:hover
-      background-color #F0F0F0 !important
+      background-color #F8F8F8 !important
 
   .status-text, .idle-duration
     box-sizing border-box
@@ -659,7 +670,7 @@ room-members-sidebar-width = 200px
 
   .room-info
     border 1px solid #B4B4B4
-    background-color #E6E6E6
+    background-color #EEF0F0
 
   .edit-topic-link
     color #aaa
@@ -862,7 +873,7 @@ room-members-sidebar-width = 200px
   padding 5px
   border 1px solid #B4B4B4
   border-bottom 0
-  background-color #E6E6E6
+  background-color #EEF0F0
 
   .send-message-text
     width 300px

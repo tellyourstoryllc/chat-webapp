@@ -56,13 +56,14 @@
 </div>
 
 <div class='room-members-sidebar'>
-  <div class='room-actions'>
-    {{#if activeRoom}}
-      <img class='room-actions-icon' src='/images/settings-icon.png'
-        {{action 'toggleRoomMenu' target=view bubbles=false}}>
-    {{/if}}
-    <input type='file' class='room-wallpaper-file' style='display: none;'>
-  </div>
+  {{#if activeRoom}}
+    <div class='title'>Admin</div>
+    <div class='room-actions' {{action 'toggleRoomMenu' target=view bubbles=false}}>
+      <img class='room-actions-icon' src='/images/settings-icon.png'>
+      Room Settings
+      <input type='file' class='room-wallpaper-file' style='display: none;'>
+    </div>
+  {{/if}}
 
   <div class='title'>People</div>
   {{#if usersLoaded}}
