@@ -232,6 +232,13 @@ window.App = App = Ember.Application.create
           # Don't synchronize the client preferences; only server preferences.
           delete json.client_web
           App.loadAll(json)
+        else if json.object_type == 'account'
+          # We received an account update for things like 1-1 wallpaper.
+          instances = App.loadAll(json)
+          account = instances.find (o) -> o instanceof App.Account
+          user = App.User.lookup(json.user_id)
+          if user? && account?
+            user.set('_account', account)
         return undefined
     @set('userChannelSubscription', subscription)
 
