@@ -52,16 +52,6 @@ App.RoomMessagesView = Ember.View.extend
     App.get('roomMessagesViews').set(room, @) if room?
   ).observes('room').on('init')
 
-  roomWallpaperChanged: (->
-    room = @get('room')
-    return unless room?
-    wallpaperUrl = room.get('wallpaperUrl')
-    if wallpaperUrl?
-      @$('.messages').css { 'background-image': "url(#{wallpaperUrl})" }
-    else
-      @$('.messages').css { 'background-image': 'none' }
-  ).observes('room.wallpaperUrl').on('didInsertElement')
-
   roomAssociationsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
       @scrollToLastMessage(false) if @get('room.associationsLoaded')
