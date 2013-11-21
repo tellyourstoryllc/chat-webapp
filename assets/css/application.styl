@@ -157,35 +157,6 @@ button, input[type='checkbox'], label.checkbox
 .disabled
   opacity .6
 
-.status-icon
-  display inline-block
-  box-sizing border-box
-  width 10px
-  height 10px
-
-  &.available, &.away, &.idle, &.do_not_disturb, &.unavailable
-    border 1px solid rgba(0,0,0, .05)
-    border-radius 50%
-    box-shadow inset 0 3px 3px rgba(255,255,255, .5), inset 0 -3px 3px rgba(0,0,0, .3), 0 1px 1px rgba(0,0,0, .25)
-
-    transition background-color .5s ease-out
-
-  &.available
-    background-color #A2D61C
-
-  &.away, &.idle
-    background-color #FDB00D
-
-  &.do_not_disturb
-    background-color #DA362A
-
-  &.unavailable
-    background-color #BBBBBB
-
-  &.phone:after, &.tablet:after
-    content "☎"
-    font-size 80%
-
 .room-avatar
   position relative
   display inline-block

@@ -17,7 +17,6 @@
       {{#each room in rooms}}
         <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
-            {{room-icon room=room}}
             {{room-avatar room=room showStatus=true}}
             {{room.name}}
             <span {{action 'closeRoom' room}} class='close-room'>&times;</span>
@@ -78,7 +77,6 @@
         <li class='room-member'>
           {{#link-to 'rooms.room' user}}
             <div>
-              {{room-icon room=user}}
               {{room-avatar room=user showStatus=true}}
               {{user.name}}
             </div>
