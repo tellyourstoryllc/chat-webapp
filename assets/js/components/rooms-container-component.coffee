@@ -48,7 +48,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-file').off 'change', @fileChange
 
   avatarClassNames: (->
-    classes = ['small-avatar']
+    classes = ['room-avatar small-avatar']
     if ! App.get('preferences.clientWeb.showAvatars')
       classes.push('avatars-off')
     classes.join(' ')

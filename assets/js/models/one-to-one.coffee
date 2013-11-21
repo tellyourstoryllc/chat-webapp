@@ -13,6 +13,8 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   clientType: Ember.computed.alias('otherUser.clientType')
 
+  status: Ember.computed.alias('otherUser.status')
+
   computedStatus: Ember.computed.alias('otherUser.computedStatus')
 
   # OneToOnes don't have topics.

@@ -186,15 +186,58 @@ button, input[type='checkbox'], label.checkbox
     content "☎"
     font-size 80%
 
+.room-avatar
+  position relative
+  display inline-block
+  box-sizing border-box
+  width 26px
+  height 26px
+  border 3px solid hsla(180, 6%, 94%, 0.5)
+  border-radius 50%
+  background-clip padding-box
+  vertical-align middle
+  background-repeat no-repeat
+  background-position center
+  background-size cover
+
+  &.not-displayed
+    display none
+
+  &.avatars-off
+    width 11px
+    height 11px
+    background-image none !important
+
+  &.available, &.away, &.idle, &.do_not_disturb, &.unavailable
+    transition border-color .5s ease-out
+
+  &.available
+    border-color #A2D61C
+
+  &.away, &.idle
+    border-color #FDB00D
+
+  &.do_not_disturb
+    border-color #DA362A
+
+  &.unavailable
+    border-color #BBBBBB
+
+  &.phone:after, &.tablet:after
+    position absolute
+    right -5px
+    bottom -5px
+    content "☎"
+
 .emoticon
   height 32px
   width auto
   vertical-align middle
 
-.small-avatar
+.inline-text-avatar
+  width 20px
   height 20px
-  width auto
-  vertical-align middle
+  border-width 0
 
   &.not-displayed, &.avatars-off
     display none
