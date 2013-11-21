@@ -886,15 +886,19 @@ room-members-sidebar-width = 200px
   position absolute
   bottom 0
   box-sizing border-box
-  height 45px
+  height 52px
   padding 5px
   border 1px solid #B4B4B4
   border-bottom 0
   background-color #EEF0F0
 
   .send-message-text
+    box-sizing border-box
     width 300px
-    height 27px
+    height 40px
+    border 1px solid #BDC2C7
+    border-radius 6px
+    padding 4px 8px
     font-size 12px
 
     &:focus
@@ -904,9 +908,18 @@ room-members-sidebar-width = 200px
     position absolute
     top 5px
     margin 0
-    padding 8px
+    border 1px solid rgba(0, 0, 20, 0.3)
+    padding 10px
+    border-radius 6px
+    background-color #EEF0F0
+    box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
+    color #8E929E
     font-size 14px
     width 70px
+
+    &:active
+      outline 0
+      box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
 
   .send-message-file
     display none
@@ -916,7 +929,12 @@ room-members-sidebar-width = 200px
     top 5px
     right 5px
     margin 0
-    padding 8px
+    border 1px solid rgba(0, 0, 20, 0.3)
+    padding 10px 17px
+    border-radius 6px
+    background-color #EEF0F0
+    box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
+    color #8E929E
     font-size 14px
 
     &.encrypted-send-button
@@ -924,6 +942,10 @@ room-members-sidebar-width = 200px
 
       &:after
         content " Encrypted"
+
+    &:active
+      outline 0
+      box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
 
 .autocomplete
   position absolute
