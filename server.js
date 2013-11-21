@@ -46,7 +46,7 @@ app.configure('development', function() {
 
 
 var renderChatApp = function(req, res) {
-  res.render('index', { config: config, title: "Chat App" });
+  res.render('index', { config: config, title: "SkyMob" });
 };
 
 app.get('/', renderChatApp);

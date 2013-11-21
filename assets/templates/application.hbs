@@ -2,7 +2,11 @@
   <p class='empty-content-page'>Loading...</p>
 {{else}}
   <div class='navbar'>
-    <div class='brand'>{{#link-to 'index'}}Chat App{{/link-to}}</div>
+    <div class='brand'>
+      {{#link-to 'index'}}
+        <img src='/images/logo.png' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
+      {{/link-to}}
+    </div>
     {{#unless isLoggedIn}}
       <div class='pull-right'>
         {{#link-to 'login'}}Log In{{/link-to}}
