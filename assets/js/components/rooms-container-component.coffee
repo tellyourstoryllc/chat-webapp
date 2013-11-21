@@ -120,11 +120,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       width: width
       height: height
 
-    @$('.room-name-info-container').css
-      width: Math.floor(width * 0.4)
-    @$('.invite-link-container').css
-      width: Math.floor(width * 0.6)
-
     # The send message area, including textarea and send button.
     @$('.send-message-area').css
       width: width
@@ -146,7 +141,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # This method needs to work for multiple message view elements.
 
     height = $window.height()
-    height -= 20 # .room-info outerHeight() without topic.
+    height -= 30 # .room-info outerHeight() without topic.
     height -= @$('.send-message-area').outerHeight(true) ? 0
 
     roomMessagesViewFromElement = ($e) ->
