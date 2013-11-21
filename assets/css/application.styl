@@ -440,8 +440,8 @@ body.logged-out
     display block
     overflow hidden
 
-    border-top 1px solid rgba(255,255,255, .2)
-    border-bottom 1px solid rgba(0,0,0, .15)
+    border-top 1px solid transparent
+    border-bottom 1px solid transparent
     padding 10px
     color rgba(254, 255, 255, 0.65)
     text-decoration none
@@ -455,8 +455,9 @@ body.logged-out
     &.active
       background-color #3E274D
       color #eee
-      border-top-color transparent
-      border-bottom-color transparent
+      border-top-color #2E1C3A
+      border-bottom-color #2E1C3A
+      box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
 
       .close-room
         color #aaa
