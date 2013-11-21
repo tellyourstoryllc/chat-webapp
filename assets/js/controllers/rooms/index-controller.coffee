@@ -42,14 +42,8 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
       return undefined
 
     joinRoom: ->
-      joinCode = @get('joinCode') ? ''
-      joinCode = joinCode.trim()
+      joinCode = App.Group.parseJoinCode(@get('joinCode'))
       return if Ember.isEmpty(joinCode)
-
-      matches = joinCode.match(/^[^\?]*\/join\/([a-zA-Z0-9]+)/)
-      if matches
-        # If we were given a URL, strip out the join code.
-        joinCode = matches[1]
 
       @set('isJoiningRoom', true)
       App.get('api').joinGroup(joinCode)

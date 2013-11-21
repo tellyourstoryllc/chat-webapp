@@ -9,6 +9,10 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Show the UI to set topics.
   canSetTopic: true
 
+  joinCode: (->
+    App.Group.parseJoinCode(@get('joinUrl'))
+  ).property('joinUrl')
+
   isCurrentUserAdmin: (->
     @get('adminIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'adminIds.@each')
@@ -171,3 +175,15 @@ App.Group.reopenClass
         return group
       else
         throw json
+
+  parseJoinCode: (str) ->
+    joinCode = str ? ''
+    joinCode = joinCode.trim()
+    return null if Ember.isEmpty(joinCode)
+
+    matches = joinCode.match(/^[^\?]*\/join\/([a-zA-Z0-9]+)/)
+    if matches
+      # If we were given a URL, strip out the join code.
+      joinCode = matches[1]
+
+    joinCode

@@ -3,6 +3,9 @@
 @import 'nib/overflow'
 @import 'nib/vendor'
 
+app-purple = #341B45
+app-dark-purple = #2E1C38
+
 link-color = #417ACE
 
 base-line-height = 20px
@@ -48,6 +51,53 @@ disable-grayscale-image()
   100%
     transform scale(1)
     opacity 1
+
+///////////////////////////////////////////////////////////
+// Fonts
+
+@font-face {
+    font-family: 'gotham_rounded';
+    src: url('/fonts/gothamrnd-light-webfont.eot');
+    src: url('/fonts/gothamrnd-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/gothamrnd-light-webfont.woff') format('woff'),
+         url('/fonts/gothamrnd-light-webfont.ttf') format('truetype'),
+         url('/fonts/gothamrnd-light-webfont.svg#gotham_roundedlight') format('svg');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'gotham_rounded';
+    src: url('/fonts/gothamrnd-book-webfont.eot');
+    src: url('/fonts/gothamrnd-book-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/gothamrnd-book-webfont.woff') format('woff'),
+         url('/fonts/gothamrnd-book-webfont.ttf') format('truetype'),
+         url('/fonts/gothamrnd-book-webfont.svg#gotham_roundedbook') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'gotham_rounded';
+    src: url('/fonts/gothamrnd-medium-webfont.eot');
+    src: url('/fonts/gothamrnd-medium-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/gothamrnd-medium-webfont.woff') format('woff'),
+         url('/fonts/gothamrnd-medium-webfont.ttf') format('truetype'),
+         url('/fonts/gothamrnd-medium-webfont.svg#gotham_roundedmedium') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'gotham_rounded';
+    src: url('/fonts/gothamrnd-bold-webfont.eot');
+    src: url('/fonts/gothamrnd-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/gothamrnd-bold-webfont.woff') format('woff'),
+         url('/fonts/gothamrnd-bold-webfont.ttf') format('truetype'),
+         url('/fonts/gothamrnd-bold-webfont.svg#gotham_roundedbold') format('svg');
+    font-weight: 900;
+    font-style: normal;
+}
 
 ///////////////////////////////////////////////////////////
 
@@ -268,7 +318,7 @@ html
   min-height 100%
 
 body
-  font-family Helvetica, Arial, sans-serif
+  font-family gotham_rounded, Helvetica, Arial, sans-serif
   overflow hidden
 
 a
@@ -279,25 +329,28 @@ room-sidebar-width = 200px
 .navbar
   box-sizing border-box
   width room-sidebar-width
+  border-top 2px solid #26BE9D
   padding 10px 10px 0
-  background-color #313947
+  background-color app-purple
 
   a
     color #fff
     text-decoration none
 
-body.logged-out
-  background-color #EDEDED
-  .navbar
-    width auto
-
 .brand
-  float left
-  margin-bottom 10px
-  font-size 16px
+  margin-bottom 5px
+  text-align center
 
   > a
     color #fff
+
+body.logged-out
+  background-color #E4E6E8
+  .navbar
+    width auto
+
+  .brand
+    float left
 
 .empty-content-page
   text-align center
@@ -374,7 +427,7 @@ body.logged-out
   box-sizing border-box
   width room-sidebar-width
   height 100%
-  background-color #313947
+  background-color app-purple
 
 .rooms-list
   box-sizing border-box
@@ -387,10 +440,10 @@ body.logged-out
     display block
     overflow hidden
 
-    border-top 1px solid rgba(255,255,255, .2)
-    border-bottom 1px solid rgba(0,0,0, .15)
+    border-top 1px solid transparent
+    border-bottom 1px solid transparent
     padding 10px
-    color #aaa
+    color rgba(254, 255, 255, 0.65)
     text-decoration none
 
     &:hover
@@ -400,10 +453,11 @@ body.logged-out
         color #aaa
 
     &.active
-      background-color #242B37
+      background-color #3E274D
       color #eee
-      border-top-color transparent
-      border-bottom-color transparent
+      border-top-color #2E1C3A
+      border-bottom-color #2E1C3A
+      box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
 
       .close-room
         color #aaa
@@ -431,7 +485,7 @@ body.logged-out
   bottom 0
   box-sizing border-box
   width room-sidebar-width
-  background-color #3F4755
+  background-color app-dark-purple
   color #aaa
 
 .current-user-status
@@ -546,7 +600,7 @@ room-members-sidebar-width = 200px
 .room-menu
   position fixed
   right 5px
-  top 30px
+  top 58px
   width room-members-sidebar-width - 10px
 
 .room-members-sidebar
@@ -557,22 +611,45 @@ room-members-sidebar-width = 200px
   width room-members-sidebar-width
   height 100%
   overflow hidden
-  background-color #fff
+  background-color #EEF0F0
   font-size 12px
   line-height 1.2em
+
+  .loading
+    margin 5px 10px 10px 10px
+
+  .title
+    padding 5px 10px
+    border-top 1px solid #BDC2C7
+    border-bottom 1px solid #BDC2C7
+    background-color #E5E6E7
+    color #3C495A
+    font-weight bold
 
   .room-actions
     box-sizing border-box
     height 33px
     padding 5px
-    background-color #E6E6E6
-    text-align right
+    background-color #EEF0F0
+    color #3C495A
 
-  .room-actions-icon
+    &:hover
+      background-color #F8F8F8
+
+  .admin-room-actions
     cursor pointer
 
-  .title, .loading
-    margin 5px 10px 10px 10px
+  .room-settings-icon
+    vertical-align text-bottom
+
+  .invite-room-actions
+    display block
+    text-decoration none
+
+  .join-url
+    width room-members-sidebar-width
+    overflow ellipsis
+    font-size 10px
 
   .room-members
     overflow auto // Scrollable.
@@ -585,7 +662,7 @@ room-members-sidebar-width = 200px
     text-decoration none
 
     &:hover
-      background-color #F0F0F0 !important
+      background-color #F8F8F8 !important
 
   .status-text, .idle-duration
     box-sizing border-box
@@ -605,7 +682,8 @@ room-members-sidebar-width = 200px
 
   .room-info
     border 1px solid #B4B4B4
-    background-color #E6E6E6
+    padding 5px
+    background-color #EEF0F0
 
   .edit-topic-link
     color #aaa
@@ -618,10 +696,7 @@ room-members-sidebar-width = 200px
   .edit-topic
     width 70%
 
-  .room-info-table
-    width 100%
-
-  .room-name-info-container, .invite-link-container, .topic-container
+  .room-name-info-container, .topic-container
     box-sizing border-box
     padding 2px 5px
 
@@ -629,7 +704,12 @@ room-members-sidebar-width = 200px
     overflow ellipsis
 
   .room-permalink
+    color #0F2035
+    font-weight bold
     text-decoration none
+
+    &:hover
+      text-decoration underline
 
   .invite-link-container
     overflow ellipsis
@@ -638,8 +718,6 @@ room-members-sidebar-width = 200px
   .topic-cell
     // Set explicit height so that it doesn't change when editing topic.
     height 23px
-    // Center vertically.
-    vertical-align middle
 
   .topic-container
     // Remove top and bottom padding so we can use it for the text box which
@@ -652,6 +730,9 @@ room-members-sidebar-width = 200px
   .edit-topic-form
     margin 0
     font-size 12px
+
+  .topic-text
+    padding-top 4px
 
 .messages
   // Scrollable.
@@ -705,6 +786,7 @@ room-members-sidebar-width = 200px
 
   .sender-cell
     width 150px
+    font-weight bold
     // border-top 1px solid #fff
     // border-right 1px solid #fff
     // background-color #F7F7F7
@@ -718,11 +800,11 @@ room-members-sidebar-width = 200px
 
     .sender-cell
       // border-color #F3F7FB
-      background-color hsla(213, 50%, 87%, .5)
+      background-color hsla(191, 58%, 90%, 0.5)
 
     .body-cell
       // border-color #BFD6EA
-      background-color hsla(209, 49%, 94%, 0.5)
+      background-color hsla(191, 58%, 90%, 0.5)
 
   &.system-message
 
@@ -803,15 +885,19 @@ room-members-sidebar-width = 200px
   position absolute
   bottom 0
   box-sizing border-box
-  height 45px
+  height 52px
   padding 5px
   border 1px solid #B4B4B4
   border-bottom 0
-  background-color #E6E6E6
+  background-color #EEF0F0
 
   .send-message-text
+    box-sizing border-box
     width 300px
-    height 27px
+    height 40px
+    border 1px solid #BDC2C7
+    border-radius 6px
+    padding 4px 8px
     font-size 12px
 
     &:focus
@@ -821,9 +907,21 @@ room-members-sidebar-width = 200px
     position absolute
     top 5px
     margin 0
-    padding 8px
+    border 1px solid rgba(0, 0, 20, 0.3)
+    padding 10px
+    border-radius 6px
+    background-color #EEF0F0
+    box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
+    color #8E929E
     font-size 14px
     width 70px
+
+    &:hover
+      background-color lighten(#EEF0F0, 50%)
+
+    &:active
+      outline 0
+      box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
 
   .send-message-file
     display none
@@ -833,14 +931,29 @@ room-members-sidebar-width = 200px
     top 5px
     right 5px
     margin 0
-    padding 8px
+    border 1px solid rgba(0, 0, 20, 0.3)
+    padding 10px 17px
+    border-radius 6px
+    background-color #EEF0F0
+    box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
+    color #8E929E
     font-size 14px
 
+    &:hover
+      background-color lighten(#EEF0F0, 50%)
+
     &.encrypted-send-button
-      background-color #00A053
+      background-color #56C0A5
+
+      &:hover
+        background-color lighten(#56C0A5, 50%)
 
       &:after
         content " Encrypted"
+
+    &:active
+      outline 0
+      box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
 
 .autocomplete
   position absolute

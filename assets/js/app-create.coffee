@@ -2,7 +2,7 @@ window.App = App = Ember.Application.create
   LOG_TRANSITIONS: true
 
   # Default title displayed in the window/tab's titlebar.
-  title: 'Chat App'
+  title: 'SkyMob'
 
   # Object that mixes in `Ember.Evented` and receives application events.
   #

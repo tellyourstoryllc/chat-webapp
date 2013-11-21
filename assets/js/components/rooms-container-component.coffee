@@ -120,25 +120,20 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       width: width
       height: height
 
-    @$('.room-name-info-container').css
-      width: Math.floor(width * 0.4)
-    @$('.invite-link-container').css
-      width: Math.floor(width * 0.6)
-
     # The send message area, including textarea and send button.
     @$('.send-message-area').css
       width: width
     # The send message text input.
-    textWidth = width - @$('.send-button').outerWidth() - 24
+    textWidth = width - @$('.send-button').outerWidth() - 20
     if App.doesBrowserSupportAjaxFileUpload()
-      textWidth -= @$('.send-message-file-button').outerWidth() + 4
+      textWidth -= @$('.send-message-file-button').outerWidth() + 5
     @$('.send-message-text').css
       width: Math.max(10, textWidth)
 
     # The send message file button.
     if App.doesBrowserSupportAjaxFileUpload()
       @$('.send-message-file-button').css
-        right: @$('.send-button').outerWidth() + 10
+        right: @$('.send-button').outerWidth() + 11
 
     @updateMessagesSize($window, messagesWidth)
 
@@ -146,7 +141,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # This method needs to work for multiple message view elements.
 
     height = $window.height()
-    height -= 20 # .room-info outerHeight() without topic.
+    height -= 30 # .room-info outerHeight() without topic.
     height -= @$('.send-message-area').outerHeight(true) ? 0
 
     roomMessagesViewFromElement = ($e) ->
