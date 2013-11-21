@@ -23,7 +23,7 @@
     <td class='label-cell image-label-cell'>Avatar</td>
     <td class='control-cell'>
       {{#if doesBrowserSupportAjaxFileUpload}}
-        <img {{bind-attr src='App.currentUser.avatarUrl'}} class='small-avatar avatar-image'>
+        {{room-avatar room=App.currentUser showStatus=false alwaysShowAvatar=true}}
         <button type='button' {{action 'chooseAvatarFile'}}
           {{bind-attr disabled='isSendingAvatar'}}>
           {{#if isSendingAvatar}}
