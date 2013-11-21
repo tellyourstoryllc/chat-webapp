@@ -210,6 +210,13 @@ App.RoomsView = Ember.View.extend
       return undefined
 
     removeRoomWallpaper: ->
+      activeRoom = @get('activeRoom')
+      if ! activeRoom.get('isCurrentUserAdmin')
+        if activeRoom instanceof App.OneToOne
+          alert "The room wallpaper you see is set by the other user."
+        else
+          alert "You must be an admin to change the room wallpaper."
+        return
       @$('.room-wallpaper-file').val('')
       @_updateRoomWallpaper(null)
       return undefined
