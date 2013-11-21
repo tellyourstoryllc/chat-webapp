@@ -57,12 +57,13 @@
 </div>
 
 <div class='room-members-sidebar'>
+  {{! Always render the file input so that event listeners can bind to it. }}
+  <input type='file' class='room-wallpaper-file' style='display: none;'>
   {{#if activeRoom}}
     <div class='title'>Admin</div>
     <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' target=view bubbles=false}}>
       <img class='room-settings-icon' src='/images/settings-icon.png'>
       Room Settings
-      <input type='file' class='room-wallpaper-file' style='display: none;'>
     </div>
 
     <div class='title'>Invite Link</div>
