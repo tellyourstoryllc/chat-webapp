@@ -42,7 +42,8 @@
 <ul class='menu choose-status-menu' role='menu'>
   {{#each status in App.User.statuses}}
     <li class='menu-item' {{action 'setStatus' status target='view'}}>
-      <span {{bind-attr class=':status-icon status.name'}}></span> {{status.title}}
+      <span {{bind-attr class=':room-avatar :blank-avatar status.name'}}></span>
+      {{status.title}}
     </li>
   {{/each}}
   <li class='separator'></li>
