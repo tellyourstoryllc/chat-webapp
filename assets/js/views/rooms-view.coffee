@@ -210,6 +210,7 @@ App.RoomsView = Ember.View.extend
       return undefined
 
     removeRoomWallpaper: ->
+      @$('.room-wallpaper-file').val('')
       @_updateRoomWallpaper(null)
       return undefined
 
