@@ -512,6 +512,7 @@ body.logged-out
   color #aaa
 
 .current-user-status
+  position relative
   display table-cell
   padding 10px
   // Clickable.
@@ -519,6 +520,21 @@ body.logged-out
 
   &:hover
     color #ccc
+
+  &:after
+    position absolute
+    right 5px
+    top 5px
+    content: ''
+    width 12px
+    height 16px
+    background-image url('/images/sprites.png')
+    background-repeat no-repeat
+    background-position -104px 0
+    opacity .6
+
+  &:hover:after
+    opacity 1
 
 .choose-status-menu
   position fixed
