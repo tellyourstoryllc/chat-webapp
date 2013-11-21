@@ -615,19 +615,6 @@ room-members-sidebar-width = 200px
   font-size 12px
   line-height 1.2em
 
-  .room-actions
-    box-sizing border-box
-    height 33px
-    padding 5px
-    background-color #EEF0F0
-    cursor pointer
-
-    &:hover
-      background-color #F8F8F8
-
-  .room-actions-icon
-    vertical-align text-bottom
-
   .loading
     margin 5px 10px 10px 10px
 
@@ -638,6 +625,31 @@ room-members-sidebar-width = 200px
     background-color #E5E6E7
     color #3C495A
     font-weight bold
+
+  .room-actions
+    box-sizing border-box
+    height 33px
+    padding 5px
+    background-color #EEF0F0
+    color #3C495A
+
+    &:hover
+      background-color #F8F8F8
+
+  .admin-room-actions
+    cursor pointer
+
+  .room-settings-icon
+    vertical-align text-bottom
+
+  .invite-room-actions
+    display block
+    text-decoration none
+
+  .join-url
+    width room-members-sidebar-width
+    overflow ellipsis
+    font-size 10px
 
   .room-members
     overflow auto // Scrollable.

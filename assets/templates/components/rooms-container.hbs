@@ -12,13 +12,6 @@
                 {{/if}}
               </div>
             </td>
-            <td class='room-info-cell invite-link-cell'>
-              <div class='invite-link-container'>
-                {{#if activeRoom.joinUrl}}
-                  Invite Link: <a {{bind-attr href='activeRoom.joinUrl'}}>{{activeRoom.joinUrl}}</a>
-                {{/if}}
-              </div>
-            </td>
           </tr>
           {{#if roomsContainer.showTopicRow}}
             <tr>
