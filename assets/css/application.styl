@@ -678,7 +678,6 @@ room-members-sidebar-width = 200px
 
   .room-actions
     box-sizing border-box
-    height 33px
     padding 5px
     background-color #EEF0F0
     color #3C495A
@@ -698,10 +697,19 @@ room-members-sidebar-width = 200px
 
   .invite-room-actions
     display block
+    height 35px
     text-decoration none
 
+  .join-icon
+    float left
+    width 22px
+    height 24px
+    margin-right 3px
+    background-image url('/images/sprites.png')
+    background-position -29px -2px
+
   .join-url
-    width room-members-sidebar-width
+    width room-members-sidebar-width - 35px // Subtract the width of the icon.
     overflow ellipsis
     font-size 10px
 
