@@ -132,6 +132,11 @@ button, input[type='checkbox'], label.checkbox
   background-color error-background-color
   color error-text-color
 
+.sprite-icon
+  display inline-block
+  background-repeat no-repeat
+  vertical-align middle
+
 .menu
   position absolute
   display none // Initially hidden.
@@ -682,10 +687,14 @@ room-members-sidebar-width = 200px
       background-color #F8F8F8
 
   .admin-room-actions
+    height 29px
     cursor pointer
 
   .room-settings-icon
-    vertical-align text-bottom
+    width 20px
+    height 22px
+    background-image url('/images/sprites.png')
+    background-position -202px -4px
 
   .invite-room-actions
     display block
