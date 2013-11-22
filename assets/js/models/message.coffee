@@ -155,7 +155,7 @@ App.Message = App.BaseModel.extend
 
   toNotification: ->
     text = @get('userFacingText')
-    if Ember.isEmpty(text) && @get('imageUrl')?
+    if Ember.isEmpty(text) && @get('attachmentUrl')?
       text = "(file attached)"
 
     # TODO: icon field.
@@ -209,8 +209,8 @@ App.Message.reopenClass
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     rank: json.rank
     text: json.text
-    imageUrl: json.image_url
-    imageThumbUrl: json.image_thumb_url
+    attachmentUrl: json.attachment_url
+    attachmentThumbUrl: json.attachment_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # This is different from the base class since it dedupes by client IDs.
@@ -245,7 +245,7 @@ App.Message.reopenClass
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
     data = {}
-    for key in ['imageFile']
+    for key in ['attachmentFile']
       val = message.get(key)
       if val?
         data[key.underscore()] = val
@@ -269,9 +269,9 @@ App.Message.reopenClass
     # Track the message's client ID.
     @_allByClientId[message.get('clientId')] = message
 
-    # Only send message via POST if there's an image.
+    # Only send message via POST if there's a file attachment.
     convo = message.get('conversation')
-    if message.get('imageFile')?
+    if message.get('attachmentFile')?
       api = App.get('api')
       formData = new FormData()
       formData.append(k, v) for k,v of api.defaultParams()

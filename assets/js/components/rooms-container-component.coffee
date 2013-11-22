@@ -433,7 +433,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         groupId: convo instanceof App.Group && convo.get('id')
         oneToOneId: convo instanceof App.OneToOne && convo.get('id')
         localText: text
-        imageFile: file
+        attachmentFile: file
         mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
