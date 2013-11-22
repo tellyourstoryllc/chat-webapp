@@ -772,6 +772,11 @@ room-members-sidebar-width = 200px
     padding-top 1px
     text-shadow 0 1px 0 #fff
 
+  .username
+    display inline-block
+    max-width room-members-sidebar-width - 50px // Subtract the width of the avatar.
+    overflow ellipsis
+
   .avatars-off
     .room-member-avatar-cell
       padding-top 1px
@@ -785,6 +790,9 @@ room-members-sidebar-width = 200px
     overflow hidden
     color #A9A9A9
     font-size 11px
+
+  .idle-duration
+    white-space nowrap
 
   .status-text
     white-space pre-wrap // Preserve whitespace.

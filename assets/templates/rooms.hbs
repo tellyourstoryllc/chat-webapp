@@ -104,7 +104,7 @@
               {{room-avatar room=user showStatus=true}}
             </div>
             <div class='room-member-info-cell'>
-              {{user.name}}
+              <span class='username'>{{user.name}}</span>
               {{#if user.shouldDisplayIdleDuration}}
                 <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
               {{/if}}
