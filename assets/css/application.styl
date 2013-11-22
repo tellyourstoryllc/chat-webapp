@@ -521,32 +521,37 @@ body.logged-out
   bottom 0
   box-sizing border-box
   width room-sidebar-width
+  border-top 1px solid rgba(255,255,255, .2)
   background-color app-dark-purple
   color #aaa
 
-.current-user-status
-  position relative
+.current-user-status-cell
   display table-cell
-  padding 10px
-  // Clickable.
-  cursor pointer
+  border-right 1px solid rgba(255,255,255, .2)
+  padding 8px 10px
+  cursor pointer // Clickable.
 
   &:hover
     color #ccc
 
-  &:after
-    position absolute
-    right 5px
-    top 8px
-    content: ''
-    width 12px
-    height 16px
-    background-image url('/images/sprites.png')
-    background-repeat no-repeat
-    background-position -104px 0
-    opacity .6
+  // Need this extra nesting since Firefox can't do position relative on a
+  // table-cell.
+  .current-user-status
+    position relative
 
-  &:hover:after
+    &:after
+      position absolute
+      right -7px
+      top -4px
+      content: ''
+      width 12px
+      height 16px
+      background-image url('/images/sprites.png')
+      background-repeat no-repeat
+      background-position -104px 0
+      opacity .6
+
+  &:hover .current-user-status:after
     opacity 1
 
   .username

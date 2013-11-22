@@ -29,9 +29,11 @@
   </ul>
 
   <div class='current-user-status-bar'>
-    <div class='current-user-status' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
-      {{room-avatar room=currentUser showStatus=true}}
-      <span class='username'>{{currentUser.name}}</span>
+    <div class='current-user-status-cell' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
+      <div class='current-user-status'>
+        {{room-avatar room=currentUser showStatus=true}}
+        <span class='username'>{{currentUser.name}}</span>
+      </div>
     </div>
     <div class='settings-icon-cell' {{action 'showSettings'}}>
       <img class='settings-icon' src='/images/settings-icon.png'>
