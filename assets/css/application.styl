@@ -30,6 +30,11 @@ disable-grayscale-image()
   filter none
   -webkit-filter: grayscale(0)
 
+sprite-icon()
+  display inline-block
+  background-repeat no-repeat
+  vertical-align middle
+
 ///////////////////////////////////////////////////////////
 // Animations
 
@@ -131,11 +136,6 @@ button, input[type='checkbox'], label.checkbox
   border-color error-border-color
   background-color error-background-color
   color error-text-color
-
-.sprite-icon
-  display inline-block
-  background-repeat no-repeat
-  vertical-align middle
 
 .menu
   position absolute
@@ -690,6 +690,7 @@ room-members-sidebar-width = 200px
     cursor pointer
 
   .room-settings-icon
+    sprite-icon()
     width 20px
     height 22px
     background-image url('/images/sprites.png')
@@ -701,6 +702,7 @@ room-members-sidebar-width = 200px
     text-decoration none
 
   .join-icon
+    sprite-icon()
     float left
     width 22px
     height 24px

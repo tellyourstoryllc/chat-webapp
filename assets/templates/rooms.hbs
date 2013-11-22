@@ -62,13 +62,13 @@
   {{#if activeRoom}}
     <div class='title'>Admin</div>
     <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' target=view bubbles=false}}>
-      <span class='room-settings-icon sprite-icon'></span>
+      <span class='room-settings-icon'></span>
       Room Settings
     </div>
 
     <div class='title'>Invite Link</div>
     <a class='room-actions invite-room-actions' {{bind-attr href='activeRoom.joinUrl'}}>
-      <span class='join-icon sprite-icon'></span>
+      <span class='join-icon'></span>
       <div class='join-code'>{{activeRoom.joinCode}}</div>
       <div class='join-url'>{{activeRoom.joinUrl}}</div>
       <div class='clearfix'></div>
