@@ -19,10 +19,10 @@
     <td class='label-cell'>Mention Name</td>
     <td class='control-cell'>@{{App.currentUser.mentionName}}</td>
   </tr>
-  <tr>
-    <td class='label-cell image-label-cell'>Avatar</td>
-    <td class='control-cell'>
-      {{#if doesBrowserSupportAjaxFileUpload}}
+  {{#if doesBrowserSupportAjaxFileUpload}}
+    <tr>
+      <td class='label-cell image-label-cell'>Avatar</td>
+      <td class='control-cell'>
         {{room-avatar room=App.currentUser showStatus=false alwaysShowAvatar=true}}
         <button type='button' {{action 'chooseAvatarFile'}}
           {{bind-attr disabled='isSendingAvatar'}}>
@@ -33,10 +33,8 @@
           {{/if}}
         </button>
         <input type='file' class='avatar-file-input' style='display: none'>
-      {{/if}}
-    </td>
-  </tr>
-  {{#if doesBrowserSupportAjaxFileUpload}}
+      </td>
+    </tr>
     <tr>
       <td class='label-cell image-label-cell'>1-1 Wallpaper</td>
       <td class='control-cell'>
