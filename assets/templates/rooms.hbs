@@ -98,17 +98,21 @@
     <ul class='room-members'>
       {{#each user in arrangedMembers}}
         <li class='room-member'>
-          {{#link-to 'rooms.room' user}}
-            <div>
+          {{#link-to 'rooms.room' user classNames='room-member-link'
+            classNameBindings='view.showAvatars::avatars-off'}}
+            <div class='room-member-avatar-cell'>
               {{room-avatar room=user showStatus=true}}
-              {{user.name}}
             </div>
-            {{#if user.shouldDisplayIdleDuration}}
-              <div class='idle-duration'>{{duration user.mostRecentIdleDuration}}</div>
-            {{/if}}
-            {{#if user.statusText}}
-              <div class='status-text'>{{user.statusText}}</div>
-            {{/if}}
+            <div class='room-member-info-cell'>
+              {{user.name}}
+              {{#if user.shouldDisplayIdleDuration}}
+                <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
+              {{/if}}
+              {{#if user.statusText}}
+                <div class='status-text'>{{user.statusText}}</div>
+              {{/if}}
+            </div>
+            <div class='clearfix'></div>
           {{/link-to}}
         </li>
       {{/each}}

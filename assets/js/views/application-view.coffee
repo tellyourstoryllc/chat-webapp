@@ -42,6 +42,13 @@ App.ApplicationView = Ember.View.extend
     else
       $('body').addClass('logged-out')
 
+  showAvatarsChanged: (->
+    if App.get('preferences.clientWeb.showAvatars')
+      $('.small-avatar').removeClass('avatars-off')
+    else
+      $('.small-avatar').addClass('avatars-off')
+  ).observes('App.preferences.clientWeb.showAvatars')
+
   currentlyViewingRoomChanged: (->
     @hideNotifications()
   ).observes('App.currentlyViewingRoom')

@@ -746,8 +746,9 @@ room-members-sidebar-width = 200px
   .room-members
     overflow auto // Scrollable.
 
-  .room-member > a
-    display block
+  .room-member-link
+    display table
+    width 100%
     padding 5px 10px
     color #000
     font-size 14px
@@ -756,12 +757,32 @@ room-members-sidebar-width = 200px
     &:hover
       background-color #F8F8F8 !important
 
+  .room-member-avatar-cell, .room-member-info-cell
+    display table-cell
+    vertical-align top
+
+  .room-member-avatar-cell
+    padding-right 5px
+    width 10px
+
+  .room-avatar
+    vertical-align top
+
+  .room-member-info-cell
+    padding-top 1px
+    text-shadow 0 1px 0 #fff
+
+  .avatars-off
+    .room-member-avatar-cell
+      padding-top 1px
+  
+    .room-member-info-cell
+      padding-top 0
+
   .status-text, .idle-duration
     box-sizing border-box
-    width 100%
     max-height 2.4em
     overflow hidden
-    padding-left 14px // Indent .status-icon width.
     color #A9A9A9
     font-size 11px
 

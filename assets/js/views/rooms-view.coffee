@@ -146,6 +146,10 @@ App.RoomsView = Ember.View.extend
     $audio.prop('volume', App.get('preferences.clientWeb.notificationVolume') / 100.0)
   ).observes('App.preferences.clientWeb.notificationVolume')
 
+  showAvatars: (->
+    App.get('preferences.clientWeb.showAvatars')
+  ).property('App.preferences.clientWeb.showAvatars')
+
   hasRoomWallpaper: Ember.computed.notEmpty('activeRoom.wallpaperUrl')
 
   canUpdateRoomWallpaper: (->
