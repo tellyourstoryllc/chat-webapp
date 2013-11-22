@@ -373,13 +373,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       #   # Actually start reading the file.
       #   reader.readAsDataURL(file)
 
+      return undefined
+
   clearFile: ->
     @$('.send-message-file').val('')
     @set('activeRoom.newMessageFile', null)
 
   resetNewMessage: ->
     @set('activeRoom.newMessageText', '')
-    @set('activeRoom.newMessageFile', null)
+    @clearFile()
 
   actions:
 
@@ -405,6 +407,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     attachUrl: (url) ->
       @$('.send-message-text').textrange('replace', url)
+      return undefined
 
     didSelectSuggestion: (suggestion) ->
       # User selected a suggestion.  Expand the value into the text.
