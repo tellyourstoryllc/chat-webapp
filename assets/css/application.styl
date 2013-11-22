@@ -109,6 +109,11 @@ sprite-icon()
 button, input[type='checkbox'], label.checkbox
   cursor pointer
 
+button
+  // Fix browser defaults, especially IE9.
+  padding-left 6px
+  padding-right 6px
+
 .pull-left
   float left
 
@@ -551,7 +556,25 @@ body.logged-out
   position fixed
   left 5px
   bottom 45px
-  width room-sidebar-width - 10px
+  width room-sidebar-width + 50px
+
+.status-text-menu
+  position fixed
+  left 5px
+  bottom 45px
+  width room-sidebar-width + 50px
+
+  > .menu-item
+    cursor default
+
+  .new-status-text
+    box-sizing border-box
+    width 180px
+    float left
+
+  .save-status-text-button
+    float right
+    margin 4px 0 0 0
 
 .settings-icon-cell
   display table-cell

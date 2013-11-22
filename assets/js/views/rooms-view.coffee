@@ -4,6 +4,8 @@ App.RoomsView = Ember.View.extend
 
   isChooseStatusMenuVisible: false
 
+  isStatusTextMenuVisible: false
+
   isSendingRoomWallpaper: false
 
   activeRoom: Ember.computed.alias('controller.activeRoom')
@@ -36,6 +38,11 @@ App.RoomsView = Ember.View.extend
   ).observes('controller.roomsLoaded')
 
   bodyKeyDown: (event) ->
+    # No key modifiers.
+    if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
+      if event.which == 27      # Escape
+        @closeChooseStatusMenu()
+        @closeStatusTextMenu()
     # Ctrl.
     if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
       if event.which == 219      # [
@@ -77,6 +84,7 @@ App.RoomsView = Ember.View.extend
     Ember.run @, ->
       @closeRoomMenu()
       @closeChooseStatusMenu()
+      @closeStatusTextMenu()
 
   # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
   documentActive: (event) ->
@@ -188,6 +196,17 @@ App.RoomsView = Ember.View.extend
     @$('.choose-status-menu').fadeOut(300)
     @set('isChooseStatusMenuVisible', false)
 
+  showStatusTextMenu: ->
+    @$('.status-text-menu').fadeIn(50)
+    @set('isStatusTextMenuVisible', true)
+    @$('.new-status-text').val(App.get('currentUser.statusText'))
+    Ember.run.schedule 'afterRender', @, ->
+      @$('.new-status-text').focus()
+
+  closeStatusTextMenu: ->
+    @$('.status-text-menu').fadeOut(300)
+    @set('isStatusTextMenuVisible', false)
+
   actions:
 
     toggleRoomMenu: ->
@@ -226,11 +245,24 @@ App.RoomsView = Ember.View.extend
         @closeChooseStatusMenu()
       else
         @showChooseStatusMenu()
+      @closeStatusTextMenu()
       return undefined
 
     setStatus: (status) ->
       App.get('api').updateCurrentUserStatus(status.get('name'))
       @closeChooseStatusMenu()
+      return undefined
+
+    changeStatusText: ->
+      if ! @get('isStatusTextMenuVisible')
+        @showStatusTextMenu()
+      @closeChooseStatusMenu()
+      return undefined
+
+    saveStatusText: ->
+      newStatusText = @$('.new-status-text').val()
+      newStatusText = null if Ember.isEmpty(newStatusText)
+      App.get('api').updateCurrentUserStatusText(newStatusText)
       return undefined
 
     logOut: ->

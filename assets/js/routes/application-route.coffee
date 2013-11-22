@@ -22,3 +22,5 @@ App.ApplicationRoute = Ember.Route.extend
     error: (reason) ->
       Ember.Logger.error(reason)
       return undefined
+
+    ignore: -> # Ignore.  This is useful to cancel bubbling of actions.
