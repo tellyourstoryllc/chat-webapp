@@ -26,11 +26,20 @@ App.ApplicationView = Ember.View.extend
     Ember.run @, ->
       storageEvent = event.originalEvent
       key = storageEvent.key
-      return unless key? && key of App.Preferences.clientPrefsDefaults
-      # Another window changed localStorage preferences.  Load them.
-      clientPrefs = App.get('preferences.clientWeb')
-      return unless clientPrefs?
-      clientPrefs.set(key, App.Preferences.coerceValueFromStorage(key, storageEvent.newValue))
+      return unless key? && App.isLoggedIn()
+
+      if key == 'token'
+        # Another window changed our login token.
+        newToken = storageEvent.newValue
+        if Ember.isEmpty(newToken)
+          # User logged out.  We should log out too.
+          @get('controller').transitionToRoute('logout')
+
+      if key of App.Preferences.clientPrefsDefaults
+        # Another window changed localStorage preferences.  Load them.
+        clientPrefs = App.get('preferences.clientWeb')
+        if clientPrefs?
+          clientPrefs.set(key, App.Preferences.coerceValueFromStorage(key, storageEvent.newValue))
 
   loggedInChanged: (->
     @setupUi()
