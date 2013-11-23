@@ -697,6 +697,18 @@ room-members-sidebar-width = 200px
   top 58px
   width room-members-sidebar-width - 10px
 
+@keyframes join-icon-bump
+  0%
+    transform translateY(0%)
+  40%
+    transform translateY(-10%)
+  50%
+    transform translateY(-12%)
+  60%
+    transform translateY(-10%)
+  100%
+    transform translateY(0%)
+
 .room-members-sidebar
   position fixed
   right 0
@@ -744,6 +756,11 @@ room-members-sidebar-width = 200px
     display block
     height 35px
     text-decoration none
+
+    &:hover .join-icon
+      animation-name join-icon-bump
+      animation-duration .2s
+      animation-timing-function linear
 
   .join-icon
     sprite-icon()
