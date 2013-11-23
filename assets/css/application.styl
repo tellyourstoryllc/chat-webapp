@@ -602,12 +602,17 @@ body.logged-out
 
   &:hover > .settings-icon
     opacity 1
+    transform rotate(180deg)
 
 .settings-icon
+  sprite-icon()
   width 18px
   height 20px
-  vertical-align middle
-  opacity .7
+  background-image url('/images/sprites.png')
+  background-position -230px -4px
+
+  opacity .6
+  transition transform .2s ease-in-out
 
 .room-content
   position fixed
