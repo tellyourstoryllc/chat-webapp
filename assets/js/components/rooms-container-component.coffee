@@ -353,13 +353,19 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       # The user canceled; don't do anything.
       return if ! file?
 
-      @set('activeRoom.newMessageFile', file)
+      @setFileAttachment(file)
 
       return undefined
 
   clearFile: ->
     @$('.send-message-file').val('')
     @set('activeRoom.newMessageFile', null)
+
+  setFileAttachment: (file) ->
+    if file?
+      @set('activeRoom.newMessageFile', file)
+    else
+      @clearFile()
 
   resetNewMessage: ->
     @set('activeRoom.newMessageText', '')
@@ -389,6 +395,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     removeAttachment: ->
       @clearFile()
+      return undefined
+
+    attachFile: (file) ->
+      @setFileAttachment(file)
       return undefined
 
     attachUrl: (url) ->

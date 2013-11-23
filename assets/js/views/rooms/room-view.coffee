@@ -23,6 +23,10 @@ App.RoomsRoomView = Ember.View.extend
   onDrop: (event) ->
     Ember.run @, ->
       event.preventDefault()
-      # TODO: This doesn't seem to work in Firefox.
-      event.originalEvent.dataTransfer?.items[0]?.getAsString (url) ->
-        App.get('roomsContainerView')?.send('attachUrl', url)
+      dataTransfer = event.originalEvent.dataTransfer
+      if dataTransfer?.files[0]?
+        App.get('roomsContainerView')?.send('attachFile', dataTransfer.files[0])
+      else
+        # TODO: This doesn't seem to work in Firefox.
+        dataTransfer?.items[0]?.getAsString (url) ->
+          App.get('roomsContainerView')?.send('attachUrl', url)
