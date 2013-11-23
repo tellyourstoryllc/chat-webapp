@@ -9,6 +9,8 @@ App.Message = App.BaseModel.extend
   # Error message to diplay to the user.
   errorMessage: null
 
+  conversationId: Ember.computed.any('groupId', 'oneToOneId')
+
   conversation: Ember.computed.any('group', 'oneToOne')
 
   group: (->
@@ -67,6 +69,26 @@ App.Message = App.BaseModel.extend
 
     @get('conversation').processOutgoingMessageText(@, @get('localText'))
   ).property('localText', 'text')
+
+  # Return the HTML to display the file attachment.  This is implemented as a
+  # function instead of Handlebars to reduce the number of views and bindings,
+  # since this is per message.
+  attachmentDisplayHtml: (options = {}) ->
+    attachmentUrl = @get('attachmentUrl')
+    return null unless attachmentUrl?
+
+    escape = Ember.Handlebars.Utils.escapeExpression
+    attachmentThumbUrl = @get('attachmentThumbUrl')
+    if attachmentThumbUrl?
+      # We have a server generated thumbnail image.
+      onLoadFunction = options.messagesView.get('messageImageOnLoad')
+      """
+      <a href='#{escape(attachmentUrl)}' target='_blank'>
+      <img src='#{escape(attachmentThumbUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
+      </a>
+      """.htmlSafe()
+    else if @_isPlayableAudioFile(@get('attachmentFile'), attachmentUrl)
+      "<audio preload='auto' controls><source src='#{escape(attachmentUrl)}'></audio>".htmlSafe()
 
   # This is the html text with emoticons and mentions.
   body: (->
@@ -163,6 +185,34 @@ App.Message = App.BaseModel.extend
     title: @get('title')
     body: text
     icon: {}
+
+  # Returns true if the file attachment is an audio file supported by the
+  # browser.
+  _isPlayableAudioFile: (file, url) ->
+    return false unless Modernizr.audio
+    types = []
+    exts = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.audio.ogg
+      types.push('audio/ogg')
+      exts.push('.ogg')
+    if Modernizr.audio.mp3
+      types.push('audio/mpeg')
+      exts.push('.mp3')
+    if Modernizr.audio.wav
+      types.push('audio/wav')
+      types.push('audio/x-wav')
+      exts.push('.wav')
+    if Modernizr.audio.m4a
+      types.push('audio/x-m4a')
+      types.push('audio/aac')
+      exts.push('.m4a')
+      exts.push('.aac')
+    url ?= ''
+    url = url.toLowerCase()
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.  Otherwise just look at the URL's file extension.
+    file?.type in types || exts.some (ext) -> url.endsWith(ext)
 
 
 App.Message.reopenClass

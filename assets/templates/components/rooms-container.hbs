@@ -58,11 +58,11 @@
                         {{/if}}
                         {{compact-timestamp-element message.createdAt classNames='timestamp'}}
                       </span>
-                      {{#if message.attachmentUrl}}
-                        <a {{bind-attr href='message.attachmentUrl'}} target='_blank'>
-                          <img {{bind-attr src='message.attachmentThumbUrl'}} onload='{{unbound messagesView.messageImageOnLoad}}("{{unbound message.groupId}}", this, false);'>
-                        </a>
-                      {{/if}}
+
+                      {{! Passing attachmentUrl so that this re-renders when it changes. }}
+                      {{messageAttachmentDisplay message
+                        messagesViewBinding=messagesView
+                        attachmentUrlBinding=message.attachmentUrl}}
 
                       <div class='message-body'>{{message.body}}</div>
                     </div>
