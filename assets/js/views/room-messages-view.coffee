@@ -27,6 +27,51 @@ App.RoomMessagesView = Ember.View.extend
 
   willDestroyElement: ->
 
+  hasAttachment: (->
+    @get('room.newMessageFile')?
+  ).property('room.newMessageFile')
+
+  attachmentName: (->
+    # Make sure to always show something.
+    name = @get('room.newMessageFile.name')
+    name = '(file attached)' if Ember.isEmpty(name)
+    name
+  ).property('room.newMessageFile.name')
+
+  newMessageFileChanged: (->
+    # Make sure preview is supported.
+    return unless Modernizr.filereader
+
+    file = @get('room.newMessageFile')
+    previousFileUrl = @get('attachmentPreviewUrl')
+    if ! file?
+      if previousFileUrl?
+        # Delay so the UI can transition.
+        Ember.run.later @, ->
+          @set('attachmentPreviewUrl', null)
+        , 400 # This should match the transition-duration.
+      return
+
+    canPreview = file?.type in ['image/png', 'image/gif', 'image/jpeg', 'image/vnd.microsoft.icon']
+    if ! canPreview
+      @set('attachmentPreviewUrl', null)
+      return
+
+    # Setup file reader.
+    reader = new FileReader()
+    reader.onload = (e) =>
+      startIndex = reader.result.indexOf(',')
+      if startIndex < 0
+        throw new Error("I was trying to read the file base64-encoded, but I couldn't recognize the format returned from the FileReader's result")
+      # Set image preview.
+      base64EncodedFile = reader.result[startIndex + 1 ..]
+      @set('attachmentPreviewUrl', "data:image/png;base64," + base64EncodedFile)
+
+    # Actually start reading the file.
+    reader.readAsDataURL(file)
+  ).observes('room.newMessageFile')
+
+  # $messages should be the jQuery object of .messages element.
   updateSize: (height, activeRoom, isEditingTopic, $messages) ->
     return unless @currentState == Ember.View.states.inDOM
     room = @get('room')

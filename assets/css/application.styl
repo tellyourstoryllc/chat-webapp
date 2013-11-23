@@ -998,6 +998,74 @@ room-members-sidebar-width = 200px
   .error
     color #b94a48
 
+// This is used when adding the attachment.
+@keyframes attachment-slide-in
+  0%
+    bottom -100px
+  40%
+    // Wait a bit without changing anything to wait for the file preview to
+    // load.  Otherwise the image preview pops in mid-animation.
+    bottom -100px
+  60%
+    bottom 70px
+  80%
+    bottom 55px
+  100%
+    bottom 60px
+
+.attachment-thumbnail
+  width 128px
+  position absolute
+  right 41px
+  border 1px solid #BDC3C7
+  border-radius 10px
+  box-shadow 0 0 20px rgba(0,0,0, .5)
+  padding 10px
+  background-image linear-gradient(to bottom, #fff, #eee)
+  font-size 12px
+  text-align center
+
+  bottom -100px
+  visibility hidden
+
+  // This is used when removing the attachment.
+  transition-timing-function ease-out
+  transition-duration .2s
+  transition-property bottom, visibility
+
+  &.has-attachment
+    transition none // Turn off the other transition.
+    animation-name attachment-slide-in
+    animation-duration 1.1s
+    animation-timing-function ease-in-out
+    bottom 60px
+    visibility visible
+
+  .remove
+    position absolute
+    top 3px
+    right 3px
+    width 18px
+    height 18px
+    border-radius 50%
+    border 1px solid rgba(128,128,128, .5)
+    background-color #eee
+    cursor pointer
+    font-size 17px
+    font-weight bold
+
+    &:hover
+      background-color #ccc
+
+  .attachment-thumbnail-image
+    height auto
+    max-width 100%
+    max-height 128px
+
+  .filename
+    width 100%
+    overflow ellipsis
+
 .connecting-status-bar
   position absolute
   right 30px

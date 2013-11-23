@@ -154,17 +154,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     height -= 30 # .room-info outerHeight() without topic.
     height -= @$('.send-message-area').outerHeight(true) ? 0
 
-    roomMessagesViewFromElement = ($e) ->
-      App._viewFromElement($e.closest('.room-messages-view'))
-
     isEditingTopic = @get('isEditingTopic')
     activeRoom = @get('activeRoom')
     $('.messages').each ->
       $e = $(@)
-      # Don't modify the height of message lists if they don't need to be
-      # changed.  That would screw up the scroll position.
-      view = roomMessagesViewFromElement($e)
-      view.updateSize(height, activeRoom, isEditingTopic, $e)
+      $parent = $e.closest('.room-messages-view')
+      roomMessagesView = App._viewFromElement($parent)
+      roomMessagesView.updateSize(height, activeRoom, isEditingTopic, $e)
 
     # Loading more messages bar at the top.
     $loadingMoreMessages = $('.loading-more-messages')
@@ -354,24 +350,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       else if event.target.value
         name: event.target.value.replace(/^.+\\/, '')
 
-      if ! file?
-        @clearFile()
-        return
+      # The user canceled; don't do anything.
+      return if ! file?
 
       @set('activeRoom.newMessageFile', file)
-
-      # if Modernizr.filereader
-      #   # Setup file reader.
-      #   reader = new FileReader()
-      #   reader.onload = (e) =>
-      #     startIndex = reader.result.indexOf(',')
-      #     if startIndex < 0
-      #       throw new Error("I was trying to read the file base64-encoded, but I couldn't recognize the format returned from the FileReader's result")
-      #     # TODO: Set image preview here.
-      #     base64EncodedFile = reader.result[startIndex + 1 ..]
-      #        
-      #   # Actually start reading the file.
-      #   reader.readAsDataURL(file)
 
       return undefined
 
@@ -403,6 +385,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     chooseFile: ->
       @$('.send-message-file').trigger('click')
+      return undefined
+
+    removeAttachment: ->
+      @clearFile()
       return undefined
 
     attachUrl: (url) ->

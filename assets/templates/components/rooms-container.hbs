@@ -70,6 +70,17 @@
                 </div>
               {{/each}}
             </div>
+
+            {{! Preview thumbnail of the file attached. }}
+            <div {{bind-attr class=':attachment-thumbnail messagesView.hasAttachment:has-attachment'}}>
+              <span class='remove' title='Remove Attachment' {{action 'removeAttachment' target=roomsContainer}}>
+                &times;
+              </span>
+              {{#if messagesView.attachmentPreviewUrl}}
+                <img class='attachment-thumbnail-image' {{bind-attr src='messagesView.attachmentPreviewUrl'}}>
+              {{/if}}
+              <div class='filename'>{{messagesView.attachmentName}}</div>
+            </div>
           {{/with}}
         {{/view}}
       {{/if}}
