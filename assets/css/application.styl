@@ -880,10 +880,13 @@ room-members-sidebar-width = 200px
   border-right 1px solid #B4B4B4
   background-color #fff
 
-  transition left 0.1s ease-out
+  transition-duration 0.1s
+  transition-timing-function ease-out
+  transition-property left, visibility
 
   &.inactive
     left 100%
+    visibility hidden
 
     &.before-cursor
       left -100%
