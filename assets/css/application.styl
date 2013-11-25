@@ -415,8 +415,10 @@ input, textarea
 room-sidebar-width = 200px
 
 .navbar
+  position fixed
   box-sizing border-box
   width room-sidebar-width
+  min-height 52px
   border-top 3px solid #26BE9D
   padding 10px 10px 0
   background-color app-purple
@@ -435,6 +437,7 @@ room-sidebar-width = 200px
 body.logged-out
   background-color #E4E6E8
   .navbar
+    position static
     width auto
 
   .brand
@@ -512,6 +515,7 @@ body.logged-out
 
 .rooms-sidebar
   position fixed
+  top 52px // Height of .navbar
   box-sizing border-box
   width room-sidebar-width
   height 100%
