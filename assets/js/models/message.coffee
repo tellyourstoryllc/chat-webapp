@@ -82,6 +82,8 @@ App.Message = App.BaseModel.extend
     if attachmentThumbUrl?
       # We have a server generated thumbnail image.
       onLoadFunction = options.messagesView.get('messageImageOnLoad')
+      # TODO: detect if it's a video here and pop open a light box to play it
+      # since the server is giving us a gif preview image.
       """
       <a href='#{escape(attachmentUrl)}' target='_blank'>
       <img src='#{escape(attachmentThumbUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
@@ -89,6 +91,8 @@ App.Message = App.BaseModel.extend
       """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentFile'), attachmentUrl)
       "<audio preload='auto' controls><source src='#{escape(attachmentUrl)}'></audio>".htmlSafe()
+    else if @_isPlayableVideoFile(@get('attachmentFile'), attachmentUrl)
+      "<video preload='auto' controls><source src='#{escape(attachmentUrl)}'></video>".htmlSafe()
     else
       # We don't have a thumbnail and couldn't display it any other way, so just
       # link to it.
@@ -224,6 +228,28 @@ App.Message = App.BaseModel.extend
       types.push('audio/aac')
       exts.push('.m4a')
       exts.push('.aac')
+    url ?= ''
+    url = url.toLowerCase()
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.  Otherwise just look at the URL's file extension.
+    file?.type in types || exts.some (ext) -> url.endsWith(ext)
+
+  # Returns true if the file attachment is an audio file supported by the
+  # browser.
+  _isPlayableVideoFile: (file, url) ->
+    return false unless Modernizr.video
+    types = []
+    exts = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.video.ogg
+      types.push('video/ogg')
+      exts.push('.ogg')
+    if Modernizr.video.h264
+      types.push('video/mp4')
+      exts.push('.mp4')
+    if Modernizr.video.webm
+      types.push('video/webm')
+      exts.push('.webm')
     url ?= ''
     url = url.toLowerCase()
     # If the current user sent it, we have the actual file and can try to use

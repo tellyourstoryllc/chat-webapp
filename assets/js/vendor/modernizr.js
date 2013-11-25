@@ -1,5 +1,5 @@
 /* Modernizr 2.7.0 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-audio-inputtypes-addtest-domprefixes-file_api-forms_fileinput
+ * Build: http://modernizr.com/download/#-history-audio-video-inputtypes-addtest-domprefixes-file_api-forms_fileinput
  */
 ;
 
@@ -132,6 +132,24 @@ window.Modernizr = (function( window, document, undefined ) {
     }
     tests['history'] = function() {
       return !!(window.history && history.pushState);
+    };
+    tests['video'] = function() {
+        var elem = document.createElement('video'),
+            bool = false;
+
+            try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"')      .replace(/^no$/,'');
+
+                            bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"') .replace(/^no$/,'');
+
+                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/,'');
+            }
+
+        } catch(e) { }
+
+        return bool;
     };
 
     tests['audio'] = function() {
