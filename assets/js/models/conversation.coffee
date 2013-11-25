@@ -207,6 +207,7 @@ App.Conversation = Ember.Mixin.create
         json = Ember.makeArray(json)
         # Load everything from the response.
         return App.loadAllWithMetaData(json)
+    .fail App.rejectionHandler
 
   didReceiveUpdateFromFaye: (json) ->
     Ember.Logger.log "received packet", json
@@ -381,7 +382,7 @@ App.Conversation = Ember.Mixin.create
       return messages
     , (e) =>
       @set('isLoadingEarlierMessages', false)
-      throw e
+    .fail App.rejectionHandler
 
   # Hook that gets called with the App.Message and the payload (faye data built
   # from the message) just before it is published to the channel via socket.

@@ -93,6 +93,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     )
     .always =>
       @set('isSendingAvatar', false)
+    .fail App.rejectionHandler
 
   onOneToOneWallpaperFileChange: (event) ->
     Ember.run @, ->
@@ -118,6 +119,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isSendingOneToOneWallpaper', false)
     .then (json) =>
       App.loadAll(json)
+    .fail App.rejectionHandler
 
   clientWebPreferencesDidChange: (->
     # When the global preferences change, sync the UI.

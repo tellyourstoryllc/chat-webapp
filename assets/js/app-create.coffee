@@ -128,6 +128,7 @@ window.App = App = Ember.Application.create
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
+      .fail App.rejectionHandler
 
   # Common promise rejection handler.  Use this as the final handler whenever
   # you create a promise so that errors don't get swallowed.  For example:
@@ -185,6 +186,7 @@ window.App = App = Ember.Application.create
       # yet.
       App.get('api').checkin(token: token).then (user) =>
         @didCheckIn()
+      .fail App.rejectionHandler
 
   # This is triggered after logging in and checking in.
   didCheckIn: ->
