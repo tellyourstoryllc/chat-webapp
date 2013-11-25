@@ -79,18 +79,22 @@ App.Message = App.BaseModel.extend
 
     escape = Ember.Handlebars.Utils.escapeExpression
     attachmentPreviewUrl = @get('attachmentPreviewUrl')
+    onLoadFunction = options.messagesView.get('messageImageOnLoad')
     if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
-      onLoadFunction = options.messagesView.get('messageImageOnLoad')
       # TODO: detect if it's a video here and pop open a light box to play it
       # since the server is giving us a gif preview image.
       """
       <a href='#{escape(attachmentUrl)}' target='_blank'>
-      <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
+      <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "image");'>
       </a>
       """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
-      "<audio preload='auto' controls><source src='#{escape(attachmentUrl)}'></audio>".htmlSafe()
+      """
+      <audio preload='auto' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "audio");'>
+      <source src='#{escape(attachmentUrl)}'>
+      </audio>
+      """.htmlSafe()
     else if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
       "<video preload='auto' controls><source src='#{escape(attachmentUrl)}'></video>".htmlSafe()
     else
@@ -164,7 +168,7 @@ App.Message = App.BaseModel.extend
       regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
       imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
                   " title='#{escape(emoticon.get('name'))}'" +
-                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, true);'>"
+                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, &quot;emoticon&quot;);'>"
       str.replace regexp, imageHtml
     , evaledText
 
