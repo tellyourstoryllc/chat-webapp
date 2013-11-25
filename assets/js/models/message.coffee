@@ -89,6 +89,22 @@ App.Message = App.BaseModel.extend
       """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentFile'), attachmentUrl)
       "<audio preload='auto' controls><source src='#{escape(attachmentUrl)}'></audio>".htmlSafe()
+    else
+      # We don't have a thumbnail and couldn't display it any other way, so just
+      # link to it.
+      display = attachmentUrl
+      if display.length > 100
+        display = display[0...100] + '...'
+
+      escapedDisplay = escape(display)
+
+      # Allow soft line break after slashes in a URL.  Must be after escaping
+      # so that our wbr tags don't get lost.
+      escapedDisplay = escapedDisplay.replace /\//g, '/<wbr>'
+
+      """
+      <a href='#{escape(attachmentUrl)}'>#{escapedDisplay}</a>
+      """.htmlSafe()
 
   # This is the html text with emoticons and mentions.
   body: (->
