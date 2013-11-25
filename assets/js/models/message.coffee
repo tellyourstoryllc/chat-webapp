@@ -78,15 +78,15 @@ App.Message = App.BaseModel.extend
     return null unless attachmentUrl?
 
     escape = Ember.Handlebars.Utils.escapeExpression
-    attachmentThumbUrl = @get('attachmentThumbUrl')
-    if attachmentThumbUrl?
+    attachmentPreviewUrl = @get('attachmentPreviewUrl')
+    if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
       onLoadFunction = options.messagesView.get('messageImageOnLoad')
       # TODO: detect if it's a video here and pop open a light box to play it
       # since the server is giving us a gif preview image.
       """
       <a href='#{escape(attachmentUrl)}' target='_blank'>
-      <img src='#{escape(attachmentThumbUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
+      <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
       </a>
       """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
@@ -289,7 +289,7 @@ App.Message.reopenClass
     text: json.text
     attachmentUrl: json.attachment_url
     attachmentContentType: json.attachment_content_type
-    attachmentThumbUrl: json.attachment_thumb_url
+    attachmentPreviewUrl: json.attachment_preview_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # This is different from the base class since it dedupes by client IDs.
