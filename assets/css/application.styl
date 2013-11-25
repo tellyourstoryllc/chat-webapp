@@ -57,6 +57,57 @@ sprite-icon()
     transform scale(1)
     opacity 1
 
+.expand-in-less-bounce
+  animation-name expand-in-less-bounce
+  animation-duration .5s
+  animation-timing-function ease-in-out
+  visibility visible !important
+
+@keyframes expand-in-less-bounce
+  0%
+    transform scale(0)
+    opacity 0.0
+  60%
+    transform scale(1.05)
+  80%
+    transform scale(0.9)
+    opacity 1
+  100%
+    transform scale(1)
+    opacity 1
+
+.expand-up
+  animation-name expand-up
+  animation-duration .3s
+  animation-timing-function ease
+  visibility visible !important
+
+@keyframes expand-up
+  0%
+    transform translateY(40%) scale(0.6) scaleY(0.5)
+  60%
+    transform translateY(-7%) scaleY(1.12)
+  75%
+    transform translateY(3%)
+  100%
+    transform translateY(0%) scale(1) scaleY(1)
+
+.expand-down
+  animation-name expand-down
+  animation-duration .3s
+  animation-timing-function ease
+  visibility visible !important
+
+@keyframes expand-down
+  0%
+    transform translateY(-40%) scale(0.6) scaleY(0.5)
+  60%
+    transform translateY(7%) scaleY(1.12)
+  75%
+    transform translateY(-3%)
+  100%
+    transform translateY(0%) scale(1) scaleY(1)
+
 ///////////////////////////////////////////////////////////
 // Fonts
 
@@ -145,13 +196,13 @@ button
 
 .menu
   position absolute
-  display none // Initially hidden.
   box-sizing border-box
   overflow hidden
   background-color #ccc
   border-radius 4px
   box-shadow 0 0 3px rgba(0,0,0, .2)
   z-index 100
+  visibility hidden // Initially hidden.
 
   .menu-item
     padding 5px 10px
@@ -573,12 +624,14 @@ body.logged-out
   left 5px
   bottom 45px
   width room-sidebar-width + 50px
+  visibility hidden // Initially hidden.
 
 .status-text-menu
   position fixed
   left 5px
   bottom 45px
   width room-sidebar-width + 50px
+  animation-duration .4s
 
   > .menu-item
     cursor default

@@ -185,30 +185,30 @@ App.RoomsView = Ember.View.extend
       App.loadAll(json)
 
   showRoomMenu: ->
-    @$('.room-menu').fadeIn(50)
+    @$('.room-menu').addClass('expand-down')
     @set('isRoomMenuVisible', true)
 
   closeRoomMenu: ->
-    @$('.room-menu').fadeOut(300)
+    @$('.room-menu').removeClass('expand-down')
     @set('isRoomMenuVisible', false)
 
   showChooseStatusMenu: ->
-    @$('.choose-status-menu').fadeIn(50)
+    @$('.choose-status-menu').addClass('expand-up')
     @set('isChooseStatusMenuVisible', true)
 
   closeChooseStatusMenu: ->
-    @$('.choose-status-menu').fadeOut(300)
+    @$('.choose-status-menu').removeClass('expand-up')
     @set('isChooseStatusMenuVisible', false)
 
   showStatusTextMenu: ->
-    @$('.status-text-menu').fadeIn(50)
+    @$('.status-text-menu').addClass('expand-in-less-bounce')
     @set('isStatusTextMenuVisible', true)
     @$('.new-status-text').val(App.get('currentUser.statusText'))
     Ember.run.schedule 'afterRender', @, ->
       @$('.new-status-text').focus()
 
   closeStatusTextMenu: ->
-    @$('.status-text-menu').fadeOut(300)
+    @$('.status-text-menu').removeClass('expand-in-less-bounce')
     @set('isStatusTextMenuVisible', false)
 
   actions:

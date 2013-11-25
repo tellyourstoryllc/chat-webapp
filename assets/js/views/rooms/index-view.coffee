@@ -26,12 +26,12 @@ App.RoomsIndexView = Ember.View.extend
     $menu.css
       left: position.left
       top: position.top + $toggle.outerHeight()
-    $menu.fadeIn(50)
+    $menu.addClass('expand-down')
     @set('isRoomMenuVisible', true)
 
   closeRoomMenu: ->
     @set('menuRoom', null)
-    @$('.lobby-room-menu').fadeOut(300)
+    @$('.lobby-room-menu').removeClass('expand-down')
     @set('isRoomMenuVisible', false)
 
   isAdminOfMenuRoom: Ember.computed.alias('menuRoom.isCurrentUserAdmin')
