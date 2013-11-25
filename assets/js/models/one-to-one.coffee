@@ -142,10 +142,8 @@ App.OneToOne.reopenClass
 
     oneToOne
 
-  idFromUserIds: (userId1, userId2) ->
-    return null unless userId1? && userId2?
-    id1 = parseInt(userId1)
-    id2 = parseInt(userId2)
+  idFromUserIds: (id1, id2) ->
+    return null unless id1? && id2?
     ids = if id1 < id2 then [id1, id2] else [id2, id1]
     ids.join('-')
 
