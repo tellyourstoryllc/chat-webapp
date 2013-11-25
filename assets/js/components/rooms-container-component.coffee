@@ -438,9 +438,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
         Ember.Logger.error e
+        msg = e?.error?.message ? e?.message
+        # Stale client error.
+        msg = "There was an error sending this message" if /^1000:/.test(msg)
         msg.setProperties
           isError: true
-          errorMessage: e?.error?.message ? e?.message ? "There was an unknown error sending this message."
+          errorMessage: msg ? "There was an unknown error sending this message."
 
       @resetNewMessage()
       @get('activeRoom.messages').pushObject(msg)
