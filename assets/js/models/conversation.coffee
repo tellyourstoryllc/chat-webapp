@@ -360,8 +360,6 @@ App.Conversation = Ember.Mixin.create
     data =
       limit: @get('messagesPageSize')
       below_rank: minMessageRank
-      # TODO: remove this after the upgrade.
-      last_message_id: minMessageRank
 
     @set('isLoadingEarlierMessages', true)
     api.ajax(@earlierMessagesUrl(), 'GET', data: data)
