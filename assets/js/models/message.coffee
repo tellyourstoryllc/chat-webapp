@@ -89,9 +89,9 @@ App.Message = App.BaseModel.extend
       <img src='#{escape(attachmentThumbUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, false);'>
       </a>
       """.htmlSafe()
-    else if @_isPlayableAudioFile(@get('attachmentFile'), attachmentUrl)
+    else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
       "<audio preload='auto' controls><source src='#{escape(attachmentUrl)}'></audio>".htmlSafe()
-    else if @_isPlayableVideoFile(@get('attachmentFile'), attachmentUrl)
+    else if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
       "<video preload='auto' controls><source src='#{escape(attachmentUrl)}'></video>".htmlSafe()
     else
       # We don't have a thumbnail and couldn't display it any other way, so just
@@ -208,53 +208,39 @@ App.Message = App.BaseModel.extend
 
   # Returns true if the file attachment is an audio file supported by the
   # browser.
-  _isPlayableAudioFile: (file, url) ->
+  _isPlayableAudioFile: (mimetype, file) ->
     return false unless Modernizr.audio
     types = []
-    exts = []
     # Use Modernizr to detect if the file can actually be played.
     if Modernizr.audio.ogg
       types.push('audio/ogg')
-      exts.push('.ogg')
     if Modernizr.audio.mp3
       types.push('audio/mpeg')
-      exts.push('.mp3')
     if Modernizr.audio.wav
       types.push('audio/wav')
       types.push('audio/x-wav')
-      exts.push('.wav')
     if Modernizr.audio.m4a
       types.push('audio/x-m4a')
       types.push('audio/aac')
-      exts.push('.m4a')
-      exts.push('.aac')
-    url ?= ''
-    url = url.toLowerCase()
     # If the current user sent it, we have the actual file and can try to use
-    # its mime type.  Otherwise just look at the URL's file extension.
-    file?.type in types || exts.some (ext) -> url.endsWith(ext)
+    # its mime type.
+    mimetype in types || file?.type in types
 
-  # Returns true if the file attachment is an audio file supported by the
+  # Returns true if the file attachment is a video file supported by the
   # browser.
-  _isPlayableVideoFile: (file, url) ->
+  _isPlayableVideoFile: (mimetype, file) ->
     return false unless Modernizr.video
     types = []
-    exts = []
     # Use Modernizr to detect if the file can actually be played.
     if Modernizr.video.ogg
       types.push('video/ogg')
-      exts.push('.ogg')
     if Modernizr.video.h264
       types.push('video/mp4')
-      exts.push('.mp4')
     if Modernizr.video.webm
       types.push('video/webm')
-      exts.push('.webm')
-    url ?= ''
-    url = url.toLowerCase()
     # If the current user sent it, we have the actual file and can try to use
-    # its mime type.  Otherwise just look at the URL's file extension.
-    file?.type in types || exts.some (ext) -> url.endsWith(ext)
+    # its mime type.
+    mimetype in types || file?.type in types
 
 
 App.Message.reopenClass
@@ -302,6 +288,7 @@ App.Message.reopenClass
     rank: json.rank
     text: json.text
     attachmentUrl: json.attachment_url
+    attachmentContentType: json.attachment_content_type
     attachmentThumbUrl: json.attachment_thumb_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
