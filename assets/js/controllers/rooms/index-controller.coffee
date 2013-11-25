@@ -33,11 +33,11 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         # Group was created successfully.
         @resetNewRoom()
         @get('target').send('goToRoom', group)
-      , (e) =>
+      , (xhrOrError) =>
         @set('isCreatingGroup', false)
         # Show error message.
-        @set('createGroupErrorMessage', e?.error?.message ? "There was an error.  Please try again.")
-        throw e
+        @set('createGroupErrorMessage', App.userMessageFromError(xhrOrError))
+      .fail App.rejectionHandler
 
       return undefined
 
@@ -50,7 +50,7 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
       .then (json) =>
         @set('isJoiningRoom', false)
         if ! json? || json.error?
-          @set('joinRoomErrorMessage', json?.error.message ? "There was an error.  Please try again.")
+          @set('joinRoomErrorMessage', App.userMessageFromError(json))
           return
 
         # Group was joined successfully.
@@ -62,7 +62,7 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
       , (xhr) =>
         @set('isJoiningRoom', false)
         # Show error message.
-        msg = xhr?.responseJSON?.error?.message
-        @set('joinRoomErrorMessage', msg ? "There was an error.  Please try again.")
+        @set('joinRoomErrorMessage', App.userMessageFromError(xhr))
+      .fail App.rejectionHandler
 
       return undefined

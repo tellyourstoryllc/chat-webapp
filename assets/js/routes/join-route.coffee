@@ -29,10 +29,8 @@ App.JoinRoute = Ember.Route.extend
           if group?
             group.set('isDeleted', false)
             @transitionTo('rooms.room', group)
-        else if json.error
-          controller.set('userMessage', json.error)
+        else
+          controller.set('userMessage', App.userMessageFromError(json))
       , (xhr) =>
-        msg = xhr?.responseJSON?.error?.message
-        if msg?
-          controller.set('userMessage', msg)
-      .then null, App.rejectionHandler
+        controller.set('userMessage', App.userMessageFromError(xhr))
+      .fail App.rejectionHandler

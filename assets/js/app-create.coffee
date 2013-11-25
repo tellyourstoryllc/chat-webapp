@@ -64,6 +64,8 @@ window.App = App = Ember.Application.create
   # `App.RoomMessagesView` instances.
   roomMessagesViews: null
 
+  defaultErrorMessage: "There was an unknown error.  Please try again."
+
   ready: ->
     Ember.onerror = (e) ->
       # TODO: Send error to server.
@@ -133,7 +135,7 @@ window.App = App = Ember.Application.create
   #     somethingAsync()
   #     .then (result) ->
   #       coolStuff(result) # This could accidentally throw an exception.
-  #     .then null, App.rejectionHandler
+  #     .fail App.rejectionHandler
   rejectionHandler: (e) ->
     Ember.Logger.error(e, e?.message, e?.stack ? e?.stacktrace)
     throw e
@@ -361,6 +363,14 @@ window.App = App = Ember.Application.create
     value ?= window.localStorage.getItem("#{key}")
 
     value
+
+  userMessageFromError: (xhrOrError) ->
+    if xhrOrError?
+      msg = xhrOrError.responseJSON?.error?.message
+      msg ?= xhrOrError.error?.message
+    msg ?= App.defaultErrorMessage
+
+    msg
 
 
 if Modernizr.history

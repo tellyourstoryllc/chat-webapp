@@ -35,11 +35,11 @@ App.PasswordResetController = Ember.Controller.extend
         @set('isRequesting', false)
       .then (json) =>
         if ! json? || json.error?
-          @set('errorMessage', json?.error?.message ? "There was an unknown error.  Please try again.")
+          @set('errorMessage', App.userMessageFromError(json))
         else
           # Assume success.
           @set('hasReset', true)
       , (xhr) =>
-        @set('errorMessage', xhr.responseJSON?.error?.message ? "There was an unknown error.  Please try again.")
+        @set('errorMessage', App.userMessageFromError(xhr))
       .fail App.rejectionHandler
       return undefined

@@ -32,7 +32,7 @@ App.SignupFormComponent = Ember.Component.extend
         @set('isCreatingUser', false)
 
         if ! json? || json.error?
-          @set('errorMessage', json.error.message)
+          @set('errorMessage', App.userMessageFromError(json))
         else
           json = Ember.makeArray(json)
 
@@ -46,8 +46,8 @@ App.SignupFormComponent = Ember.Component.extend
             App.login(token, user)
             @sendAction('didSignUp')
 
-      , (e) =>
+      , (xhr) =>
         @set('isCreatingUser', false)
-        @set('errorMessage', "There was an unknown error.  Please try again.")
-        throw e
+        @set('errorMessage', App.userMessageFromError(xhr))
+      .fail App.rejectionHandler
       return undefined

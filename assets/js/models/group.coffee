@@ -145,7 +145,7 @@ App.Group.reopenClass
       if ! json? || json.error?
         throw json
       return @loadSingle(json)
-    .then null, App.rejectionHandler
+    .fail App.rejectionHandler
 
   # Given json for a Group and all its associations, load it, and return the
   # `App.Group` instance.

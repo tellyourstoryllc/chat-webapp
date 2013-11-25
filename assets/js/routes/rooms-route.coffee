@@ -15,7 +15,7 @@ App.RoomsRoute = Ember.Route.extend
         rooms.forEach (room) =>
           room.subscribeToMessages().then =>
             room.reload()
-    .then null, App.rejectionHandler
+    .fail App.rejectionHandler
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)

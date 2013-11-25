@@ -22,7 +22,7 @@ App.LoginController = Ember.Controller.extend
         @set('isChecking', false)
 
         if ! json? || json.error?
-          @set('errorMessage', json.error.message)
+          @set('errorMessage', App.userMessageFromError(json))
         else
           json = Ember.makeArray(json)
 
@@ -39,8 +39,8 @@ App.LoginController = Ember.Controller.extend
               @transitionToRoute('rooms.index')
               @set('isLoggingIn', false)
 
-      , (e) =>
+      , (xhr) =>
         @set('isChecking', false)
-        @set('errorMessage', "There was an unknown error.  Please try again.")
-        throw e
+        @set('errorMessage', App.userMessageFromError(xhr))
+      .fail App.rejectionHandler
       return undefined
