@@ -1,4 +1,4 @@
-/* Modernizr 2.6.3 (Custom Build) | MIT & BSD
+/* Modernizr 2.7.0 (Custom Build) | MIT & BSD
  * Build: http://modernizr.com/download/#-history-audio-inputtypes-addtest-domprefixes-file_api-forms_fileinput
  */
 ;
@@ -7,7 +7,7 @@
 
 window.Modernizr = (function( window, document, undefined ) {
 
-    var version = '2.6.3',
+    var version = '2.7.0',
 
     Modernizr = {},
 
