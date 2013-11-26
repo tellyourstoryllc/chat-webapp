@@ -978,41 +978,42 @@ room-members-sidebar-width = 200px
   &.hidden
     opacity 0
 
+sender-column-width = 150px
+
 .message
   // border-top 1px solid #E1E1E1
   font-size 14px
 
   .message-table
-    display table
     width 100%
-    border-collapse separate
 
   .sender-cell, .body-cell
-    display table-cell
+    box-sizing border-box
     padding 5px
     vertical-align top
 
   .sender-cell
-    width 150px
+    float left
+    width sender-column-width
     font-weight bold
     // border-top 1px solid #fff
     // border-right 1px solid #fff
     // background-color #F7F7F7
     text-align right
 
-  // .body-cell
-  //   border-left 1px solid #E1E1E1
+  .body-cell
+    margin-left sender-column-width + 5px
+    // border-left 1px solid #E1E1E1
 
   &.sent-by-you
+    background-color hsla(191, 58%, 90%, 0.5)
     // border-color #BFD6EA
 
     .sender-cell
       // border-color #F3F7FB
-      background-color hsla(191, 58%, 90%, 0.5)
 
     .body-cell
       // border-color #BFD6EA
-      background-color hsla(191, 58%, 90%, 0.5)
 
   &.system-message
 
