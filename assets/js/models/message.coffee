@@ -9,6 +9,8 @@ App.Message = App.BaseModel.extend
   # Error message to diplay to the user.
   errorMessage: null
 
+  conversationId: Ember.computed.any('groupId', 'oneToOneId')
+
   conversation: Ember.computed.any('group', 'oneToOne')
 
   group: (->
@@ -68,6 +70,50 @@ App.Message = App.BaseModel.extend
     @get('conversation').processOutgoingMessageText(@, @get('localText'))
   ).property('localText', 'text')
 
+  # Return the HTML to display the file attachment.  This is implemented as a
+  # function instead of Handlebars to reduce the number of views and bindings,
+  # since this is per message.
+  attachmentDisplayHtml: (options = {}) ->
+    attachmentUrl = @get('attachmentUrl')
+    return null unless attachmentUrl?
+
+    escape = Ember.Handlebars.Utils.escapeExpression
+    attachmentPreviewUrl = @get('attachmentPreviewUrl')
+    onLoadFunction = options.messagesView.get('messageImageOnLoad')
+    if attachmentPreviewUrl?
+      # We have a server generated thumbnail image.
+      # TODO: detect if it's a video here and pop open a light box to play it
+      # since the server is giving us a gif preview image.
+      """
+      <a href='#{escape(attachmentUrl)}' target='_blank'>
+      <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "image");'>
+      </a>
+      """.htmlSafe()
+    else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
+      """
+      <audio preload='auto' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "audio");'>
+      <source src='#{escape(attachmentUrl)}'>
+      </audio>
+      """.htmlSafe()
+    else if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
+      "<video preload='auto' controls><source src='#{escape(attachmentUrl)}'></video>".htmlSafe()
+    else
+      # We don't have a thumbnail and couldn't display it any other way, so just
+      # link to it.
+      display = attachmentUrl
+      if display.length > 100
+        display = display[0...100] + '...'
+
+      escapedDisplay = escape(display)
+
+      # Allow soft line break after slashes in a URL.  Must be after escaping
+      # so that our wbr tags don't get lost.
+      escapedDisplay = escapedDisplay.replace /\//g, '/<wbr>'
+
+      """
+      <a href='#{escape(attachmentUrl)}'>#{escapedDisplay}</a>
+      """.htmlSafe()
+
   # This is the html text with emoticons and mentions.
   body: (->
     # For some reason, this is getting triggered on rooms that haven't been
@@ -122,7 +168,7 @@ App.Message = App.BaseModel.extend
       regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
       imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
                   " title='#{escape(emoticon.get('name'))}'" +
-                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, true);'>"
+                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, &quot;emoticon&quot;);'>"
       str.replace regexp, imageHtml
     , evaledText
 
@@ -155,7 +201,7 @@ App.Message = App.BaseModel.extend
 
   toNotification: ->
     text = @get('userFacingText')
-    if Ember.isEmpty(text) && @get('imageUrl')?
+    if Ember.isEmpty(text) && @get('attachmentUrl')?
       text = "(file attached)"
 
     # TODO: icon field.
@@ -163,6 +209,42 @@ App.Message = App.BaseModel.extend
     title: @get('title')
     body: text
     icon: {}
+
+  # Returns true if the file attachment is an audio file supported by the
+  # browser.
+  _isPlayableAudioFile: (mimetype, file) ->
+    return false unless Modernizr.audio
+    types = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.audio.ogg
+      types.push('audio/ogg')
+    if Modernizr.audio.mp3
+      types.push('audio/mpeg')
+    if Modernizr.audio.wav
+      types.push('audio/wav')
+      types.push('audio/x-wav')
+    if Modernizr.audio.m4a
+      types.push('audio/x-m4a')
+      types.push('audio/aac')
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.
+    mimetype in types || file?.type in types
+
+  # Returns true if the file attachment is a video file supported by the
+  # browser.
+  _isPlayableVideoFile: (mimetype, file) ->
+    return false unless Modernizr.video
+    types = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.video.ogg
+      types.push('video/ogg')
+    if Modernizr.video.h264
+      types.push('video/mp4')
+    if Modernizr.video.webm
+      types.push('video/webm')
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.
+    mimetype in types || file?.type in types
 
 
 App.Message.reopenClass
@@ -209,8 +291,9 @@ App.Message.reopenClass
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     rank: json.rank
     text: json.text
-    imageUrl: json.image_url
-    imageThumbUrl: json.image_thumb_url
+    attachmentUrl: json.attachment_url
+    attachmentContentType: json.attachment_content_type
+    attachmentPreviewUrl: json.attachment_preview_url
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # This is different from the base class since it dedupes by client IDs.
@@ -245,7 +328,7 @@ App.Message.reopenClass
   # Given a Message instance, persists it to the server.  Returns a Promise.
   sendNewMessage: (message) ->
     data = {}
-    for key in ['imageFile']
+    for key in ['attachmentFile']
       val = message.get(key)
       if val?
         data[key.underscore()] = val
@@ -269,9 +352,9 @@ App.Message.reopenClass
     # Track the message's client ID.
     @_allByClientId[message.get('clientId')] = message
 
-    # Only send message via POST if there's an image.
+    # Only send message via POST if there's a file attachment.
     convo = message.get('conversation')
-    if message.get('imageFile')?
+    if message.get('attachmentFile')?
       api = App.get('api')
       formData = new FormData()
       formData.append(k, v) for k,v of api.defaultParams()

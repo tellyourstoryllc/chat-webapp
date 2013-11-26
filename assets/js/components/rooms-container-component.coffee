@@ -433,17 +433,17 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         groupId: convo instanceof App.Group && convo.get('id')
         oneToOneId: convo instanceof App.OneToOne && convo.get('id')
         localText: text
-        imageFile: file
+        attachmentFile: file
         mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
         Ember.Logger.error e
-        msg = e?.error?.message ? e?.message
+        userMsg = e?.error?.message ? e?.message
         # Stale client error.
-        msg = "There was an error sending this message" if /^1000:/.test(msg)
+        userMsg = "There was an error sending this message" if /^1000:/.test(userMsg)
         msg.setProperties
           isError: true
-          errorMessage: msg ? "There was an unknown error sending this message."
+          errorMessage: userMsg ? "There was an error sending this message."
 
       @resetNewMessage()
       @get('activeRoom.messages').pushObject(msg)
