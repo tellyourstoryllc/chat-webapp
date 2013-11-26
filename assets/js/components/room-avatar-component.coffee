@@ -6,7 +6,6 @@ App.RoomAvatarComponent = Ember.Component.extend
       'status'
       'clientType'
       'showAvatars::avatars-off' # For preference.
-      'hasAvatar::not-displayed' # For groups that don't have an avatar.
       'showStatus::no-status'
     ]
   attributeBindings: ['style']
@@ -35,10 +34,6 @@ App.RoomAvatarComponent = Ember.Component.extend
     else
       null
   ).property('room.hasStatusIcon', 'room.clientType')
-
-  hasAvatar: (->
-    @get('room.hasStatusIcon')
-  ).property('room.hasStatusIcon')
 
   style: (->
     url = @get('room.avatarUrl')

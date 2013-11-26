@@ -9,6 +9,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Show the UI to set topics.
   canSetTopic: true
 
+  # Hard-coded until we have server support.
+  avatarUrl: '/images/room.png'
+
   joinCode: (->
     App.Group.parseJoinCode(@get('joinUrl'))
   ).property('joinUrl')
