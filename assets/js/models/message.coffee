@@ -82,21 +82,26 @@ App.Message = App.BaseModel.extend
     onLoadFunction = options.messagesView.get('messageImageOnLoad')
     if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
-      # TODO: detect if it's a video here and pop open a light box to play it
-      # since the server is giving us a gif preview image.
-      """
-      <a href='#{escape(attachmentUrl)}' target='_blank'>
-      <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "image");'>
-      </a>
-      """.htmlSafe()
+      if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
+        # A playable video.
+        """
+        <video class='video-attachment' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "video");'>
+        <source src='#{escape(attachmentUrl)}'>
+        </video>
+        """.htmlSafe()
+      else
+        # A regular image.
+        """
+        <a href='#{escape(attachmentUrl)}' target='_blank'>
+        <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "image");'>
+        </a>
+        """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
       """
       <audio preload='auto' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "audio");'>
       <source src='#{escape(attachmentUrl)}'>
       </audio>
       """.htmlSafe()
-    else if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
-      "<video preload='auto' controls><source src='#{escape(attachmentUrl)}'></video>".htmlSafe()
     else
       # We don't have a thumbnail and couldn't display it any other way, so just
       # link to it.
