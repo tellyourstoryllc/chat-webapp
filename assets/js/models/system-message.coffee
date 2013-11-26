@@ -19,6 +19,8 @@ App.SystemMessage = Ember.Object.extend
 
   body: Ember.computed.alias('userFacingText')
 
+  attachmentDisplayHtml: (options = {}) ->
+
   fetchAndLoadAssociations: ->
     # TODO: Ensure that the user is loaded, e.g. when a user joins a room.
     new Ember.RSVP.Promise (resolve, reject) -> resolve()
