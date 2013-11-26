@@ -57,13 +57,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.room-info').css { 'background-image': 'none' }
   ).observes('activeRoom.wallpaperUrl').on('didInsertElement')
 
-  avatarClassNames: (->
-    classes = ['room-avatar small-avatar']
-    if ! App.get('preferences.clientWeb.showAvatars')
-      classes.push('avatars-off')
-    classes.join(' ')
-  ).property('App.preferences.clientWeb.showAvatars')
-
   bodyKeyDown: (event) ->
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
