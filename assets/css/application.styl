@@ -1029,7 +1029,7 @@ sender-column-width = 150px
     line-height 20px
 
   .sender
-    padding 0 5px
+    padding-right 5px
     cursor pointer // Clickable.
 
     // Truncate with ellipsis.
@@ -1072,6 +1072,22 @@ sender-column-width = 150px
 
   .error
     color #b94a48
+
+@media (max-width: 870px)
+
+  .message
+
+    // At narrow width, messages get the full width.
+    .sender-cell
+      float none
+      padding-bottom 0
+      text-align left
+    .body-cell
+      margin-left 0
+    .status
+      margin-top -19px
+    .message-body
+      width 100%
 
 // This is used when adding the attachment.
 @keyframes attachment-slide-in
