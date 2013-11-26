@@ -111,7 +111,7 @@ App.Message = App.BaseModel.extend
       escapedDisplay = escapedDisplay.replace /\//g, '/<wbr>'
 
       """
-      <a href='#{escape(attachmentUrl)}'>#{escapedDisplay}</a>
+      <a href='#{escape(attachmentUrl)}' target='_blank'>#{escapedDisplay}</a>
       """.htmlSafe()
 
   # This is the html text with emoticons and mentions.
