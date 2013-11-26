@@ -1,5 +1,7 @@
 App.RoomsView = Ember.View.extend
 
+  isShowingRoomsSidebar: false
+
   isRoomMenuVisible: false
 
   isChooseStatusMenuVisible: false
@@ -12,7 +14,9 @@ App.RoomsView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown', 'onChangeRoomWallpaperFile')
+    _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
+      'onChangeRoomWallpaperFile',
+      'onToggleRoomsSidebarTouchStart')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
@@ -21,6 +25,7 @@ App.RoomsView = Ember.View.extend
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
     @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
+    @$('.toggle-sidebar-tab').on 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -31,6 +36,7 @@ App.RoomsView = Ember.View.extend
     $('html').off 'click', @documentClick
     $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
     $('body').off 'keydown', @bodyKeyDown
+    @$('.toggle-sidebar-tab').off 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -52,8 +58,23 @@ App.RoomsView = Ember.View.extend
         @get('controller').send('showNextRoom')
         event.preventDefault()
 
+  isRoomContentOutOfTheWay: Ember.computed.alias('isShowingRoomsSidebar')
+
+  onToggleRoomsSidebarTouchStart: (event) ->
+    Ember.run @, ->
+      event.preventDefault()
+      @toggleProperty('isShowingRoomsSidebar')
+
+  activeRoomDidChange: (->
+    # When the user shows the sidebar and selects a room, hide the sidebar.
+    @set('isShowingRoomsSidebar', false)
+  ).observes('activeRoom')
+
   resize: _.debounce (event) ->
     Ember.run @, ->
+      # If we had the sidebar showing, go back to the default by hiding it.
+      @set('isShowingRoomsSidebar', false)
+
       @updateSize()
   , 5
 

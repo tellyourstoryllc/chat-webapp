@@ -677,14 +677,31 @@ body.logged-out
 
   transition margin-left .2s ease-out
 
+.toggle-sidebar-tab
+  display none
+
 // At very narrow width, hide most of the rooms sidebar.
 //
 // If you change these dimensions, you should also change
 // `App.RoomsContainerComponent::messagesWidth()`
 @media (max-width: 515px)
 
-  .room-content
+  .room-content:not(.out-of-the-way)
     margin-left 41px
+
+  .toggle-sidebar-tab
+    position fixed
+    top 5px
+    left 5px
+    display block
+    // Simulate a 5px padding.
+    width 26px + 2 * 5px
+    height 23px + 2 * 5px
+    background-image url('/images/hamburger.png')
+    background-repeat no-repeat
+    background-size 26px 23px
+    background-position 5px 5px
+    cursor pointer
 
 .lobby-form
   width 260px

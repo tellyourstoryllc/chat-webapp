@@ -8,6 +8,9 @@
   <source src='/audio/receive.m4a'>
 </audio>
 
+<div class='toggle-sidebar-tab'>
+</div>
+
 <div class='rooms-sidebar'>
   <ul class='rooms-list'>
     <li class='room-list-item'>
@@ -68,7 +71,7 @@
   </li>
 </ul>
 
-<div class='room-content'>
+<div {{bind-attr class=':room-content view.isRoomContentOutOfTheWay:out-of-the-way'}}>
   {{outlet}}
 
   {{rooms-container rooms=rooms activeRoom=activeRoom}}
