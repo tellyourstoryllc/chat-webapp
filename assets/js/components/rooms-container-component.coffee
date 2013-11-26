@@ -315,8 +315,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           value: "@" + u.get('mentionName')
           user: u
       newSuggestions.pushObjects(userSuggestions)
-    else if (matches = /(?:^|\W)(\(\w*)$/.exec(beforeCursorText))
-      # `(text` found; now figure out which emoticons to suggest.
+    else if (matches = /(?:^|\W)(:\w*)$/.exec(beforeCursorText))
+      # `:text` found; now figure out which emoticons to suggest.
       @setProperties(suggestMatchText: matches[1], textCursorPosition: range.position)
       lowerCasedInputName = matches[1].toLowerCase()
       newSuggestions = []
