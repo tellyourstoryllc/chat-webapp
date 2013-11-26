@@ -14,6 +14,10 @@ App.Conversation = Ember.Mixin.create
 
   isUnread: false
 
+  # Date (timestamp) that this conversation last had activity.  Non-event
+  # messages count as activity.
+  lastActiveAt: null
+
   # Boolean set to false when the beginning of the messages is reached.
   canLoadEarlierMessages: true
   isLoadingEarlierMessages: false
@@ -67,6 +71,8 @@ App.Conversation = Ember.Mixin.create
       val = @get(name)
       if ! val?
         props[name] = []
+
+    props.lastActiveAt = new Date() if ! @get('lastActiveAt')?
 
     @setProperties(props)
 
@@ -264,6 +270,14 @@ App.Conversation = Ember.Mixin.create
     .then (result) =>
       # Add the message to the room list.
       @get('messages').pushObject(message)
+
+      # Mark this conversation as active, if this isn't a system message.
+      if ! message.get('isSystemMessage')
+        newActiveAt = message.get('createdAt') ? new Date()
+        # Active at should only ever get newer, not older.
+        previousActiveAt = @get('lastActiveAt')
+        if ! previousActiveAt? || previousActiveAt.getTime() < newActiveAt.getTime()
+          @set('lastActiveAt', newActiveAt)
 
       return result if options.suppressNotifications
 

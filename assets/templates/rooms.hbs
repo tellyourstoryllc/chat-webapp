@@ -17,7 +17,7 @@
       {{#link-to 'rooms.index'}}Lobby{{/link-to}}
     </li>
     {{#if roomsLoaded}}
-      {{#each room in rooms}}
+      {{#each room in arrangedRooms}}
         <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
             {{room-avatar room=room showStatus=true}}

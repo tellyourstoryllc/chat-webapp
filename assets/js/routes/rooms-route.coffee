@@ -33,10 +33,10 @@ App.RoomsRoute = Ember.Route.extend
   _uiGroups: ->
     # Create a list that includes the lobby in the first position to match the
     # UI.
-    groups = @controllerFor('rooms').get('rooms')
+    groups = @controllerFor('rooms').get('arrangedRooms')
     lobby = Ember.Object.create
       transitionToArgs: ['rooms.index']
-    uiGroups = groups.copy()
+    uiGroups = groups.toArray().copy()
     uiGroups.unshiftObject(lobby)
 
     [uiGroups, lobby]

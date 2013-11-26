@@ -8,6 +8,13 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   ).property('allGroups.@each.isOpen', 'allGroups.@each.isDeleted',
              'allOneToOnes.@each.isOpen', 'allOneToOnes.@each.isDeleted')
 
+  arrangedRooms: (->
+    App.RecordArray.create
+      content: @get('rooms')
+      sortProperties: ['lastActiveAt']
+      sortAscending: false
+  ).property('rooms')
+
   activeRoom: (->
     App.get('currentlyViewingRoom')
   ).property('App.currentlyViewingRoom')
