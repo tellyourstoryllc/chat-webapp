@@ -675,6 +675,17 @@ body.logged-out
   margin-left room-sidebar-width
   background-color #EDEDED
 
+  transition margin-left .2s ease-out
+
+// At very narrow width, hide most of the rooms sidebar.
+//
+// If you change these dimensions, you should also change
+// `App.RoomsContainerComponent::messagesWidth()`
+@media (max-width: 515px)
+
+  .room-content
+    margin-left 41px
+
 .lobby-form
   width 260px
   margin 20px

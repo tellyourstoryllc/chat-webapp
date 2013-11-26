@@ -163,10 +163,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Returns the width of the list of messages in pixels.
   messagesWidth: ($window = $(window)) ->
-    isMembersVisible = $window.width() > 700
+    windowWidth = $window.width()
+    isMembersVisible = windowWidth > 700
     membersSidebarWidth = 200 # .room-members-sidebar
-    width = $window.width()
-    width -= ($('.rooms-sidebar').outerWidth() ? 0)
+    roomsSidebarWidth = if windowWidth <= 515
+      41
+    else
+      $('.rooms-sidebar').outerWidth()
+    width = windowWidth
+    width -= roomsSidebarWidth ? 0
     width -= membersSidebarWidth if isMembersVisible
     width
 
