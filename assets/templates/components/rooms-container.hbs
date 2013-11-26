@@ -2,8 +2,13 @@
   <div class='room-container'>
     {{#if activeRoom}}
       <div class='room-info'>
+        {{#link-to 'rooms.room' activeRoom classNames='room-avatar-permalink'}}
+          <img {{bind-attr src='activeRoom.avatarUrl'}} class='medium-avatar-image'>
+        {{/link-to}}
         <div class='room-name-info-container'>
-          {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+          {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}
+            {{activeRoom.name}}
+          {{/link-to}}
           {{#if roomsContainer.showSetTopicLink}}
             <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'><nobr>Set Topic</nobr></a>
           {{/if}}
@@ -28,6 +33,7 @@
             </div>
           </div>
         {{/if}}
+        <div class='clearfix'></div>
       </div>
     {{/if}}
 
