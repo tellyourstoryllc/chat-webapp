@@ -72,12 +72,9 @@ App.RoomMessagesView = Ember.View.extend
   ).observes('room.newMessageFile')
 
   # $messages should be the jQuery object of .messages element.
-  updateSize: (height, activeRoom, isEditingTopic, $messages) ->
+  updateSize: (height, activeRoom, $messages) ->
     return unless @currentState == Ember.View.states.inDOM
-    room = @get('room')
-    hasVisibleTopic = room == activeRoom && isEditingTopic || ! Ember.isEmpty(room.get('topic'))
     messagesHeight = height
-    messagesHeight -= 23 if hasVisibleTopic # .topic-cell outerHeight()
     isScrolledToLastMessage = @isScrolledToLastMessage()
     $messages.css
       height: messagesHeight

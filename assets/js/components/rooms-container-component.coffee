@@ -93,11 +93,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.connecting-status-bar').css
       bottom: bottom
 
-  anyRoomTopicChanged: (->
-    # A topic change can affect the height of messages list.
-    Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
-  ).observes('rooms.@each.topic', 'isEditingTopic')
-
   roomsChanged: (->
     # If a room gets added later, it needs to get sized.
     Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
@@ -145,16 +140,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # This method needs to work for multiple message view elements.
 
     height = $window.height()
-    height -= 30 # .room-info outerHeight() without topic.
+    height -= @$('.room-info').outerHeight() ? 0
     height -= @$('.send-message-area').outerHeight(true) ? 0
 
-    isEditingTopic = @get('isEditingTopic')
     activeRoom = @get('activeRoom')
     $('.messages').each ->
       $e = $(@)
       $parent = $e.closest('.room-messages-view')
       roomMessagesView = App._viewFromElement($parent)
-      roomMessagesView.updateSize(height, activeRoom, isEditingTopic, $e)
+      roomMessagesView.updateSize(height, activeRoom, $e)
 
     # Loading more messages bar at the top.
     $loadingMoreMessages = $('.loading-more-messages')
