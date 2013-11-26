@@ -14,7 +14,7 @@
 <div class='rooms-sidebar'>
   <ul class='rooms-list'>
     <li class='room-list-item'>
-      {{#link-to 'rooms.index'}}Lobby{{/link-to}}
+      {{#link-to 'rooms.index'}}<span class='room-name'>Lobby</span>{{/link-to}}
     </li>
     {{#if roomsLoaded}}
       {{#each room in arrangedRooms}}
