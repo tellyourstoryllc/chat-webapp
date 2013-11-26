@@ -72,8 +72,6 @@ App.Conversation = Ember.Mixin.create
       if ! val?
         props[name] = []
 
-    props.lastActiveAt = new Date() if ! @get('lastActiveAt')?
-
     @setProperties(props)
 
     App.get('eventTarget').on 'didConnect', @, @didConnect

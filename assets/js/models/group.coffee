@@ -157,7 +157,17 @@ App.Group.reopenClass
     group = instances.find (o) -> o instanceof App.Group
     group.didLoadMembers()
     if Ember.isEmpty(group.get('messages'))
-      group.set('messages', instances.filter (o) -> o instanceof App.Message)
+      messages = instances.filter (o) -> o instanceof App.Message
+      group.set('messages', messages)
+      if ! group.get('lastActiveAt')?
+        dates = messages.mapBy('createdAt').compact()
+        newActiveAt = dates.reduce (max,date) ->
+          if ! max? || date.getTime() > max.getTime()
+            date
+          else
+            max
+        , null
+        group.set('lastActiveAt', newActiveAt)
 
     group
 

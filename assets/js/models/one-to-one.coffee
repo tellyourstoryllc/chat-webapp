@@ -138,7 +138,17 @@ App.OneToOne.reopenClass
     oneToOne = instances.find (o) -> o instanceof App.OneToOne
     oneToOne.didLoadMembers()
     if Ember.isEmpty(oneToOne.get('messages'))
-      oneToOne.set('messages', instances.filter (o) -> o instanceof App.Message)
+      messages = instances.filter (o) -> o instanceof App.Message
+      oneToOne.set('messages', messages)
+      if ! oneToOne.get('lastActiveAt')?
+        dates = messages.mapBy('createdAt').compact()
+        newActiveAt = dates.reduce (max,date) ->
+          if ! max? || date.getTime() > max.getTime()
+            date
+          else
+            max
+        , null
+        oneToOne.set('lastActiveAt', newActiveAt)
 
     oneToOne
 
