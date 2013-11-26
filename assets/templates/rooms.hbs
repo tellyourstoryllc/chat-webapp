@@ -18,7 +18,7 @@
     </li>
     {{#if roomsLoaded}}
       {{#each room in arrangedRooms}}
-        <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
+        <li {{bind-attr class=':room-list-item room.isUnread:unread:read room.isGroup:group'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
             {{room-avatar room=room showStatus=true}}
             <span class='room-name'>{{room.name}}</span>
