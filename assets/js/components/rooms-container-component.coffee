@@ -439,7 +439,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           errorMessage: userMsg ? "There was an error sending this message."
 
       @resetNewMessage()
-      @get('activeRoom.messages').pushObject(msg)
+      @get('activeRoom').didReceiveMessage(msg, suppressNotifications: true)
 
       # Get permission to show desktop notifications since it must be done in
       # response to a user event.
