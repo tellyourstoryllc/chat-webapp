@@ -41,6 +41,10 @@ App.Conversation = Ember.Mixin.create
   # Used to expire cache of members association.
   _membersAssociationLoaded: 0
 
+  # Flag to communicate to the view that we need to ignore the current scroll
+  # state and scroll the room to the last message.
+  forceScroll: false
+
   isListeningForMessages: Ember.required(Function)
 
   mostRecentMessagesUrl: Ember.required(Function)
@@ -268,6 +272,8 @@ App.Conversation = Ember.Mixin.create
     .then (result) =>
       # Add the message to the room list.
       @get('messages').pushObject(message)
+
+      @set('forceScroll', true) if options.forceScroll
 
       # Mark this conversation as active, if this isn't a system message.
       if ! message.get('isSystemMessage')

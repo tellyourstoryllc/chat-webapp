@@ -145,10 +145,12 @@ App.RoomMessagesView = Ember.View.extend
           # We've prepended some messages, so fix the scroll position so that the
           # visible portion doesn't change.
           $messages.prop('scrollTop', $messages.scrollTop() + scrollHeightAdded)
-        else if isScrolledToLastMessage
+        else if isScrolledToLastMessage || @get('room.forceScroll')
           # When we append a new message to the bottom and were at the bottom,
-          # scroll it into view.
+          # or if the model has `forceScroll` set, scroll it into view.
           @scrollToLastMessage(true)
+          # Reset the flag.
+          @set('room.forceScroll', false)
 
   isCurrentlyViewingRoom: (->
     App.get('currentlyViewingRoom') == @get('room')
