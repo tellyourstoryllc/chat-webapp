@@ -79,6 +79,7 @@
 
 <div class='room-members-sidebar'>
   {{! Always render the file input so that event listeners can bind to it. }}
+  <input type='file' class='room-avatar-file' style='display: none;'>
   <input type='file' class='room-wallpaper-file' style='display: none;'>
   {{#if activeRoom}}
     <div class='title'>Admin</div>
@@ -128,6 +129,12 @@
 </div>
 
 <ul class='menu room-menu' role='menu'>
+  <li {{bind-attr class=':menu-item view.canUpdateRoomAvatar::disabled'}}
+    {{action 'chooseRoomAvatar' target=view}}>Change Avatar...</li>
+  {{#if view.hasRoomAvatar}}
+    <li {{bind-attr class=':menu-item view.canUpdateRoomAvatar::disabled'}}
+      {{action 'removeRoomAvatar' target=view}}>Remove Avatar</li>
+  {{/if}}
   <li {{bind-attr class=':menu-item view.canUpdateRoomWallpaper::disabled'}}
     {{action 'chooseRoomWallpaper' target=view}}>Change Wallpaper...</li>
   {{#if view.hasRoomWallpaper}}

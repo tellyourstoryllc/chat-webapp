@@ -9,8 +9,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Show the UI to set topics.
   canSetTopic: true
 
-  # Hard-coded until we have server support.
-  avatarUrl: '/images/room.png'
+  defaultAvatarUrl: '/images/room.png'
+
+  avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
 
   joinCode: (->
     App.Group.parseJoinCode(@get('joinUrl'))
@@ -101,6 +102,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   publishMessageChannelName: ->
     "/groups/#{@get('id')}/messages"
 
+  updateAvatarUrl: ->
+    App.get('api').buildURL("/groups/#{@get('id')}/update")
+
   updateWallpaperUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}/update")
 
@@ -136,6 +140,7 @@ App.Group.reopenClass
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
+    avatarUrl: json.avatar_url
     wallpaperUrl: json.wallpaper_url
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)

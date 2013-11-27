@@ -8,6 +8,8 @@ App.RoomsView = Ember.View.extend
 
   isStatusTextMenuVisible: false
 
+  isSendingRoomAvatar: false
+
   isSendingRoomWallpaper: false
 
   activeRoom: Ember.computed.alias('controller.activeRoom')
@@ -15,7 +17,7 @@ App.RoomsView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
-      'onChangeRoomWallpaperFile',
+      'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onToggleRoomsSidebarTouchStart')
 
   didInsertElement: ->
@@ -24,6 +26,7 @@ App.RoomsView = Ember.View.extend
     $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
+    @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').on 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     Ember.run.later @, 'checkIfIdleTick', 5000
@@ -36,6 +39,8 @@ App.RoomsView = Ember.View.extend
     $('html').off 'click', @documentClick
     $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
     $('body').off 'keydown', @bodyKeyDown
+    @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
+    @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').off 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
 
   roomsLoadedChanged: (->
@@ -66,6 +71,8 @@ App.RoomsView = Ember.View.extend
       @toggleProperty('isShowingRoomsSidebar')
 
   activeRoomDidChange: (->
+    # Reset file pickers.
+    @$('.room-avatar-file, .room-wallpaper-file').val('')
     # When the user shows the sidebar and selects a room, hide the sidebar.
     @set('isShowingRoomsSidebar', false)
   ).observes('activeRoom')
@@ -171,6 +178,41 @@ App.RoomsView = Ember.View.extend
     App.get('preferences.clientWeb.showAvatars')
   ).property('App.preferences.clientWeb.showAvatars')
 
+  hasRoomAvatar: Ember.computed.notEmpty('activeRoom.avatarUrl')
+
+  canUpdateRoomAvatar: (->
+    room = @get('activeRoom')
+    room instanceof App.Group && ! @get('isSendingRoomAvatar') &&
+      room.get('isCurrentUserAdmin')
+  ).property('activeRoom', 'activeRoom.isCurrentUserAdmin', 'isSendingRoomAvatar')
+
+  onChangeRoomAvatarFile: (event) ->
+    Ember.run @, ->
+      file = event.target.files?[0]
+      @_updateRoomAvatar(file) if file?
+
+  # Persists the file to the API.  Use `null` file to remove it.
+  _updateRoomAvatar: (file) ->
+    return if @get('isSendingRoomAvatar')
+    api = App.get('api')
+    formData = new FormData()
+    formData.append(k, v) for k,v of api.defaultParams()
+    formData.append('avatar_image_file', file)
+    @set('isSendingRoomAvatar', true)
+    room = @get('activeRoom')
+    api.ajax(room.updateAvatarUrl(), 'POST',
+      data: formData
+      processData: false
+      contentType: false
+    )
+    .always =>
+      @set('isSendingRoomAvatar', false)
+    .then (json) =>
+      if ! json || json.error?
+        throw json
+      App.loadAll(json)
+    .fail App.rejectionHandler
+
   hasRoomWallpaper: Ember.computed.notEmpty('activeRoom.wallpaperUrl')
 
   canUpdateRoomWallpaper: (->
@@ -204,6 +246,7 @@ App.RoomsView = Ember.View.extend
       if ! json || json.error?
         throw json
       App.loadAll(json)
+    .fail App.rejectionHandler
 
   showRoomMenu: ->
     @$('.room-menu').addClass('expand-down')
@@ -241,11 +284,35 @@ App.RoomsView = Ember.View.extend
         @showRoomMenu()
       return undefined
 
+    chooseRoomAvatar: ->
+      activeRoom = @get('activeRoom')
+      if ! activeRoom.get('isCurrentUserAdmin')
+        if activeRoom instanceof App.OneToOne
+          alert "The room avatar you see is set by the other user.  You can change your avatar from your settings dialog."
+        else
+          alert "You must be an admin to change the room wallpaper."
+        return
+      return unless @get('canUpdateRoomAvatar')
+      @$('.room-avatar-file').trigger('click')
+      return undefinedundefined
+
+    removeRoomAvatar: ->
+      activeRoom = @get('activeRoom')
+      if ! activeRoom.get('isCurrentUserAdmin')
+        if activeRoom instanceof App.OneToOne
+          alert "The room avatar you see is set by the other user.  You can change your avatar from your settings dialog."
+        else
+          alert "You must be an admin to change the room avatar."
+        return
+      @$('.room-avatar-file').val('')
+      @_updateRoomAvatar(null)
+      return undefined
+
     chooseRoomWallpaper: ->
       activeRoom = @get('activeRoom')
       if ! activeRoom.get('isCurrentUserAdmin')
         if activeRoom instanceof App.OneToOne
-          alert "The room wallpaper you see is set by the other user."
+          alert "The room wallpaper you see is set by the other user.  You can change your wallpaper from your settings dialog."
         else
           alert "You must be an admin to change the room wallpaper."
         return
@@ -257,7 +324,7 @@ App.RoomsView = Ember.View.extend
       activeRoom = @get('activeRoom')
       if ! activeRoom.get('isCurrentUserAdmin')
         if activeRoom instanceof App.OneToOne
-          alert "The room wallpaper you see is set by the other user."
+          alert "The room wallpaper you see is set by the other user.  You can change your wallpaper from your settings dialog."
         else
           alert "You must be an admin to change the room wallpaper."
         return
