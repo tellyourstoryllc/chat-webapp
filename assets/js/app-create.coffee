@@ -318,8 +318,8 @@ window.App = App = Ember.Application.create
 
   showVideoAttachment: (event, conversationId, element, messageGuid) ->
     Ember.run @, ->
-      $video = $(".video-attachment-#{messageGuid}")
-      return unless $video?
+      $videoContainer = $(".video-attachment-#{messageGuid}")
+      return unless $videoContainer?
 
       # Cancel following the link.
       event.preventDefault()
@@ -329,19 +329,25 @@ window.App = App = Ember.Application.create
         App.OneToOne.lookup(conversationId)
       else
         App.Group.lookup(conversationId)
-      if convo?
-        if App.get('currentlyViewingRoom') == convo
-          view = App.get('roomMessagesViews').get(convo)
-          isScrolledToLastMessage = view?.isScrolledToLastMessage()
+      if convo? && App.get('currentlyViewingRoom') == convo
+        view = App.get('roomMessagesViews').get(convo)
+        isScrolledToLastMessage = view?.isScrolledToLastMessage()
 
       # Hide the preview and show the video player.
       $(element).hide()
-      $video.show()
-      $video.each -> @play()
+      $videoContainer.removeClass('not-displayed')
+      $videoContainer.find('video').each -> @play()
 
       # Scroll the room if needed.
       if isScrolledToLastMessage
         view.didLoadMessageImage(element, 'video-attachment')
+
+  hideVideoAttachment: (event, conversationId, element, messageGuid) ->
+    Ember.run @, ->
+      event.preventDefault()
+      $(element).closest('.video-attachment').addClass('not-displayed')
+      $preview = $(".video-attachment-preview-#{messageGuid}")
+      $preview.show()
 
   loadAllWithMetaData: (json) ->
     descs = for attrs in Ember.makeArray(json)

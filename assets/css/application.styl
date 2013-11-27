@@ -1086,6 +1086,21 @@ sender-column-width = 150px
     color #686868
     font-weight bold
 
+  .expand-indicator
+    position absolute
+    top 5px
+    right 5px
+    border-radius 3px
+    padding 8px 12px
+    background-color rgba(0,0,0, .75)
+    color #ddd
+    cursor pointer
+    opacity .6
+
+    &.expanded
+      // When it's expanded, only show it on mouse over.
+      display none
+
   .video-attachment-preview
     position relative
     display inline-block
@@ -1094,26 +1109,25 @@ sender-column-width = 150px
       // Prevent space below the image.
       vertical-align middle
 
-    > .indicator
-      display none
-      position absolute
-      bottom 5px
-      right 5px
-      border-radius 3px
-      padding 5px 10px
-      background-color rgba(0,0,0, .8)
-      color #ddd
-
     &:hover
-      > .indicator
-        display block
+      .expand-indicator
+        opacity 1
 
   .video-attachment
-    max-width 100%
-    height auto
+    position relative
+    display inline-block
 
     &.not-displayed
       display none
+
+    &:hover
+      .expand-indicator
+        display block
+        opacity 1
+
+  .video-attachment-video
+    max-width 100%
+    height auto
 
   .message-body
     overflow hidden

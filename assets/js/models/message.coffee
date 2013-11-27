@@ -87,13 +87,16 @@ App.Message = App.BaseModel.extend
         convoId = @get('conversationId')
         messageGuid = Ember.guidFor(@)
         """
-        <a href='#{escape(attachmentUrl)}' class='video-attachment-preview' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
-        <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(convoId)}", this, "image");'>
-        <div class='indicator'>&#8600;</div>
+        <a href='#{escape(attachmentUrl)}' class='video-attachment-preview video-attachment-preview-#{escape(messageGuid)}' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
+          <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(convoId)}", this, "image");'>
+          <div class='expand-indicator' title='Expand Video'>↗</div>
         </a>
-        <video class='video-attachment video-attachment-#{messageGuid} not-displayed' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls>
-        <source src='#{escape(attachmentUrl)}'>
-        </video>
+        <div class='video-attachment video-attachment-#{messageGuid} not-displayed'>
+          <video class='video-attachment-video' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls>
+            <source src='#{escape(attachmentUrl)}'>
+          </video>
+          <div class='expand-indicator expanded' title='Collapse Video' onclick='App.hideVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>↙</div>
+        </div>
         """.htmlSafe()
       else
         # A regular image.
