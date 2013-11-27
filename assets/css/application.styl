@@ -1086,9 +1086,34 @@ sender-column-width = 150px
     color #686868
     font-weight bold
 
+  .video-attachment-preview
+    position relative
+    display inline-block
+
+    > img
+      // Prevent space below the image.
+      vertical-align middle
+
+    > .indicator
+      display none
+      position absolute
+      bottom 5px
+      right 5px
+      border-radius 3px
+      padding 5px 10px
+      background-color rgba(0,0,0, .8)
+      color #ddd
+
+    &:hover
+      > .indicator
+        display block
+
   .video-attachment
     max-width 100%
     height auto
+
+    &.not-displayed
+      display none
 
   .message-body
     overflow hidden

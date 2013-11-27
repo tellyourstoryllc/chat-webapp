@@ -84,8 +84,14 @@ App.Message = App.BaseModel.extend
       # We have a server generated thumbnail image.
       if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
         # A playable video.
+        convoId = @get('conversationId')
+        messageGuid = Ember.guidFor(@)
         """
-        <video class='video-attachment' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "video");'>
+        <a href='#{escape(attachmentUrl)}' class='video-attachment-preview' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
+        <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(convoId)}", this, "image");'>
+        <div class='indicator'>&#8600;</div>
+        </a>
+        <video class='video-attachment video-attachment-#{messageGuid} not-displayed' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls>
         <source src='#{escape(attachmentUrl)}'>
         </video>
         """.htmlSafe()

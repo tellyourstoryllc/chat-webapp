@@ -316,6 +316,33 @@ window.App = App = Ember.Application.create
         view = App.get('roomMessagesViews').get(convo)
         view?.didLoadMessageImage(element, objectType)
 
+  showVideoAttachment: (event, conversationId, element, messageGuid) ->
+    Ember.run @, ->
+      $video = $(".video-attachment-#{messageGuid}")
+      return unless $video?
+
+      # Cancel following the link.
+      event.preventDefault()
+
+      # Check if room is scrolled to bottom.
+      convo = if /-/.test(conversationId)
+        App.OneToOne.lookup(conversationId)
+      else
+        App.Group.lookup(conversationId)
+      if convo?
+        if App.get('currentlyViewingRoom') == convo
+          view = App.get('roomMessagesViews').get(convo)
+          isScrolledToLastMessage = view?.isScrolledToLastMessage()
+
+      # Hide the preview and show the video player.
+      $(element).hide()
+      $video.show()
+      $video.each -> @play()
+
+      # Scroll the room if needed.
+      if isScrolledToLastMessage
+        view.didLoadMessageImage(element, 'video-attachment')
+
   loadAllWithMetaData: (json) ->
     descs = for attrs in Ember.makeArray(json)
       type = @classFromRawObject(attrs)

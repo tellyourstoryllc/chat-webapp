@@ -203,7 +203,7 @@ App.RoomMessagesView = Ember.View.extend
   ).property().volatile()
 
   didLoadMessageImage: (element, objectType) ->
-    if objectType in ['image', 'audio', 'video']
+    if objectType in ['image', 'audio', 'video', 'video-attachment']
       # Just loaded a regular image, audio, or video element.
       @scrollToLastMessage(false)
     else
