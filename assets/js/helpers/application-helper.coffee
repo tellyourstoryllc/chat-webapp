@@ -63,3 +63,7 @@ Ember.Handlebars.registerBoundHelper 'messageAttachmentDisplay', (message, optio
     messagesView: options.hash.messagesView
 
   message.attachmentDisplayHtml(opts)
+
+
+Ember.Handlebars.registerHelper 'webServerUrl', (path) ->
+  App.webServerUrl(path)

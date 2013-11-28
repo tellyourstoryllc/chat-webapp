@@ -4,7 +4,7 @@
   <div class='navbar'>
     <div class='brand'>
       {{#link-to 'index'}}
-        <img src='/images/logo.png' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
+        <img src='{{webServerUrl '/images/logo.png'}}' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
       {{/link-to}}
     </div>
     {{#unless isLoggedIn}}

@@ -43,6 +43,9 @@ App.RemoteApi = Ember.Object.extend
 
     url = [@get('namespace'), url].compact().join('')
     url = '/' + url if url[0] != '/'
+
+    url = App.webServerUrl(url)
+
     url
 
   checkin: (data) ->

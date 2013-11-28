@@ -1,11 +1,11 @@
 {{! Mention notification audio tag. }}
 <audio preload='auto' class='mention-sound'>
-  <source src='/audio/mention_sound.mp4'>
-  <source src='/audio/mention_sound.wav'>
+  <source src='{{webServerUrl '/audio/mention_sound.mp4'}}'>
+  <source src='{{webServerUrl '/audio/mention_sound.wav'}}'>
 </audio>
 {{! Received regular message audio tag. }}
 <audio preload='auto' class='receive-message-sound'>
-  <source src='/audio/receive.m4a'>
+  <source src='{{webServerUrl '/audio/receive.m4a'}}'>
 </audio>
 
 <div class='toggle-sidebar-tab'>

@@ -410,6 +410,12 @@ window.App = App = Ember.Application.create
 
     msg
 
+  webServerUrl: (path) ->
+    if process? && AppConfig.webServerProtocolAndHost?
+      AppConfig.webServerProtocolAndHost + path
+    else
+      path
+
 
 if Modernizr.history
   # Browser supports pushState.

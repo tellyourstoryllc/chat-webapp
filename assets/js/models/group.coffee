@@ -9,7 +9,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Show the UI to set topics.
   canSetTopic: true
 
-  defaultAvatarUrl: '/images/room.png'
+  defaultAvatarUrl: App.webServerUrl('/images/room.png')
 
   avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
 
