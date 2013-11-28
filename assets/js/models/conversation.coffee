@@ -287,7 +287,7 @@ App.Conversation = Ember.Mixin.create
 
       fromCurrentUser = message.get('userId') == App.get('currentUser.id')
       wasMentioned = message.doesMentionUser(App.get('currentUser'))
-      if ! fromCurrentUser && wasMentioned
+      if ! fromCurrentUser && wasMentioned
         # The current user was mentioned.  Play sound.
         @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
 
