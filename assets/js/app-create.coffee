@@ -431,4 +431,6 @@ App.Router.map ->
   @resource 'rooms', path: '/rooms', ->
     @route 'room', path: '/:room_id'
 
+  @route 'node-entry', path: '/var/*path'
+
   @route 'index', path: '/'
