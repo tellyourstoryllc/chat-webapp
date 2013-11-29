@@ -14,11 +14,15 @@ App.RoomMessagesView = Ember.View.extend
   # Number of pixels from the top to load more messages.
   nextPageThresholdPixels: 500
 
+  useAutoScroll: true
+
   # Messages array that we're currently observing.
   _observingMessages: null
 
   init: ->
     @_super(arguments...)
+    # Force computed properties.
+    @get('isCurrentlyViewingRoom')
 
   didInsertElement: ->
     @$('.messages').on 'scroll', @onScrollMessages
@@ -145,7 +149,7 @@ App.RoomMessagesView = Ember.View.extend
           # We've prepended some messages, so fix the scroll position so that the
           # visible portion doesn't change.
           $messages.prop('scrollTop', $messages.scrollTop() + scrollHeightAdded)
-        else if isScrolledToLastMessage || @get('room.forceScroll')
+        else if isScrolledToLastMessage || @get('useAutoScroll') || @get('room.forceScroll')
           # When we append a new message to the bottom and were at the bottom,
           # or if the model has `forceScroll` set, scroll it into view.
           @scrollToLastMessage(true)
@@ -155,6 +159,11 @@ App.RoomMessagesView = Ember.View.extend
   isCurrentlyViewingRoom: (->
     App.get('currentlyViewingRoom') == @get('room')
   ).property('App.currentlyViewingRoom', 'room')
+
+  isCurrentlyViewingRoomChanged: (->
+    if @get('isCurrentlyViewingRoom') && @get('useAutoScroll')
+      @scrollToLastMessage(true)
+  ).observes('isCurrentlyViewingRoom')
 
   isRoomBeforeCursor: (->
     rooms = @get('rooms')
@@ -173,6 +182,12 @@ App.RoomMessagesView = Ember.View.extend
 
   scrollMessages: _.throttle (event) ->
     Ember.run @, ->
+      # Sometimes we get scroll events loading in the background.  Igore them.
+      return unless @get('isCurrentlyViewingRoom')
+
+      # If the user scrolled to the bottom, use auto-scrolling.
+      @set('useAutoScroll', @isScrolledToLastMessage())
+
       # This prevents us from loading more while switching rooms.
       return if @get('_justChangedRooms')
 
