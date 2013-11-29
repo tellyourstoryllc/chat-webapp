@@ -67,6 +67,13 @@ App.RoomsRoomRoute = Ember.Route.extend
         # make sure that we're subscribed and have all messages.
         room.subscribeToMessages().then =>
           room.reload()
+      , (xhrOrError) =>
+        if xhrOrError?.status == 404
+          # Room not found.
+          # TODO: some kind of flash alert message.
+          @transitionTo('rooms.index')
+        else
+          throw xhrOrError
       .fail App.rejectionHandler
 
   _typeFromRoomId: (id) ->
