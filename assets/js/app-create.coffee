@@ -410,6 +410,12 @@ window.App = App = Ember.Application.create
 
     msg
 
+  webServerUrl: (path) ->
+    if process? && AppConfig.webServerProtocolAndHost?
+      AppConfig.webServerProtocolAndHost + path
+    else
+      path
+
 
 if Modernizr.history
   # Browser supports pushState.
@@ -430,5 +436,7 @@ App.Router.map ->
 
   @resource 'rooms', path: '/rooms', ->
     @route 'room', path: '/:room_id'
+
+  @route 'node-entry', path: '/var/*path'
 
   @route 'index', path: '/'

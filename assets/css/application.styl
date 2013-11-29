@@ -35,6 +35,13 @@ sprite-icon()
   background-repeat no-repeat
   vertical-align middle
 
+// Fix flashing on node-webkit.  Add this to any element that may be transformed
+// in the future, for example, on hover.
+//
+// http://viget.com/inspire/webkit-transform-kill-the-flash
+webkit-flashing-fix()
+  -webkit-transform translateZ(0)
+
 ///////////////////////////////////////////////////////////
 // Animations
 
@@ -203,6 +210,8 @@ button
   box-shadow 0 0 3px rgba(0,0,0, .2)
   z-index 100
   visibility hidden // Initially hidden.
+
+  webkit-flashing-fix()
 
   .menu-item
     padding 5px 10px
@@ -669,6 +678,8 @@ body.logged-out
 
   opacity .6
   transition transform .2s ease-in-out
+
+  webkit-flashing-fix()
 
 .room-content
   position fixed
