@@ -56,6 +56,9 @@ app.get('/signup', renderChatApp);
 app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/rooms(/*)?', renderChatApp);
+app.get('/health_check', function(req, res) {
+  res.render('health-check', { config: config });
+});
 
 
 http.createServer(app).listen(app.get('port'), function() {
