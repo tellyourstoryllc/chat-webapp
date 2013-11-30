@@ -1,45 +1,35 @@
-# Actions: didSignUp
-App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
-
-  email: null
-  password: null
-  name: null
+# Actions: didLogIn
+App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   facebookId: null
   facebookToken: null
 
-  isCreatingUser: false
+  isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.or('isCreatingUser', 'isAuthenticatingWithFacebook')
+  isLoginDisabled: Ember.computed.or('isChecking', 'isLoggingIn', 'isAuthenticatingWithFacebook')
 
   errorMessage: null
-
-  reset: ->
-    @setProperties
-      errorMessage: null
 
   didInsertElement: ->
     @_super(arguments...)
 
   actions:
 
-    attemptSignUpWithFacebook: ->
+    attemptLogInWithFacebook: ->
       return if @get('isAuthenticatingWithFacebook')
 
       @setProperties
         isAuthenticatingWithFacebook: true
         errorMessage: null
-      @beginSignUpWithFacebookFlow()
+      @beginLogInWithFacebookFlow()
       .always =>
         @set('isAuthenticatingWithFacebook', false)
       .then (result) =>
         @setProperties
-          email: result.email
-          name: [result.firstName, result.lastName].compact().join(' ')
           facebookId: result.facebookId
           facebookToken: result.facebookToken
-        @send('attemptSignup')
+        @send('attemptLogin')
       , (error) =>
         Ember.Logger.error error, error.stack ? error.stacktrace
         @setProperties
@@ -48,31 +38,22 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           facebookId: null
           facebookToken: null
 
-    attemptSignup: ->
-      return if @get('isCreatingUser')
-
-      facebookToken = @get('facebookToken')
-
-      password = @get('password') ? ''
-      minPasswordLength = App.Account.minPasswordLength()
-      if Ember.isEmpty(facebookToken) && password.length < minPasswordLength
-        @set('errorMessage', "Password must be at least #{minPasswordLength} characters.")
-        return
-
-      @set('isCreatingUser', true)
+    attemptLogin: ->
+      return if @get('isChecking')
+      @set('isChecking', true)
       @set('errorMessage', null)
 
-      data =
-        email: @get('email')
-        name: @get('name')
-      if Ember.isEmpty(facebookToken)
-        data.password = password
+      if Ember.isEmpty(@get('facebookToken'))
+        data =
+          email: @get('email')
+          password: @get('password')
       else
-        data.facebook_id = @get('facebookId')
-        data.facebook_token = facebookToken
-      App.get('api').createUser(data)
+        data =
+          facebook_id: @get('facebookId')
+          facebook_token: @get('facebookToken')
+      App.get('api').login(data)
       .then (json) =>
-        @set('isCreatingUser', false)
+        @set('isChecking', false)
 
         if ! json? || json.error?
           @set('errorMessage', App.userMessageFromError(json))
@@ -86,11 +67,14 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
           user = App.User.loadRaw(userJson)
           if token?
+            @set('isLoggingIn', true)
             App.login(token, user)
-            @sendAction('didSignUp')
+            App.whenLoggedIn @, ->
+              @set('isLoggingIn', false)
+              @sendAction('didLogIn')
 
       , (xhr) =>
-        @set('isCreatingUser', false)
+        @set('isChecking', false)
         @set('errorMessage', App.userMessageFromError(xhr))
       .fail App.rejectionHandler
       return undefined

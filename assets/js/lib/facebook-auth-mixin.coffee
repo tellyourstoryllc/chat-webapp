@@ -32,6 +32,43 @@ App.FacebookAuthMixin = Ember.Mixin.create
        ref.parentNode.insertBefore(js, ref)
      )(document)
 
+  # Returns a promise that resolves to an object with a facebook id and token.
+  # If there is any error or the use cancels, the promise is rejected.
+  beginLogInWithFacebookFlow: ->
+    return new Ember.RSVP.Promise (resolve, reject) =>
+      # Make sure the FB library is loaded.
+      App.when window.fbLoaded, @, 'didLoadFacebook', @, =>
+        try
+          handleLoggedInResponse = (response) =>
+            resolve
+              facebookId: response.authResponse.userID
+              facebookToken: response.authResponse.accessToken
+              # For debugging.
+              loginStatusResponse: response
+
+          FB.getLoginStatus (response) =>
+            try
+              if response.status == 'connected'
+                # The user is logged in and has authenticated our app before.
+                handleLoggedInResponse(response)
+              else
+                # The user isn't logged in to Facebook, or the user is logged in
+                # to Facebook but has not authenticated our app.  Prompt the user
+                # to allow the app.
+                FB.login (response) =>
+                  try
+                    if response.authResponse
+                      handleLoggedInResponse(response)
+                    else
+                      # User cancelled login or did not fully authorize.
+                      reject(message: "Log in to Facebook and allow the app to continue.")
+                  catch e
+                    reject(e)
+            catch e
+              reject(e)
+        catch e
+          reject(e)
+
   # Returns a promise that resolves to an object with all available user fields.
   # If there is any error or the use cancels, the promise is rejected.
   beginSignUpWithFacebookFlow: ->
