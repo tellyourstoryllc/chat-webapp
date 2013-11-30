@@ -76,11 +76,11 @@ App.FacebookAuthMixin = Ember.Mixin.create
       # Make sure the FB library is loaded.
       App.when window.fbLoaded, @, 'didLoadFacebook', @, =>
         FB.login (response) =>
-          @handleFacebookLoginResponse(response, resolve, reject)
+          @handleFacebookLoginResponseForSignUp(response, resolve, reject)
         , scope: 'email,user_birthday'
 
-  # Callback for FB.login that queries FB and fills in the signup form.
-  handleFacebookLoginResponse: (response, resolve, reject) ->
+  # Callback for FB.login that queries FB and gathers sign up info.
+  handleFacebookLoginResponseForSignUp: (response, resolve, reject) ->
     try
       if ! response.authResponse
         # User cancelled login or did not fully authorize.
