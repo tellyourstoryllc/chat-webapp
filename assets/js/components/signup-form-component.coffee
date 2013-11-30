@@ -1,11 +1,17 @@
 # Actions: didSignUp
-App.SignupFormComponent = Ember.Component.extend
+App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   email: null
   password: null
   name: null
 
-  isSignupDisabled: Ember.computed.bool('isCreatingUser')
+  facebookId: null
+  facebookToken: null
+
+  isCreatingUser: false
+  isAuthenticatingWithFacebook: false
+
+  isSignupDisabled: Ember.computed.or('isCreatingUser', 'isAuthenticatingWithFacebook')
 
   errorMessage: null
 
@@ -13,21 +19,58 @@ App.SignupFormComponent = Ember.Component.extend
     @setProperties
       errorMessage: null
 
+  didInsertElement: ->
+    @_super(arguments...)
+
   actions:
+
+    attemptSignUpWithFacebook: ->
+      return if @get('isAuthenticatingWithFacebook')
+
+      @setProperties
+        isAuthenticatingWithFacebook: true
+        errorMessage: null
+      @beginSignUpWithFacebookFlow()
+      .always =>
+        @set('isAuthenticatingWithFacebook', false)
+      .then (result) =>
+        @setProperties
+          email: result.email
+          name: [result.firstName, result.lastName].compact().join(' ')
+          facebookId: result.facebookId
+          facebookToken: result.facebookToken
+        @send('attemptSignup')
+      , (error) =>
+        Ember.Logger.error error
+        @setProperties
+          errorMessage: error?.message ? "There was an error communicating with Facebook.  Please try again."
+          # Clear out any facebook credentials that may have been set before.
+          facebookId: null
+          facebookToken: null
 
     attemptSignup: ->
       return if @get('isCreatingUser')
 
+      facebookToken = @get('facebookToken')
+
       password = @get('password') ? ''
       minPasswordLength = App.Account.minPasswordLength()
-      if password.length < minPasswordLength
+      if Ember.isEmpty(facebookToken) && password.length < minPasswordLength
         @set('errorMessage', "Password must be at least #{minPasswordLength} characters.")
         return
 
       @set('isCreatingUser', true)
       @set('errorMessage', null)
 
-      App.get('api').createUser(@get('email'), password, @get('name'))
+      data =
+        email: @get('email')
+        name: @get('name')
+      if Ember.isEmpty(facebookToken)
+        data.password = password
+      else
+        data.facebook_id = @get('facebookId')
+        data.facebook_token = facebookToken
+      App.get('api').createUser(data)
       .then (json) =>
         @set('isCreatingUser', false)
 
