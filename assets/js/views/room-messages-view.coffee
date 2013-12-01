@@ -221,17 +221,5 @@ App.RoomMessagesView = Ember.View.extend
   # change its rendered size.
   contentDidChangeSize: (element, objectType) ->
     Ember.run.schedule 'afterRender', @, ->
-      if objectType in ['image', 'audio', 'video', 'video-attachment']
-        # Just loaded a regular image, audio, or video element.
-        @scrollToLastMessage(false) if @get('useAutoScroll')
-      else
-        $msgs = @$('.messages')
-        return unless $msgs?
-        # Assume the emoticon loaded above the scrolled-into-view content, so
-        # scroll down the difference between a line of text and the height of the
-        # loaded image.
-        baseLineHeight = 20
-        imageHeight = $(element).height()
-        diff = Math.max(0, imageHeight - baseLineHeight)
-        if diff > 0
-          $msgs.prop('scrollTop', $msgs.prop('scrollTop') + diff)
+      # Just loaded a regular image, audio, or video element.
+      @scrollToLastMessage(false) if @get('useAutoScroll')
