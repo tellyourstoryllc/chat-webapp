@@ -303,18 +303,21 @@ window.App = App = Ember.Application.create
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
 
-  onMessageImageLoad: (conversationId, element, objectType) ->
+  conversationFromId: (conversationId) ->
+    if /-/.test(conversationId)
+      App.OneToOne.lookup(conversationId)
+    else
+      App.Group.lookup(conversationId)
+
+  onMessageContentLoad: (conversationId, element, objectType) ->
     Ember.run @, ->
-      convo = if /-/.test(conversationId)
-        App.OneToOne.lookup(conversationId)
-      else
-        App.Group.lookup(conversationId)
+      convo = App.conversationFromId(conversationId)
       return unless convo?
 
       # Make sure we're still viewing the same room.
       if App.get('currentlyViewingRoom') == convo
         view = App.get('roomMessagesViews').get(convo)
-        view?.didLoadMessageImage(element, objectType)
+        view?.contentDidChangeSize(element, objectType)
 
   showVideoAttachment: (event, conversationId, element, messageGuid) ->
     Ember.run @, ->
@@ -324,23 +327,17 @@ window.App = App = Ember.Application.create
       # Cancel following the link.
       event.preventDefault()
 
-      # Check if room is scrolled to bottom.
-      convo = if /-/.test(conversationId)
-        App.OneToOne.lookup(conversationId)
-      else
-        App.Group.lookup(conversationId)
-      if convo? && App.get('currentlyViewingRoom') == convo
-        view = App.get('roomMessagesViews').get(convo)
-        isScrolledToLastMessage = view?.isScrolledToLastMessage()
-
       # Hide the preview and show the video player.
       $(element).hide()
       $videoContainer.removeClass('not-displayed')
       $videoContainer.find('video').each -> @play()
 
-      # Scroll the room if needed.
-      if isScrolledToLastMessage
-        view.didLoadMessageImage(element, 'video-attachment')
+      # Find the view from the room.  Notify the view so that it can scroll if
+      # needed.
+      convo = App.conversationFromId(conversationId)
+      if convo? && App.get('currentlyViewingRoom') == convo
+        view = App.get('roomMessagesViews').get(convo)
+        view?.contentDidChangeSize(element, 'video-attachment')
 
   hideVideoAttachment: (event, conversationId, element, messageGuid) ->
     Ember.run @, ->

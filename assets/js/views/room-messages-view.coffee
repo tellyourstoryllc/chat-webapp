@@ -217,28 +217,21 @@ App.RoomMessagesView = Ember.View.extend
     @isScrolledToLastMessage()
   ).property().volatile()
 
-  didLoadMessageImage: (element, objectType) ->
-    if objectType in ['image', 'audio', 'video', 'video-attachment']
-      # Just loaded a regular image, audio, or video element.
-      @scrollToLastMessage(false)
-    else
-      $msgs = @$('.messages')
-      return unless $msgs?
-      # Assume the emoticon loaded above the scrolled-into-view content, so
-      # scroll down the difference between a line of text and the height of the
-      # loaded image.
-      baseLineHeight = 20
-      imageHeight = $(element).height()
-      diff = Math.max(0, imageHeight - baseLineHeight)
-      if diff > 0
-        $msgs.prop('scrollTop', $msgs.prop('scrollTop') + diff)
-
-  # Returns string that evaluates to the JS function to call when the image is
-  # loaded.
-  messageImageOnLoad: (->
-    if @isScrolledToLastMessage()
-      "App.onMessageImageLoad"
-    else
-      # When we don't want to scroll, use a no-op.
-      "Ember.K"
-  ).property().volatile()
+  # Triggered when an image or other DOM element loads causing the content to
+  # change its rendered size.
+  contentDidChangeSize: (element, objectType) ->
+    Ember.run.schedule 'afterRender', @, ->
+      if objectType in ['image', 'audio', 'video', 'video-attachment']
+        # Just loaded a regular image, audio, or video element.
+        @scrollToLastMessage(false) if @get('useAutoScroll')
+      else
+        $msgs = @$('.messages')
+        return unless $msgs?
+        # Assume the emoticon loaded above the scrolled-into-view content, so
+        # scroll down the difference between a line of text and the height of the
+        # loaded image.
+        baseLineHeight = 20
+        imageHeight = $(element).height()
+        diff = Math.max(0, imageHeight - baseLineHeight)
+        if diff > 0
+          $msgs.prop('scrollTop', $msgs.prop('scrollTop') + diff)

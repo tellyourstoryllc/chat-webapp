@@ -79,7 +79,6 @@ App.Message = App.BaseModel.extend
 
     escape = Ember.Handlebars.Utils.escapeExpression
     attachmentPreviewUrl = @get('attachmentPreviewUrl')
-    onLoadFunction = options.messagesView.get('messageImageOnLoad')
     if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
       if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
@@ -88,7 +87,7 @@ App.Message = App.BaseModel.extend
         messageGuid = Ember.guidFor(@)
         """
         <a href='#{escape(attachmentUrl)}' class='video-attachment-preview video-attachment-preview-#{escape(messageGuid)}' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
-          <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(convoId)}", this, "image");'>
+          <img src='#{escape(attachmentPreviewUrl)}' onload='App.onMessageContentLoad("#{escape(convoId)}", this, "image");'>
           <div class='expand-indicator' title='Expand Video'>&#8599;</div>
         </a>
         <div class='video-attachment video-attachment-#{messageGuid} not-displayed'>
@@ -102,12 +101,12 @@ App.Message = App.BaseModel.extend
         # A regular image.
         """
         <a href='#{escape(attachmentUrl)}' target='_blank'>
-        <img src='#{escape(attachmentPreviewUrl)}' onload='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "image");'>
+        <img src='#{escape(attachmentPreviewUrl)}' onload='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "image");'>
         </a>
         """.htmlSafe()
     else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
       """
-      <audio preload='auto' controls onloadeddata='#{escape(onLoadFunction)}("#{escape(@get('conversationId'))}", this, "audio");'>
+      <audio preload='auto' controls onloadeddata='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "audio");'>
       <source src='#{escape(attachmentUrl)}'>
       </audio>
       """.htmlSafe()
@@ -182,7 +181,7 @@ App.Message = App.BaseModel.extend
       regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
       imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
                   " title='#{escape(emoticon.get('name'))}'" +
-                  " onload='App.onMessageImageLoad(&quot;#{escape(groupId)}&quot;, this, &quot;emoticon&quot;);'>"
+                  " onload='App.onMessageContentLoad(&quot;#{escape(groupId)}&quot;, this, &quot;emoticon&quot;);'>"
       str.replace regexp, imageHtml
     , evaledText
 

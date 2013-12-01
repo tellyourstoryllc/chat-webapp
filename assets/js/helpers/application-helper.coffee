@@ -56,13 +56,10 @@ Ember.Handlebars.registerHelper 'actionable-textarea', (options) ->
   Ember.Handlebars.helpers.view.call(@, App.ActionableTextareaComponent, options)
 
 
-# Using a helper so that we can pass the view as a parameter to the
-# `attachmentDisplayHtml()` function.
 Ember.Handlebars.registerBoundHelper 'messageAttachmentDisplay', (message, options) ->
-  opts =
-    messagesView: options.hash.messagesView
+  opts = options.hash
 
-  message.attachmentDisplayHtml(opts)
+  message.attachmentDisplayHtml?(opts)
 
 
 Ember.Handlebars.registerHelper 'webServerUrl', (path) ->
