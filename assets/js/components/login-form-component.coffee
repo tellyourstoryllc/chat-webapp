@@ -7,7 +7,7 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isLoginDisabled: Ember.computed.or('isChecking', 'isLoggingIn', 'isAuthenticatingWithFacebook')
+  isLoginDisabled: Ember.computed.or('isChecking', 'isLoggingIn')
 
   errorMessage: null
 

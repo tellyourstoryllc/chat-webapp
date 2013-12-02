@@ -11,7 +11,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   isCreatingUser: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.or('isCreatingUser', 'isAuthenticatingWithFacebook')
+  isSignupDisabled: Ember.computed.alias('isCreatingUser')
 
   errorMessage: null
 
