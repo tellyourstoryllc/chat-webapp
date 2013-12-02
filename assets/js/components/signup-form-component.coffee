@@ -7,6 +7,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   facebookId: null
   facebookToken: null
+  avatarImageUrl: null
 
   isCreatingUser: false
   isLoggingIn: false
@@ -40,6 +41,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           name: [result.firstName, result.lastName].compact().join(' ')
           facebookId: result.facebookId
           facebookToken: result.facebookToken
+          avatarImageUrl: result.avatarImageUrl
         @send('attemptSignup')
       , (error) =>
         Ember.Logger.error error, error.stack ? error.stacktrace
@@ -48,6 +50,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           # Clear out any facebook credentials that may have been set before.
           facebookId: null
           facebookToken: null
+          avatarImageUrl: null
 
     attemptSignup: ->
       return if @get('isCreatingUser')
@@ -71,6 +74,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       else
         data.facebook_id = @get('facebookId')
         data.facebook_token = facebookToken
+        data.avatar_image_url = @get('avatarImageUrl')
       App.get('api').createUser(data)
       .then (json) =>
         @set('isCreatingUser', false)

@@ -125,7 +125,7 @@ App.FacebookAuthMixin = Ember.Mixin.create
 
           # Avatar.
           if response.picture && response.picture.data && ! response.picture.data.is_silhouette
-            result.avatarUrl = response.picture.data.url
+            result.avatarImageUrl = response.picture.data.url
 
           # Success.
           resolve(result)
