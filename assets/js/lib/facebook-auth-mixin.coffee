@@ -1,13 +1,8 @@
 App.FacebookAuthMixin = Ember.Mixin.create
 
-  isFacebookLoaded: false
-
   didInsertElement: ->
     # Only load the Facebook script once when we need it.
-    if window.fbLoaded
-      @set('isFacebookLoaded', true)
-      @trigger?('didLoadFacebook')
-    else
+    if ! App.get('isFacebookLoaded')
       @loadFacebookLibrary()
 
   loadFacebookLibrary: ->
@@ -19,9 +14,9 @@ App.FacebookAuthMixin = Ember.Mixin.create
         #cookie     : true # enable cookies to allow the server to access the session
       )
       # Additional init code here
-      window.fbLoaded = true # So we can check that it's been loaded.
-      @set('isFacebookLoaded', true)
-      @trigger?('didLoadFacebook')
+      # So we can check that it's been loaded.
+      App.set('isFacebookLoaded', true)
+      App.get('eventTarget').trigger('didLoadFacebook')
 
     # Load the SDK Asynchronously
     ((d) ->
@@ -37,7 +32,7 @@ App.FacebookAuthMixin = Ember.Mixin.create
   beginLogInWithFacebookFlow: ->
     return new Ember.RSVP.Promise (resolve, reject) =>
       # Make sure the FB library is loaded.
-      App.when window.fbLoaded, @, 'didLoadFacebook', @, =>
+      App.when App.get('isFacebookLoaded'), App.get('eventTarget'), 'didLoadFacebook', @, =>
         try
           handleLoggedInResponse = (response) =>
             resolve
@@ -74,7 +69,7 @@ App.FacebookAuthMixin = Ember.Mixin.create
   beginSignUpWithFacebookFlow: ->
     return new Ember.RSVP.Promise (resolve, reject) =>
       # Make sure the FB library is loaded.
-      App.when window.fbLoaded, @, 'didLoadFacebook', @, =>
+      App.when App.get('isFacebookLoaded'), App.get('eventTarget'), 'didLoadFacebook', @, =>
         FB.login (response) =>
           @handleFacebookLoginResponseForSignUp(response, resolve, reject)
         , scope: 'email,user_birthday'
