@@ -233,6 +233,7 @@ App.Message = App.BaseModel.extend
       types.push('audio/ogg')
     if Modernizr.audio.mp3
       types.push('audio/mpeg')
+      types.push('audio/mp3')
     if Modernizr.audio.wav
       types.push('audio/wav')
       types.push('audio/x-wav')
