@@ -1,4 +1,4 @@
-# Actions: didSignUp
+# Actions: didSignUp, didLogIn
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   email: null
@@ -13,7 +13,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.or('isCreatingUser', 'isLoggingIn')
+  isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn')
 
   errorMessage: null
 
@@ -42,7 +42,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           facebookId: result.facebookId
           facebookToken: result.facebookToken
           avatarImageUrl: result.avatarImageUrl
-        @send('attemptSignup')
+        @send('attemptLogInWithFacebookOrSignup')
       , (error) =>
         Ember.Logger.error error, error.stack ? error.stacktrace
         @setProperties
@@ -51,6 +51,48 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           facebookId: null
           facebookToken: null
           avatarImageUrl: null
+
+    attemptLogInWithFacebookOrSignup: ->
+      return if @get('isCheckingLogIn')
+      @set('isCheckingLogIn', true)
+      @set('errorMessage', null)
+
+      data =
+        facebook_id: @get('facebookId')
+        facebook_token: @get('facebookToken')
+      App.get('api').login(data)
+      .always =>
+        @set('isCheckingLogIn', false)
+      .then (json) =>
+        if ! json? || json.error?
+          # Ignore error; just fall back to signing up.
+          @send('attemptSignup')
+          return
+
+        json = Ember.makeArray(json)
+
+        userJson = json.find (o) -> o.object_type == 'user'
+        if userJson.token?
+          token = userJson.token
+          delete userJson.token
+
+        user = App.User.loadRaw(userJson)
+        if token?
+          @set('isLoggingIn', true)
+          App.login(token, user)
+          App.whenLoggedIn @, ->
+            @set('isLoggingIn', false)
+            @sendAction('didLogIn')
+        else
+          # This should never happen, but if it does, just fall back to signing
+          # up.
+          @send('attemptSignup')
+
+      , (xhr) =>
+        # Ignore error; just fall back to signing up.
+        @send('attemptSignup')
+      .fail App.rejectionHandler
+      return undefined
 
     attemptSignup: ->
       return if @get('isCreatingUser')
