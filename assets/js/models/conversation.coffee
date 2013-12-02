@@ -103,6 +103,15 @@ App.Conversation = Ember.Mixin.create
     _.pluck sorted, 'user'
   ).property('members.@each.name', 'members.@each.sortableComputedStatus')
 
+  # This is needed for when not displaying status.
+  alphabeticMembers: (->
+    App.RecordArray.create(content: @get('members'), sortProperties: ['name'])
+  ).property('members')
+
+  isCurrentUserMember: (->
+    @get('memberIds').contains(App.get('currentUser.id'))
+  ).property('App.currentUser.id', 'memberIds.@each')
+
   # You should call this after all the User instances have been loaded for the
   # group.
   didLoadMembers: ->

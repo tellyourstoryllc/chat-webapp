@@ -39,6 +39,23 @@
       {{#if associationsLoaded}}
         {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
           {{#with view as messagesView}}
+            {{#unless isCurrentUserMember}}
+              <div class='room-alert-content'>
+                <div class='room-alert-message'>
+                  <div>You don't have permission to enter this room.</div>
+                  <div class='subtitle'>These members are inside:</div>
+                </div>
+                <div class='members-preview'>
+                  {{#each user in alphabeticMembers}}
+                    <div class='member-preview'>
+                      {{room-avatar room=user showStatus=false alwaysShowAvatar=true}}
+                      <span class='username'>{{user.name}}</span>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            {{/unless}}
+
             <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}}>
               <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
                 Loading...
