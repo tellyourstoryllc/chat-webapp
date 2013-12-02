@@ -9,9 +9,10 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   facebookToken: null
 
   isCreatingUser: false
+  isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.alias('isCreatingUser')
+  isSignupDisabled: Ember.computed.or('isCreatingUser', 'isLoggingIn')
 
   errorMessage: null
 
@@ -86,8 +87,11 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
           user = App.User.loadRaw(userJson)
           if token?
+            @set('isLoggingIn', true)
             App.login(token, user)
-            @sendAction('didSignUp')
+            App.whenLoggedIn @, ->
+              @set('isLoggingIn', false)
+              @sendAction('didSignUp')
 
       , (xhr) =>
         @set('isCreatingUser', false)
