@@ -27,37 +27,45 @@
       {{/if}}
     </td>
   </tr>
-  <tr>
-    <td class='label-cell editable-label-cell'>Password</td>
-    <td class='control-cell'>
-      {{#if isEditingPassword}}
-        <form> {{! Capture enter key. }}
-          {{#if passwordErrorMessage}}
-            <div class='alert alert-error'>
-              {{passwordErrorMessage}}
-            </div>
-          {{/if}}
-          <input type='password' class='current-password-input' placeholder='Current Password'>
-          <br>
-          {{input type='password' classNames='new-password-input' value=newPassword on-enter='savePassword'
-            placeholder='New Password'}}
-          <br>
-          {{input type='password' classNames='confirm-password-input' value=confirmPassword on-enter='savePassword'
-            placeholder='Confirm Password'}}
-          <button type='submit' class='save-password-button' {{action 'savePassword'}}
-            {{bind-attr disabled='isSendingPassword'}}>
-            {{#if isSendingPassword}}Saving...{{else}}Save{{/if}}
-          </button>
-          {{#unless isSendingPassword}}
-            <a href='#' {{action 'cancelEditingPassword'}}>Cancel</a>
-          {{/unless}}
-        </form>
-      {{else}}
-        <div class='editable-display'>
-          ******
-          <a href='#' {{action 'editPassword'}}>Edit</a>
-        </div>
-      {{/if}}
-    </td>
-  </tr>
+  {{#if isLinkedToFacebook}}
+    <tr>
+      <td colspan='2'>
+        Your account is linked to Facebook.
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td class='label-cell editable-label-cell'>Password</td>
+      <td class='control-cell'>
+        {{#if isEditingPassword}}
+          <form> {{! Capture enter key. }}
+            {{#if passwordErrorMessage}}
+              <div class='alert alert-error'>
+                {{passwordErrorMessage}}
+              </div>
+            {{/if}}
+            <input type='password' class='current-password-input' placeholder='Current Password'>
+            <br>
+            {{input type='password' classNames='new-password-input' value=newPassword on-enter='savePassword'
+              placeholder='New Password'}}
+            <br>
+            {{input type='password' classNames='confirm-password-input' value=confirmPassword on-enter='savePassword'
+              placeholder='Confirm Password'}}
+            <button type='submit' class='save-password-button' {{action 'savePassword'}}
+              {{bind-attr disabled='isSendingPassword'}}>
+              {{#if isSendingPassword}}Saving...{{else}}Save{{/if}}
+            </button>
+            {{#unless isSendingPassword}}
+              <a href='#' {{action 'cancelEditingPassword'}}>Cancel</a>
+            {{/unless}}
+          </form>
+        {{else}}
+          <div class='editable-display'>
+            ******
+            <a href='#' {{action 'editPassword'}}>Edit</a>
+          </div>
+        {{/if}}
+      </td>
+    </tr>
+  {{/if}}
 </table>

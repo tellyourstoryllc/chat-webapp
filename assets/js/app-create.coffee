@@ -8,6 +8,7 @@ window.App = App = Ember.Application.create
   #
   # List of events:
   # - didLogIn
+  # - didLoadFacebook
   eventTarget: null
 
   isLoggingIn: false
@@ -65,6 +66,9 @@ window.App = App = Ember.Application.create
   roomMessagesViews: null
 
   defaultErrorMessage: "There was an unknown error.  Please try again."
+
+  # True when the FB external JS library has been loaded.
+  isFacebookLoaded: false
 
   ready: ->
     Ember.onerror = (e) ->

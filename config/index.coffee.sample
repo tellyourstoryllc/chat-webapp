@@ -6,9 +6,18 @@ exports.getConfig = (env, app, express) ->
       # Host is "hostname:port"
       fayeHost: 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com:8080'
       webServerProtocolAndHost: 'http://localhost:3001'
-    when 'production'
+      facebookAppId: '590925707640079'
+    when 'staging'
       apiHostname: 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com'
       apiPort: 80
       # Host is "hostname:port"
       fayeHost: 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com:8080'
       webServerProtocolAndHost: 'http://staging.skymob.co'
+      facebookAppId: '590925707640079'
+    when 'production'
+      apiHostname: 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com'
+      apiPort: 80
+      # Host is "hostname:port"
+      fayeHost: 'ec2-54-214-231-83.us-west-2.compute.amazonaws.com:8080'
+      webServerProtocolAndHost: 'http://www.skymob.co'
+      facebookAppId: '247703948717943'

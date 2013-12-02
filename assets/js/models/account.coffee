@@ -18,4 +18,5 @@ App.Account.reopenClass
     # map caches.
     id: @coerceId(json.user_id)
     email: json.email
+    facebookId: json.facebook_id
     oneToOneWallpaperUrl: json.one_to_one_wallpaper_url

@@ -23,4 +23,14 @@
     <button type='submit' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
     <div class='clearfix'></div>
   </div>
+
+  <hr>
+
+  <div class='facebook-group'>
+    <div>OR</div>
+    <button type='button' {{bind-attr disabled='isSignupDisabled'}}
+      {{action 'attemptSignUpWithFacebook'}}>
+      Sign Up With Facebook
+    </button>
+  </div>
 </form>

@@ -73,6 +73,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$().addClass('expand-in')
   ).observes('isHidden')
 
+  isLinkedToFacebook: (->
+    ! Ember.isEmpty(App.get('currentUser.account.facebookId'))
+  ).property('App.currentUser.account.facebookId')
+
   fileChange: (event) ->
     Ember.run @, ->
       file = event.target.files?[0]
