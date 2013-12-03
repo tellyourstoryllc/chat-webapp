@@ -9,6 +9,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isEditingTopic: false
 
+  numMembersToShow: 10
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
@@ -178,6 +180,18 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   showTopicRow: (->
     ! Ember.isEmpty(@get('activeRoom.topic')) || @get('isEditingTopic')
   ).property('activeRoom.topic', 'isEditingTopic')
+
+  roomAlphabeticMembers: (->
+    members = @get('activeRoom.alphabeticMembers')
+    return null unless members?
+    members[0 ... @get('numMembersToShow')]
+  ).property('activeRoom.alphabeticMembers.[]', 'numMembersToShow')
+
+  roomNumberMoreMembers: (->
+    len = @get('activeRoom.alphabeticMembers.length')
+    return null unless len?
+    len - @get('numMembersToShow')
+  ).property('activeRoom.alphabeticMembers.length', 'numMembersToShow')
 
   setFocus: ->
     @$('.send-message-text')?.focus()
