@@ -28,6 +28,15 @@ App.JoinRoute = Ember.Route.extend
           group = App.Group.loadSingle(json)
           if group?
             group.set('isDeleted', false)
+            group.subscribeToMessages()
+            # TODO: This is techincally a race condition where messages could
+            # come in between downloading them all and subscribing.
+            #
+            # .then =>
+            #   # Fetch all messages after subscribing.
+            #   group.reload()
+
+            # Go to the room.
             @transitionTo('rooms.room', group)
         else
           controller.set('userMessage', App.userMessageFromError(json))

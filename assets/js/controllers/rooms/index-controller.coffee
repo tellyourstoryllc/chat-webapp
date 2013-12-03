@@ -32,6 +32,7 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         @set('isCreatingGroup', false)
         # Group was created successfully.
         @resetNewRoom()
+        group.subscribeToMessages()
         @get('target').send('goToRoom', group)
       , (xhrOrError) =>
         @set('isCreatingGroup', false)
@@ -58,6 +59,15 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         group = App.Group.loadSingle(json)
         if group?
           group.set('isDeleted', false)
+          group.subscribeToMessages()
+          # TODO: This is techincally a race condition where messages could
+          # come in between downloading them all and subscribing.
+          #
+          # .then =>
+          #   # Fetch all messages after subscribing.
+          #   group.reload()
+
+          # Go to room.
           @get('target').send('goToRoom', group)
       , (xhr) =>
         @set('isJoiningRoom', false)
