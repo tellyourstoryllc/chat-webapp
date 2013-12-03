@@ -282,6 +282,11 @@ button
     background-repeat no-repeat
     background-position -83px 0
 
+.medium-avatar-image
+  width 43px
+  height 43px
+  border-radius 50%
+
 .emoticon
   height 32px
   width auto
@@ -526,6 +531,28 @@ body.logged-out
 
   input[type=text], input[type=email], input[type=password]
     width 188px
+
+.logged-out-join
+  .room-title
+    display inline-block
+    margin-bottom 20px
+
+  .avatar, .room-name-info-container
+    float left
+
+  .room-name-info-container
+    margin-top 5px
+    text-align left
+
+  .room-topic
+    margin-top 5px
+    font-size 12px
+
+  .avatar
+    margin-right 5px
+
+  .signup-or-login
+    margin 20px
 
 .rooms-sidebar
   position fixed
@@ -954,11 +981,6 @@ room-members-sidebar-width = 200px
   .room-avatar-permalink
     float left
     margin-right 5px
-
-  .medium-avatar-image
-    width 43px
-    height 43px
-    border-radius 50%
 
   .edit-topic-link
     color #aaa

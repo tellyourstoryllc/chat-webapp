@@ -23,7 +23,11 @@ window.App = App = Ember.Application.create
 
   isFayeClientConnected: false
 
+  # Ember route transition to continue to after logging in.
   continueTransition: null
+
+  # Room join code to continue to after logging in.
+  continueJoinCode: null
 
   hasNotificationPermission: false
 

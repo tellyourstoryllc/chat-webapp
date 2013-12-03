@@ -5,6 +5,9 @@ App.ApplicationRoute = Ember.Route.extend
     if transition?
       App.set('continueTransition', null)
       transition.retry()
+    else if (joinCode = App.get('continueJoinCode'))?
+      App.set('continueJoinCode', null)
+      @transitionTo('join', joinCode)
     else
       @transitionTo('rooms.index')
 

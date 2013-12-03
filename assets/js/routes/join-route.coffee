@@ -5,20 +5,19 @@ App.JoinRoute = Ember.Route.extend
     # If we're listening for the login and transition away, stop listening.
     App.get('eventTarget').off 'didLogIn', @, '_didLogIn'
 
-  beforeModel: (transition) ->
-    # This should work when landing on this URL, so allow when we're in the
-    # process of logging in.
-    if ! App.isLoggedIn() && ! App.get('isLoggingIn')
-      App.set('continueTransition', transition)
-      @transitionTo('login')
-      return
-
   model: (params, transition) ->
     params.join_code
 
   setupController: (controller, model) ->
     @_super(arguments...)
     joinCode = model
+    if App.isLoggedIn() || App.get('isLoggingIn')
+      @_joinGroupWhenLoggedIn(controller, joinCode)
+    else
+      App.set('continueJoinCode', joinCode)
+      @_loadGroupFromJoinCode(controller, joinCode)
+
+  _joinGroupWhenLoggedIn: (controller, joinCode) ->
     App.whenLoggedIn @, ->
       api = App.get('api')
       api.joinGroup(joinCode)
@@ -43,3 +42,19 @@ App.JoinRoute = Ember.Route.extend
       , (xhr) =>
         controller.set('userMessage', App.userMessageFromError(xhr))
       .fail App.rejectionHandler
+
+  _loadGroupFromJoinCode: (controller, joinCode) ->
+    App.Group.fetchByJoinCode(joinCode)
+    .then (json) =>
+      if ! json? || json.error?
+        controller.set('userMessage', App.userMessageFromError(json))
+        return
+      # Load everything from the response.
+      group = App.Group.loadSingle(json)
+      if group?
+        group.set('isDeleted', false)
+        controller.set('model', group)
+        controller.set('room', group)
+    , (xhr) =>
+      controller.set('userMessage', App.userMessageFromError(xhr))
+    .fail App.rejectionHandler

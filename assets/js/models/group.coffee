@@ -182,6 +182,13 @@ App.Group.reopenClass
       limit: 40
     api.ajax(api.buildURL("/groups/#{id}"), 'GET', data: data)
 
+  fetchByJoinCode: (joinCode) ->
+    api = App.get('api')
+    data =
+      join_code: joinCode
+      limit: 40
+    api.ajax(api.buildURL('/groups/find'), 'GET', data: data)
+
   createRecord: (data) ->
     api = App.get('api')
     api.ajax(api.buildURL('/groups/create'), 'POST', data: data)
