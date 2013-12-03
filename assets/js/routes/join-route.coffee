@@ -6,7 +6,7 @@ App.JoinRoute = Ember.Route.extend
     App.get('eventTarget').off 'didLogIn', @, '_didLogIn'
 
   beforeModel: (transition) ->
-    # This should work when lading on this URL, so allow when we're in the
+    # This should work when landing on this URL, so allow when we're in the
     # process of logging in.
     if ! App.isLoggedIn() && ! App.get('isLoggingIn')
       App.set('continueTransition', transition)
