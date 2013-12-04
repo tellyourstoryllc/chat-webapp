@@ -26,9 +26,6 @@ window.App = App = Ember.Application.create
   # Ember route transition to continue to after logging in.
   continueTransition: null
 
-  # Room join code to continue to after logging in.
-  continueJoinCode: null
-
   hasNotificationPermission: false
 
   emoticonsVersion: null
