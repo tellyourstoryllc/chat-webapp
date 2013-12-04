@@ -120,7 +120,9 @@
         disabledBinding='roomsContainer.isSendDisabled'
         target=roomsContainer}}
       {{#if doesBrowserSupportAjaxFileUpload}}
-        <button type='button' class='send-message-file-button' {{action 'chooseFile' target=roomsContainer}}>
+        <button type='button' class='app-btn send-message-file-button'
+          {{bind-attr disabled='roomsContainer.isSendDisabled'}}
+          {{action 'chooseFile' target=roomsContainer}}>
           {{#if activeRoom.newMessageFile}}
             Change
           {{else}}
@@ -130,7 +132,7 @@
         <input type='file' class='send-message-file'>
       {{/if}}
       <button type='button' {{action 'sendMessage' target=roomsContainer}}
-        {{bind-attr class=':send-button activeRoom.isEncrypted:encrypted-send-button'}}
+        {{bind-attr class=':app-btn :send-button activeRoom.isEncrypted:encrypted-send-button'}}
         {{bind-attr disabled='roomsContainer.isSendDisabled'}}
         >Send</button>
     </div>
