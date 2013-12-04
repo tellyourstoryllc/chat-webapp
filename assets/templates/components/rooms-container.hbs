@@ -53,12 +53,12 @@
           </div>
           {{#if activeRoom.canJoinWithoutCode}}
             <button type='button' {{action 'joinGroup' target=roomsContainer}}
-              class='app-btn join-button'>Join</button>
+              class='app-btn join-button'>Enter Room</button>
           {{else}}
             <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
               <div class='title'>Enter join code to become a member.</div>
               {{input type='text' value=activeRoom.enteredJoinCode placeholder='Join Code'}}
-              <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Join</button>
+              <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Enter Room</button>
             </form>
           {{/if}}
         </div>
