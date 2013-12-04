@@ -213,6 +213,10 @@ App.RoomsView = Ember.View.extend
       App.loadAll(json)
     .fail App.rejectionHandler
 
+    # Clear out the file input so that selecting the same file again triggers a
+    # change event.
+    @$('.room-avatar-file').val('')
+
   hasRoomWallpaper: Ember.computed.notEmpty('activeRoom.wallpaperUrl')
 
   canUpdateRoomWallpaper: (->
@@ -247,6 +251,10 @@ App.RoomsView = Ember.View.extend
         throw json
       App.loadAll(json)
     .fail App.rejectionHandler
+
+    # Clear out the file input so that selecting the same file again triggers a
+    # change event.
+    @$('.room-wallpaper-file').val('')
 
   showRoomMenu: ->
     @$('.room-menu').addClass('expand-down')
