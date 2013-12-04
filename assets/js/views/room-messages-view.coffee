@@ -79,11 +79,10 @@ App.RoomMessagesView = Ember.View.extend
   updateSize: (height, activeRoom, $messages) ->
     return unless @currentState == Ember.View.states.inDOM
     messagesHeight = height
-    isScrolledToLastMessage = @isScrolledToLastMessage()
     $messages.css
       height: messagesHeight
 
-    if isScrolledToLastMessage
+    if @get('useAutoScroll')
       @scrollToLastMessage(false)
 
   roomWillChange: (->
