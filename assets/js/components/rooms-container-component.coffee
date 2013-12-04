@@ -49,17 +49,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
     @$('.send-message-file').off 'change', @fileChange
 
-  roomWallpaperChanged: (->
-    Ember.run.schedule 'afterRender', @, ->
-      room = @get('activeRoom')
-      return unless room?
-      wallpaperUrl = room.get('wallpaperUrl')
-      if wallpaperUrl?
-        @$('.room-info').css { 'background-image': "url(#{wallpaperUrl})" }
-      else
-        @$('.room-info').css { 'background-image': 'none' }
-  ).observes('activeRoom.wallpaperUrl').on('didInsertElement')
-
   bodyKeyDown: (event) ->
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
