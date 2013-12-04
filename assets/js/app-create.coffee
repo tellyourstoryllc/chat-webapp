@@ -82,6 +82,11 @@ window.App = App = Ember.Application.create
 
       undefined
 
+    # Load debug logging setting from localStorage to help debug page load.
+    useDebugLogging = window.localStorage.getItem('useDebugLogging')
+    if useDebugLogging in ['1', 'true']
+      @set('useDebugLogging', true)
+
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
       # we have a hash, we were probably on IE9 or below and refreshed the page
