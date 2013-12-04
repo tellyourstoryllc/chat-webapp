@@ -4,6 +4,9 @@ window.App = App = Ember.Application.create
   # Default title displayed in the window/tab's titlebar.
   title: 'SkyMob'
 
+  # Set to true to enable more verbose logging to the console.
+  useDebugLogging: false
+
   # Object that mixes in `Ember.Evented` and receives application events.
   #
   # List of events:
@@ -215,7 +218,7 @@ window.App = App = Ember.Application.create
     # one to one messages.
     subscription = @get('fayeClient').subscribe "/users/#{user.get('id')}", (json) =>
       Ember.run @, ->
-        Ember.Logger.log "received user packet", json
+        Ember.Logger.log "received user packet", json if App.get('useDebugLogging')
         if ! json? || json.error?
           return
 

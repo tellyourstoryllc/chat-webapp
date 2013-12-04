@@ -15,11 +15,15 @@ App.Faye.reopenClass
         message.ext.token = App.get('token')
 
         # Carry on and send the message to the server
-        Ember.Logger.log "faye outgoing", new Date(), message
+        callback(message)
+
+    debugLogging =
+      outgoing: (message, callback) ->
+        Ember.Logger.log "faye outgoing", new Date(), message if App.get('useDebugLogging')
         callback(message)
 
       incoming: (message, callback) ->
-        Ember.Logger.log "faye incoming", new Date(), message
+        Ember.Logger.log "faye incoming", new Date(), message if App.get('useDebugLogging')
         callback(message)
 
     # Allow application to specify metadata in the `ext` property of the
@@ -39,6 +43,7 @@ App.Faye.reopenClass
         callback(message)
 
     fayeClient.addExtension(clientAuth)
+    fayeClient.addExtension(debugLogging)
     fayeClient.addExtension(moveExtData)
     fayeClient.addExtension(implementSaneConnectEvent)
 

@@ -227,7 +227,7 @@ App.Conversation = Ember.Mixin.create
     .fail App.rejectionHandler
 
   didReceiveUpdateFromFaye: (json) ->
-    Ember.Logger.log "received packet", json
+    Ember.Logger.log "received packet", json if App.get('useDebugLogging')
     if ! json? || json.error?
       return
 
