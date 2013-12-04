@@ -55,8 +55,8 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     data.ext ?= {}
     data.ext.action = 'create_one_to_one_message'
 
-  mostRecentMessagesUrl: ->
-    App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
+  fetchUrl: ->
+    App.get('api').buildURL("/one_to_ones/#{@get('id')}")
 
   earlierMessagesUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")

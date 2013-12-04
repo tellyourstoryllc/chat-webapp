@@ -47,7 +47,7 @@ App.Conversation = Ember.Mixin.create
 
   isListeningForMessages: Ember.required(Function)
 
-  mostRecentMessagesUrl: Ember.required(Function)
+  fetchUrl: Ember.required(Function)
 
   earlierMessagesUrl: Ember.required(Function)
 
@@ -184,7 +184,7 @@ App.Conversation = Ember.Mixin.create
 
   didReconnect: ->
     # We just reconnected.  Fetch any messages we may have missed.
-    @fetchMostRecentMessages()
+    @fetchConversationWithMostRecentMessages()
     .then (loadMetas) =>
       overlapFound = loadMetas.any ([inst, isNew]) ->
         # Consider there to be overlap if any of the most recent messages were
@@ -210,20 +210,18 @@ App.Conversation = Ember.Mixin.create
         for msg in newMessages
           @didReceiveMessage(msg, suppressNotifications: true)
 
-  # Fetch most recent messages, load them, and resolve returned promise to all
-  # instances.
-  fetchMostRecentMessages: ->
+  # Fetch the conversation (with users and most recent messages), load them, and
+  # resolve returned promise to all instances.
+  fetchConversationWithMostRecentMessages: ->
     api = App.get('api')
     data =
       limit: @get('messagesLimitOnReconnect')
-    api.ajax(@mostRecentMessagesUrl(), 'GET', data: data)
+    api.ajax(@fetchUrl(), 'GET', data: data)
     .then (json) =>
       if ! json? || json.error?
         throw json
-      else
-        json = Ember.makeArray(json)
-        # Load everything from the response.
-        return App.loadAllWithMetaData(json)
+      # Load everything from the response.
+      return App.loadAllWithMetaData(json)
     .fail App.rejectionHandler
 
   didReceiveUpdateFromFaye: (json) ->

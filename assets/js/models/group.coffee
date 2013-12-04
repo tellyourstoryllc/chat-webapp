@@ -90,8 +90,8 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     , =>
       @set('topic', oldTopic)
 
-  mostRecentMessagesUrl: ->
-    App.get('api').buildURL("/groups/#{@get('id')}/messages")
+  fetchUrl: ->
+    App.get('api').buildURL("/groups/#{@get('id')}")
 
   earlierMessagesUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}/messages")
