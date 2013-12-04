@@ -179,7 +179,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   roomNumberMoreMembers: (->
     len = @get('activeRoom.alphabeticMembers.length')
     return null unless len?
-    len - @get('numMembersToShow')
+    Math.max(0, len - @get('numMembersToShow'))
   ).property('activeRoom.alphabeticMembers.length', 'numMembersToShow')
 
   setFocus: ->

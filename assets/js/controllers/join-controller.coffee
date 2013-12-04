@@ -6,10 +6,10 @@ App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
 
   alphabeticRoomMembers: (->
     (@get('room.alphabeticMembers') ? [])[0 ... @get('numMembersToShow')]
-  ).property('room.alphabeticMembers.[]')
+  ).property('room.alphabeticMembers.[]', 'numMembersToShow')
 
   moreRoomMembers: (->
     members = @get('room.alphabeticMembers')
     return null unless members?
     Math.max(0, members.get('length') - @get('numMembersToShow'))
-  ).property('room.alphabeticMembers.length')
+  ).property('room.alphabeticMembers.length', 'numMembersToShow')
