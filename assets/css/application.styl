@@ -963,6 +963,9 @@ room-members-sidebar-width = 200px
   overflow hidden
 
   .room-alert-content
+    position absolute
+    z-index 1 // Show on top of .room-messages-view
+    width 100%
     padding 20px
     text-align center
 
