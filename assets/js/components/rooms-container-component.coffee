@@ -433,10 +433,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         mentionedUserIds: App.Message.mentionedIdsInText(text, convo.get('members'))
       App.Message.sendNewMessage(msg)
       .then null, (e) =>
-        Ember.Logger.error e
-        userMsg = e?.error?.message ? e?.message
+        Ember.Logger.error e, e?.stack ? e?.stacktrace
+        # The internal error message isn't helpful to users.
+        # userMsg = e?.error?.message ? e?.message
+        userMsg = undefined
         # Stale client error.
-        userMsg = "There was an error sending this message" if /^1000:/.test(userMsg)
+        userMsg = "There was an error sending this message.  Wait a minute and try again." if /^1000:/.test(userMsg)
         msg.setProperties
           isError: true
           errorMessage: userMsg ? "There was an error sending this message."
