@@ -99,6 +99,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isSendingAvatar', false)
     .fail App.rejectionHandler
 
+    # Clear out the file input so that selecting the same file again triggers a
+    # change event.
+    @$('.avatar-file-input').val('')
+
   onOneToOneWallpaperFileChange: (event) ->
     Ember.run @, ->
       file = event.target.files?[0]
@@ -124,6 +128,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     .then (json) =>
       App.loadAll(json)
     .fail App.rejectionHandler
+
+    # Clear out the file input so that selecting the same file again triggers a
+    # change event.
+    @$('.one-to-one-wallpaper-file-input').val('')
 
   clientWebPreferencesDidChange: (->
     # When the global preferences change, sync the UI.
