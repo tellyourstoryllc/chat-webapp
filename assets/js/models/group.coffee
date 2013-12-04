@@ -3,11 +3,20 @@
 
 App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
+  # Join code that the user entered in before submitting.
+  enteredJoinCode: ''
+
+  # Set to true when attempting to join.
+  isJoining: false
+
   # Faye subscription to listen for updates.
   subscription: null
 
   # Show the UI to set topics.
   canSetTopic: true
+
+  # Currently, all groups are public.
+  canJoinWithoutCode: true
 
   defaultAvatarUrl: App.webServerUrl('/images/room.png')
 

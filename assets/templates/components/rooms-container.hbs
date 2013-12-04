@@ -37,7 +37,7 @@
       {{#unless activeRoom.isCurrentUserMember}}
         <div class='room-alert-content'>
           <div class='room-alert-message'>
-            <div>You don't have permission to enter this room.</div>
+            <div>You aren't a member of this room.</div>
             <div class='subtitle'>These members are inside:</div>
           </div>
           <div class='members-preview'>
@@ -51,6 +51,16 @@
               and {{roomsContainer.roomNumberMoreMembers}} more.
             {{/if}}
           </div>
+          {{#if activeRoom.canJoinWithoutCode}}
+            <button type='button' {{action 'joinGroup' target=roomsContainer}}
+              class='app-btn join-button'>Join</button>
+          {{else}}
+            <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
+              <div class='title'>Enter join code to become a member.</div>
+              {{input type='text' value=activeRoom.enteredJoinCode placeholder='Join Code'}}
+              <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Join</button>
+            </form>
+          {{/if}}
         </div>
       {{/unless}}
 

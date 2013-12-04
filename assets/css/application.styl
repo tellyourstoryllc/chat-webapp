@@ -992,19 +992,6 @@ room-members-sidebar-width = 200px
   position absolute
   overflow hidden
 
-  .room-alert-content
-    position absolute
-    z-index 1 // Show on top of .room-messages-view
-    width 100%
-    padding 20px
-    text-align center
-
-    .room-alert-message
-      font-size 16px
-
-      .subtitle
-        margin-top 15px
-
   .room-info
     border 1px solid #B4B4B4
     padding 5px
@@ -1064,6 +1051,28 @@ room-members-sidebar-width = 200px
 
   .topic-text
     padding-top 4px
+
+  .room-alert-content
+    position absolute
+    z-index 1 // Show on top of .room-messages-view
+    width 100%
+    padding 20px
+    text-align center
+
+  .room-alert-message
+    font-size 16px
+
+  .subtitle
+    margin-top 15px
+
+  .join-button
+    margin-top 15px
+
+  .join-form
+    margin-top 20px
+
+    .join-button
+      margin-top 0
 
 .messages
   // Scrollable.

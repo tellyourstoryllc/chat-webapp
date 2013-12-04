@@ -1,5 +1,7 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
+#
+# Actions: didJoinGroup
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -73,7 +75,9 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         @setFocus()
   ).observes('activeRoom.associationsLoaded')
 
-  isSendDisabled: Ember.computed.not('activeRoom.associationsLoaded')
+  isSendDisabled: (->
+    ! @get('activeRoom.associationsLoaded') || ! @get('activeRoom.isCurrentUserMember')
+  ).property('activeRoom.associationsLoaded', 'activeRoom.isCurrentUserMember')
 
   didConnect: ->
     bottom = if App.get('isFayeClientConnected')
@@ -377,6 +381,22 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     cancelEditingTopic: ->
       @set('isEditingTopic', false)
+      return undefined
+
+    joinGroup: ->
+      return if @get('activeRoom.isJoining')
+
+      joinCode = @get('activeRoom.enteredJoinCode')
+      return if Ember.isEmpty(joinCode) && ! @get('activeRoom.canJoinWithoutCode')
+
+      @set('activeRoom.isJoining', true)
+      App.get('api').joinGroup(joinCode)
+      .always =>
+        @set('activeRoom.isJoining', false)
+      .then (group) =>
+        # Reset form.
+        @set('activeRoom.enteredJoinCode', '')
+        @sendAction('didJoinGroup', group)
       return undefined
 
     saveTopic: ->

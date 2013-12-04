@@ -48,31 +48,15 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
 
       @set('isJoiningRoom', true)
       App.get('api').joinGroup(joinCode)
-      .then (json) =>
+      .always =>
         @set('isJoiningRoom', false)
-        if ! json? || json.error?
-          @set('joinRoomErrorMessage', App.userMessageFromError(json))
-          return
-
+      .then (group) =>
         # Group was joined successfully.
         @resetJoinRoom()
-        group = App.Group.loadSingle(json)
-        if group?
-          group.set('isDeleted', false)
-          group.subscribeToMessages()
-          # TODO: This is techincally a race condition where messages could
-          # come in between downloading them all and subscribing.
-          #
-          # .then =>
-          #   # Fetch all messages after subscribing.
-          #   group.reload()
-
-          # Go to room.
-          @get('target').send('goToRoom', group)
-      , (xhr) =>
-        @set('isJoiningRoom', false)
+        # Go to room.
+        @get('target').send('goToRoom', group)
+      , (e) =>
         # Show error message.
-        @set('joinRoomErrorMessage', App.userMessageFromError(xhr))
-      .fail App.rejectionHandler
+        @set('joinRoomErrorMessage', e.message)
 
       return undefined
