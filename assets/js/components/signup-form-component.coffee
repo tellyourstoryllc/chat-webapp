@@ -1,5 +1,6 @@
 # Actions: didSignUp, didLogIn
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
+  classNames: ['signup-form-component']
 
   email: null
   password: null

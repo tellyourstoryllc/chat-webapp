@@ -39,12 +39,20 @@
           class='app-btn join-button'>Enter Room</button>
       {{else}}
         <div class='signup-or-login'>
-          <div class='title'>To enter</div>
-          <div>
-            {{#link-to 'signup'}}Sign Up{{/link-to}}
-            or
-            {{#link-to 'login'}}Log In{{/link-to}}
-          </div>
+          {{#if view.isAuthStateSignup}}
+            {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+          {{else}}
+            {{#if view.isAuthStateLogin}}
+              {{login-form didLogIn='didLogIn'}}
+            {{else}}
+              <div class='title'>To enter</div>
+              <div>
+                <button type='button' {{action 'signUp' target=view}} class='app-btn'>Sign Up</button>
+                or
+                <button type='button' {{action 'logIn' target=view}} class='app-btn'>Log In</button>
+              </div>
+            {{/if}}
+          {{/if}}
         </div>
       {{/if}}
     </div>

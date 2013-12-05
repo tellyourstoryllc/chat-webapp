@@ -1,5 +1,6 @@
 # Actions: didLogIn
 App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
+  classNames: ['login-form-component']
 
   facebookId: null
   facebookToken: null
