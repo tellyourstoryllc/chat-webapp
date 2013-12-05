@@ -387,6 +387,23 @@ window.App = App = Ember.Application.create
       $preview = $(".video-attachment-preview-#{messageGuid}")
       $preview.show()
 
+  # Attempts to open the mobile app with the given URL.  URL should have a
+  # protocol that the app understand.
+  attemptToOpenMobileApp: (path) ->
+    return unless Modernizr.appleios
+    # If we've done this before and it either failed or the user came back,
+    # don't try to do it again.
+    return if window.sessionStorage.getItem('hasAttemptedToOpenApp')
+    window.sessionStorage.setItem('hasAttemptedToOpenApp', '1')
+    path = '/' + path if path[0] != '/'
+    window.location = "skymob:/" + path
+    # If the app isn't installed, fall back to opening the App Store.
+    # window.setTimeout ->
+    #   if +new Date - loadedAt < 2000
+    #     # If we're still here, open the app store.
+    #     window.location = "http://itunes.apple.com/app/XXXXXXX"
+    # , 100
+
   loadAllWithMetaData: (json) ->
     descs = for attrs in Ember.makeArray(json)
       type = @classFromRawObject(attrs)

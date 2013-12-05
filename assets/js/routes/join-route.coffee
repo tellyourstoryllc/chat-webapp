@@ -19,6 +19,10 @@ App.JoinRoute = Ember.Route.extend
     controller.set('joinCode', joinCode)
     @_loadGroupFromJoinCode(controller, joinCode)
 
+    # Try to open the mobile app.
+    Ember.run.schedule 'afterRender', @, ->
+      App.attemptToOpenMobileApp("/group/join_code/#{joinCode}")
+
   _loadGroupFromJoinCode: (controller, joinCode) ->
     App.Group.fetchByJoinCode(joinCode)
     .then (json) =>

@@ -50,6 +50,10 @@ App.RoomsRoomRoute = Ember.Route.extend
       # Set the room as opened to show it in the list.
       model.set('isOpen', true)
 
+    # Try to open the mobile app.
+    Ember.run.schedule 'afterRender', @, ->
+      App.attemptToOpenMobileApp("/group/id/#{modelId}")
+
     if ! model?.get('associationsLoaded')
       type = if isOneToOne
         App.OneToOne
