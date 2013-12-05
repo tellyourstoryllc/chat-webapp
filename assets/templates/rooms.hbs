@@ -141,4 +141,6 @@
     <li {{bind-attr class=':menu-item view.canUpdateRoomWallpaper::disabled'}}
       {{action 'removeRoomWallpaper' target=view}}>Remove Wallpaper</li>
   {{/if}}
+  <li class='separator'></li>
+  <li class='menu-item' {{action 'leaveRoom' target=view}}>Leave Room...</li>
 </ul>

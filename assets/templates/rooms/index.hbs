@@ -57,7 +57,6 @@
 
     <ul class='menu lobby-room-menu' role='menu'>
       <li {{bind-attr class=':menu-item lobbyView.isAdminOfMenuRoom::disabled'}} {{action 'renameRoom' target=lobbyView}}>Rename Room</li>
-      <li class='menu-item' {{action 'leaveRoom' target=lobbyView}}>Leave Room</li>
     </ul>
   {{/with}}
 {{/if}}

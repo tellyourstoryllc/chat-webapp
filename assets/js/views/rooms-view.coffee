@@ -340,6 +340,30 @@ App.RoomsView = Ember.View.extend
       @_updateRoomWallpaper(null)
       return undefined
 
+    leaveRoom: ->
+      room = @get('activeRoom')
+      return unless room?
+
+      if room.isPropertyLocked('isDeleted')
+        Ember.Logger.warn "I can't delete a room when I'm still waiting for a response from the server."
+        return
+
+      return if ! window.confirm("Permanently leave the \"#{room.get('name')}\" room?")
+
+      api = App.get('api')
+      url = api.buildURL("/groups/#{room.get('id')}/leave")
+      room.withLockedPropertyTransaction url, 'POST', {}, 'isDeleted', =>
+        room.set('isDeleted', true)
+      , =>
+        room.set('isDeleted', false)
+      .then =>
+        # Make sure the transaction succeeded.
+        if room.get('isDeleted')
+          # Stop listening for messages.
+          room.set('isOpen', false)
+
+      return undefined
+
     toggleChooseStatusMenu: ->
       if @get('isChooseStatusMenuVisible')
         @closeChooseStatusMenu()
