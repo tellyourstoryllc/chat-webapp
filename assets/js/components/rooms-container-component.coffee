@@ -384,10 +384,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       return undefined
 
     joinGroup: ->
-      return if @get('activeRoom.isJoining')
+      room = @get('activeRoom')
+      return unless room?
+      return if room.get('isJoining')
 
-      joinCode = @get('activeRoom.enteredJoinCode')
-      return if Ember.isEmpty(joinCode) && ! @get('activeRoom.canJoinWithoutCode')
+      joinCode = room.get('enteredJoinCode')
+      # If no code is specified, use group ID for public rooms.
+      if room.get('canJoinWithoutCode') && Ember.isEmpty(joinCode)
+        joinCode = room.get('id')
+      return if Ember.isEmpty(joinCode)
 
       @set('activeRoom.isJoining', true)
       App.get('api').joinGroup(joinCode)
