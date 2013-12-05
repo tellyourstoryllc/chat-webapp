@@ -2,6 +2,10 @@ Ember.Handlebars.registerBoundHelper 'capitalize', (text) ->
   return null unless text?
   text.capitalize()
 
+Ember.Handlebars.registerBoundHelper 'upcase', (text) ->
+  return null unless text?
+  text.toUpperCase()
+
 Ember.Handlebars.registerBoundHelper 'humanize', (text) ->
   return null unless text?
   text.decamelize().replace(/[_-]/g, ' ').capitalize()
