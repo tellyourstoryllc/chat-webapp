@@ -394,13 +394,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         joinCode = room.get('id')
       return if Ember.isEmpty(joinCode)
 
-      @set('activeRoom.isJoining', true)
+      room.set('isJoining', true)
       App.get('api').joinGroup(joinCode)
       .always =>
-        @set('activeRoom.isJoining', false)
+        room.set('isJoining', false)
       .then (group) =>
         # Reset form.
-        @set('activeRoom.enteredJoinCode', '')
+        room.set('enteredJoinCode', '')
         @sendAction('didJoinGroup', group)
       return undefined
 
