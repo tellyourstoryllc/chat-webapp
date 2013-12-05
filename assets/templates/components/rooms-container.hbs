@@ -70,7 +70,7 @@
       {{#if associationsLoaded}}
         {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
           {{#with view as messagesView}}
-            <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}}>
+            <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}} {{bind-attr data-conversation-id='id'}}>
               <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
                 Loading...
               </div>

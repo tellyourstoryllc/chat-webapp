@@ -79,12 +79,12 @@ App.Message = App.BaseModel.extend
 
     escape = Ember.Handlebars.Utils.escapeExpression
     attachmentPreviewUrl = @get('attachmentPreviewUrl')
+    messageGuid = Ember.guidFor(@)
     if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
-      if @_isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
+      if @hasPlayableVideoAttachment()
         # A playable video.
         convoId = @get('conversationId')
-        messageGuid = Ember.guidFor(@)
         """
         <a href='#{escape(attachmentUrl)}' class='video-attachment-preview video-attachment-preview-#{escape(messageGuid)}' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
           <img src='#{escape(attachmentPreviewUrl)}' onload='App.onMessageContentLoad("#{escape(convoId)}", this, "image");'>
@@ -104,9 +104,12 @@ App.Message = App.BaseModel.extend
         <img src='#{escape(attachmentPreviewUrl)}' onload='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "image");'>
         </a>
         """.htmlSafe()
-    else if @_isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
+    else if @hasPlayableAudioAttachment()
       """
-      <audio preload='auto' controls onloadeddata='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "audio");'>
+      <audio class='audio-attachment audio-attachment-#{messageGuid}' preload='auto' controls
+        onended='App.onAudioEnded(event, this);'
+        onerror='App.onAudioEnded(event, this);'
+        onloadeddata='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "audio");'>
       <source src='#{escape(attachmentUrl)}'>
       </audio>
       """.htmlSafe()
@@ -223,42 +226,11 @@ App.Message = App.BaseModel.extend
     body: text
     icon: {}
 
-  # Returns true if the file attachment is an audio file supported by the
-  # browser.
-  _isPlayableAudioFile: (mimetype, file) ->
-    return false unless Modernizr.audio
-    types = []
-    # Use Modernizr to detect if the file can actually be played.
-    if Modernizr.audio.ogg
-      types.push('audio/ogg')
-    if Modernizr.audio.mp3
-      types.push('audio/mpeg')
-      types.push('audio/mp3')
-    if Modernizr.audio.wav
-      types.push('audio/wav')
-      types.push('audio/x-wav')
-    if Modernizr.audio.m4a
-      types.push('audio/x-m4a')
-      types.push('audio/aac')
-    # If the current user sent it, we have the actual file and can try to use
-    # its mime type.
-    mimetype in types || file?.type in types
+  hasPlayableVideoAttachment: ->
+    App.Util.isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
 
-  # Returns true if the file attachment is a video file supported by the
-  # browser.
-  _isPlayableVideoFile: (mimetype, file) ->
-    return false unless Modernizr.video
-    types = []
-    # Use Modernizr to detect if the file can actually be played.
-    if Modernizr.video.ogg
-      types.push('video/ogg')
-    if Modernizr.video.h264
-      types.push('video/mp4')
-    if Modernizr.video.webm
-      types.push('video/webm')
-    # If the current user sent it, we have the actual file and can try to use
-    # its mime type.
-    mimetype in types || file?.type in types
+  hasPlayableAudioAttachment: ->
+    App.Util.isPlayableAudioFile(@get('attachmentContentType'), @get('attachmentFile'))
 
 
 App.Message.reopenClass

@@ -322,6 +322,34 @@ window.App = App = Ember.Application.create
     else
       App.Group.lookup(conversationId)
 
+  onAudioEnded: (event, element) ->
+    Ember.run @, ->
+      $target = $(element ? event?.target)
+      messageId = $target.closest('[data-message-id]').attr('data-message-id')
+      message = App.Message.lookup(messageId)
+      convoId = $target.closest('[data-conversation-id]').attr('data-conversation-id')
+      if convoId?
+        convo = App.conversationFromId(convoId)
+      return unless convo? && message?
+
+      # TODO: speed this up.  Currently linear on number of messages.
+      messages = convo.get('messages')
+      # Look from the end since it's more likely to be near the end.
+      index = messages.lastIndexOf(message)
+      return unless index >= 0
+      # Find the next message with a playable audio attachment.
+      for i in [index + 1 ... messages.get('length')]
+        m = messages.objectAt(i)
+        $audio = undefined
+        if m.hasPlayableAudioAttachment?()
+          guid = Ember.guidFor(m)
+          $audio = $(".audio-attachment-#{guid}")
+        # If we found the audio element, play it, and then we're finished.
+        if $audio? && $audio.size() > 0
+          $audio.get(0).play()
+          break
+      return undefined
+
   onMessageContentLoad: (conversationId, element, objectType) ->
     Ember.run @, ->
       convo = App.conversationFromId(conversationId)

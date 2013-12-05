@@ -29,3 +29,40 @@ App.Util.reopenClass
         r = Math.random() * 16 | 0
         v = (if c == 'x' then r else (r & 0x3 | 0x8))
         v.toString(16)
+
+  # Returns true if the file attachment is an audio file supported by the
+  # browser.
+  isPlayableAudioFile: (mimetype, file) ->
+    return false unless Modernizr.audio
+    types = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.audio.ogg
+      types.push('audio/ogg')
+    if Modernizr.audio.mp3
+      types.push('audio/mpeg')
+      types.push('audio/mp3')
+    if Modernizr.audio.wav
+      types.push('audio/wav')
+      types.push('audio/x-wav')
+    if Modernizr.audio.m4a
+      types.push('audio/x-m4a')
+      types.push('audio/aac')
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.
+    mimetype in types || file?.type in types
+
+  # Returns true if the file attachment is a video file supported by the
+  # browser.
+  isPlayableVideoFile: (mimetype, file) ->
+    return false unless Modernizr.video
+    types = []
+    # Use Modernizr to detect if the file can actually be played.
+    if Modernizr.video.ogg
+      types.push('video/ogg')
+    if Modernizr.video.h264
+      types.push('video/mp4')
+    if Modernizr.video.webm
+      types.push('video/webm')
+    # If the current user sent it, we have the actual file and can try to use
+    # its mime type.
+    mimetype in types || file?.type in types

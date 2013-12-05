@@ -21,6 +21,10 @@ App.SystemMessage = Ember.Object.extend
 
   attachmentDisplayHtml: (options = {}) ->
 
+  hasPlayableVideoAttachment: -> false
+
+  hasPlayableAudioAttachment: -> false
+
   fetchAndLoadAssociations: ->
     # TODO: Ensure that the user is loaded, e.g. when a user joins a room.
     new Ember.RSVP.Promise (resolve, reject) -> resolve()
