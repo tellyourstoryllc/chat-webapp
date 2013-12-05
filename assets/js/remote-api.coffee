@@ -83,6 +83,9 @@ App.RemoteApi = Ember.Object.extend
   login: (data) ->
     @ajax(@buildURL('/login'), 'POST', data: data)
 
+  logout: ->
+    @ajax(@buildURL('/logout'), 'POST', {})
+
   createUser: (data) ->
     @ajax(@buildURL('/users/create'), 'POST', data: data)
 
