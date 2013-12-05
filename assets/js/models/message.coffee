@@ -116,7 +116,12 @@ App.Message = App.BaseModel.extend
     else
       # We don't have a thumbnail and couldn't display it any other way, so just
       # link to it.
-      display = attachmentUrl
+      display = App.Util.fileNameFromUrl(attachmentUrl)
+      # Make sure we have something to display if we couldn't find a file name.
+      if Ember.isEmpty(display)
+        display = attachmentUrl
+
+      # Truncate the display if it's very long.
       if display.length > 100
         display = display[0...100] + '...'
 

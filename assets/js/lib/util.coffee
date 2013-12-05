@@ -5,6 +5,22 @@ App.Util.reopenClass
   escapeRegexp: (str) ->
     (str + '').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
 
+  # Returns the file name from a URL or last non-empty part.  Returns undefined
+  # if can't be found.
+  fileNameFromUrl: (url) ->
+    urlToMatch = url
+    # Remove query params.
+    queryParamsIndex = urlToMatch.indexOf('?')
+    if queryParamsIndex >= 0
+      urlToMatch = urlToMatch[0 ... queryParamsIndex]
+    # Remove trailing slash.
+    if urlToMatch[urlToMatch.length - 1] == '/'
+      urlToMatch = urlToMatch[0 ... urlToMatch.length - 1]
+    # Try to extract the file name at the end.
+    matches = /\/([^\/?]+)[^\/]*$/.exec(urlToMatch)
+
+    matches?[1]
+
   # Generates a GUID as securely as possible.
   #
   # http://stackoverflow.com/a/8472700/12887
