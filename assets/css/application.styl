@@ -1201,6 +1201,10 @@ sender-column-width = 150px
   .video-attachment-preview
     position relative
     display inline-block
+    // Min dimensions to have enough space for the .expand-indicator needed
+    // when the preview image is super tiny or doesn't load.
+    min-width 38px
+    min-height 30px
 
     > img
       // Prevent space below the image.
