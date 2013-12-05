@@ -170,10 +170,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       ! @get('isEditingTopic')
   ).property('activeRoom.canSetTopic', 'activeRoom.topic', 'isEditingTopic')
 
-  showTopicRow: (->
-    ! Ember.isEmpty(@get('activeRoom.topic')) || @get('isEditingTopic')
-  ).property('activeRoom.topic', 'isEditingTopic')
-
   roomAlphabeticMembers: (->
     members = @get('activeRoom.alphabeticMembers')
     return null unless members?
