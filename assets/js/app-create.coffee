@@ -1,5 +1,4 @@
 window.App = App = Ember.Application.create
-  LOG_TRANSITIONS: true
 
   # Default title displayed in the window/tab's titlebar.
   title: 'SkyMob'
