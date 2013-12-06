@@ -59,8 +59,14 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
       if event.which == 27 # Escape.
-        # Focus on send message textarea.
-        @$('.send-message-text')?.focus()
+        # Cancel editing.
+        if @get('isEditingRoomName')
+          @set('isEditingRoomName', false)
+        else if @get('isEditingTopic')
+          @set('isEditingTopic', false)
+        else
+          # Focus on send message textarea.
+          @$('.send-message-text')?.focus()
 
   roomChanged: (->
     # Hide autocomplete suggestions.
