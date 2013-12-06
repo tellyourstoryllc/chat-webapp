@@ -30,6 +30,11 @@ disable-grayscale-image()
   filter none
   -webkit-filter: grayscale(0)
 
+sprites-background()
+  background-image url('/images/sprites2x.png')
+  background-size 260px 36px
+  background-repeat no-repeat
+
 sprite-icon()
   display inline-block
   background-repeat no-repeat
@@ -296,9 +301,8 @@ button
     content ''
     width 12px
     height 22px
-    background-image url('/images/sprites.png')
-    background-repeat no-repeat
-    background-position -83px 0
+    sprites-background()
+    background-position -88px -4px
 
 .medium-avatar-image
   width 43px
@@ -685,13 +689,12 @@ body.logged-out, body.join-page
     &:after
       position absolute
       right -7px
-      top -4px
+      top 0
       content: ''
       width 12px
       height 16px
-      background-image url('/images/sprites.png')
-      background-repeat no-repeat
-      background-position -104px 0
+      sprites-background()
+      background-position -107px -5px
       opacity .6
 
   &:hover .current-user-status:after
@@ -745,8 +748,8 @@ body.logged-out, body.join-page
   sprite-icon()
   width 18px
   height 20px
-  background-image url('/images/sprites.png')
-  background-position -230px -4px
+  sprites-background()
+  background-position -235px -8px
 
   opacity .6
   transition transform .2s ease-in-out
@@ -916,8 +919,8 @@ room-members-sidebar-width = 200px
     sprite-icon()
     width 20px
     height 22px
-    background-image url('/images/sprites.png')
-    background-position -202px -4px
+    sprites-background()
+    background-position -206px -8px
 
   .invite-room-actions
     display block
@@ -935,8 +938,8 @@ room-members-sidebar-width = 200px
     width 22px
     height 24px
     margin-right 3px
-    background-image url('/images/sprites.png')
-    background-position -29px -2px
+    sprites-background()
+    background-position -34px -5px
 
   .join-url
     width room-members-sidebar-width - 35px // Subtract the width of the icon.
