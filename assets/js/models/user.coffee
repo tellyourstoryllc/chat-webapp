@@ -11,6 +11,10 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Account object.
   _account: null
 
+  defaultAvatarUrl: App.webServerUrl('/images/avatar.png')
+
+  avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
+
   oneToOneWallpaperUrl: Ember.computed.alias('account.oneToOneWallpaperUrl')
 
   computedStatus: (->
