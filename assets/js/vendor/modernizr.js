@@ -1,5 +1,5 @@
 /* Modernizr 2.7.0 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-audio-video-inputtypes-addtest-domprefixes-file_api-forms_fileinput
+ * Build: http://modernizr.com/download/#-history-audio-video-inputtypes-addtest-domprefixes-a_download-file_api-forms_fileinput
  */
 ;
 
@@ -259,18 +259,14 @@ window.Modernizr = (function( window, document, undefined ) {
     return Modernizr;
 
 })(this, this.document);
-/**
- * file tests for the File API specification
- *   Tests for objects specific to the File API W3C specification without
- *   being redundant (don't bother testing for Blob since it is assumed
- *   to be the File object's prototype.
- *
- *   Will fail in Safari 5 due to its lack of support for the standards
- *   defined FileReader object
- */
-Modernizr.addTest('filereader', function () {
-    return !!(window.File && window.FileList && window.FileReader);
-});
+
+// a[download] attribute
+// When used on an <a>, this attribute signifies that the resource it
+// points to should be downloaded by the browser rather than navigating to it.
+// http://developers.whatwg.org/links.html#downloading-resources
+// By Addy Osmani
+
+Modernizr.addTest('adownload', 'download' in document.createElement('a'));
 
 
 // Detects whether input type="file" is available on the platform
@@ -283,5 +279,17 @@ Modernizr.addTest('fileinput', function() {
     var elem = document.createElement('input');
     elem.type = 'file';
     return !elem.disabled;
+});
+/**
+ * file tests for the File API specification
+ *   Tests for objects specific to the File API W3C specification without
+ *   being redundant (don't bother testing for Blob since it is assumed
+ *   to be the File object's prototype.
+ *
+ *   Will fail in Safari 5 due to its lack of support for the standards
+ *   defined FileReader object
+ */
+Modernizr.addTest('filereader', function () {
+    return !!(window.File && window.FileList && window.FileReader);
 });
 ;

@@ -80,6 +80,16 @@ App.Message = App.BaseModel.extend
     escape = Ember.Handlebars.Utils.escapeExpression
     attachmentPreviewUrl = @get('attachmentPreviewUrl')
     messageGuid = Ember.guidFor(@)
+    downloadLink = ->
+      # Only show a download link if browser supports the download attribute
+      # since it otherwise requires server support.
+      return '' unless Modernizr.adownload
+      """
+      <div>
+        <a href='#{escape(attachmentUrl)}' download>Download</a>
+      </div>
+      """
+
     if attachmentPreviewUrl?
       # We have a server generated thumbnail image.
       if @hasPlayableVideoAttachment()
@@ -96,6 +106,7 @@ App.Message = App.BaseModel.extend
           </video>
           <div class='expand-indicator expanded' title='Collapse Video' onclick='App.hideVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>&#8601;</div>
         </div>
+        #{downloadLink()}
         """.htmlSafe()
       else
         # A regular image.
@@ -112,6 +123,7 @@ App.Message = App.BaseModel.extend
         onloadeddata='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "audio");'>
       <source src='#{escape(attachmentUrl)}'>
       </audio>
+      #{downloadLink()}
       """.htmlSafe()
     else
       # We don't have a thumbnail and couldn't display it any other way, so just
