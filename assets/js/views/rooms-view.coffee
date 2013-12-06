@@ -302,7 +302,7 @@ App.RoomsView = Ember.View.extend
         return
       return unless @get('canUpdateRoomAvatar')
       @$('.room-avatar-file').trigger('click')
-      return undefinedundefined
+      return undefined
 
     removeRoomAvatar: ->
       activeRoom = @get('activeRoom')
