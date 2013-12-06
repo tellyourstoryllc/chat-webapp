@@ -7,6 +7,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   # Caller must bind this.
   activeRoom: null
 
+  newRoomName: ''
+
+  isEditingRoomName: false
+
   newRoomTopic: null
 
   isEditingTopic: false
@@ -62,8 +66,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # Hide autocomplete suggestions.
     @set('suggestionsShowing', false)
 
-    # If user was editing topic, cancel it.
-    @set('isEditingTopic', false)
+    # If user was editing, cancel it.
+    @setProperties(isEditingRoomName: false, isEditingTopic: false)
 
     Ember.run.schedule 'afterRender', @, ->
       @setFocus()
@@ -164,6 +168,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     width -= roomsSidebarWidth ? 0
     width -= membersSidebarWidth if isMembersVisible
     width
+
+  canEditRoomName: (->
+    room = @get('activeRoom')
+    room instanceof App.Group && room.get('isCurrentUserAdmin')
+  ).property('activeRoom', 'activeRoom.isCurrentUserAdmin')
 
   showSetTopicLink: (->
     @get('activeRoom.canSetTopic') && Ember.isEmpty(@get('activeRoom.topic')) &&
@@ -368,6 +377,22 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @clearFile()
 
   actions:
+
+    editRoomName: ->
+      @setProperties(isEditingRoomName: true, newRoomName: @get('activeRoom.name'))
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.edit-room-name').focus().textrange('set') # Select all.
+      return undefined
+
+    cancelEditingRoomName: ->
+      @set('isEditingRoomName', false)
+      return undefined
+
+    saveRoomName: ->
+      @set('isEditingRoomName', false)
+      room = @get('activeRoom')
+      room.updateName(@get('newRoomName'))
+      return undefined
 
     editTopic: ->
       @setProperties(isEditingTopic: true, newRoomTopic: @get('activeRoom.topic'))

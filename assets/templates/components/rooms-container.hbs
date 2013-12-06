@@ -6,7 +6,20 @@
           <img {{bind-attr src='activeRoom.avatarUrl'}} class='medium-avatar-image'>
         {{/link-to}}
         <div class='room-name-info-container'>
-          {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+          {{#if roomsContainer.isEditingRoomName}}
+            <form class='edit-room-name-form'>
+              {{input type='text' value=roomsContainer.newRoomName
+                class='edit-room-name'
+                placeholder='New Name' maxlength='32'}}
+              <button type='submit' {{action 'saveRoomName' target=roomsContainer}} class='save-room-name-button'>Save</button>
+              <a href='#' {{action 'cancelEditingRoomName' target=roomsContainer}} class='edit-room-name-link'>Cancel</a>
+            </form>
+          {{else}}
+            {{#link-to 'rooms.room' activeRoom classNames='room-permalink'}}{{activeRoom.name}}{{/link-to}}
+            {{#if roomsContainer.canEditRoomName}}
+              <a href='#' {{action 'editRoomName' target=roomsContainer}} class='edit-room-name-link'>Edit</a>
+            {{/if}}
+          {{/if}}
         </div>
         <div class='room-info-cell topic-cell'>
           <div class='topic-container'>

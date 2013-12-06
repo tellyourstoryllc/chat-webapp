@@ -85,6 +85,20 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     @didReceiveMessage(message, suppressNotifications: true)
   ).observes('topic')
 
+  updateName: (newName) ->
+    if @isPropertyLocked('name')
+      Ember.Logger.warn "I can't change the name of a group when I'm still waiting for a response from the server."
+      return
+
+    data =
+      name: newName
+    oldName = @get('name')
+    url = App.get('api').buildURL("/groups/#{@get('id')}/update")
+    @withLockedPropertyTransaction url, 'POST', { data: data }, 'name', =>
+      @set('name', newName)
+    , =>
+      @set('name', oldName)
+
   updateTopic: (newTopic) ->
     if @isPropertyLocked('topic')
       Ember.Logger.warn "I can't change the topic of a group when I'm still waiting for a response from the server."
