@@ -3,7 +3,7 @@ App.Faye = Ember.Object.extend()
 App.Faye.reopenClass
 
   createClient: ->
-    fayeClient = new Faye.Client("http://#{AppConfig.fayeHost}/faye")
+    fayeClient = new Faye.Client("#{AppConfig.fayeProtocolAndHost}/faye")
 
     # Authentication
     clientAuth =
