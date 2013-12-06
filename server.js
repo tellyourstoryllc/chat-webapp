@@ -1,5 +1,8 @@
 require('coffee-script');
 
+// TODO: Remove this since it's not safe!
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -16,14 +19,24 @@ app.use(express.favicon());
 app.use(express.logger('short'));
 
 // Proxy api requests; must be *before* `bodyParser`.
-var routingProxy = new httpProxy.RoutingProxy();
 var apiProxy = function(pattern, host, port) {
+  // Default to HTTPS if not specified.
+  var useHttps = config.apiUseHttps == null || !! config.apiUseHttps;
+  var httpsOptions = true;
+  var routingProxy = new httpProxy.HttpProxy({
+    https: (useHttps ? httpsOptions : false),
+    target: {
+      host: host,
+      port: port,
+      https: (useHttps ? httpsOptions : false)
+    }
+  });
   return function(req, res, next) {
     var matches = req.url.match(pattern);
     if (matches) {
       // Strip off /api prefix of the URL.
       req.url = matches[1];
-      routingProxy.proxyRequest(req, res, { host: host, port: port });
+      routingProxy.proxyRequest(req, res);
     }
     else {
       next();
