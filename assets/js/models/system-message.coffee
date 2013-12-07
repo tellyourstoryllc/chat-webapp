@@ -17,7 +17,22 @@ App.SystemMessage = Ember.Object.extend
 
   userFacingText: Ember.computed.alias('localText')
 
-  body: Ember.computed.alias('userFacingText')
+  body: (->
+    escape = Ember.Handlebars.Utils.escapeExpression
+    text = @get('userFacingText')
+
+    escapedText = escape(text)
+
+    # Emoticons.
+    convoId = @get('conversationId')
+    evaledText = App.Emoticon.replaceText escapedText, (str, emoticon) ->
+      # Return the image HTML for the emoticon image.
+      "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
+      " title='#{escape(emoticon.get('name'))}'" +
+      " onload='App.onMessageContentLoad(&quot;#{escape(convoId)}&quot;, this, &quot;emoticon&quot;);'>"
+
+    evaledText.htmlSafe()
+  ).property('userFacingText')
 
   attachmentDisplayHtml: (options = {}) ->
 
@@ -28,3 +43,15 @@ App.SystemMessage = Ember.Object.extend
   fetchAndLoadAssociations: ->
     # TODO: Ensure that the user is loaded, e.g. when a user joins a room.
     new Ember.RSVP.Promise (resolve, reject) -> resolve()
+
+App.SystemMessage.reopenClass
+
+  createFromConversation: (conversation, props) ->
+    defProps = {}
+    id = conversation.get('id')
+    if conversation instanceof App.OneToOne
+      defProps.oneToOneId = id
+    else if conversation instanceof App.Group
+      defProps.groupId = id
+
+    @create(_.extend(defProps, props))

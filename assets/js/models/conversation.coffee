@@ -265,12 +265,12 @@ App.Conversation = Ember.Mixin.create
 
   userDidJoin: (user) ->
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
-      message = App.SystemMessage.create(localText: "#{user.get('name')} joined.")
+      message = App.SystemMessage.createFromConversation(@, localText: "#{user.get('name')} joined.")
       @didReceiveMessage(message, suppressNotifications: true)
 
   userDidLeave: (user) ->
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
-      message = App.SystemMessage.create(localText: "#{user.get('name')} left for good.")
+      message = App.SystemMessage.createFromConversation(@, localText: "#{user.get('name')} left for good.")
       @didReceiveMessage(message, suppressNotifications: true)
 
   didReceiveMessage: (message, options = {}) ->

@@ -81,7 +81,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
       "The topic was cleared."
     else
       "The topic was changed to: #{topic}"
-    message = App.SystemMessage.create(localText: text)
+    message = App.SystemMessage.createFromConversation(@, localText: text)
     @didReceiveMessage(message, suppressNotifications: true)
   ).observes('topic')
 
