@@ -196,14 +196,12 @@ App.Message = App.BaseModel.extend
         fullMatch
 
     # Emoticons.
-    groupId = @get('groupId')
-    evaledText = App.Emoticon.all().reduce (str, emoticon) ->
-      regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
-      imageHtml = "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
-                  " title='#{escape(emoticon.get('name'))}'" +
-                  " onload='App.onMessageContentLoad(&quot;#{escape(groupId)}&quot;, this, &quot;emoticon&quot;);'>"
-      str.replace regexp, imageHtml
-    , evaledText
+    convoId = @get('conversationId')
+    evaledText = App.Emoticon.replaceText evaledText, (str, emoticon) ->
+      # Return the image HTML for the emoticon image.
+      "<img class='emoticon' src='#{emoticon.get('imageUrl')}'" +
+      " title='#{escape(emoticon.get('name'))}'" +
+      " onload='App.onMessageContentLoad(&quot;#{escape(convoId)}&quot;, this, &quot;emoticon&quot;);'>"
 
     evaledText.htmlSafe()
   # Note: We omit conversation members' names from dependent keys since we don't

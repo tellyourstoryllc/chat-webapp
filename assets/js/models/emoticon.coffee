@@ -64,3 +64,18 @@ App.Emoticon.reopenClass
       type: @
       content: @_all
       sortProperties: ['name']
+
+  replaceText: (text, emoticonReplacementFn) ->
+    @all().reduce (str, emoticon) ->
+      regexp = new RegExp(App.Util.escapeRegexp(emoticon.get('name')), 'g')
+      replacement = emoticonReplacementFn(str, emoticon)
+      str.replace regexp, replacement
+    , text
+
+  asHtml: (text, options = {}) ->
+    escape = Ember.Handlebars.Utils.escapeExpression
+    classNames = Ember.makeArray(options.classNames).join(' ')
+    @replaceText escape(text), (str, emoticon) ->
+      "<img class='emoticon #{escape(classNames)}' src='#{emoticon.get('imageUrl')}'" +
+      " title='#{escape(emoticon.get('name'))}'>"
+    .htmlSafe()

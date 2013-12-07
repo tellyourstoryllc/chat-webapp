@@ -14,6 +14,10 @@ Ember.Handlebars.registerBoundHelper 'truncate', (text, options) ->
   return null unless text?
   text[0 ... options.hash.length ? 30]
 
+Ember.Handlebars.registerBoundHelper 'emoticonize', (text, options) ->
+  return null unless text?
+  App.Emoticon.asHtml(text, classNames: 'small-emoticon')
+
 # Returns given number of seconds formatted as a duration.
 Ember.Handlebars.registerBoundHelper 'duration', (seconds) ->
   return null unless Ember.typeOf(seconds) == 'number'

@@ -36,7 +36,7 @@
                 {{#if roomsContainer.showSetTopicLink}}
                   <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'><nobr>Set Topic</nobr></a>
                 {{else}}
-                  {{activeRoom.topic}}
+                  {{emoticonize activeRoom.topic}}
                   {{#if activeRoom.canSetTopic}}
                     <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
                   {{/if}}
