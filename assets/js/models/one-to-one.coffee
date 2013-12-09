@@ -89,6 +89,7 @@ App.OneToOne.reopenClass
   propertiesFromRawAttrs: (json) ->
     id: @coerceId(json.id)
     memberIds: (json.member_ids ? []).map (id) => @coerceId(id)
+    lastActiveAt: App.get('api').deserializeUnixTimestamp(json.last_message_at)
 
   lookupOrCreate: (id) ->
     id = @coerceId(id)

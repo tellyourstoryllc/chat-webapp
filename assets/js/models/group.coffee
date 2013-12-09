@@ -167,6 +167,7 @@ App.Group.reopenClass
     wallpaperUrl: json.wallpaper_url
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
+    lastActiveAt: App.get('api').deserializeUnixTimestamp(json.last_message_at)
 
   # Fetches a Group by id and returns a promise that resolves to the Group
   # instance.
