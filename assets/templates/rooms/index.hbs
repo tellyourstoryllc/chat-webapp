@@ -25,21 +25,3 @@
     <button type='submit' {{action 'joinRoom'}} {{bind-attr disabled='isJoiningRoom'}}>Join Room</button>
   </div>
 </form>
-
-{{#if rooms}}
-  {{#with view as lobbyView}}
-    <table class='rooms-table'>
-      <tr>
-        <th colspan='2'>Rooms</th>
-      </tr>
-      {{#each room in rooms itemViewClass='App.RoomsTableRowView'}}
-        <td>
-          <div class='room-name'>
-            {{#link-to 'rooms.room' room}}{{room.name}}{{/link-to}}
-            <span class='topic'>{{room.topic}}</span>
-          </div>
-        </td>
-      {{/each}}
-    </table>
-  {{/with}}
-{{/if}}
