@@ -7,6 +7,7 @@
 #= require vendor/moment
 #= require vendor/jquery-textrange
 #= require vendor/sjcl
+#= require vendor/ZeroClipboard
 #= require es6-polyfill
 #= require rsvp-ext
 #= require desktop-notify

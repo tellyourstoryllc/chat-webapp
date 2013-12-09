@@ -43,6 +43,7 @@ App.RoomsView = Ember.View.extend
 
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
+      @setupCopyToClipboard()
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
@@ -94,11 +95,19 @@ App.RoomsView = Ember.View.extend
     Ember.run.next @, ->
       @send('joinRoom', $('.join-text').val())
 
+  setupCopyToClipboard: ->
+    return if @get('zeroClipboard')? || ! @get('activeRoom')?
+    clip = new ZeroClipboard(@$('.copy-icon'))
+    @set('zeroClipboard', clip)
+
   activeRoomDidChange: (->
     # Reset file pickers.
     @$('.room-avatar-file, .room-wallpaper-file').val('')
     # When the user shows the sidebar and selects a room, hide the sidebar.
     @set('isShowingRoomsSidebar', false)
+    # Make sure copy to clipboard is setup.
+    Ember.run.schedule 'afterRender', @, ->
+      @setupCopyToClipboard()
   ).observes('activeRoom')
 
   resize: _.debounce (event) ->

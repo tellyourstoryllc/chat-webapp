@@ -142,6 +142,9 @@ window.App = App = Ember.Application.create
           window.localStorage.removeItem('token')
       .fail App.rejectionHandler
 
+    # Setup copying to clipboard.  Versioning the URL to prevent caching issues.
+    ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf')
+
   # Common promise rejection handler.  Use this as the final handler whenever
   # you create a promise so that errors don't get swallowed.  For example:
   #

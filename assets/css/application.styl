@@ -883,12 +883,12 @@ room-members-sidebar-width = 200px
     background-color #EEF0F0
     color #3C495A
 
-    &:hover
-      background-color #F8F8F8
-
   .admin-room-actions
     height 29px
     cursor pointer
+
+    &:hover
+      background-color #F8F8F8
 
   .room-settings-icon
     sprite-icon()
@@ -898,23 +898,17 @@ room-members-sidebar-width = 200px
     background-position -206px -8px
 
   .invite-room-actions
-    display block
     height 35px
-    text-decoration none
 
-    &:hover .join-icon
-      animation-name join-icon-bump
-      animation-duration .2s
-      animation-timing-function linear
-
-  .join-icon
+  .copy-icon
     sprite-icon()
     float left
     width 22px
     height 24px
     margin-right 3px
     sprites-background()
-    background-position -34px -5px
+    background-position -89px -30px
+    cursor pointer
 
   .join-url
     width room-members-sidebar-width - 35px // Subtract the width of the icon.
@@ -922,6 +916,9 @@ room-members-sidebar-width = 200px
     color #A9A9A9
     text-shadow 0 1px 0 rgba(255,255,255, 0.8)
     font-size 10px
+    // Don't appear like a link.
+    text-decoration none
+    cursor default
 
   .room-members
     overflow auto // Scrollable.
