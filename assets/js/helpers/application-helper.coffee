@@ -18,6 +18,10 @@ Ember.Handlebars.registerBoundHelper 'emoticonize', (text, options) ->
   return null unless text?
   App.Emoticon.asHtml(text, classNames: 'small-emoticon')
 
+Ember.Handlebars.registerBoundHelper 'displayUrl', (url, options) ->
+  return null unless url?
+  url.replace /^https?:\/\//, ''
+
 # Returns given number of seconds formatted as a duration.
 Ember.Handlebars.registerBoundHelper 'duration', (seconds) ->
   return null unless Ember.typeOf(seconds) == 'number'

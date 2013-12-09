@@ -13,7 +13,7 @@
 </div>
 
 <div class='rooms-sidebar'>
-  <input type='text' class='join-text' placeholder='Enter Room (Invite Code)' autocomplete='off'>
+  <input type='text' class='join-text' placeholder='Enter Room (Key Code)' autocomplete='off'>
   <ul class='rooms-list'>
     <li class='room-list-item'>
       {{#link-to 'rooms.index'}}<span class='room-name'>Lobby</span>{{/link-to}}
@@ -93,8 +93,8 @@
     <a class='room-actions invite-room-actions' {{bind-attr href='activeRoom.relativeJoinUrl'}}
       {{action 'ignore'}}>
       <span class='join-icon'></span>
-      <div class='join-code'>{{upcase activeRoom.joinCode}}</div>
-      <div class='join-url'>{{activeRoom.joinUrl}}</div>
+      <div class='join-code'>Key Code: {{upcase activeRoom.joinCode}}</div>
+      <div class='join-url'>{{displayUrl activeRoom.joinUrl}}</div>
       <div class='clearfix'></div>
     </a>
   {{/if}}
