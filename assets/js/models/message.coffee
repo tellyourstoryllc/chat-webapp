@@ -366,7 +366,7 @@ App.Message.reopenClass
         contentType: false
       )
       .then (json) =>
-        Ember.Logger.log "message create response", json
+        Ember.Logger.log "message create response", json if App.get('useDebugLogging')
         message.set('isSaving', false)
         if ! json? || json.error?
           # Reject the promise.

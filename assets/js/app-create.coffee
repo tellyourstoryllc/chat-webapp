@@ -155,7 +155,7 @@ window.App = App = Ember.Application.create
 
   onFayeConnect: ->
     Ember.run @, ->
-      Ember.Logger.log "faye app:connect", new Date()
+      Ember.Logger.log "faye app:connect", new Date() if App.get('useDebugLogging')
       @set('isFayeClientConnected', true)
       @updateStatusAfterConnect()
       @get('eventTarget').trigger('didConnect')
@@ -163,12 +163,12 @@ window.App = App = Ember.Application.create
 
   onFayeTransportUp: ->
     Ember.run @, ->
-      Ember.Logger.log "faye transport:up", new Date()
+      Ember.Logger.log "faye transport:up", new Date() if App.get('useDebugLogging')
       return undefined
 
   onFayeTransportDown: ->
     Ember.run @, ->
-      Ember.Logger.log "faye transport:down", new Date()
+      Ember.Logger.log "faye transport:down", new Date() if App.get('useDebugLogging')
       return undefined
 
   # Returns the router.  You should only call this as a last resort.
