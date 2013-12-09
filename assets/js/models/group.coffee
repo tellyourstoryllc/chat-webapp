@@ -26,6 +26,11 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     App.Group.parseJoinCode(@get('joinUrl'))
   ).property('joinUrl')
 
+  # Similar to joinUrl but a relative URL instead of absolute.
+  relativeJoinUrl: (->
+    "/join/#{@get('joinCode')}"
+  ).property('joinCode')
+
   isCurrentUserAdmin: (->
     @get('adminIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'adminIds.@each')
