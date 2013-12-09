@@ -23,7 +23,6 @@
           {{#link-to 'rooms.room' room}}
             {{room-avatar room=room showStatus=true}}
             <span class='room-name'>{{room.name}}</span>
-            <span {{action 'closeRoom' room}} class='close-room'>&times;</span>
           {{/link-to}}
         </li>
       {{/each}}
