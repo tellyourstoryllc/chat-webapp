@@ -90,7 +90,8 @@
     </div>
 
     <div class='title'>Invite Link</div>
-    <a class='room-actions invite-room-actions' {{bind-attr href='activeRoom.joinUrl'}}>
+    <a class='room-actions invite-room-actions' {{bind-attr href='activeRoom.joinUrl'}}
+      {{action 'ignore'}}>
       <span class='join-icon'></span>
       <div class='join-code'>{{upcase activeRoom.joinCode}}</div>
       <div class='join-url'>{{activeRoom.joinUrl}}</div>
