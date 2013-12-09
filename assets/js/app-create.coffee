@@ -244,7 +244,7 @@ window.App = App = Ember.Application.create
           else
             # This is a OneToOne we've never seen before, so just load it.
             App.loadAll(json)
-        else if json.object_type == 'preferences'
+        else if json.object_type == 'user_preferences'
           # Don't synchronize the client preferences; only server preferences.
           delete json.client_web
           App.loadAll(json)
@@ -443,7 +443,7 @@ window.App = App = Ember.Application.create
         App.Message
       when 'one_to_one'
         App.OneToOne
-      when 'preferences'
+      when 'user_preferences'
         App.Preferences
       when 'user'
         App.User

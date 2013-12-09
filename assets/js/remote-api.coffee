@@ -69,7 +69,7 @@ App.RemoteApi = Ember.Object.extend
         throw new Error("Expected to find account in checkin result but didn't") unless obj?
         account = App.Account.loadRaw(obj)
 
-        objs = json.filter (o) -> o.object_type == 'preferences'
+        objs = json.filter (o) -> o.object_type == 'user_preferences'
         prefs = objs.map (o) -> App.Preferences.loadRaw(o)
 
         userAttrs = json.find (o) -> o.object_type == 'user'
