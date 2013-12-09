@@ -13,11 +13,6 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
       newRoomName: ''
       createGroupErrorMessage: null
 
-  resetJoinRoom: ->
-    @setProperties
-      joinCode: ''
-      joinRoomErrorMessage: null
-
   actions:
 
     createRoom: ->
@@ -39,24 +34,5 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
         # Show error message.
         @set('createGroupErrorMessage', App.userMessageFromError(xhrOrError))
       .fail App.rejectionHandler
-
-      return undefined
-
-    joinRoom: ->
-      joinCode = App.Group.parseJoinCode(@get('joinCode'))
-      return if Ember.isEmpty(joinCode)
-
-      @set('isJoiningRoom', true)
-      App.get('api').joinGroup(joinCode)
-      .always =>
-        @set('isJoiningRoom', false)
-      .then (group) =>
-        # Group was joined successfully.
-        @resetJoinRoom()
-        # Go to room.
-        @get('target').send('goToRoom', group)
-      , (e) =>
-        # Show error message.
-        @set('joinRoomErrorMessage', e.message)
 
       return undefined

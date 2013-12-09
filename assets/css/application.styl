@@ -608,6 +608,18 @@ body.logged-out, body.join-page
   height 100%
   background-color app-purple
 
+.join-text
+  box-sizing border-box
+  width room-sidebar-width - 2*10px
+  margin 10px
+  padding 6px
+  border-radius 15px
+  border 1px solid rgba(0,0,0, .5)
+  outline none
+  box-shadow 0 1px 0 rgba(255,255,255, .18)
+  background-color #3E274D
+  color rgba(254, 255, 255, 0.65)
+
 .rooms-list
   box-sizing border-box
   width room-sidebar-width
@@ -820,10 +832,6 @@ body.logged-out, body.join-page
 .create-room-form
   input[type=text]
     width 168px
-
-.join-room-form
-  input[type=text]
-    width 138px
 
 
 room-members-sidebar-width = 200px

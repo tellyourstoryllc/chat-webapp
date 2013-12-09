@@ -456,10 +456,11 @@ window.App = App = Ember.Application.create
 
     value
 
-  userMessageFromError: (xhrOrError) ->
+  userMessageFromError: (xhrOrError, defaultMessage = null) ->
     if xhrOrError?
       msg = xhrOrError.responseJSON?.error?.message
       msg ?= xhrOrError.error?.message
+    msg ?= defaultMessage
     msg ?= App.defaultErrorMessage
 
     msg

@@ -11,17 +11,3 @@
     <button type='submit' {{action 'createRoom'}} {{bind-attr disabled='isCreatingGroup'}}>Create Room</button>
   </div>
 </form>
-
-<form class='join-room-form lobby-form'>
-  <h3 class='title'>Join an Existing Room</h3>
-  {{#if joinRoomErrorMessage}}
-    <div class='alert alert-error'>{{joinRoomErrorMessage}}</div>
-  {{/if}}
-  <div class='control-group'>
-    <label>Join Code or Link</label>
-    {{input type='text' value=joinCode autocomplete='off'}}
-  </div>
-  <div class='form-actions'>
-    <button type='submit' {{action 'joinRoom'}} {{bind-attr disabled='isJoiningRoom'}}>Join Room</button>
-  </div>
-</form>

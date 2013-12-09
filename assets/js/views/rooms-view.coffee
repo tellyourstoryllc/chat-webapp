@@ -1,5 +1,12 @@
 App.RoomsView = Ember.View.extend
 
+  # Text from input textbox to join room.
+  enteredJoinText: ''
+
+  isJoiningRoom: false
+
+  joinRoomErrorMessage: null
+
   isShowingRoomsSidebar: false
 
   isRoomMenuVisible: false
@@ -18,7 +25,8 @@ App.RoomsView = Ember.View.extend
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
-      'onToggleRoomsSidebarTouchStart')
+      'onToggleRoomsSidebarTouchStart',
+      'onJoinTextKeyDown', 'onJoinTextPaste')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
@@ -29,6 +37,8 @@ App.RoomsView = Ember.View.extend
     @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').on 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
+    @$('.join-text').on 'keydown', @onJoinTextKeyDown
+    @$('.join-text').on 'paste', @onJoinTextPaste
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -42,6 +52,8 @@ App.RoomsView = Ember.View.extend
     @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').off 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
+    @$('.join-text').off 'keydown', @onJoinTextKeyDown
+    @$('.join-text').off 'paste', @onJoinTextPaste
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -70,6 +82,18 @@ App.RoomsView = Ember.View.extend
       event.preventDefault()
       @toggleProperty('isShowingRoomsSidebar')
 
+  onJoinTextKeyDown: (event) ->
+    Ember.run @, ->
+      if event.which == 13  # Enter
+        event.preventDefault()
+        @send('joinRoom', $('.join-text').val())
+
+  onJoinTextPaste: (event) ->
+    # Use Ember.run.next so that we get the result of pasting, not before
+    # pasting.
+    Ember.run.next @, ->
+      @send('joinRoom', $('.join-text').val())
+
   activeRoomDidChange: (->
     # Reset file pickers.
     @$('.room-avatar-file, .room-wallpaper-file').val('')
@@ -92,6 +116,7 @@ App.RoomsView = Ember.View.extend
 
     height = $window.height()
     height -= $('.navbar:first').outerHeight() ? 0
+    height -= $('.join-text').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
       height: height
@@ -283,6 +308,11 @@ App.RoomsView = Ember.View.extend
     @$('.status-text-menu').removeClass('expand-in-less-bounce')
     @set('isStatusTextMenuVisible', false)
 
+  resetJoinRoom: ->
+    $('.join-text').val('')
+    @set('joinRoomErrorMessage', null)
+    undefined
+
   actions:
 
     toggleRoomMenu: ->
@@ -361,6 +391,30 @@ App.RoomsView = Ember.View.extend
         if room.get('isDeleted')
           # Stop listening for messages.
           room.set('isOpen', false)
+
+      return undefined
+
+    joinRoom: (joinText) ->
+      return if @get('isJoiningRoom')
+      joinCode = App.Group.parseJoinCode(joinText)
+      return if Ember.isEmpty(joinCode)
+
+      @setProperties(isJoiningRoom: true, joinRoomErrorMessage: null)
+      App.get('api').joinGroup(joinCode)
+      .always =>
+        @set('isJoiningRoom', false)
+      .then (group) =>
+        # Group was joined successfully.
+        @resetJoinRoom()
+        # Go to room.
+        @get('controller').send('goToRoom', group)
+      , (e) =>
+        # Show error message.
+        # TODO: There's no UI for this yet so just alert.
+        errorMsg = App.userMessageFromError(e, "Sorry, we couldn't find a room with that code.")
+        @set('joinRoomErrorMessage', errorMsg)
+        alert(errorMsg)
+      .fail App.rejectionHandler
 
       return undefined
 
