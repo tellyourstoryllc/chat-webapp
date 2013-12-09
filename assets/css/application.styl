@@ -32,7 +32,7 @@ disable-grayscale-image()
 
 sprites-background()
   background-image url('/images/sprites2x.png')
-  background-size 260px 36px
+  background-size 260px 57px
   background-repeat no-repeat
 
 sprite-icon()
@@ -786,14 +786,15 @@ body.logged-out, body.join-page
     top 5px
     left 5px
     display block
-    // Simulate a 5px padding.
-    width 26px + 2 * 5px
-    height 23px + 2 * 5px
-    background-image url('/images/hamburger.png')
-    background-repeat no-repeat
-    background-size 26px 23px
-    background-position 5px 5px
+    padding 8px
     cursor pointer
+
+  .toggle-sidebar-icon
+    width 16px
+    height 12px
+    sprites-background()
+    sprite-icon()
+    background-position -69px -41px
 
 .lobby-form
   width 260px
