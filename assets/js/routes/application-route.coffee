@@ -1,5 +1,16 @@
 App.ApplicationRoute = Ember.Route.extend
 
+  renderTemplate: (controller, model) ->
+    obj = App.get('blowUpWithMessage')
+    if obj?
+      # There's some kind of fatal error.
+      controller.setProperties
+        userErrorTitle: obj.title
+        userErrorMessage: obj.message
+      @render 'error'
+    else
+      @_super(arguments...)
+
   transitionToDefault: ->
     transition = App.get('continueTransition')
     if transition?

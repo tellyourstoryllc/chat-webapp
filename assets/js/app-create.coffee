@@ -105,12 +105,22 @@ window.App = App = Ember.Application.create
     @set('roomMessagesViews', Ember.Map.create())
 
     # Setup Faye client.
-    fayeClient = App.Faye.createClient()
+    try
+      fayeClient = App.Faye.createClient()
+    catch e
+      if /Faye/.test(e?.message)
+        Ember.Logger.error e, e.stack ? e.stacktrace
+        App.set 'blowUpWithMessage',
+          title: "500 Internal Server Error"
+          message: "There was an error connecting to the messaging server."
+      else
+        throw e
     @set('fayeClient', fayeClient)
     _.bindAll(@, 'onFayeConnect', 'onFayeTransportUp', 'onFayeTransportDown')
-    fayeClient.on 'app:connect', @onFayeConnect
-    fayeClient.on 'transport:up', @onFayeTransportUp
-    fayeClient.on 'transport:down', @onFayeTransportDown
+    if fayeClient?
+      fayeClient.on 'app:connect', @onFayeConnect
+      fayeClient.on 'transport:up', @onFayeTransportUp
+      fayeClient.on 'transport:down', @onFayeTransportDown
 
     token = window.localStorage['token']
     if token?
