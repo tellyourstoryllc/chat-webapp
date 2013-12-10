@@ -1,4 +1,4 @@
-# Actions: didLogIn
+# Actions: didLogIn, didClose
 App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   classNames: ['login-form-component']
 
@@ -15,7 +15,13 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   didInsertElement: ->
     @_super(arguments...)
 
+  showClose: Ember.computed.alias('didClose')
+
   actions:
+
+    close: ->
+      @sendAction('didClose')
+      return undefined
 
     attemptLogInWithFacebook: ->
       return if @get('isAuthenticatingWithFacebook')

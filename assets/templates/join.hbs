@@ -40,10 +40,11 @@
       {{else}}
         <div class='signup-or-login'>
           {{#if view.isAuthStateSignup}}
-            {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+            {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'
+              didClose='cancelSignUp'}}
           {{else}}
             {{#if view.isAuthStateLogin}}
-              {{login-form didLogIn='didLogIn'}}
+              {{login-form didLogIn='didLogIn' didClose='cancelLogIn'}}
             {{else}}
               <div class='title'>To enter</div>
               <div>

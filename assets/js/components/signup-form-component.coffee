@@ -1,4 +1,4 @@
-# Actions: didSignUp, didLogIn
+# Actions: didSignUp, didLogIn, didClose
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   classNames: ['signup-form-component']
 
@@ -25,7 +25,13 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   didInsertElement: ->
     @_super(arguments...)
 
+  showClose: Ember.computed.alias('didClose')
+
   actions:
+
+    close: ->
+      @sendAction('didClose')
+      return undefined
 
     attemptSignUpWithFacebook: ->
       return if @get('isAuthenticatingWithFacebook')

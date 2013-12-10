@@ -1,6 +1,6 @@
 App.JoinView = Ember.View.extend
 
-  authState: null
+  authState: Ember.computed.alias('controller.authState')
 
   didInsertElement: ->
     # Add class so that we keep the navbar full width.

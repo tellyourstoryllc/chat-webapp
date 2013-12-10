@@ -1,5 +1,8 @@
 {{! Use a form tag to capture enter key. }}
 <form class='login-form form' {{action 'attemptLogin' on='submit'}}>
+  {{#if showClose}}
+    <a href='#' class='close' {{action 'close'}}>&times;</a href='#'>
+  {{/if}}
   <div class='title'>Log In</div>
   {{#if errorMessage}}
     <div class='alert alert-error'>{{errorMessage}}</div>
