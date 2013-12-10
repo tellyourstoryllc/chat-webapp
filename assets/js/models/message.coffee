@@ -271,7 +271,12 @@ App.Message.reopenClass
 
     # Parse JSON.
     clientMetadata = if json.client_metadata
-      JSON.parse(json.client_metadata)
+      try
+        JSON.parse(json.client_metadata)
+      catch e
+        # If parsing fails, the metadata is probably the client ID.  Ensure it's
+        # a string.
+        '' + json.client_metadata
     else
       {}
     # Extract the client ID.
