@@ -321,6 +321,8 @@ App.Message.reopenClass
       inst = @create(props)
       @_all.pushObject(inst)
       @_allById[props.id] = inst
+      # This is also client ID magic sauce.
+      @_allByClientId[props.clientId] = inst
       isNew = true
 
     [inst, isNew]
