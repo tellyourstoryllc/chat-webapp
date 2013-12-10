@@ -1,7 +1,7 @@
 {{! Use a form tag to capture enter key. }}
 <form class='signup-form form' {{action 'attemptSignup' on='submit'}}>
   {{#if showClose}}
-    <a href='#' class='close' {{action 'close'}}>&times;</a href='#'>
+    <a href='#' class='close' {{action 'close'}}>&times;</a>
   {{/if}}
   <div class='title'>Sign Up</div>
   {{#if errorMessage}}
