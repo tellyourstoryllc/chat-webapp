@@ -57,13 +57,10 @@ App.RemoteApi = Ember.Object.extend
       else
         json = Ember.makeArray(json)
 
-        # Get version.
-        meta = json.find (o) -> o.object_type == 'meta'
-        version = meta.emoticons?.version
-        App.set('emoticonsVersion', version) if version?
-
         objs = json.filter (o) -> o.object_type == 'emoticon'
         emoticons = objs.map (o) -> App.Emoticon.loadRaw(o)
+        # Invalidate any properties depending on emoticons.
+        App.incrementProperty('emoticonsVersion')
 
         obj = json.find (o) -> o.object_type == 'account'
         throw new Error("Expected to find account in checkin result but didn't") unless obj?

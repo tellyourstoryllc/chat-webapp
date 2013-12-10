@@ -1,15 +1,6 @@
 #= require base-model
 
-App.Emoticon = App.BaseModel.extend
-
-  imageUrl: (->
-    imageData = @get('imageData')
-
-    if imageData?
-      "data:image/png;base64," + imageData
-    else
-      null
-  ).property('imageData')
+App.Emoticon = App.BaseModel.extend()
 
 
 App.Emoticon.reopenClass
@@ -54,7 +45,7 @@ App.Emoticon.reopenClass
 
     id: App.BaseModel.coerceId(json.id)
     name: json.name
-    imageData: json.image_data
+    imageUrl: json.image_url
 
   lookupByName: (name) ->
     @_allByName[name]

@@ -30,7 +30,7 @@ window.App = App = Ember.Application.create
 
   hasNotificationPermission: false
 
-  emoticonsVersion: null
+  emoticonsVersion: 0
 
   # Whether the app/window has focus.
   hasFocus: true
