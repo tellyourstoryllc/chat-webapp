@@ -7,13 +7,22 @@ App.CreateRoomModalView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onOverlayClick')
+    _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick')
 
   didInsertElement: ->
+    $('body').on 'keydown', @onBodyKeyDown
     @$('.page-overlay').on 'click', @onOverlayClick
 
   willDestroyElement: ->
+    $('body').off 'keydown', @onBodyKeyDown
     @$('.page-overlay').off 'click', @onOverlayClick
+
+  onBodyKeyDown: (event) ->
+    Ember.run @, ->
+      # No key modifiers.
+      if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
+        if event.which == 27      # Escape
+          @closeModal()
 
   onOverlayClick: (event) ->
     Ember.run @, ->
