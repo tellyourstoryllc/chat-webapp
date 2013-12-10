@@ -78,6 +78,8 @@ App.Conversation = Ember.Mixin.create
 
     @setProperties(props)
 
+    App.get('eventTarget').on 'didConnect', @, @didConnect
+
   # Marks a class as a conversation.
   actsLikeConversation: true
 
@@ -172,14 +174,13 @@ App.Conversation = Ember.Mixin.create
 
     promise
 
-  isFayeClientConnectedDidChange: (->
+  didConnect: ->
     if ! @get('associationsLoaded') || ! @get('isSubscribedToUpdates')
       # If we're not loaded or not listening, we don't care.
       return
 
     if App.get('isFayeClientConnected')
       @didReconnect()
-  ).observes('App.isFayeClientConnected')
 
   didReconnect: ->
     # We just reconnected.  Fetch any messages we may have missed.

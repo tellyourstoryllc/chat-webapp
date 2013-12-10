@@ -11,7 +11,6 @@ window.App = App = Ember.Application.create
   # List of events:
   # - didLogIn
   # - didLoadFacebook
-  # - didConnect
   eventTarget: null
 
   isLoggingIn: false
@@ -173,7 +172,6 @@ window.App = App = Ember.Application.create
   onFayeTransportDown: ->
     Ember.run @, ->
       Ember.Logger.log "faye transport:down", new Date() if App.get('useDebugLogging')
-      @set('isFayeClientConnected', false)
       return undefined
 
   # Returns the router.  You should only call this as a last resort.

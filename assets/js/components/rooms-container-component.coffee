@@ -23,6 +23,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
+    App.get('eventTarget').on 'didConnect', @, @didConnect
 
   didInsertElement: ->
     App.set('roomsContainerView', @)
@@ -88,7 +89,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     ! @get('activeRoom.associationsLoaded') || ! @get('activeRoom.isCurrentUserMember')
   ).property('activeRoom.associationsLoaded', 'activeRoom.isCurrentUserMember')
 
-  isFayeClientConnectedDidChange: (->
+  didConnect: ->
     bottom = if App.get('isFayeClientConnected')
       '0'
     else
@@ -96,7 +97,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     @$('.connecting-status-bar').css
       bottom: bottom
-  ).observes('App.isFayeClientConnected')
 
   roomsChanged: (->
     # If a room gets added later, it needs to get sized.
