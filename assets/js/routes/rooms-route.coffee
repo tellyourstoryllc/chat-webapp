@@ -28,45 +28,29 @@ App.RoomsRoute = Ember.Route.extend
       controller: 'settingsModal'
     return undefined
 
-  # Returns a pair where the first is a list representing the rooms list in the
-  # UI, and the second is the lobby object.
-  _uiGroups: ->
-    # Create a list that includes the lobby in the first position to match the
-    # UI.
-    groups = @controllerFor('rooms').get('arrangedRooms')
-    lobby = Ember.Object.create
-      transitionToArgs: ['rooms.index']
-    uiGroups = groups.toArray().copy()
-    uiGroups.unshiftObject(lobby)
-
-    [uiGroups, lobby]
+  _uiRooms: ->
+    @controllerFor('rooms').get('arrangedRooms').toArray()
 
   actions:
 
     showPreviousRoom: ->
-      [uiGroups, lobby] = @_uiGroups()
-      index = uiGroups.indexOf(App.get('currentlyViewingRoom') ? lobby)
+      uiRooms = @_uiRooms()
+      index = uiRooms.indexOf(App.get('currentlyViewingRoom'))
       if index >= 0
         index--
-        index = uiGroups.length - 1 if index < 0
-        inst = uiGroups.objectAt(index)
-        if inst.get('actsLikeConversation')
-          @transitionTo('rooms.room', inst)
-        else
-          @transitionTo(inst.get('transitionToArgs')...)
+        index = uiRooms.length - 1 if index < 0
+        inst = uiRooms.objectAt(index)
+        @transitionTo('rooms.room', inst)
       return undefined
 
     showNextRoom: ->
-      [uiGroups, lobby] = @_uiGroups()
-      index = uiGroups.indexOf(App.get('currentlyViewingRoom') ? lobby)
+      uiRooms = @_uiRooms()
+      index = uiRooms.indexOf(App.get('currentlyViewingRoom'))
       if index >= 0
         index++
-        index = 0 if index >= uiGroups.length
-        inst = uiGroups.objectAt(index)
-        if inst.get('actsLikeConversation')
-          @transitionTo('rooms.room', inst)
-        else
-          @transitionTo(inst.get('transitionToArgs')...)
+        index = 0 if index >= uiRooms.length
+        inst = uiRooms.objectAt(index)
+        @transitionTo('rooms.room', inst)
       return undefined
 
     closeRoom: (room) ->
