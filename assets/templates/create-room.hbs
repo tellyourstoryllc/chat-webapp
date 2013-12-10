@@ -1,0 +1,17 @@
+<div class='page-overlay hidden create-room-overlay'>
+  <form class='modal modal-form create-room-form' {{action 'createRoom' target=view on='submit'}}>
+    <span class='close' {{action 'hideCreateRoomDialog'}}>&times;</span>
+    <h3 class='title'>Create a New Room</h3>
+    {{#if view.createGroupErrorMessage}}
+      <div class='alert alert-error'>{{view.createGroupErrorMessage}}</div>
+    {{/if}}
+    <div class='control-group'>
+      {{input type='text' value=view.newRoomName classNames='room-name-text'
+        autocomplete='off' placeholder='Room Name'}}
+    </div>
+    <div class='form-actions'>
+      <button type='submit' class='app-btn'
+       {{bind-attr disabled='isCreatingGroup'}}>Create Room</button>
+    </div>
+  </form>
+</div>

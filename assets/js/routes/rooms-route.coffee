@@ -23,7 +23,7 @@ App.RoomsRoute = Ember.Route.extend
     # outlet.
     @render 'settings-modal',
       into: 'application'
-      outlet: 'modal'
+      outlet: 'settingsModal'
       view: 'settingsModal'
       controller: 'settingsModal'
     return undefined
@@ -87,6 +87,27 @@ App.RoomsRoute = Ember.Route.extend
             @transitionTo('rooms.index')
 
       room.set('isOpen', false)
+      return undefined
+
+    showCreateRoomDialog: ->
+      @render 'create-room',
+        into: 'application'
+        outlet: 'modal'
+        view: 'createRoomModal'
+      Ember.run.schedule 'afterRender', @, ->
+        $('.create-room-overlay').removeClass('hidden')
+        $('.create-room-form').addClass('expand-in')
+        $('.room-name-text').focus()
+      return undefined
+
+    hideCreateRoomDialog: ->
+      $('.create-room-overlay').addClass('hidden')
+      $('.create-room-form').removeClass('expand-in')
+      Ember.run.later @, ->
+        @disconnectOutlet
+          outlet: 'modal'
+          parentView: 'application'
+      , 500 # After the animation.
       return undefined
 
     showSettings: ->

@@ -681,6 +681,13 @@ body.logged-out, body.join-page
     > a
       color #FD7773
 
+  .create-room-icon
+    sprites-background()
+    sprite-icon()
+    width 26px
+    height 26px
+    background-position -2px -5px
+
   .room-name
     display inline-block
     width room-sidebar-width - 85px
@@ -831,14 +838,17 @@ body.logged-out, body.join-page
     sprite-icon()
     background-position -69px -41px
 
-.lobby-form
-  width 260px
-  margin 20px
-  border 1px solid #ccc
-  border-radius 4px
+.modal-form
+  margin 20px auto
   padding 10px
-  background-color #F8F8F8
-  font-size 14px
+
+  .close
+    float right
+    // Make it a bigger target for touch interfaces.
+    padding 5px 10px
+    margin -5px -5px 0 0
+
+    cursor pointer
 
   .title
     margin-bottom 20px
@@ -853,8 +863,12 @@ body.logged-out, body.join-page
     text-align right
 
 .create-room-form
+  width 205px
+  margin-left -102px // Negative width divided by 2.
+  margin-top -258px // Negative height divided by 2.
+
   input[type=text]
-    width 168px
+    width 200px
 
 
 room-members-sidebar-width = 200px
