@@ -1,13 +1,1 @@
-<form class='create-room-form lobby-form'>
-  <h3 class='title'>Create a New Room</h3>
-  {{#if createGroupErrorMessage}}
-    <div class='alert alert-error'>{{createGroupErrorMessage}}</div>
-  {{/if}}
-  <div class='control-group'>
-    <label>Room Name</label>
-    {{input type='text' value=newRoomName autocomplete='off'}}
-  </div>
-  <div class='form-actions'>
-    <button type='submit' {{action 'createRoom'}} {{bind-attr disabled='isCreatingGroup'}}>Create Room</button>
-  </div>
-</form>
+{{! Nothing to do here. }}
