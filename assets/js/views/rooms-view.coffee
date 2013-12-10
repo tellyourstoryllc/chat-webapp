@@ -97,7 +97,7 @@ App.RoomsView = Ember.View.extend
 
   setupCopyToClipboard: ->
     return if @get('zeroClipboard')? || ! @get('activeRoom')?
-    clip = new ZeroClipboard(@$('.copy-icon'))
+    clip = new ZeroClipboard(@$('.invite-room-actions'))
     @set('zeroClipboard', clip)
 
   activeRoomDidChange: (->

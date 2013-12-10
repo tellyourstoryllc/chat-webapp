@@ -885,12 +885,12 @@ room-members-sidebar-width = 200px
     background-color #EEF0F0
     color #3C495A
 
+    &:hover, &.zeroclipboard-is-hover
+      background-color #F8F8F8
+
   .admin-room-actions
     height 29px
     cursor pointer
-
-    &:hover
-      background-color #F8F8F8
 
   .room-settings-icon
     sprite-icon()
@@ -901,6 +901,7 @@ room-members-sidebar-width = 200px
 
   .invite-room-actions
     height 35px
+    cursor pointer
 
   .copy-icon
     sprite-icon()
@@ -910,7 +911,6 @@ room-members-sidebar-width = 200px
     margin-right 3px
     sprites-background()
     background-position -89px -30px
-    cursor pointer
 
   .join-url
     width room-members-sidebar-width - 35px // Subtract the width of the icon.

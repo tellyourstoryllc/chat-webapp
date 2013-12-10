@@ -90,8 +90,8 @@
     </div>
 
     <div class='title'>Invite Link</div>
-    <div class='room-actions invite-room-actions'>
-      <span class='copy-icon' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}></span>
+    <div class='room-actions invite-room-actions' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+      <span class='copy-icon'></span>
       <div class='join-code' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
         Key Code: {{upcase activeRoom.joinCode}}
       </div>
