@@ -22,7 +22,3 @@ App.JoinView = Ember.View.extend
     logIn: ->
       @set('authState', 'login')
       return undefined
-
-    cancelAuthentication: ->
-      @set('authState', null)
-      return undefined

@@ -5,12 +5,6 @@ App.RoomsRoomRoute = Ember.Route.extend
 
     App.set('currentlyViewingRoom', null)
 
-  beforeModel: (transition) ->
-    if ! App.isLoggedIn()
-      App.set('continueTransition', transition)
-      @transitionTo('login')
-      return
-
   serialize: (model) ->
     id = if Ember.typeOf(model) == 'string'
       model
@@ -24,15 +18,19 @@ App.RoomsRoomRoute = Ember.Route.extend
   model: (params, transition) ->
     params.room_id
 
+  afterModel: (model, transition) ->
+    # Try to open the mobile app.  Do this before requiring login.
+    Ember.run.schedule 'afterRender', @, ->
+      [modelId] = @_tryModelFromGivenContext(model)
+      App.attemptToOpenMobileApp("/group/id/#{modelId}")
+
+    if ! App.isLoggedIn()
+      App.set('continueTransition', transition)
+      @transitionTo('login')
+      return
+
   setupController: (controller, model) ->
-    if Ember.typeOf(model) == 'string'
-      modelId = model
-      model = @_typeFromRoomId(modelId).lookup(modelId)
-    else if model instanceof App.User
-      modelId = App.OneToOne.idFromUser(model)
-      model = null
-    else
-      modelId = model.get('id')
+    [modelId, model] = @_tryModelFromGivenContext(model)
 
     isOneToOne = @_typeFromRoomId(modelId) == App.OneToOne
     if ! model? && modelId? && isOneToOne
@@ -49,10 +47,6 @@ App.RoomsRoomRoute = Ember.Route.extend
       model.set('isUnread', false)
       # Set the room as opened to show it in the list.
       model.set('isOpen', true)
-
-    # Try to open the mobile app.
-    Ember.run.schedule 'afterRender', @, ->
-      App.attemptToOpenMobileApp("/group/id/#{modelId}")
 
     if ! model?.get('associationsLoaded')
       type = if isOneToOne
@@ -79,6 +73,20 @@ App.RoomsRoomRoute = Ember.Route.extend
         else
           throw xhrOrError
       .fail App.rejectionHandler
+
+  # From the given context that we transitioned here with, extract the model ID
+  # and/or model without fetching anything.
+  _tryModelFromGivenContext: (model) ->
+    if Ember.typeOf(model) == 'string'
+      modelId = model
+      model = @_typeFromRoomId(modelId).lookup(modelId)
+    else if model instanceof App.User
+      modelId = App.OneToOne.idFromUser(model)
+      model = null
+    else
+      modelId = model.get('id')
+
+    [modelId, model]
 
   _typeFromRoomId: (id) ->
     if /-/.test(id)
