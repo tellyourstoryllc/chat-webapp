@@ -1,1 +1,11 @@
-{{! Nothing to do here. }}
+<div class='lobby-join-room-callout'>
+  <span class='arrow'>&larr;</span>
+  input <strong>Key Code</strong> to enter an existing room
+</div>
+
+{{#if showCreateRoomCallout}}
+  <div class='lobby-create-room-callout'>
+    <span class='arrow'>&larr;</span>
+    or <strong>create</strong> your own room
+  </div>
+{{/if}}

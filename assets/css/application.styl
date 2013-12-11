@@ -880,6 +880,52 @@ body.logged-out, body.join-page
     width 200px
 
 
+.lobby-join-room-callout
+  position absolute
+  top 36px
+  left -40px
+  box-sizing border-box
+  max-width 50%
+  overflow ellipsis
+  margin 20px
+  border 1px solid #ccc
+  border-radius 6px
+  box-shadow 0 0 3px rgba(0,0,0, 0.15)
+  padding 10px 10px 11px
+  background-color #f8f8f8
+
+  .arrow
+    font-size 18px
+
+  strong
+    font-weight bold
+
+
+.lobby-create-room-callout
+  position absolute
+  top 81px
+  left -26px
+  box-sizing border-box
+  max-width 50%
+  margin 20px
+  border 1px solid #ccc
+  border-radius 6px
+  box-shadow 0 0 3px rgba(0,0,0, 0.15)
+  padding 10px 10px 11px
+  background-color #f8f8f8
+
+  .arrow
+    font-size 18px
+
+  strong
+    font-weight bold
+
+@media (max-width: 515px)
+  .lobby-join-room-callout, .lobby-create-room-callout
+    max-width 80%
+    left 0
+
+
 room-members-sidebar-width = 200px
 
 .room-menu
