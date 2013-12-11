@@ -99,6 +99,11 @@ App.RoomsView = Ember.View.extend
     return if @get('zeroClipboard')? || ! @get('activeRoom')?
     clip = new ZeroClipboard(@$('.invite-room-actions'))
     @set('zeroClipboard', clip)
+    clip.on 'load', (client, args) =>
+      # Flash has been loaded.  Indicate in the UI that clicking copies.
+      $e = @$('.invite-room-actions')
+      $e.addClass('flash-loaded')
+      $e.attr('title', 'Copy Invite Link to Clipboard')
 
   activeRoomDidChange: (->
     # Reset file pickers.
