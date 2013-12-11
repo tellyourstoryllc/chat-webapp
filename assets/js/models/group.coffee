@@ -163,8 +163,8 @@ App.Group.reopenClass
     name: json.name
     joinUrl: json.join_url
     topic: json.topic
-    avatarUrl: json.avatar_url
-    wallpaperUrl: json.wallpaper_url
+    avatarUrl: App.UrlUtil.mediaUrlToHttps(json.avatar_url)
+    wallpaperUrl: App.UrlUtil.mediaUrlToHttps(json.wallpaper_url)
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     lastActiveAt: App.get('api').deserializeUnixTimestamp(json.last_message_at)

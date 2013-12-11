@@ -45,7 +45,7 @@ App.Emoticon.reopenClass
 
     id: App.BaseModel.coerceId(json.id)
     name: json.name
-    imageUrl: json.image_url
+    imageUrl: App.UrlUtil.mediaUrlToHttps(json.image_url)
 
   lookupByName: (name) ->
     @_allByName[name]

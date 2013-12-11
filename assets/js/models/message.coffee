@@ -296,9 +296,9 @@ App.Message.reopenClass
     mentionedUserIds: mentionedUserIds.map (id) -> App.BaseModel.coerceId(id)
     rank: json.rank
     text: json.text
-    attachmentUrl: json.attachment_url
+    attachmentUrl: App.UrlUtil.mediaUrlToHttps(json.attachment_url)
     attachmentContentType: json.attachment_content_type
-    attachmentPreviewUrl: json.attachment_preview_url
+    attachmentPreviewUrl: App.UrlUtil.mediaUrlToHttps(json.attachment_preview_url)
     createdAt: api.deserializeUnixTimestamp(json.created_at)
 
   # This is different from the base class since it dedupes by client IDs.

@@ -19,4 +19,4 @@ App.Account.reopenClass
     id: @coerceId(json.user_id)
     email: json.email
     facebookId: json.facebook_id
-    oneToOneWallpaperUrl: json.one_to_one_wallpaper_url
+    oneToOneWallpaperUrl: App.UrlUtil.mediaUrlToHttps(json.one_to_one_wallpaper_url)
