@@ -45,6 +45,20 @@ var apiProxy = function(pattern, host, port) {
 };
 app.use(apiProxy(/\/api(\/.*)/, config.apiHostname, config.apiPort));
 
+// Redirect http to https.  *Before* `bodyParser`.
+if (config.redirectHttpToHttps) {
+  app.use(function(req, res, next) {
+    var schema = req.headers['x-forwarded-proto'];
+
+    if (schema === 'https') {
+      next();
+    }
+    else {
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
+}
+
 app.use(express.bodyParser());
 app.use(app.router);
 app.use(connectAssets());

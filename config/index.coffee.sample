@@ -11,6 +11,7 @@ exports.getConfig = (env, app, express) ->
       # server built-in assets) are re- written to use this host when https is
       # needed.
       sslMediaHost: null
+      redirectHttpToHttps: false
     when 'staging'
       apiHostname: 'testing-api.skymob.co'
       apiPort: 443
@@ -19,6 +20,7 @@ exports.getConfig = (env, app, express) ->
       webServerProtocolAndHost: 'http://staging.skymob.co'
       facebookAppId: '590925707640079'
       sslMediaHost: null
+      redirectHttpToHttps: false
     when 'production'
       apiHostname: 'api.skymob.co'
       apiPort: 443
@@ -27,3 +29,4 @@ exports.getConfig = (env, app, express) ->
       webServerProtocolAndHost: 'http://www.skymob.co'
       facebookAppId: '247703948717943'
       sslMediaHost: 'https://ddytkvq26chic.cloudfront.net'
+      redirectHttpToHttps: true
