@@ -123,7 +123,7 @@ App.RoomMessagesView = Ember.View.extend
         @setProperties(_justChangedRoomsTimer: null, _justChangedRooms: false)
       , 1000))
 
-      # Handle as if it ware a change.
+      # Handle as if it were a change.
       @messagesChanged(messages, 0, 0, messages.length, true)
   ).observes('room.messages').on('init')
 
