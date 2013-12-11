@@ -900,6 +900,23 @@ room-members-sidebar-width = 200px
   100%
     transform translateY(0%)
 
+.copied-fade-in-out
+  animation copied-fade-in-out 1s ease-in-out
+  visibility visible !important
+  opacity 0
+
+@keyframes copied-fade-in-out
+  0%
+    transform scale(.6) translateY(0%)
+    opacity 0
+  25%
+    opacity 1
+  50%
+    opacity 1
+  100%
+    transform scale(1) translateY(100%)
+    opacity 0
+
 .room-members-sidebar
   position fixed
   right 0
@@ -948,6 +965,20 @@ room-members-sidebar-width = 200px
 
     &.flash-loaded
       cursor pointer
+
+  .copy-to-clipboard-indicator
+    position absolute
+    top 114px
+    right 30px
+    padding 5px
+    border-radius 3px
+    background-color rgba(0,0,0, 0.7)
+    color #eee
+    font-size 14px
+    z-index 1000
+
+    // Animation shows it.
+    visibility hidden
 
   .copy-icon
     sprite-icon()

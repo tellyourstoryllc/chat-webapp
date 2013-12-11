@@ -3,6 +3,8 @@ App.RoomsView = Ember.View.extend
   # Text from input textbox to join room.
   enteredJoinText: ''
 
+  copiedIndicatorTimer: null
+
   isJoiningRoom: false
 
   joinRoomErrorMessage: null
@@ -104,6 +106,17 @@ App.RoomsView = Ember.View.extend
       $e = @$('.invite-room-actions')
       $e.addClass('flash-loaded')
       $e.attr('title', 'Copy Invite Link to Clipboard')
+
+      client.on 'complete', (client, args) =>
+        # Copied to clipboard.
+        @$('.copy-to-clipboard-indicator').addClass('copied-fade-in-out')
+        timer = @get('copiedIndicatorTimer')
+        Ember.run.cancel timer if timer?
+        timer = Ember.run.later @, ->
+          @set('copiedIndicatorTimer', null)
+          @$('.copy-to-clipboard-indicator').removeClass('copied-fade-in-out')
+        , 1000 # Animation duration.
+        @set('copiedIndicatorTimer', timer)
 
   activeRoomDidChange: (->
     # Reset file pickers.
