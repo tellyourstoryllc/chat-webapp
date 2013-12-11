@@ -160,8 +160,9 @@ App.RoomMessagesView = Ember.View.extend
   ).property('App.currentlyViewingRoom', 'room')
 
   isCurrentlyViewingRoomChanged: (->
-    if @get('isCurrentlyViewingRoom') && @get('useAutoScroll')
-      @scrollToLastMessage(true)
+    Ember.run.schedule 'afterRender', @, ->
+      if @get('isCurrentlyViewingRoom') && @get('useAutoScroll')
+        @scrollToLastMessage(true)
   ).observes('isCurrentlyViewingRoom')
 
   roomWallpaperChanged: (->
