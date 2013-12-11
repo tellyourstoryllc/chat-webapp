@@ -23,15 +23,15 @@
         {{#link-to 'login'}}Log In{{/link-to}}
       </div>
     {{/if}}
-    <button type='submit' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
+    <button type='submit' class='app-btn' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
     <div class='clearfix'></div>
   </div>
 
   <hr>
 
   <div class='facebook-group'>
-    <div>OR</div>
-    <button type='button' {{bind-attr disabled='isSignupDisabled'}}
+    <div class='facebook-or'>OR</div>
+    <button type='button' class='app-btn' {{bind-attr disabled='isSignupDisabled'}}
       {{action 'attemptSignUpWithFacebook'}}>
       Sign Up With Facebook
     </button>
