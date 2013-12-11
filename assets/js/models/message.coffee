@@ -235,11 +235,10 @@ App.Message = App.BaseModel.extend
     if Ember.isEmpty(text) && @get('attachmentUrl')?
       text = "(file attached)"
 
-    # TODO: icon field.
     tag: @get('notificationTag')
     title: @get('title')
     body: text
-    icon: {}
+    icon: @get('conversation.avatarUrl') ? {}
 
   hasPlayableVideoAttachment: ->
     App.Util.isPlayableVideoFile(@get('attachmentContentType'), @get('attachmentFile'))
