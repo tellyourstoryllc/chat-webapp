@@ -66,7 +66,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           @set('isEditingTopic', false)
         else
           # Focus on send message textarea.
-          @$('.send-message-text')?.focus()
+          @setFocus(true)
 
   roomChanged: (->
     # Hide autocomplete suggestions.
@@ -76,13 +76,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @setProperties(isEditingRoomName: false, isEditingTopic: false)
 
     Ember.run.schedule 'afterRender', @, ->
-      @setFocus()
+      @setFocus(false)
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
     if @get('activeRoom.associationsLoaded')
       Ember.run.schedule 'afterRender', @, ->
-        @setFocus()
+        @setFocus(false)
   ).observes('activeRoom.associationsLoaded')
 
   isSendDisabled: (->
@@ -197,8 +197,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     Math.max(0, len - @get('numMembersToShow'))
   ).property('activeRoom.alphabeticMembers.length', 'numMembersToShow')
 
-  setFocus: ->
-    @$('.send-message-text')?.focus()
+  setFocus: (force) ->
+    # Don't auto-focus on mobile since it opens the on-screen keyboard.
+    if force || ! (Modernizr.appleios || Modernizr.android)
+      @$('.send-message-text')?.focus()
 
   # When clicking a name, insert @name to mention that user.
   clickSender: (event) ->
