@@ -51,8 +51,7 @@
       {{#unless activeRoom.isCurrentUserMember}}
         <div class='room-alert-content'>
           <div class='room-alert-message'>
-            <div>You aren't a member of this room.</div>
-            <div class='subtitle'>These members are inside:</div>
+            <div class='subtitle'>These people are inside:</div>
           </div>
           <div class='members-preview'>
             {{#each user in roomsContainer.roomAlphabeticMembers}}
@@ -70,8 +69,8 @@
               class='app-btn join-button'>Enter Room</button>
           {{else}}
             <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
-              <div class='title'>Enter join code to become a member.</div>
-              {{input type='text' value=activeRoom.enteredJoinCode placeholder='Join Code'}}
+              <div class='title'>Input key code to enter.</div>
+              {{input type='text' value=activeRoom.enteredJoinCode placeholder='Key Code'}}
               <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Enter Room</button>
             </form>
           {{/if}}
