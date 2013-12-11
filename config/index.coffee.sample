@@ -26,4 +26,4 @@ exports.getConfig = (env, app, express) ->
       fayeProtocolAndHost: 'https://api.skymob.co:8080'
       webServerProtocolAndHost: 'http://www.skymob.co'
       facebookAppId: '247703948717943'
-      sslMediaHost: 'ddytkvq26chic.cloudfront.net'
+      sslMediaHost: 'https://ddytkvq26chic.cloudfront.net'
