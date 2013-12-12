@@ -93,6 +93,9 @@ app.get('/rooms(/*)?', renderChatApp);
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
+app.get('/legal/dmca', function(req, res) {
+  res.render('legal-dmca', { config: config, title: "Copyright Policy" });
+});
 app.get('/legal/tos', function(req, res) {
   res.render('legal-tos', { config: config, title: "Terms of Service" });
 });
