@@ -83,6 +83,10 @@ app.get('/signup', renderChatApp);
 app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/rooms(/*)?', renderChatApp);
+
+app.get('/legal/tos', function(req, res) {
+  res.render('legal-tos', { config: config });
+});
 app.get('/health_check', function(req, res) {
   res.render('health-check', { config: config });
 });
