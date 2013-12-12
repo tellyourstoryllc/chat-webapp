@@ -69,8 +69,8 @@
               class='app-btn join-button'>Enter Room</button>
           {{else}}
             <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
-              <div class='title'>Input key code to enter.</div>
-              {{input type='text' value=activeRoom.enteredJoinCode placeholder='Key Code'}}
+              <div class='title'>Input room key to enter.</div>
+              {{input type='text' value=activeRoom.enteredJoinCode placeholder='Room Key'}}
               <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Enter Room</button>
             </form>
           {{/if}}
