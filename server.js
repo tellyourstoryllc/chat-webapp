@@ -96,6 +96,9 @@ app.get('/mobile/help', function(req, res) {
 app.get('/legal/dmca', function(req, res) {
   res.render('legal-dmca', { config: config, title: "Copyright Policy" });
 });
+app.get('/legal/privacy', function(req, res) {
+  res.render('legal-privacy', { config: config, title: "Privacy Policy" });
+});
 app.get('/legal/tos', function(req, res) {
   res.render('legal-tos', { config: config, title: "Terms of Service" });
 });
