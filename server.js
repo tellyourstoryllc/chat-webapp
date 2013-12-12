@@ -84,8 +84,11 @@ app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/rooms(/*)?', renderChatApp);
 
+app.get('/mobile/help', function(req, res) {
+  res.render('mobile-help', { config: config, title: "Help" });
+});
 app.get('/legal/tos', function(req, res) {
-  res.render('legal-tos', { config: config });
+  res.render('legal-tos', { config: config, title: "Terms of Service" });
 });
 app.get('/health_check', function(req, res) {
   res.render('health-check', { config: config });
