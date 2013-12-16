@@ -7,13 +7,15 @@ html
     != css('application')
   body
     block content
-    //- TODO: use other GA number for the Mac app.
     script.
       window.AppConfig = !{JSON.stringify(config)};
 
+      AppConfig.isMacGap = /MacGap/.test(navigator.userAgent);
+      AppConfig.googleAnalyticsAccount = AppConfig.isMacGap ? 'UA-34895126-7' : 'UA-34895126-6';
+
       if (AppConfig.useAnalytics) {
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-34895126-6']);
+        _gaq.push(['_setAccount', AppConfig.googleAnalyticsAccount]);
         _gaq.push(['_setDomainName', 'atfirstsight.com']);
         _gaq.push(['_trackPageview']);
         (function() {

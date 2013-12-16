@@ -97,9 +97,8 @@ window.App = App = Ember.Application.create
         # Copy the URL path to hash.
         @_getRouter().location.setURL(window.location.pathname)
 
-    # Detect whether we're running inside MacGap.
-    if /MacGap/.test(navigator.userAgent)
-      @set('isMacGap', true)
+    # Whether we're running inside MacGap.
+    @set('isMacGap', AppConfig.isMacGap)
 
     @set('eventTarget', Ember.Object.extend(Ember.Evented).create())
 
