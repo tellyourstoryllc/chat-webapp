@@ -1,5 +1,7 @@
 App.RoomsView = Ember.View.extend
 
+  isMacGapIdle: false
+
   # Text from input textbox to join room.
   enteredJoinText: ''
 
@@ -26,6 +28,7 @@ App.RoomsView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
+      'onMacGapActive', 'onMacGapIdle',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onToggleRoomsSidebarTouchStart',
       'onJoinTextKeyDown', 'onJoinTextPaste')
@@ -34,6 +37,9 @@ App.RoomsView = Ember.View.extend
     $(window).on 'resize', @resize
     $('html').on 'click', @documentClick
     $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
+    if App.get('isMacGap')
+      $(document).on 'systemactive', @onMacGapActive
+      $(document).on 'systemidle', @onMacGapIdle
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
     @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
@@ -51,6 +57,9 @@ App.RoomsView = Ember.View.extend
     $(window).off 'resize', @resize
     $('html').off 'click', @documentClick
     $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
+    if App.get('isMacGap')
+      $(document).off 'systemactive', @onMacGapActive
+      $(document).off 'systemidle', @onMacGapIdle
     $('body').off 'keydown', @bodyKeyDown
     @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
@@ -192,7 +201,22 @@ App.RoomsView = Ember.View.extend
     msDiff = new Date().getTime() - lastActiveAt.getTime()
     secDiff = Math.round(msDiff / 1000)
     App.set('idleForSeconds', secDiff)
-    App.set('isIdle', secDiff >= 60 * App.get('preferences.clientWeb.showIdleAfterMinutes'))
+    isIdle = (! App.get('isMacGap') || @get('isMacGapIdle')) &&
+      secDiff >= 60 * App.get('preferences.clientWeb.showIdleAfterMinutes')
+    App.set('isIdle', isIdle)
+
+  onMacGapIdle: (event) ->
+    Ember.run @, ->
+      @set('isMacGapIdle', true)
+      lastActiveAt = App.get('lastActiveAt')
+      macGapLastActiveAt = moment().subtract(30, 'seconds').toDate()
+      if ! lastActiveAt? || macGapLastActiveAt.getTime() > lastActiveAt.getTime()
+        App.set('lastActiveAt', macGapLastActiveAt)
+
+  onMacGapActive: (event) ->
+    Ember.run @, ->
+      @set('isMacGapIdle', false)
+      @didDetectActivity()
 
   updateUserIdleDurations: ->
     now = new Date()

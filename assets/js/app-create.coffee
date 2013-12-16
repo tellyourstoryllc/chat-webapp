@@ -73,6 +73,9 @@ window.App = App = Ember.Application.create
   # True when the FB external JS library has been loaded.
   isFacebookLoaded: false
 
+  # True if we're running inside MacGap
+  isMacGap: false
+
   ready: ->
     Ember.onerror = (e) ->
       # TODO: Send error to server.
@@ -93,6 +96,10 @@ window.App = App = Ember.Application.create
       if Ember.isEmpty(window.location.hash)
         # Copy the URL path to hash.
         @_getRouter().location.setURL(window.location.pathname)
+
+    # Detect whether we're running inside MacGap.
+    if /MacGap/.test(navigator.userAgent)
+      @set('isMacGap', true)
 
     @set('eventTarget', Ember.Object.extend(Ember.Evented).create())
 
