@@ -1,7 +1,7 @@
 window.App = App = Ember.Application.create
 
   # Default title displayed in the window/tab's titlebar.
-  title: 'SkyMob'
+  title: 'skymob'
 
   # Set to true to enable more verbose logging to the console.
   useDebugLogging: false
