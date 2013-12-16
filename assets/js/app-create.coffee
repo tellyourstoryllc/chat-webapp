@@ -491,6 +491,28 @@ if Modernizr.history
     location: 'history'
 
 
+App.Router.reopen
+
+  # Used to prevent double tracking.
+  lastPageViewUrl: null
+
+  # Add tracking of page views with Google Analytics.
+  didTransition: (infos) ->
+    result = @_super(arguments...)
+
+    Ember.run.schedule 'afterRender', =>
+      location = @get('location')
+      url = location.getURL()
+      if @get('lastPageViewUrl') == url
+        # Skip double trigger of the same url.
+        return
+
+      @set('lastPageViewUrl', url)
+      App.Analytics.trackPageView(url)
+
+    return result
+
+
 App.Router.map ->
 
   @route 'join', path: '/join/:join_code'
