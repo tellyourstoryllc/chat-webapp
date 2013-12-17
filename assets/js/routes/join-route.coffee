@@ -17,24 +17,8 @@ App.JoinRoute = Ember.Route.extend
     @_super(arguments...)
     joinCode = model
     controller.set('joinCode', joinCode)
-    @_loadGroupFromJoinCode(controller, joinCode)
+    App.JoinUtil.loadGroupFromJoinCode(controller, joinCode)
 
     # Try to open the mobile app.
     Ember.run.schedule 'afterRender', @, ->
       App.attemptToOpenMobileApp("/group/join_code/#{joinCode}")
-
-  _loadGroupFromJoinCode: (controller, joinCode) ->
-    App.Group.fetchByJoinCode(joinCode)
-    .then (json) =>
-      if ! json? || json.error?
-        controller.set('userMessage', App.userMessageFromError(json))
-        return
-      # Load everything from the response.
-      group = App.Group.loadSingle(json)
-      if group?
-        group.set('isDeleted', false)
-        controller.set('model', group)
-        controller.set('room', group)
-    , (xhr) =>
-      controller.set('userMessage', App.userMessageFromError(xhr))
-    .fail App.rejectionHandler

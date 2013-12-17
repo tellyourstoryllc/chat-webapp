@@ -227,6 +227,12 @@ button
   box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
   color hsl(225, 8%, 43%)
   font-size 14px
+  text-align center
+
+  &.btn-flat
+    border-width 0
+    border-radius 2px
+    box-shadow none
 
   &:hover
     background-color lighten(#EEF0F0, 50%)
@@ -234,6 +240,27 @@ button
   &:active
     outline 0
     box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
+
+  &.btn-green
+    background-color #56C0A5
+    color #fff
+
+    &:hover
+      background-color lighten(#56C0A5, 10%)
+
+  &.btn-fb
+    background-color #3C5A99
+    color #fff
+
+    &:hover
+      background-color lighten(#3C5A99, 10%)
+
+.btn-block
+  display block
+  box-sizing border-box
+  width 100%
+  padding-left 0
+  padding-right 0
 
 .menu
   position absolute
@@ -735,6 +762,87 @@ room-sidebar-width = 200px
     .footer-link
       color rgba(0,0,0, .8)
       text-transform uppercase
+
+.home-signup-modal
+  width 350px
+  height 350px
+  margin-top -175px
+  margin-left -175px
+  color #5B6271
+
+  .loading
+    margin 20px
+
+  .room-title
+    padding 20px
+    background-color #E2E3E3
+
+  .dialog-content
+    padding 30px
+    font-size 12px
+
+    &.with-room
+      // Reduce top padding with there's a room title.
+      padding-top 10px
+
+  .avatar
+    float left
+
+  .room-name-info-container
+    margin-top 5px
+    margin-left 50px
+    text-align left
+
+  .room-name, .subtitle
+    font-weight bold
+
+  .room-topic
+    margin-top 5px
+    width 260px  // Determined experimentally.
+    overflow ellipsis
+    font-size 12px
+
+  .avatar
+    margin-right 5px
+
+  .members-preview
+    // Undo the right-most .member-preview.
+    margin-right -5px
+
+  .subtitle
+    margin-bottom 10px
+
+  .member-preview
+    float left
+    margin-right 5px
+    margin-bottom 20px
+    width 68px
+    text-align center
+
+    // Set max height so long names don't overflow.
+    max-height 100px
+    overflow hidden
+
+  .no-one-here, .member-count-more
+    color rgba(0,0,0, .4)
+    font-weight bold
+    text-shadow 0 1px 0 #fff
+
+  .member-count-more
+    float left
+    padding-top 21px
+
+  .no-one-here
+    margin 20px
+
+  .or-divider
+    margin 10px
+
+  .signup-with-facebook-button
+    margin-bottom 10px
+
+
+///////////////////////////////////////////////////////////
 
 .rooms-sidebar
   position fixed
