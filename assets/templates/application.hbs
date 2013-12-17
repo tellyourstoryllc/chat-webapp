@@ -11,7 +11,7 @@
       {{#unless isLoggedIn}}
         <div class='pull-right'>
           {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
-          {{#link-to 'signup' classNames='nav-link signup-nav-link'}}Sign Up{{/link-to}}
+          <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
         </div>
       {{/unless}}
       <div class='clearfix'></div>

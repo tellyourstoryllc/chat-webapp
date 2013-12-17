@@ -76,6 +76,10 @@ window.App = App = Ember.Application.create
   # True if we're running inside MacGap
   isMacGap: false
 
+  # Index (i.e. home page) does some crazy handling of the navbar, so the
+  # ApplicationRoute needs access to it.
+  indexView: null
+
   ready: ->
     Ember.onerror = (e) ->
       # TODO: Send error to server.

@@ -21,6 +21,10 @@ App.ApplicationRoute = Ember.Route.extend
 
   actions:
 
+    goToSignUp: ->
+      @transitionTo('signup')
+      return undefined
+
     joinGroup: (joinCode) ->
       App.get('api').joinGroup(joinCode).then (group) =>
         # Go to the room.

@@ -10,7 +10,9 @@
     </div>
   </form>
 
-  {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+  <div class='page-overlay hidden home-signup-overlay'>
+    {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+  </div>
 
   <img class='screenshot' src='http://placehold.it/905x400'>
 
