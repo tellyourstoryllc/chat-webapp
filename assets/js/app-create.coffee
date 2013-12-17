@@ -255,7 +255,7 @@ window.App = App = Ember.Application.create
             oneToOne.didReceiveUpdateFromFaye(json)
         else if json.object_type == 'one_to_one'
           # We received an update to a OneToOne.
-          oneToOne = App.OneToOne.lookup(oneToOneJson.id)
+          oneToOne = App.OneToOne.lookup(json.id)
           if oneToOne?
             # If we've loaded this OneToOne before, notify the existing instance
             # so that it can handle changes.
