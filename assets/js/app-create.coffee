@@ -253,6 +253,19 @@ window.App = App = Ember.Application.create
           App.OneToOne.find(json.one_to_one_id)
           .then (oneToOne) =>
             oneToOne.didReceiveUpdateFromFaye(json)
+        else if json.object_type == 'group'
+          # We received a Group.
+          group = App.Group.lookup(json.id)
+          if group?
+            # If we've loaded this Group before, notify the existing instance so
+            # that it can handle changes.
+            group.didReceiveUpdateFromFaye(json)
+          else
+            # This is a Group we've never seen before, so load it and subscribe.
+            instances = App.loadAll(json)
+            group = instances.find (o) -> o instanceof App.Group
+            group.subscribeToMessages().then =>
+              group.reload()
         else if json.object_type == 'one_to_one'
           # We received an update to a OneToOne.
           oneToOne = App.OneToOne.lookup(json.id)
