@@ -55,6 +55,7 @@ app.get('/health_check', function(req, res) {
 if (config.redirectHttpToHttps) {
   app.use(function(req, res, next) {
     var schema = req.headers['x-forwarded-proto'];
+    console.log("redirectHttpToHttps:", schema);
 
     if (schema === 'https') {
       next();
