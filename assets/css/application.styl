@@ -47,6 +47,18 @@ sprite-icon()
 webkit-flashing-fix()
   -webkit-transform translateZ(0)
 
+dark-purple-round-input()
+  box-sizing border-box
+  margin 10px
+  padding 6px 8px
+  border-radius 15px
+  border 1px solid rgba(0,0,0, .5)
+  outline none
+  box-shadow 0 1px 0 rgba(255,255,255, .18)
+  background-color #1E0529
+  color rgba(254, 255, 255, 0.65)
+
+
 ///////////////////////////////////////////////////////////
 // Animations
 
@@ -465,6 +477,12 @@ room-sidebar-width = 200px
     color #fff
     text-decoration none
 
+  .nav-link
+    display inline-block
+    border 1px solid #fff
+    border-radius 3px
+    padding 10px 25px
+
 .brand
   margin-bottom 5px
   text-align center
@@ -472,7 +490,8 @@ room-sidebar-width = 200px
   > a
     color #fff
 
-body.logged-out, body.join-page
+// body
+.logged-out, .join-page
   background-color #E4E6E8
   overflow auto
 
@@ -484,7 +503,8 @@ body.logged-out, body.join-page
     float left
 
 // This is for static pages on mobile like TOS and help.
-body.static-mobile-layout
+// body
+.static-mobile-layout
   margin 10px
 
   .page-content
@@ -656,6 +676,55 @@ body.static-mobile-layout
     &:hover
       text-decoration underline
 
+// Home page
+
+.home-page
+  background-color app-dark-purple
+  color #fff
+  text-align center
+
+  .navbar
+    padding 30px
+    background-color transparent
+
+  .home-content
+    max-width 960px
+    margin 0 auto
+
+  .title
+    margin 0 0 30px
+    font-size 28px
+
+  .room-key-form
+    margin 0 0 30px
+    color rgba(255,255,255, .6)
+
+  .room-key-input
+    dark-purple-round-input()
+
+    width 230px
+    padding 10px 25px
+    border-radius 20px
+    font-size 16px
+    text-align center
+
+  .signup-form-component
+    display none // Initially invisible.
+
+  .screenshot
+    width 905px
+    height auto
+
+  .footer
+    margin-top 0
+    padding 40px
+    background-color #344751
+    color rgba(0,0,0, .8)
+
+    .footer-link
+      color rgba(0,0,0, .8)
+      text-transform uppercase
+
 .rooms-sidebar
   position fixed
   top 52px // Height of .navbar
@@ -665,16 +734,8 @@ body.static-mobile-layout
   background-color app-purple
 
 .join-text
-  box-sizing border-box
+  dark-purple-round-input()
   width room-sidebar-width - 2*10px
-  margin 10px
-  padding 6px 8px
-  border-radius 15px
-  border 1px solid rgba(0,0,0, .5)
-  outline none
-  box-shadow 0 1px 0 rgba(255,255,255, .18)
-  background-color #1E0529
-  color rgba(254, 255, 255, 0.65)
 
 .rooms-list
   box-sizing border-box

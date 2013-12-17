@@ -1,3 +1,19 @@
-{{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+<div class='home-content'>
+  <h1 class='title'>
+    Private Chat Rooms For Work &amp; Play
+  </h1>
+
+  <form class='room-key-form' {{action 'submitRoomKey' on='submit' target=view}}>
+    <input type='text' class='room-key-input' placeholder='Room Key' autocomplete='off'>
+    <div class='room-key-help'>
+      Have a room key?
+    </div>
+  </form>
+
+  {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'}}
+
+  <img class='screenshot' src='http://placehold.it/905x400'>
+
+</div>
 
 {{footer-bar}}
