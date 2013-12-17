@@ -15,9 +15,9 @@ App.LogoutRoute = Ember.Route.extend
         # Set the URL and reload the page to clear everything in memory.
         routerLocation = App._getRouter().location
         if routerLocation instanceof Ember.HistoryLocation
-          routerLocation.setURL('/login')
+          routerLocation.replaceURL('/login')
         else
-          routerLocation.setURL('/')
+          routerLocation.replaceURL('/')
         window.location.reload(true)
 
       App.get('api').logout()
