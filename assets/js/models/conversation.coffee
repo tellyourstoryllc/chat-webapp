@@ -250,7 +250,7 @@ App.Conversation = Ember.Mixin.create
       oldMemberIds.forEach (oldId) =>
         if ! newMemberIds.contains(oldId)
           user = App.User.lookup(oldId)
-          @userDidLeave(user)
+          @userDidLeave(user) if user?
       newMemberIds.forEach (newId) =>
         if ! oldMemberIds.contains(newId)
           # The user might not be loaded yet here.  Fetch the user if necessary.
@@ -272,6 +272,12 @@ App.Conversation = Ember.Mixin.create
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
       message = App.SystemMessage.createFromConversation(@, localText: "#{user.get('name')} left for good.")
       @didReceiveMessage(message, suppressNotifications: true)
+
+    if user == App.get('currentUser')
+      # Current user left the room, possibly in another client.
+      @set('isDeleted', true)
+      # Stop listening for messages.
+      @set('isOpen', false)
 
   didReceiveMessage: (message, options = {}) ->
     # Make sure the sender is loaded before displaying it.
