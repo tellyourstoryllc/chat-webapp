@@ -15,10 +15,10 @@ App.IndexView = Ember.View.extend
 
   showSignupModal: ->
     @$('.home-signup-overlay').removeClass('hidden')
-    @$('.signup-form-component').addClass('expand-in')
+    @$('.home-signup-modal').addClass('expand-in')
 
   hideSignupModal: ->
-    @$('.signup-form-component').removeClass('expand-in')
+    @$('.home-signup-modal').removeClass('expand-in')
     @$('.home-signup-overlay').addClass('hidden')
 
   actions:
@@ -36,4 +36,18 @@ App.IndexView = Ember.View.extend
       @get('controller').send('clearJoinRoom')
       # Show the signup modal.
       @showSignupModal()
+      return undefined
+
+    signUpWithFacebook: ->
+      console.log "TODO signUpWithFacebook"
+      return undefined
+
+    signUpWithEmail: ->
+      @$('.signup-auth-choice').addClass('hidden')
+      @$('.signup-form-component').addClass('visible')
+      return undefined
+
+    goBackToAuthChoices: ->
+      @$('.signup-auth-choice').removeClass('hidden')
+      @$('.signup-form-component').removeClass('visible')
       return undefined

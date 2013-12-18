@@ -18,3 +18,7 @@ App.IndexRoute = Ember.Route.extend
         # Bubble up.
         return true
       return undefined
+
+    goBackToAuthChoices: ->
+      App.get('indexView')?.send('goBackToAuthChoices')
+      return undefined
