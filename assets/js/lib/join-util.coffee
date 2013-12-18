@@ -17,5 +17,7 @@ App.JoinUtil.reopenClass
         controller.set('model', group)
         controller.set('room', group)
     , (xhr) =>
-      controller.set('userMessage', App.userMessageFromError(xhr))
+      Ember.Logger.error xhr
+      # Display a friendly message to the user.
+      controller.set('userMessage', "Sorry, that room couldn't be found.")
     .fail App.rejectionHandler

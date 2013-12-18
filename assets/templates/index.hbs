@@ -16,16 +16,11 @@
 
   <div class='page-overlay hidden home-signup-overlay'>
     <div {{bind-attr class=':modal :home-signup-modal room:with-room view.isShowingEmailForm:is-showing-email-form'}}>
-      {{#if userMessage}}
-        <div class='alert alert-error'>
-          {{userMessage}}
-        </div>
-      {{/if}}
-
       {{#if isLoadingRoom}}
         <div class='loading'>Loading...</div>
       {{else}}
         <a href='#' class='close' {{action 'closeSignUp' target=view}} title='Close'>&times;</a>
+
         {{#if room}}
           <div class='room-title'>
             <div class='avatar'>
@@ -40,42 +35,50 @@
         {{/if}}
 
         <div class='dialog-content'>
-          {{#if room}}
-            <div class='subtitle'>Who's already here...</div>
-            <div class='members-preview'>
-              {{#each user in alphabeticRoomMembers}}
-                <div class='member-preview'>
-                  {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
-                  <div class='username'>{{user.name}}</div>
-                </div>
-              {{else}}
-                <div class='no-one-here'>
-                  (no one yet)
-                </div>
-              {{/each}}
-              {{#if moreRoomMembers}}
-                <div class='member-count-more'>
-                  +{{moreRoomMembers}} more
-                </div>
-              {{/if}}
-              <div class='clearfix'></div>
-            </div>
-
-            <div class='signup-auth-choice'>
-              <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>Sign Up with Facebook</button>
-              <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
-              <div class='login-hint'>
-                {{! TODO: Remember which room was entered. }}
-                Already have an account?  {{link-to 'Log In' 'login'}}
-              </div>
+          {{#if userMessage}}
+            <div class='clearfix'></div>
+            <div class='alert alert-error'>
+              {{userMessage}}
             </div>
           {{else}}
-            {{! No room.  Regular signup. }}
-            <div class='signup-auth-choice'>
-              <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>Sign Up with Facebook</button>
-              <div class='or-divider'>OR</div>
-              <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
-            </div>
+
+            {{#if room}}
+              <div class='subtitle'>Who's already here...</div>
+              <div class='members-preview'>
+                {{#each user in alphabeticRoomMembers}}
+                  <div class='member-preview'>
+                    {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
+                    <div class='username'>{{user.name}}</div>
+                  </div>
+                {{else}}
+                  <div class='no-one-here'>
+                    (no one yet)
+                  </div>
+                {{/each}}
+                {{#if moreRoomMembers}}
+                  <div class='member-count-more'>
+                    +{{moreRoomMembers}} more
+                  </div>
+                {{/if}}
+                <div class='clearfix'></div>
+              </div>
+
+              <div class='signup-auth-choice'>
+                <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>Sign Up with Facebook</button>
+                <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
+                <div class='login-hint'>
+                  {{! TODO: Remember which room was entered. }}
+                  Already have an account?  {{link-to 'Log In' 'login'}}
+                </div>
+              </div>
+            {{else}}
+              {{! No room.  Regular signup. }}
+              <div class='signup-auth-choice'>
+                <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>Sign Up with Facebook</button>
+                <div class='or-divider'>OR</div>
+                <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
+              </div>
+            {{/if}}
           {{/if}}
 
           {{! Whether a room or not, always have the signup form. }}
