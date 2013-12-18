@@ -13,9 +13,9 @@
     {{input type='password' value=password placeholder='Password'}}
   </div>
   <div class='form-actions'>
-    <div class='related-link'>
+    <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Create Account</button>
+    <div class='after-actions-link'>
       <span {{action 'goBack'}} class='back-link'>&lt; Back</span>
     </div>
-    <button type='submit' class='app-btn btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Create Account</button>
   </div>
 </form>

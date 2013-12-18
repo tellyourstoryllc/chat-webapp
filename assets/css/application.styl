@@ -769,7 +769,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .home-signup-modal
   width home-modal-width
-  height 350px
+  height 167px // No room, no email form.
   margin-top -(home-modal-width / 2)
   margin-left -175px
   color #5B6271
@@ -798,13 +798,18 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     padding home-modal-horiz-padding
     font-size 12px
 
+  &.is-showing-email-form
+    height 250px
+
   &.with-room
+    height 350px
+
+    &.is-showing-email-form
+      height 410px
+
     .dialog-content
       // Reduce top padding with there's a room title.
       padding-top 10px
-
-  &.is-showing-email-form
-    height 380px
 
   .avatar
     float left
@@ -909,6 +914,15 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       width 100%
       margin 0
       text-align center
+
+  .app-btn
+    padding-top 10px
+    padding-bottom 10px
+
+  .after-actions-link
+    margin-top 10px
+    text-align left
+    font-size 10px
 
   .back-link
     cursor pointer
