@@ -5,6 +5,9 @@
 
   <form class='room-key-form' {{action 'submitRoomKey' on='submit' target=view}}>
     <input type='text' class='room-key-input' placeholder='Room Key' autocomplete='off'>
+    <div class='submit-room-key-button' {{action 'submitRoomKey' target=view}}>
+      <span class='submit-room-key-icon'></span>
+    </div>
     <div class='room-key-help'>
       Have a room key?
     </div>

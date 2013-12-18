@@ -5,6 +5,7 @@
 
 app-purple = #341B45
 app-dark-purple = #2E1C38
+app-green = #56C0A5
 
 link-color = #3f9bcd
 
@@ -242,11 +243,11 @@ button
     box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
 
   &.btn-green
-    background-color #56C0A5
+    background-color app-green
     color #fff
 
     &:hover
-      background-color lighten(#56C0A5, 10%)
+      background-color lighten(app-green, 10%)
 
   &.btn-fb
     background-color #3C5A99
@@ -737,6 +738,7 @@ room-sidebar-width = 200px
     font-size 28px
 
   .room-key-form
+    position relative
     margin 0 0 30px
     color rgba(255,255,255, .6)
 
@@ -744,10 +746,30 @@ room-sidebar-width = 200px
     dark-purple-round-input()
 
     width 230px
-    padding 10px 25px
+    padding 10px 45px
     border-radius 20px
     font-size 16px
     text-align center
+
+  .submit-room-key-button
+    position absolute
+    top 17px
+    right 50%
+    margin-right -105px
+    width 30px
+    height 28px
+    border-radius 20px
+    background-color app-green
+    cursor pointer
+
+  .submit-room-key-icon
+    sprites-background()
+    sprite-icon()
+    background-position -121px -9px
+    width 20px
+    height 20px
+    margin-left 1px
+    margin-top 5px
 
   .screenshot
     width 905px
