@@ -66,6 +66,7 @@ App.IndexView = Ember.View.extend
 
     signUpWithFacebook: ->
       console.log "TODO signUpWithFacebook"
+      @get('signupForm').send('attemptSignUpWithFacebook')
       return undefined
 
     signUpWithEmail: ->
