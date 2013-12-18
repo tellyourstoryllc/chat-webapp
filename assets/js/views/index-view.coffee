@@ -38,6 +38,7 @@ App.IndexView = Ember.View.extend
 
   hideSignupModal: ->
     @set('isShowingSignupDialog', false)
+    @set('isShowingEmailForm', false)
     @$('.home-signup-modal').removeClass('expand-in')
     @$('.home-signup-overlay').addClass('hidden')
 
