@@ -17,6 +17,9 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
       return undefined
 
     joinRoom: (roomKey) ->
+      # Clear out old room.
+      @set('room', null)
+
       @set('isLoadingRoom', true)
       App.JoinUtil.loadGroupFromJoinCode(@, roomKey)
       .always =>

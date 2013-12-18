@@ -35,6 +35,7 @@ App.IndexView = Ember.View.extend
 
     goToSignUp: ->
       # Reset room if tried to join before.
+      @set('isShowingEmailForm', false)
       @get('controller').send('clearJoinRoom')
       # Show the signup modal.
       @showSignupModal()
