@@ -11,7 +11,7 @@
   </form>
 
   <div class='page-overlay hidden home-signup-overlay'>
-    <div class='modal home-signup-modal'>
+    <div {{bind-attr class=':modal :home-signup-modal room:with-room view.isShowingEmailForm:is-showing-email-form'}}>
       {{#if userMessage}}
         <div class='alert alert-error'>
           {{userMessage}}
@@ -34,7 +34,7 @@
           </div>
         {{/if}}
 
-        <div {{bind-attr class=':dialog-content room:with-room'}}>
+        <div class='dialog-content'>
           {{#if room}}
             <div class='subtitle'>Who's already here...</div>
             <div class='members-preview'>

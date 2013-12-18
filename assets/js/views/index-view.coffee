@@ -1,5 +1,7 @@
 App.IndexView = Ember.View.extend
 
+  isShowingEmailForm: false
+
   didInsertElement: ->
     App.set('indexView', @)
     $('body').addClass('home-page')
@@ -43,11 +45,13 @@ App.IndexView = Ember.View.extend
       return undefined
 
     signUpWithEmail: ->
+      @set('isShowingEmailForm', true)
       @$('.signup-auth-choice').addClass('hidden')
       @$('.signup-form-component').addClass('visible')
       return undefined
 
     goBackToAuthChoices: ->
+      @set('isShowingEmailForm', false)
       @$('.signup-auth-choice').removeClass('hidden')
       @$('.signup-form-component').removeClass('visible')
       return undefined
