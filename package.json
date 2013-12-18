@@ -12,7 +12,7 @@
     "stylus": "~0.38.0",
     "nib": "~1.0.1",
     "http-proxy": "~0.10.3",
-    "connect-assets": "~2.5.2"
+    "connect-assets": "~2.5.3"
   },
   "devDependencies": {
     "node-dev": "~2.0.2",
