@@ -49,7 +49,13 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           facebookId: result.facebookId
           facebookToken: result.facebookToken
           avatarImageUrl: result.avatarImageUrl
-        @send('attemptLogInWithFacebookOrSignup')
+
+        if window.localStorage.getItem('skipFacebookLoginCheck') in ['1', 'true']
+          # For debugging facebook signup.  Don't try to log in after
+          # authenticating with facebook.
+          @send('attemptSignup')
+        else
+          @send('attemptLogInWithFacebookOrSignup')
       , (error) =>
         Ember.Logger.error error, error.stack ? error.stacktrace
         @setProperties
