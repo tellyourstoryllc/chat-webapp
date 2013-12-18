@@ -40,6 +40,10 @@ App.IndexView = Ember.View.extend
       @showSignupModal()
       return undefined
 
+    closeSignUp: ->
+      @hideSignupModal()
+      return undefined
+
     signUpWithFacebook: ->
       console.log "TODO signUpWithFacebook"
       return undefined
