@@ -306,10 +306,21 @@ window.App = App = Ember.Application.create
     @get('eventTarget').trigger('didLogIn')
 
   # Runs callback asynchronously.  If condition is true, runs in next iteration
-  # of the run loop.  Otherwise, it runs when the event triggers.
-  when: (condition, eventTarget, eventName, target, method) ->
+  # of the run loop.  Otherwise, it runs when the event triggers. Set
+  # `runImmediately` to true to call immediately when the condition is true,
+  # instead of waiting for the next run loop.
+  when: (condition, eventTarget, eventName, target, method, options = {}) ->
     if condition
-      Ember.run.next target, method
+      if options.runImmediately
+        fn = if typeof target == 'function'
+          target
+        else if typeof method == 'function'
+          method
+        else
+          target[method]
+        fn.call(target)
+      else
+        Ember.run.next target, method
     else
       eventTarget.one eventName, target, method
 

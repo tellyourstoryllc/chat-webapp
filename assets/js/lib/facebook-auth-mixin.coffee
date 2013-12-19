@@ -63,6 +63,8 @@ App.FacebookAuthMixin = Ember.Mixin.create
               reject(e)
         catch e
           reject(e)
+      # Make sure to run inside the click handler to prevent popup blocker.
+      , runImmediately: true
 
   # Returns a promise that resolves to an object with all available user fields.
   # If there is any error or the use cancels, the promise is rejected.
@@ -73,6 +75,8 @@ App.FacebookAuthMixin = Ember.Mixin.create
         FB.login (response) =>
           @handleFacebookLoginResponseForSignUp(response, resolve, reject)
         , scope: 'email,user_birthday'
+      # Make sure to run inside the click handler to prevent popup blocker.
+      , runImmediately: true
 
   # Callback for FB.login that queries FB and gathers sign up info.
   handleFacebookLoginResponseForSignUp: (response, resolve, reject) ->
