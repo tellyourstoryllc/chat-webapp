@@ -115,6 +115,18 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
     attemptSignup: ->
       return if @get('isCreatingUser')
 
+      email = @get('email')
+      name = @get('name')
+
+      # Signup validation.
+      if Ember.isEmpty(email)
+        @set('errorMessage', "Email address is required.")
+        return
+
+      if Ember.isEmpty(name)
+        @set('errorMessage', "Display name is required.")
+        return
+
       facebookToken = @get('facebookToken')
 
       password = @get('password') ? ''
@@ -127,8 +139,8 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       @set('errorMessage', null)
 
       data =
-        email: @get('email')
-        name: @get('name')
+        email: email
+        name: name
       if Ember.isEmpty(facebookToken)
         data.password = password
       else
