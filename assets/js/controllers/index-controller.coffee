@@ -12,6 +12,14 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
 
   actions:
 
+    logInWithRoom: ->
+      room = @get('room')
+      if room?
+        # Continue to the room after logging in.
+        App.set('continueTransitionArgs', ['rooms.room', room.get('id')])
+
+      @transitionToRoute('login')
+
     clearJoinRoom: ->
       @set('room', null)
       @set('userMessage', null)

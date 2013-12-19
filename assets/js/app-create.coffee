@@ -28,6 +28,10 @@ window.App = App = Ember.Application.create
   # Ember route transition to continue to after logging in.
   continueTransition: null
 
+  # Args to Ember's `Route::transitionTo()` to continue to after logging in.
+  # Needs to be an args array since `undefined` is a valid context.
+  continueTransitionArgs: null
+
   hasNotificationPermission: false
 
   emoticonsVersion: 0

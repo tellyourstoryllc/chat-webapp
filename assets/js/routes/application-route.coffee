@@ -12,10 +12,12 @@ App.ApplicationRoute = Ember.Route.extend
       @_super(arguments...)
 
   transitionToDefault: ->
-    transition = App.get('continueTransition')
-    if transition?
+    if (transition = App.get('continueTransition'))?
       App.set('continueTransition', null)
       transition.retry()
+    else if (transitionArgs = App.get('continueTransitionArgs'))?
+      App.set('continueTransitionArgs', null)
+      @transitionTo.apply(@, transitionArgs)
     else
       @transitionTo('rooms.index')
 

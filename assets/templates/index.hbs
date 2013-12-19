@@ -73,8 +73,7 @@
                 </button>
                 <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
                 <div class='login-hint'>
-                  {{! TODO: Remember which room was entered. }}
-                  Already have an account?  {{link-to 'Log In' 'login'}}
+                  Already have an account?  <a href='/login' {{action 'logInWithRoom'}}>Log In</a>
                 </div>
               </div>
             {{else}}
