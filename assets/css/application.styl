@@ -567,6 +567,11 @@ room-sidebar-width = 200px
   > a
     color #fff
 
+// Up to landscape phone.
+@media (max-width: 480px)
+  .brand
+    margin-bottom 10px
+
 #brand-image-wide
   display none // Initially hidden.
 
@@ -843,6 +848,7 @@ room-sidebar-width = 200px
     margin-top 7px
 
   .screenshot
+    width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
 
