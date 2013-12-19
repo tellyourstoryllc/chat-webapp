@@ -8,13 +8,13 @@
     <div class='alert alert-error'>{{userErrorMessage}}</div>
   {{/if}}
   <div class='control-group'>
-    {{input type='email' value=email placeholder='Email'}}
+    {{input type='email' value=email placeholder='Email Address'}}
+  </div>
+  <div class='control-group'>
+    {{input type='text' value=name placeholder='Display Name'}}
   </div>
   <div class='control-group'>
     {{input type='password' value=password placeholder='Password'}}
-  </div>
-  <div class='control-group'>
-    {{input type='text' value=name placeholder='Name'}}
   </div>
   <div class='form-actions'>
     {{#if showRelatedLinks}}
