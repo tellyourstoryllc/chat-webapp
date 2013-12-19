@@ -52,11 +52,11 @@
         <div class='room-alert-dialog'>
           <div class='room-alert-content'>
             <div class='room-alert-message'>
-              <div class='subtitle'>Who's already here...</div>
+              <div class='members-preview-subtitle'>Who's already here...</div>
             </div>
             <div class='members-preview'>
               {{#each user in roomsContainer.roomAlphabeticMembers}}
-                <div class='member-preview'>
+                <div class='member-preview name-horizontal'>
                   {{room-avatar room=user showStatus=false alwaysShowAvatar=true}}
                   <span class='username'>{{user.name}}</span>
                 </div>
