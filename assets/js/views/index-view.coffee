@@ -85,3 +85,6 @@ App.IndexView = Ember.View.extend
       @$('.signup-auth-choice').removeClass('hidden')
       @$('.signup-form-component').removeClass('visible')
       return undefined
+
+    facebookDidError: (error) ->
+      console.log "TODO: facebookDidError", error.message

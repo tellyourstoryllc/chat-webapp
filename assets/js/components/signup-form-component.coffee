@@ -1,4 +1,4 @@
-# Actions: didSignUp, didLogIn, didClose
+# Actions: didSignUp, didLogIn, didClose, facebookDidError
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   classNames: ['signup-form-component']
 
@@ -17,6 +17,8 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn')
 
   errorMessage: null
+  facebookErrorMessage: null
+  userErrorMessage: Ember.computed.any('errorMessage', 'facebookErrorMessage')
 
   reset: ->
     @setProperties
@@ -39,6 +41,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       @setProperties
         isAuthenticatingWithFacebook: true
         errorMessage: null
+        facebookErrorMessage: null
       @beginSignUpWithFacebookFlow()
       .always =>
         @set('isAuthenticatingWithFacebook', false)
@@ -59,16 +62,18 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       , (error) =>
         Ember.Logger.error error, error.stack ? error.stacktrace
         @setProperties
-          errorMessage: error?.message ? "There was an error communicating with Facebook.  Please try again."
+          facebookErrorMessage: error?.message ? "There was an error communicating with Facebook.  Please try again."
           # Clear out any facebook credentials that may have been set before.
           facebookId: null
           facebookToken: null
           avatarImageUrl: null
+        @sendAction('facebookDidError', error)
 
     attemptLogInWithFacebookOrSignup: ->
       return if @get('isCheckingLogIn')
       @set('isCheckingLogIn', true)
       @set('errorMessage', null)
+      @set('facebookErrorMessage', null)
 
       data =
         facebook_id: @get('facebookId')

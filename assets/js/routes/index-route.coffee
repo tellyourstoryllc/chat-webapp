@@ -22,3 +22,6 @@ App.IndexRoute = Ember.Route.extend
     goBackToAuthChoices: ->
       App.get('indexView')?.send('goBackToAuthChoices')
       return undefined
+
+    facebookDidError: (error) ->
+      App.get('indexView')?.send('facebookDidError', error)

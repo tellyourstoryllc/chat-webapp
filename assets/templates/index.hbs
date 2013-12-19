@@ -93,7 +93,9 @@
           {{/if}}
 
           {{! Whether a room or not, always have the signup form. }}
-          {{home-signup-form viewName='signupForm' didSignUp='didSignUp' didLogIn='didLogIn' didGoBack='goBackToAuthChoices'}}
+          {{home-signup-form viewName='signupForm' didSignUp='didSignUp'
+            didLogIn='didLogIn' didGoBack='goBackToAuthChoices'
+            facebookDidError='facebookDidError'}}
         </div>
       {{/if}}
     </div>

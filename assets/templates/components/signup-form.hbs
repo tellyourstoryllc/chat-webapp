@@ -4,8 +4,8 @@
     <a href='#' class='close' {{action 'close'}}>&times;</a>
   {{/if}}
   <div class='title'>Sign Up</div>
-  {{#if errorMessage}}
-    <div class='alert alert-error'>{{errorMessage}}</div>
+  {{#if userErrorMessage}}
+    <div class='alert alert-error'>{{userErrorMessage}}</div>
   {{/if}}
   <div class='control-group'>
     {{input type='email' value=email placeholder='Email'}}
