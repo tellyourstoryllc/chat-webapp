@@ -885,6 +885,9 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   &.is-showing-email-form
     height 250px
 
+    &.has-error
+      height 305px
+
   &.with-room
     height 350px
 
@@ -1013,6 +1016,9 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       text-align center
 
     .alert
+      max-height 55px
+      overflow hidden
+
       // Possibly displaying on top of member previews.
       box-shadow 0 0 30px rgba(0,0,0,.6)
 

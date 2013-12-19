@@ -15,7 +15,7 @@
   </form>
 
   <div class='page-overlay hidden home-signup-overlay'>
-    <div {{bind-attr class=':modal :home-signup-modal room:with-room view.isShowingEmailForm:is-showing-email-form'}}>
+    <div {{bind-attr class=':modal :home-signup-modal room:with-room view.isShowingEmailForm:is-showing-email-form view.hasErrorMessage:has-error'}}>
       {{#if isLoadingRoom}}
         <div class='loading'>Loading...</div>
       {{else}}

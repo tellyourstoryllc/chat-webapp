@@ -31,6 +31,10 @@ App.IndexView = Ember.View.extend
       event.preventDefault()
       @hideSignupModal()
 
+  hasErrorMessage: (->
+    ! Ember.isEmpty(@get('signupForm.errorMessage'))
+  ).property('signupForm.errorMessage')
+
   showSignupModal: ->
     @set('isShowingSignupDialog', true)
     @$('.home-signup-overlay').removeClass('hidden')
