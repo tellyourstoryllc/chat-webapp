@@ -26,3 +26,13 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
       .always =>
         @set('isLoadingRoom', false)
       return undefined
+
+    didSignUp: ->
+      room = @get('room')
+      # Just do the default (bubble) if we have no room.
+      return true unless room?
+
+      # Join the room.
+      @get('target').send('joinGroup', room.get('joinCode') ? room.get('id'))
+
+      return undefined
