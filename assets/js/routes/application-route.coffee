@@ -28,12 +28,21 @@ App.ApplicationRoute = Ember.Route.extend
       return undefined
 
     joinGroup: (joinCode) ->
+      # If we were given a Group, extract its code.
+      if joinCode instanceof App.Group
+        joinCode = joinCode.get('joinCode') ? joinCode.get('id')
+
       App.get('api').joinGroup(joinCode).then (group) =>
         # Go to the room.
         @transitionTo('rooms.room', group)
 
     didLogIn: ->
-      @transitionToDefault()
+      room = App.get('autoJoinAfterLoggingIn')
+      if room?
+        App.set('autoJoinAfterLoggingIn', null)
+        @send('joinGroup', room)
+      else
+        @transitionToDefault()
 
     didSignUp: ->
       @transitionToDefault()
