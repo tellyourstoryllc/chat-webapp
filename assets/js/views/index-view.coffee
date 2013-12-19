@@ -48,14 +48,19 @@ App.IndexView = Ember.View.extend
       keyText = @$('.room-key-input').val()
       roomKey = App.Group.parseJoinCode(keyText)
       return if Ember.isEmpty(roomKey)
+
+      # Go back to first step.
+      @send('goBackToAuthChoices')
+
       @showSignupModal()
       @get('controller').send('joinRoom', roomKey)
       return undefined
 
     goToSignUp: ->
       # Reset room if tried to join before.
-      @set('isShowingEmailForm', false)
       @get('controller').send('clearJoinRoom')
+      # Go back to first step.
+      @send('goBackToAuthChoices')
       # Show the signup modal.
       @showSignupModal()
       return undefined
