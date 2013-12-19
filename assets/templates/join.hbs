@@ -1,65 +1,67 @@
-<div class='empty-content-page'>
-  {{#if userMessage}}
-    <div class='alert alert-error'>
-      {{userMessage}}
-    </div>
-  {{/if}}
-
-  {{#if room.isLoaded}}
-    <div class='room-alert-content join-members-content'>
-      <div class='room-title'>
-        <div class='avatar'>
-          <img {{bind-attr src='room.avatarUrl'}} class='medium-avatar-image'>
-        </div>
-        <div class='room-name-info-container'>
-          <div class='room-name'>{{room.name}}</div>
-          <div class='room-topic'>{{room.topic}}</div>
-        </div>
-        <div class='clearfix'></div>
+<div {{bind-attr class=':modal :join-page-modal room:with-room'}}>
+  <div class='empty-content-page'>
+    {{#if userMessage}}
+      <div class='alert alert-error'>
+        {{userMessage}}
       </div>
+    {{/if}}
 
-      <div class='room-alert-message'>
-        <div class='subtitle'>These people are inside:</div>
-      </div>
-      <div class='members-preview'>
-        {{#each user in alphabeticRoomMembers}}
-          <div class='member-preview'>
-            {{room-avatar room=user showStatus=false alwaysShowAvatar=true}}
-            <span class='username'>{{user.name}}</span>
+    {{#if room.isLoaded}}
+      <div class='room-alert-content join-members-content'>
+        <div class='room-title'>
+          <div class='avatar'>
+            <img {{bind-attr src='room.avatarUrl'}} class='medium-avatar-image'>
           </div>
-        {{/each}}
-        {{#if moreRoomMembers}}
-          and {{moreRoomMembers}} more
-        {{/if}}
-      </div>
+          <div class='room-name-info-container'>
+            <div class='room-name'>{{room.name}}</div>
+            <div class='room-topic'>{{room.topic}}</div>
+          </div>
+          <div class='clearfix'></div>
+        </div>
 
-      {{#if isLoggedIn}}
-        {{#link-to 'index' classNames='cancel-link'}}Cancel{{/link-to}}
-        <button type='button' {{action 'joinGroup' joinCode}}
-          class='app-btn join-button'>Enter Room</button>
-      {{else}}
-        <div class='signup-or-login'>
-          {{#if view.isAuthStateSignup}}
-            {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'
-              didClose='cancelSignUp'}}
-          {{else}}
-            {{#if view.isAuthStateLogin}}
-              {{login-form didLogIn='didLogIn' didClose='cancelLogIn'}}
-            {{else}}
-              <div class='title'>To enter</div>
-              <div>
-                <button type='button' {{action 'signUp' target=view}} class='app-btn'>Sign Up</button>
-                or
-                <button type='button' {{action 'logIn' target=view}} class='app-btn'>Log In</button>
-              </div>
-            {{/if}}
+        <div class='room-alert-message'>
+          <div class='subtitle'>Who's already here...</div>
+        </div>
+        <div class='members-preview'>
+          {{#each user in alphabeticRoomMembers}}
+            <div class='member-preview'>
+              {{room-avatar room=user showStatus=false alwaysShowAvatar=true}}
+              <span class='username'>{{user.name}}</span>
+            </div>
+          {{/each}}
+          {{#if moreRoomMembers}}
+            +{{moreRoomMembers}} more
           {{/if}}
         </div>
-      {{/if}}
-    </div>
-  {{else}}
-    <p>Loading...</p>
-  {{/if}}
+
+        {{#if isLoggedIn}}
+          {{#link-to 'index' classNames='cancel-link'}}Cancel{{/link-to}}
+          <button type='button' {{action 'joinGroup' joinCode}}
+            class='app-btn btn-green join-button'>Enter Room</button>
+        {{else}}
+          <div class='signup-or-login'>
+            {{#if view.isAuthStateSignup}}
+              {{signup-form showRelatedLinks=false didSignUp='didSignUp' didLogIn='didLogIn'
+                didClose='cancelSignUp'}}
+            {{else}}
+              {{#if view.isAuthStateLogin}}
+                {{login-form didLogIn='didLogIn' didClose='cancelLogIn'}}
+              {{else}}
+                <div class='title'>To enter</div>
+                <div>
+                  <button type='button' {{action 'signUp' target=view}} class='app-btn'>Sign Up</button>
+                  or
+                  <button type='button' {{action 'logIn' target=view}} class='app-btn'>Log In</button>
+                </div>
+              {{/if}}
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+    {{else}}
+      <p>Loading...</p>
+    {{/if}}
+  </div>
 </div>
 
-{{footer-bar}}
+{{footer-bar fixedToBottom=true}}

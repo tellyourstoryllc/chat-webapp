@@ -614,6 +614,12 @@ room-sidebar-width = 200px
   font-size 11px
   text-align center
 
+  &.fixed-to-bottom
+    position fixed
+    bottom 0
+    width 100%
+    padding 10px
+
   .app-links
     margin-bottom 10px
 
@@ -865,6 +871,13 @@ room-sidebar-width = 200px
 home-modal-width = 350px
 home-modal-horiz-padding = 30px
 home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
+
+
+.join-page-modal
+  width home-modal-width
+  margin-top -175px
+  margin-left -(home-modal-width / 2)
+
 
 .home-signup-modal
   width home-modal-width
