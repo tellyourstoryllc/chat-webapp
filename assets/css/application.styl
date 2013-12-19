@@ -268,12 +268,13 @@ button
       background-color lighten(app-green, 10%)
 
   &.btn-fb
-    padding-top 0
-    padding-bottom 0
+    padding 0
     background-color #374F81 // The darker blue behind the icon.
     color #fff
 
     .btn-fb-text-container
+      padding-top 10px
+      padding-bottom 10px
       background-color #3C5A99
       margin-left 45px // Space for the facebook-f icon.
 
@@ -640,12 +641,12 @@ room-sidebar-width = 200px
   .title
     margin-bottom 20px
 
-  input[type=text], input[type=email], input[type=password], button
-    padding 5px 10px
-    font-size 14px
-
   input[type=text], input[type=email], input[type=password]
     width 188px
+    margin 0
+    border 1px solid #D4D4D4
+    padding 6px 11px
+    font-size 14px
 
   .control-group
     margin-bottom 10px
@@ -1010,9 +1011,6 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     input[type=text], input[type=password], input[type=email]
       box-sizing border-box
       width 100%
-      margin 0
-      border 1px solid #D4D4D4
-      padding 6px 11px
       text-align center
 
     .alert
@@ -1035,7 +1033,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
         opacity 1
 
   // Facebook button has its own padding thing.
-  .app-btn:not(.btn-fb), .btn-fb-text-container
+  .app-btn:not(.btn-fb)
     padding-top 10px
     padding-bottom 10px
 
