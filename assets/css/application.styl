@@ -5,6 +5,7 @@
 
 app-purple = #341B45
 app-dark-purple = #2E1C38
+app-green = #56C0A5
 
 link-color = #3f9bcd
 
@@ -19,6 +20,20 @@ error-background-color = #f2dede
 error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
 // Mixins
+
+// Include this mixin to style placeholder text.  Call with a plus prefix to use
+// a block.
+input-placeholder()
+  &.placeholder
+    {block}
+  &:-moz-placeholder
+    {block}
+  &::-moz-placeholder
+    {block}
+  &:-ms-input-placeholder
+    {block}
+  &::-webkit-input-placeholder
+    {block}
 
 grayscale-image()
   filter url(/images/filters.svg#grayscale) // Firefox 3.5+
@@ -46,6 +61,22 @@ sprite-icon()
 // http://viget.com/inspire/webkit-transform-kill-the-flash
 webkit-flashing-fix()
   -webkit-transform translateZ(0)
+
+dark-purple-round-input()
+  box-sizing border-box
+  margin 10px
+  padding 6px 8px
+  border-radius 15px
+  border 1px solid rgba(0,0,0, .5)
+  outline none
+  box-shadow 0 1px 0 rgba(255,255,255, .18)
+  background-color #1E0529
+  color rgba(254, 255, 255, 0.65)
+
+  // Placeholder text should match.
+  +input-placeholder()
+    color rgba(254, 255, 255, 0.65)
+
 
 ///////////////////////////////////////////////////////////
 // Animations
@@ -215,6 +246,12 @@ button
   box-shadow inset 0 0 1px rgba(255,255,255, 0.9)
   color hsl(225, 8%, 43%)
   font-size 14px
+  text-align center
+
+  &.btn-flat
+    border-width 0
+    border-radius 2px
+    box-shadow none
 
   &:hover
     background-color lighten(#EEF0F0, 50%)
@@ -222,6 +259,48 @@ button
   &:active
     outline 0
     box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
+
+  &.btn-green
+    background-color app-green
+    color #fff
+
+    &:hover
+      background-color lighten(app-green, 10%)
+
+  &.btn-fb
+    padding 0
+    background-color #374F81 // The darker blue behind the icon.
+    color #fff
+
+    .btn-fb-text-container
+      padding-top 10px
+      padding-bottom 10px
+      background-color #3C5A99
+      margin-left 45px // Space for the facebook-f icon.
+
+    &:hover
+      background-color lighten(#374F81, 10%)
+
+      .btn-fb-text-container
+        background-color lighten(#3C5A99, 10%)
+
+.btn-block
+  display block
+  box-sizing border-box
+  width 100%
+  padding-left 0
+  padding-right 0
+
+.facebook-f-icon
+  float left
+  margin-left 16px
+  margin-top 6px
+  width 12px
+  height 22px
+  sprites-background()
+  sprite-icon()
+  background-position -160px -32px
+
 
 .menu
   position absolute
@@ -458,21 +537,41 @@ room-sidebar-width = 200px
   width room-sidebar-width
   min-height 52px
   border-top 3px solid #26BE9D
-  padding 10px 10px 0
+  padding 10px 10px
   background-color app-purple
 
   a
     color #fff
     text-decoration none
 
+  .nav-link
+    display inline-block
+    border 1px solid #fff
+    border-radius 3px
+    padding 10px 25px
+
+    &:hover
+      background-color rgba(255,255,255, 0.1)
+
+  .signup-nav-link
+    margin-left 20px
+    border-color #56C0A5
+    background-color #56C0A5
+
+    &:hover
+      background-color lighten(#56C0A5, 10%)
+
 .brand
-  margin-bottom 5px
   text-align center
 
   > a
     color #fff
 
-body.logged-out, body.join-page
+#brand-image-wide
+  display none // Initially hidden.
+
+// body
+.logged-out, .join-page
   background-color #E4E6E8
   overflow auto
 
@@ -480,11 +579,24 @@ body.logged-out, body.join-page
     position static
     width auto
 
+  .navbar-centered-content
+    // Don't stretch out to the corners of the window.
+    max-width 960px
+    margin-left auto
+    margin-right auto
+
   .brand
     float left
 
+  #brand-image
+    display none
+
+  #brand-image-wide
+    display block
+
 // This is for static pages on mobile like TOS and help.
-body.static-mobile-layout
+// body
+.static-mobile-layout
   margin 10px
 
   .page-content
@@ -496,6 +608,9 @@ body.static-mobile-layout
   margin-top 20px
   font-size 11px
   text-align center
+
+  .app-links
+    margin-bottom 10px
 
   .footer-link
     margin-right 10px
@@ -532,12 +647,13 @@ body.static-mobile-layout
   .title
     margin-bottom 20px
 
-  input[type=text], input[type=email], input[type=password], button
-    padding 5px 10px
-    font-size 14px
-
   input[type=text], input[type=email], input[type=password]
-    width 188px
+    box-sizing border-box
+    width 100%
+    margin 0
+    border 1px solid #D4D4D4
+    padding 6px 11px
+    font-size 14px
 
   .control-group
     margin-bottom 10px
@@ -555,9 +671,16 @@ body.static-mobile-layout
 .signup-form, .login-form
   margin-left auto
   margin-right auto
+  padding 20px
+
+  .title
+    text-align center
+
+  .facebook-divider
+    margin 20px 0 5px 0
 
   .facebook-or
-    margin-bottom 5px
+    margin-bottom 20px
 
 .login-form
   width 214px
@@ -573,9 +696,6 @@ body.static-mobile-layout
 
     &:hover
       opacity 1
-
-  input[type=text], input[type=email], input[type=password]
-    width 188px
 
   .facebook-group
     text-align center
@@ -593,9 +713,6 @@ body.static-mobile-layout
 
     &:hover
       opacity 1
-
-  input[type=text], input[type=email], input[type=password]
-    width 188px
 
   .related-link
     font-size 9px
@@ -656,6 +773,290 @@ body.static-mobile-layout
     &:hover
       text-decoration underline
 
+// Home page
+
+.home-page
+  background-color app-dark-purple
+  background-image url('/images/purple-bkg.png')
+  background-size cover
+  color #fff
+  text-align center
+
+  .navbar
+    padding 30px
+    background-color transparent
+
+  .home-content
+    max-width 960px
+    margin 0 auto
+
+  .title
+    margin 40px 0 30px
+    font-size 30px
+
+  .room-key-form
+    position relative
+    margin 0 0 30px
+    color rgba(255,255,255, .6)
+
+  .room-key-input
+    dark-purple-round-input()
+
+    width 230px
+    padding 14px 45px
+    border-radius 25px
+    font-size 16px
+    text-align center
+
+  .room-key-icon
+    position absolute
+    top 24px
+    left 50%
+    margin-left -105px
+
+    sprites-background()
+    sprite-icon()
+    background-position -133px -32px
+    width 23px
+    height 23px
+
+    opacity .7
+
+  .submit-room-key-button
+    position absolute
+    top 19px
+    right 50%
+    margin-right -105px
+    width 32px
+    height 32px
+    border-radius 20px
+    background-color app-green
+    cursor pointer
+
+  .submit-room-key-icon
+    sprites-background()
+    sprite-icon()
+    background-position -121px -9px
+    width 20px
+    height 20px
+    margin-left 3px
+    margin-top 7px
+
+  .screenshot
+    height auto
+    vertical-align middle
+
+  .footer
+    margin-top 0
+    padding 40px
+    background-color #344751
+    color rgba(0,0,0, .8)
+
+    .footer-link
+      color rgba(0,0,0, .8)
+      text-transform uppercase
+
+home-modal-width = 350px
+home-modal-horiz-padding = 30px
+home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
+
+.home-signup-modal
+  width home-modal-width
+  height 167px // No room, no email form.
+  margin-top -(home-modal-width / 2)
+  margin-left -175px
+  color #5B6271
+
+  transition-duration 0.1s
+  transition-timing-function ease-out
+  transition-property height
+
+  .loading
+    margin 20px
+
+  .close
+    float right
+    padding 5px 10px
+    color rgba(0,0,0, 0.4)
+    text-decoration none
+
+    &:hover
+      color rgba(0,0,0, 0.8)
+
+  .room-title
+    padding 20px
+    background-color #E2E3E3
+
+  .dialog-content
+    padding home-modal-horiz-padding
+    font-size 12px
+
+  &.is-showing-email-form
+    height 250px
+
+    &.has-error
+      height 305px
+
+  &.with-room
+    height 350px
+
+    &.is-showing-email-form
+      height 410px
+
+    .dialog-content
+      // Reduce top padding with there's a room title.
+      padding-top 10px
+
+  .avatar
+    float left
+
+  .room-name-info-container
+    margin-top 5px
+    margin-left 50px
+    text-align left
+
+  .room-name, .subtitle
+    font-weight bold
+
+  .room-topic
+    margin-top 5px
+    width 260px  // Determined experimentally.
+    overflow ellipsis
+    font-size 12px
+
+  .avatar
+    margin-right 5px
+
+  .members-preview
+    // Undo the right-most .member-preview.
+    margin-right -5px
+
+  .subtitle
+    margin-bottom 10px
+
+  .member-preview
+    float left
+    margin-right 5px
+    margin-bottom 15px
+    width 68px
+    text-align center
+
+    // Set max height so long names overflow show up to 2 lines, but no more.
+    max-height 67px
+    overflow hidden
+
+  .no-one-here, .member-count-more
+    color rgba(0,0,0, .4)
+    font-weight bold
+    text-shadow 0 1px 0 #fff
+
+  .member-count-ellipsis
+    sprites-background()
+    sprite-icon()
+    display block
+    width 32px
+    height 10px
+    background-position -180px -41px
+    margin-left 10px
+    margin-bottom 3px
+    opacity .4
+
+  .member-count-more
+    float left
+    padding-top 17px
+
+  .no-one-here
+    margin 20px
+
+  .signup-auth-choice
+    position absolute
+    width home-modal-inner-width
+
+    transition-duration 0.2s
+    transition-timing-function ease-out
+    transition-property left, visibility
+
+    &.hidden
+      visibility hidden !important
+      left -100%
+
+  &.with-room
+    .signup-auth-choice
+      bottom 30px // .dialog-content padding-bottom.
+
+  .login-hint
+    margin-top 10px
+    color rgba(0,0,0, 0.5)
+    font-size 10px
+
+  .or-divider
+    margin 10px
+
+  .signup-with-facebook-button
+    margin-bottom 10px
+
+  .signup-form-component
+    position absolute
+    left 100%
+    bottom 30px // .dialog-content padding-bottom.
+    visibility hidden // Initially invisible.
+
+    transition-duration 0.2s
+    transition-timing-function ease-out
+    transition-property left, visibility
+
+    &.visible
+      visibility visible !important
+      left 30px
+
+  .home-signup-form
+    width home-modal-inner-width
+    margin 0
+    border-width 0
+    padding 0
+    background-color transparent
+
+    input[type=text], input[type=password], input[type=email]
+      box-sizing border-box
+      width 100%
+      text-align center
+
+    .alert
+      max-height 55px
+      overflow hidden
+
+      // Possibly displaying on top of member previews.
+      box-shadow 0 0 30px rgba(0,0,0,.6)
+
+      position relative
+      top 5px
+      opacity 0
+
+      transition-duration 0.2s
+      transition-timing-function ease-out
+      transition-property opacity, top
+
+      &.visible
+        top 0
+        opacity 1
+
+  // Facebook button has its own padding thing.
+  .app-btn:not(.btn-fb)
+    padding-top 10px
+    padding-bottom 10px
+
+  .after-actions-link
+    margin-top 10px
+    text-align left
+    font-size 10px
+
+  .back-link
+    color rgba(0,0,0, 0.5)
+    cursor pointer
+
+
+///////////////////////////////////////////////////////////
+
 .rooms-sidebar
   position fixed
   top 52px // Height of .navbar
@@ -665,16 +1066,8 @@ body.static-mobile-layout
   background-color app-purple
 
 .join-text
-  box-sizing border-box
+  dark-purple-round-input()
   width room-sidebar-width - 2*10px
-  margin 10px
-  padding 6px 8px
-  border-radius 15px
-  border 1px solid rgba(0,0,0, .5)
-  outline none
-  box-shadow 0 1px 0 rgba(255,255,255, .18)
-  background-color #1E0529
-  color rgba(254, 255, 255, 0.65)
 
 .rooms-list
   box-sizing border-box

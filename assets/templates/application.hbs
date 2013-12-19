@@ -2,17 +2,21 @@
   <p class='empty-content-page'>Loading...</p>
 {{else}}
   <div class='navbar'>
-    <div class='brand'>
-      {{#link-to 'index'}}
-        <img src='{{webServerUrl '/images/logo.png'}}' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
-      {{/link-to}}
-    </div>
-    {{#unless isLoggedIn}}
-      <div class='pull-right'>
-        {{#link-to 'login'}}Log In{{/link-to}}
+    <div class='navbar-centered-content'>
+      <div class='brand'>
+        {{#link-to 'index'}}
+          <img id='brand-image' src='{{webServerUrl '/images/logo.png'}}' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
+          <img id='brand-image-wide' src='{{webServerUrl '/images/logo-wide.png'}}' alt='{{unbound App.title}}' id='brand-image-wide' style='width: 190px; height: auto;'>
+        {{/link-to}}
       </div>
-    {{/unless}}
-    <div class='clearfix'></div>
+      {{#unless isLoggedIn}}
+        <div class='pull-right'>
+          {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
+          <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
+        </div>
+      {{/unless}}
+      <div class='clearfix'></div>
+    </div>
   </div>
 
   {{! The one and only facebook root element. }}

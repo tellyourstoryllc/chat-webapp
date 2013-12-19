@@ -14,6 +14,14 @@ App.BaseControllerMixin = Ember.Mixin.create
     App.get('currentUser')
   ).property('App.currentUser')
 
+  isAppleIos: (->
+    Modernizr.appleios
+  ).property()
+
+  isAndroid: (->
+    Modernizr.android
+  ).property()
+
   # When this is supported, we can read files locally and show image previews,
   # for example.
   doesBrowserSupportFileReader: (->

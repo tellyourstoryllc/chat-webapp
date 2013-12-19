@@ -8,7 +8,7 @@
     <div class='alert alert-error'>{{errorMessage}}</div>
   {{/if}}
   <div class='control-group'>
-    {{input type='email' value=email placeholder='Email'}}
+    {{input type='email' value=email placeholder='Email Address'}}
   </div>
   <div class='control-group'>
     {{input type='password' value=password placeholder='Password'}}
@@ -21,17 +21,20 @@
     <div class='related-link'>
       {{#link-to 'forgot-password'}}Forgot Password{{/link-to}}
     </div>
-    <button type='submit' class='app-btn' {{bind-attr disabled='isLoginDisabled'}}>Log In</button>
+    <button type='submit' class='app-btn btn-flat btn-green' {{bind-attr disabled='isLoginDisabled'}}>Log In</button>
     <div class='clearfix'></div>
   </div>
 
-  <hr>
+  <hr class='facebook-divider'>
 
   <div class='facebook-group'>
     <div class='facebook-or'>OR</div>
-    <button type='button' class='app-btn' {{bind-attr disabled='isLoginDisabled'}}
+    <button type='button' class='app-btn btn-block btn-flat btn-fb' {{bind-attr disabled='isLoginDisabled'}}
       {{action 'attemptLogInWithFacebook'}}>
-      Log In With Facebook
+      <span class='facebook-f-icon'></span>
+      <div class='btn-fb-text-container'>
+        Log In With Facebook
+      </div>
     </button>
   </div>
 </form>

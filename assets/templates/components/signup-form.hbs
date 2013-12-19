@@ -4,17 +4,17 @@
     <a href='#' class='close' {{action 'close'}}>&times;</a>
   {{/if}}
   <div class='title'>Sign Up</div>
-  {{#if errorMessage}}
-    <div class='alert alert-error'>{{errorMessage}}</div>
+  {{#if userErrorMessage}}
+    <div class='alert alert-error'>{{userErrorMessage}}</div>
   {{/if}}
   <div class='control-group'>
-    {{input type='email' value=email placeholder='Email'}}
+    {{input type='email' value=email placeholder='Email Address'}}
+  </div>
+  <div class='control-group'>
+    {{input type='text' value=name placeholder='Display Name'}}
   </div>
   <div class='control-group'>
     {{input type='password' value=password placeholder='Password'}}
-  </div>
-  <div class='control-group'>
-    {{input type='text' value=name placeholder='Name'}}
   </div>
   <div class='form-actions'>
     {{#if showRelatedLinks}}
@@ -23,17 +23,20 @@
         {{#link-to 'login'}}Log In{{/link-to}}
       </div>
     {{/if}}
-    <button type='submit' class='app-btn' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
+    <button type='submit' class='app-btn btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Sign Up</button>
     <div class='clearfix'></div>
   </div>
 
-  <hr>
+  <hr class='facebook-divider'>
 
   <div class='facebook-group'>
     <div class='facebook-or'>OR</div>
-    <button type='button' class='app-btn' {{bind-attr disabled='isSignupDisabled'}}
+    <button type='button' class='app-btn btn-block btn-flat btn-fb' {{bind-attr disabled='isSignupDisabled'}}
       {{action 'attemptSignUpWithFacebook'}}>
-      Sign Up With Facebook
+      <span class='facebook-f-icon'></span>
+      <div class='btn-fb-text-container'>
+        Sign Up with Facebook
+      </div>
     </button>
   </div>
 </form>

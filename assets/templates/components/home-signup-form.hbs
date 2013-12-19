@@ -1,0 +1,21 @@
+{{! Use a form tag to capture enter key. }}
+<form class='form signup-form home-signup-form' {{action 'attemptSignup' on='submit'}}>
+  {{#if errorMessage}}
+    <div class='alert alert-error'>{{errorMessage}}</div>
+  {{/if}}
+  <div class='control-group'>
+    {{input type='email' value=email placeholder='Email Address'}}
+  </div>
+  <div class='control-group'>
+    {{input type='text' value=name placeholder='Display Name'}}
+  </div>
+  <div class='control-group'>
+    {{input type='password' value=password placeholder='Password'}}
+  </div>
+  <div class='form-actions'>
+    <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Create Account</button>
+    <div class='after-actions-link'>
+      <span {{action 'goBack'}} class='back-link'>&lt; Back</span>
+    </div>
+  </div>
+</form>

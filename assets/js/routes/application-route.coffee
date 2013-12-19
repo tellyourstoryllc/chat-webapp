@@ -12,22 +12,37 @@ App.ApplicationRoute = Ember.Route.extend
       @_super(arguments...)
 
   transitionToDefault: ->
-    transition = App.get('continueTransition')
-    if transition?
+    if (transition = App.get('continueTransition'))?
       App.set('continueTransition', null)
       transition.retry()
+    else if (transitionArgs = App.get('continueTransitionArgs'))?
+      App.set('continueTransitionArgs', null)
+      @transitionTo.apply(@, transitionArgs)
     else
       @transitionTo('rooms.index')
 
   actions:
 
+    goToSignUp: ->
+      @transitionTo('signup')
+      return undefined
+
     joinGroup: (joinCode) ->
+      # If we were given a Group, extract its code.
+      if joinCode instanceof App.Group
+        joinCode = joinCode.get('joinCode') ? joinCode.get('id')
+
       App.get('api').joinGroup(joinCode).then (group) =>
         # Go to the room.
         @transitionTo('rooms.room', group)
 
     didLogIn: ->
-      @transitionToDefault()
+      room = App.get('autoJoinAfterLoggingIn')
+      if room?
+        App.set('autoJoinAfterLoggingIn', null)
+        @send('joinGroup', room)
+      else
+        @transitionToDefault()
 
     didSignUp: ->
       @transitionToDefault()

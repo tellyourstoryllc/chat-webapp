@@ -28,6 +28,13 @@ window.App = App = Ember.Application.create
   # Ember route transition to continue to after logging in.
   continueTransition: null
 
+  # Args to Ember's `Route::transitionTo()` to continue to after logging in.
+  # Needs to be an args array since `undefined` is a valid context.
+  continueTransitionArgs: null
+
+  # Set to a Group instance to auto join it and go to it after the user logs in.
+  autoJoinAfterLoggingIn: null
+
   hasNotificationPermission: false
 
   emoticonsVersion: 0
@@ -75,6 +82,10 @@ window.App = App = Ember.Application.create
 
   # True if we're running inside MacGap
   isMacGap: false
+
+  # Index (i.e. home page) does some crazy handling of the navbar, so the
+  # ApplicationRoute needs access to it.
+  indexView: null
 
   ready: ->
     Ember.onerror = (e) ->
@@ -302,10 +313,21 @@ window.App = App = Ember.Application.create
     @get('eventTarget').trigger('didLogIn')
 
   # Runs callback asynchronously.  If condition is true, runs in next iteration
-  # of the run loop.  Otherwise, it runs when the event triggers.
-  when: (condition, eventTarget, eventName, target, method) ->
+  # of the run loop.  Otherwise, it runs when the event triggers. Set
+  # `runImmediately` to true to call immediately when the condition is true,
+  # instead of waiting for the next run loop.
+  when: (condition, eventTarget, eventName, target, method, options = {}) ->
     if condition
-      Ember.run.next target, method
+      if options.runImmediately
+        fn = if typeof target == 'function'
+          target
+        else if typeof method == 'function'
+          method
+        else
+          target[method]
+        fn.call(target)
+      else
+        Ember.run.next target, method
     else
       eventTarget.one eventName, target, method
 
