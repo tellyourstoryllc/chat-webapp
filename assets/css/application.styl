@@ -268,11 +268,20 @@ button
       background-color lighten(app-green, 10%)
 
   &.btn-fb
-    background-color #3C5A99
+    padding-top 0
+    padding-bottom 0
+    background-color #374F81 // The darker blue behind the icon.
     color #fff
 
+    .btn-fb-text-container
+      background-color #3C5A99
+      margin-left 45px // Space for the facebook-f icon.
+
     &:hover
-      background-color lighten(#3C5A99, 10%)
+      background-color lighten(#374F81, 10%)
+
+      .btn-fb-text-container
+        background-color lighten(#3C5A99, 10%)
 
 .btn-block
   display block
@@ -280,6 +289,17 @@ button
   width 100%
   padding-left 0
   padding-right 0
+
+.facebook-f-icon
+  float left
+  margin-left 16px
+  margin-top 6px
+  width 12px
+  height 22px
+  sprites-background()
+  sprite-icon()
+  background-position -160px -32px
+
 
 .menu
   position absolute
@@ -981,7 +1001,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       padding 6px 11px
       text-align center
 
-  .app-btn
+  // Facebook button has its own padding thing.
+  .app-btn:not(.btn-fb), .btn-fb-text-container
     padding-top 10px
     padding-bottom 10px
 
