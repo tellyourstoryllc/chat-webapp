@@ -12,6 +12,13 @@ App.IndexView = Ember.View.extend
     $('body').on 'keydown', @onBodyKeyDown
     $('body').addClass('home-page')
 
+    Ember.run.schedule 'afterRender', @, ->
+      joinCode = App.get('joinCodeToShow')
+      if joinCode?
+        App.set('joinCodeToShow', null)
+        @$('.room-key-input').val("#{joinCode}")
+        @send('submitRoomKey')
+
   willDestroyElement: ->
     App.set('indexView', null)
     $('body').off 'keydown', @onBodyKeyDown

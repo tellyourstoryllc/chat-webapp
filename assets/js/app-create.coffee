@@ -32,6 +32,9 @@ window.App = App = Ember.Application.create
   # Needs to be an args array since `undefined` is a valid context.
   continueTransitionArgs: null
 
+  # Set to a Group's join code to display on the home page.
+  joinCodeToShow: null
+
   # Set to a Group instance to auto join it and go to it after the user logs in.
   autoJoinAfterLoggingIn: null
 

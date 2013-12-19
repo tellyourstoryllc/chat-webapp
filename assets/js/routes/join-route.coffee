@@ -7,10 +7,14 @@ App.JoinRoute = Ember.Route.extend
     params.join_code
 
   afterModel: (model, transition) ->
-    if ! App.isLoggedIn() || App.get('isLoggingIn')
+    if App.get('isLoggingIn')
       # Save the transition so that if the user logs in in the future, we come
       # back to the join page.
       App.set('continueTransition', transition)
+    else if ! App.isLoggedIn()
+      joinCode = model
+      App.set('joinCodeToShow', joinCode)
+      @transitionTo('index')
     return undefined
 
   setupController: (controller, model) ->
