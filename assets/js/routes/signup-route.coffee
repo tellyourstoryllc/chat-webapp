@@ -1,6 +1,6 @@
 App.SignupRoute = Ember.Route.extend
 
-  beforeModel: (transition) ->
+  afterModel: (model, transition) ->
     if App.isLoggedIn()
       @transitionTo('rooms.index')
       return
