@@ -14,6 +14,7 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
 
     clearJoinRoom: ->
       @set('room', null)
+      @set('userMessage', null)
       return undefined
 
     joinRoom: (roomKey) ->
