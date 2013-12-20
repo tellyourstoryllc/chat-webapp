@@ -46,7 +46,8 @@ var apiProxy = function(pattern, host, port) {
 app.use(apiProxy(/\/api(\/.*)/, config.apiHostname, config.apiPort));
 
 // Health check for load balancer needs to be *before* any redirects.
-app.get('/health_check', function(req, res) {
+app.use('/health_check', function(req, res, next) {
+  if (req.method !== 'GET') next();
   res.setHeader('Content-Type', 'text/plain');
   res.send('Healthy');
 });
