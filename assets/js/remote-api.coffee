@@ -54,10 +54,8 @@ App.RemoteApi = Ember.Object.extend
       hash.context = App
 
       # Add in default params for all API requests.
-      token = App.get('token')
-      if token?
-        hash.data ?= {}
-        _.extend hash.data, @defaultParams()
+      hash.data ?= {}
+      _.extend hash.data, @defaultParams()
 
       if hash.data && type != 'GET'
         hash.contentType ?= 'application/json; charset=utf-8'
