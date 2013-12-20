@@ -18,6 +18,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Currently, all groups are public.
   canJoinWithoutCode: true
 
+  # Show room door icon in UI.
+  isRoom: true
+
   defaultAvatarUrl: App.webServerUrl('/images/room.png')
 
   avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')

@@ -1157,6 +1157,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   overflow auto // Scrollable.
 
 .room-list-item
+  position relative
 
   > a
     display block
@@ -1196,6 +1197,24 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     overflow ellipsis
 
     font-size 14px
+
+  .room-door-icon
+    // Center vertically.
+    position absolute
+    top 0
+    bottom 0
+    margin auto
+
+    right 15px
+    sprites-background()
+    sprite-icon()
+    width 18px
+    height 20px
+    background-position -115px -34px
+    opacity .9
+
+    &.hidden
+      display none
 
   .room-icon.status-icon, .room-avatar
     margin-right 5px
