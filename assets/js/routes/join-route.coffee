@@ -23,6 +23,10 @@ App.JoinRoute = Ember.Route.extend
     controller.set('joinCode', joinCode)
     App.JoinUtil.loadGroupFromJoinCode(controller, joinCode)
 
-    # Try to open the mobile app.
-    Ember.run.schedule 'afterRender', @, ->
-      App.attemptToOpenMobileApp("/group/join_code/#{joinCode}")
+  renderTemplate: (controller, model) ->
+    @_super(arguments...)
+    # If we're on iOS, render the mobile install.
+    if Modernizr.appleios
+      @render 'mobile-install',
+        into: 'application'
+        outlet: 'modal'

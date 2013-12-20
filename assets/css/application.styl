@@ -1086,6 +1086,58 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 
 ///////////////////////////////////////////////////////////
+// Mobile Install
+
+.mobile-install-dialog
+  box-sizing border-box
+  width 100%
+  height 100%
+  position fixed
+  left 0
+  top 0
+  z-index 1100
+
+  border-top 6px solid app-green
+  padding 15px
+  background-color app-purple
+  background-image url('/images/purple-bkg.png')
+  background-size cover
+  color rgba(255,255,255, 0.8)
+  text-align center
+
+  .title
+    margin 0 0 50px
+
+  .to-enter
+    font-size 20px
+    line-height 26px
+
+    &.no-join-code
+      margin-bottom 15px
+
+  .join-code
+    margin-top 15px
+    margin-bottom 15px
+    color rgba(255,255,255, 0.95)
+    font-size 30px
+    font-weight bold
+
+  .app-btn
+    padding-top 15px
+    padding-bottom 15px
+    font-size 20px
+
+  .app-btn:not(.btn-green)
+    color rgba(0,0,0, .8)
+
+  .btn-block
+    margin-bottom 10px
+
+  .already-text
+    margin-bottom 10px
+    font-size 12px
+
+///////////////////////////////////////////////////////////
 
 .rooms-sidebar
   position fixed

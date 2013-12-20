@@ -1,0 +1,31 @@
+<div class='title'>
+  <img src='{{unbound webServerUrl '/images/logo.png'}}' alt='skymob'>
+</div>
+
+{{#if joinCode}}
+  <p class='to-enter'>
+    To enter, launch skymob<br>
+    and enter code:
+  </p>
+
+  <div class='join-code'>
+    {{joinCode}}
+  </div>
+{{else}}
+  <p class='to-enter no-join-code'>
+    Free Group Chat that<br>
+    Works Anywhere
+  </p>
+{{/if}}
+
+<button class='app-btn btn-block btn-green' {{action 'installMobileApp'}}>
+  Install skymob
+</button>
+
+<p class='already-text'>
+  Already have the app?
+</p>
+
+<button class='app-btn btn-block' {{action 'launchMobileApp'}}>
+  Launch skymob
+</button>

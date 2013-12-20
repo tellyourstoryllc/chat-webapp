@@ -5,6 +5,25 @@ App.IndexRoute = Ember.Route.extend
       @transitionTo('rooms.index')
       return
 
+  setupController: (controller, model) ->
+    @_super(arguments...)
+
+    # If we transitioned from the join page, we may have a join code waiting to
+    # be used.
+    joinCode = App.get('joinCodeToShow')
+    # Consume this so it doesn't stick forever.
+    App.set('joinCodeToShow', null) if joinCode?
+    # Always set on the controller so that it gets cleared out properly.
+    controller.set('joinCodeToShow', joinCode)
+
+  renderTemplate: (controller, model) ->
+    @_super(arguments...)
+    # If we're on iOS, render the mobile install.
+    if Modernizr.appleios
+      @render 'mobile-install',
+        into: 'application'
+        outlet: 'modal'
+
   actions:
 
     goToSignUp: ->
