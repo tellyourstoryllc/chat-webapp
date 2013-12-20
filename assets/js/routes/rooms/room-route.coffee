@@ -19,15 +19,16 @@ App.RoomsRoomRoute = Ember.Route.extend
     params.room_id
 
   afterModel: (model, transition) ->
-    # Try to open the mobile app.  Do this before requiring login.
-    Ember.run.schedule 'afterRender', @, ->
-      [modelId] = @_tryModelFromGivenContext(model)
-      App.attemptToOpenMobileApp("/group/id/#{modelId}")
-
-    if ! App.isLoggedIn()
+    if App.get('isLoggingIn') || (! App.isLoggedIn() && ! Modernizr.appleios)
       App.set('continueTransition', transition)
       @transitionTo('login')
-      return
+    else if ! App.isLoggedIn()
+      # ***********************************************************************
+      # Note: We're treating a room ID as a join code here!  This could cause
+      # issues once we differentiate again.
+      joinCode = model
+      App.set('joinCodeToShow', joinCode)
+      @transitionTo('index')
 
   setupController: (controller, model) ->
     [modelId, model] = @_tryModelFromGivenContext(model)
