@@ -3,6 +3,8 @@ App.IndexView = Ember.View.extend
   isShowingSignupDialog: false
   isShowingEmailForm: false
 
+  joinCodeToShow: Ember.computed.alias('controller.joinCodeToShow')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown')
@@ -13,9 +15,8 @@ App.IndexView = Ember.View.extend
     $('body').addClass('home-page')
 
     Ember.run.schedule 'afterRender', @, ->
-      joinCode = App.get('joinCodeToShow')
+      joinCode = @get('joinCodeToShow')
       if joinCode?
-        App.set('joinCodeToShow', null)
         @$('.room-key-input').val("#{joinCode}")
         @send('submitRoomKey')
 

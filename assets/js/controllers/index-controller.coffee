@@ -10,6 +10,11 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
 
   numMembersToShow: 3
 
+  joinCodeToShow: null
+
+  # Used by the mobile-install template.
+  joinCode: Ember.computed.alias('joinCodeToShow')
+
   actions:
 
     logInWithRoom: ->

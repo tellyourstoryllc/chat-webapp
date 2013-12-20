@@ -447,10 +447,6 @@ window.App = App = Ember.Application.create
   # protocol that the app understand.
   attemptToOpenMobileApp: (path) ->
     return unless Modernizr.appleios
-    # If we've done this before and it either failed or the user came back,
-    # don't try to do it again.
-    return if window.sessionStorage.getItem('hasAttemptedToOpenApp')
-    window.sessionStorage.setItem('hasAttemptedToOpenApp', '1')
     path = '/' + path if path[0] != '/'
     window.location = "skymob:/" + path
     # If the app isn't installed, fall back to opening the App Store.
