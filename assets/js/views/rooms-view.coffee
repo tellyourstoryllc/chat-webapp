@@ -379,7 +379,7 @@ App.RoomsView = Ember.View.extend
         if activeRoom instanceof App.OneToOne
           alert "The room avatar you see is set by the other user.  You can change your avatar from your settings dialog."
         else
-          alert "You must be an admin to change the room wallpaper."
+          alert "You must be an admin to change the room avatar."
         return
       return unless @get('canUpdateRoomAvatar')
       @$('.room-avatar-file').trigger('click')
