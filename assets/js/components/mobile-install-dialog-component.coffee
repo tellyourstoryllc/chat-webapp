@@ -1,4 +1,5 @@
-App.MobileInstallDialogComponent = Ember.Component.extend
+# Actions: didDismissMobileInstallDialog
+App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   classNames: ['mobile-install-dialog']
 
@@ -16,4 +17,8 @@ App.MobileInstallDialogComponent = Ember.Component.extend
         App.attemptToOpenMobileApp("/group/join_code/#{joinCode}")
       else
         App.attemptToOpenMobileApp('/')
+      return undefined
+
+    dismissMobileInstallDialog: ->
+      @sendAction('didDismissMobileInstallDialog')
       return undefined

@@ -19,7 +19,7 @@ App.RoomsRoomRoute = Ember.Route.extend
     params.room_id
 
   afterModel: (model, transition) ->
-    if App.get('isLoggingIn') || (! App.isLoggedIn() && ! Modernizr.appleios)
+    if App.get('isLoggingIn') || (! App.isLoggedIn() && ! (Modernizr.appleios || Modernizr.android))
       App.set('continueTransition', transition)
       @transitionTo('login')
     else if ! App.isLoggedIn()

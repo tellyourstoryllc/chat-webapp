@@ -2,30 +2,47 @@
   <img src='{{unbound webServerUrl '/images/logo.png'}}' alt='skymob'>
 </div>
 
-{{#if joinCode}}
-  <p class='to-enter'>
-    To enter, launch skymob<br>
-    and enter code:
+{{#if isAppleIos}}
+  {{#if joinCode}}
+    <p class='to-enter'>
+      To enter, launch skymob<br>
+      and enter code:
+    </p>
+
+    <div class='join-code'>
+      {{joinCode}}
+    </div>
+  {{else}}
+    <p class='to-enter no-join-code'>
+      Free Group Chat that<br>
+      Works Anywhere
+    </p>
+  {{/if}}
+
+  <button class='app-btn btn-block btn-green' {{action 'installMobileApp'}}>
+    Install skymob
+  </button>
+
+  <p class='already-text'>
+    Already have the app?
   </p>
 
-  <div class='join-code'>
-    {{joinCode}}
-  </div>
+  <button class='app-btn btn-block' {{action 'launchMobileApp'}}>
+    Launch skymob
+  </button>
 {{else}}
-  <p class='to-enter no-join-code'>
-    Free Group Chat that<br>
-    Works Anywhere
-  </p>
+  {{#if isAndroid}}
+    <p class='to-enter no-join-code'>
+      Free Group Chat that<br>
+      Works Anywhere
+    </p>
+
+    <p class='to-enter no-join-code'>
+      Our Android app will be available in early 2014.
+    </p>
+
+    <button class='app-btn btn-block btn-green' {{action 'dismissMobileInstallDialog'}}>
+      Use Web Version
+    </button>
+  {{/if}}
 {{/if}}
-
-<button class='app-btn btn-block btn-green' {{action 'installMobileApp'}}>
-  Install skymob
-</button>
-
-<p class='already-text'>
-  Already have the app?
-</p>
-
-<button class='app-btn btn-block' {{action 'launchMobileApp'}}>
-  Launch skymob
-</button>

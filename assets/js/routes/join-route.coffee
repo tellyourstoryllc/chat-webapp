@@ -25,8 +25,8 @@ App.JoinRoute = Ember.Route.extend
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)
-    # If we're on iOS, render the mobile install.
-    if Modernizr.appleios
+    # If we're on iOS or Android, render the mobile install.
+    if Modernizr.appleios || Modernizr.android
       @render 'mobile-install',
         into: 'application'
         outlet: 'modal'

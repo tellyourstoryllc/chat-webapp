@@ -53,6 +53,13 @@ App.ApplicationRoute = Ember.Route.extend
     goToRoom: (room) ->
       @transitionTo('rooms.room', room)
 
+    didDismissMobileInstallDialog: ->
+      # Destroy whatever was rendered to the modal outlet.
+      @disconnectOutlet
+        outlet: 'modal'
+        parentView: 'application'
+      return undefined
+
     logOut: ->
       @transitionTo('logout')
 
