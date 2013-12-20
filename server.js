@@ -59,7 +59,6 @@ app.use(function(req, res, next) {
   if (config.redirectHttpToHttps && origProtocol === 'http') {
     protocol = 'https';
   }
-  console.log("redirectToNoWww:", host, origProtocol, protocol, req.url);
   if (origProtocol !== protocol || /^www/.test(host)) {
     res.redirect(protocol + '://' + host.replace(/^www\./, '') + req.url);
   }
