@@ -51,20 +51,22 @@ app.get('/health_check', function(req, res) {
   res.send('Healthy');
 });
 
-// Redirect http to https.  *Before* `bodyParser`.
-if (config.redirectHttpToHttps) {
-  app.use(function(req, res, next) {
-    var schema = req.headers['x-forwarded-proto'];
-    console.log("redirectHttpToHttps:", schema);
-
-    if (schema === 'https') {
-      next();
-    }
-    else {
-      res.redirect('https://' + req.headers.host + req.url);
-    }
-  });
-}
+// Remove www subdomain, and optionally force https.  *Before* `bodyParser`.
+app.use(function(req, res, next) {
+  var host = req.headers.host;
+  var origProtocol = req.headers['x-forwarded-proto'] || req.protocol;
+  var protocol = origProtocol;
+  if (config.redirectHttpToHttps && origProtocol === 'http') {
+    protocol = 'https';
+  }
+  console.log("redirectToNoWww:", host, origProtocol, protocol, req.url);
+  if (origProtocol !== protocol || /^www/.test(host)) {
+    res.redirect(protocol + '://' + host.replace(/^www\./, '') + req.url);
+  }
+  else {
+    next();
+  }
+});
 
 app.use(express.bodyParser());
 app.use(app.router);
