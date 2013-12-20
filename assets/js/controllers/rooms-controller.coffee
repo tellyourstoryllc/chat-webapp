@@ -32,3 +32,13 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     else
       App.User.allArrangedByName()
   ).property('activeRoom.arrangedMembers')
+
+  isActiveRoomOneToOne: (->
+    @get('activeRoom') instanceof App.OneToOne
+  ).property('activeRoom')
+
+  activeRoomAvatarStyle: (->
+    url = @get('activeRoom.avatarUrl')
+    return null unless url?
+    "background-image: url('#{url}')"
+  ).property('activeRoom.avatarUrl')

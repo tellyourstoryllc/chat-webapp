@@ -1477,6 +1477,25 @@ room-members-sidebar-width = 200px
   .loading
     margin 5px 10px 10px 10px
 
+  .one-to-one-specific, .room-specific
+    &.hidden
+      display none
+
+  .one-to-one-specific
+    .username
+      box-sizing border-box
+      width 100%
+      max-width none !important // Override rules below.
+      padding 10px
+      text-align center
+    .status-text
+      margin 0 10px 10px
+      max-height 4.8em !important // Override rules below.
+
+  .big-one-to-one-avatar
+    width room-members-sidebar-width
+    height room-members-sidebar-width
+
   .title
     padding 5px 10px
     border-top 1px solid #BDC2C7

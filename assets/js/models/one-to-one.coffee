@@ -17,6 +17,8 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   computedStatus: Ember.computed.alias('otherUser.computedStatus')
 
+  statusText: Ember.computed.alias('otherUser.statusText')
+
   # OneToOnes don't have topics.
   canSetTopic: false
 

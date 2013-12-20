@@ -86,54 +86,64 @@
   <input type='file' class='room-avatar-file' style='display: none;'>
   <input type='file' class='room-wallpaper-file' style='display: none;'>
   {{#if activeRoom}}
-    <div class='title'>Admin</div>
-    <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' target=view bubbles=false}}>
-      <span class='room-settings-icon'></span>
-      Room Settings
+    <div {{bind-attr class=':one-to-one-specific isActiveRoomOneToOne::hidden'}}>
+      <div class='room-avatar big-one-to-one-avatar' {{bind-attr style='activeRoomAvatarStyle'}}></div>
+      <div class='username'>{{activeRoom.name}}</div>
+      <div class='status-text'>{{activeRoom.statusText}}</div>
     </div>
 
-    <div class='copy-to-clipboard-indicator'>
-      Copied to Clipboard
-    </div>
+    <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
+      <div class='title'>Admin</div>
+      <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' target=view bubbles=false}}>
+        <span class='room-settings-icon'></span>
+        Room Settings
+      </div>
 
-    <div class='title'>Invite Link</div>
-    <div class='room-actions invite-room-actions' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-      <span class='copy-icon'></span>
-      <div class='join-code' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-        Room Key: {{upcase activeRoom.joinCode}}
+      <div class='copy-to-clipboard-indicator'>
+        Copied to Clipboard
       </div>
-      <div>
-        <a {{bind-attr href='activeRoom.joinUrl'}} {{action 'ignore'}}
-        class='join-url'>{{displayUrl activeRoom.joinUrl}}</a>
+
+      <div class='title'>Invite Link</div>
+      <div class='room-actions invite-room-actions' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+        <span class='copy-icon'></span>
+        <div class='join-code' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+          Room Key: {{upcase activeRoom.joinCode}}
+        </div>
+        <div>
+          <a {{bind-attr href='activeRoom.joinUrl'}} {{action 'ignore'}}
+          class='join-url'>{{displayUrl activeRoom.joinUrl}}</a>
+        </div>
+        <div class='clearfix'></div>
       </div>
-      <div class='clearfix'></div>
     </div>
   {{/if}}
 
-  <div class='title'>People</div>
-  {{#if usersLoaded}}
-    <ul class='room-members'>
-      {{#each user in arrangedMembers}}
-        <li class='room-member'>
-          {{#link-to 'rooms.room' user classNames='room-member-link'
-            classNameBindings='view.showAvatars::avatars-off'}}
-            <div class='room-member-avatar-cell'>
-              {{room-avatar room=user showStatus=true}}
-            </div>
-            <div class='room-member-info-cell'>
-              <span class='username'>{{user.name}}</span>
-              {{#if user.shouldDisplayIdleDuration}}
-                <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
-              {{/if}}
-              {{#if user.statusText}}
-                <div class='status-text'>{{user.statusText}}</div>
-              {{/if}}
-            </div>
-            <div class='clearfix'></div>
-          {{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
+  <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
+    <div class='title'>People</div>
+    {{#if usersLoaded}}
+      <ul class='room-members'>
+        {{#each user in arrangedMembers}}
+          <li class='room-member'>
+            {{#link-to 'rooms.room' user classNames='room-member-link'
+              classNameBindings='view.showAvatars::avatars-off'}}
+              <div class='room-member-avatar-cell'>
+                {{room-avatar room=user showStatus=true}}
+              </div>
+              <div class='room-member-info-cell'>
+                <span class='username'>{{user.name}}</span>
+                {{#if user.shouldDisplayIdleDuration}}
+                  <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
+                {{/if}}
+                {{#if user.statusText}}
+                  <div class='status-text'>{{user.statusText}}</div>
+                {{/if}}
+              </div>
+              <div class='clearfix'></div>
+            {{/link-to}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
   {{else}}
     <div class='loading'>
       Loading...
