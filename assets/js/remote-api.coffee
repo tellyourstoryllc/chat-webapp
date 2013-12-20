@@ -1,12 +1,46 @@
+parseOsFromUserAgent = ->
+  # Yeah, this is complicated to get right, but it's just for segmentation so
+  # it doesn't need to be 100% accurate.
+  #
+  # See: http://www.zytrax.com/tech/web/mobile_ids.html
+  ua = navigator.userAgent
+  if /iPhone/i.test(ua) || /iPad/i.test(ua) || /iPod/i.test(ua)
+    os = 'ios'
+  else if /Mac OS/i.test(ua) || /Macintosh/i.test(ua) || /Mac_PowerPC/i.test(ua)
+    os = 'mac'
+  else if /Android/i.test(ua)
+    os = 'android'
+  else if /Linux/i.test(ua) || /X11/i.test(ua)
+    # This should come after Android since Android uses Linux in its user agent.
+    os = 'linux'
+  else if /Windows Phone/i.test(ua) || /Windows CE/i.test(ua)
+    os = 'windows phone'
+  else if /Windows/i.test(ua) || /WinNT/i.test(ua)
+    # This should come after windows phone.
+    os = 'windows'
+
+  os ? 'unknown'
+
+
 App.RemoteApi = Ember.Object.extend
 
   namespace: 'api'
+
+  parsedOs: null
+
+  init: ->
+    @_super(arguments...)
+    @set('parsedOs', parseOsFromUserAgent()) if ! @get('parsedOs')?
 
   defaultParams: ->
     data = {}
 
     token = App.get('token')
     data.token = token if token?
+
+    # Segmentation params.
+    data.client = 'web'
+    data.os = @get('parsedOs')
 
     data
 
