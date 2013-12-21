@@ -530,6 +530,27 @@ window.App = App = Ember.Application.create
     else
       path
 
+  # Returns the path part of the URL including the beginning slash if it's an
+  # internal URL, i.e. within the current site (protocol, domain, port).  I
+  # don't think we care about basic auth user or password.
+  internalUrlPath: (url) ->
+    bases = new Array(3)
+    bases.push(window.location.protocol + '//' + window.location.host + '/')
+    # Explicit port.
+    bases.push(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/')
+    # Implicit ports.  This may appear redundant but different browsers do
+    # things differently so the above may not always work.
+    if window.location.protocol == 'http:' && window.location.port == 80
+      bases.push(window.location.protocol + '//' + window.location.hostname + '/')
+    if window.location.protocol == 'https:' && window.location.port == 443
+      bases.push(window.location.protocol + '//' + window.location.hostname + '/')
+
+    base = bases.find((base) -> url.indexOf(base) == 0)
+    return null unless base?
+
+    # Include the beginning / in the path.
+    url[base.length - 1 ..]
+
 
 if Modernizr.history
   # Browser supports pushState.

@@ -79,7 +79,7 @@
 <div {{bind-attr class=':room-content view.isRoomContentOutOfTheWay:out-of-the-way'}}>
   {{outlet}}
 
-  {{rooms-container rooms=rooms activeRoom=activeRoom}}
+  {{rooms-container rooms=rooms activeRoom=activeRoom didGoToRoom='goToRoom'}}
 </div>
 
 <div class='room-members-sidebar'>

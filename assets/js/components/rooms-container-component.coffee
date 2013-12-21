@@ -1,7 +1,7 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didJoinGroup
+# Actions: didJoinGroup, didGoToRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -20,6 +20,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
+      'onClickMessageLink',
       'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
@@ -31,6 +32,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $(window).on 'resize', @resize
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
+    $(document).on 'click', '.message-body a[href]', @onClickMessageLink
     $(document).on 'click', '.sender', @clickSender
 
     Ember.run.schedule 'afterRender', @, ->
@@ -48,6 +50,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
+    $(document).off 'click', '.message-body a[href]', @onClickMessageLink
     $(document).off 'click', '.sender', @clickSender
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
     @$('.send-message-text').off 'keyup click', @onSendMessageTextCursorMove
@@ -201,6 +204,38 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # Don't auto-focus on mobile since it opens the on-screen keyboard.
     if force || ! (Modernizr.appleios || Modernizr.android)
       @$('.send-message-text')?.focus()
+
+  onClickMessageLink: (event) ->
+    Ember.run @, ->
+      # No key modifiers.
+      if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
+        href = $(event.target).prop('href')
+        internalPath = App.internalUrlPath(href)
+        if ! Ember.isEmpty(internalPath)
+          # Found internal link.
+          transitioned = @transitionToInternalPath(internalPath)
+          # If we were able to attempt a transition, don't load the link in the
+          # browser.
+          event.preventDefault() if transitioned
+      return undefined
+
+  # Returns true if transition was attempted.
+  transitionToInternalPath: (path) ->
+    if /^\/rooms(\/|$)/.test(path)
+      # Room permalink.  Just go to it.
+      router = App._getRouter()
+      router.location.setURL(path)
+      router.handleURL(path)
+      true
+    else if (matches = /^\/join\/([a-zA-Z0-9]+)/.exec(path))
+      # Join link.  Load the room and display the members to give the user the
+      # option to enter it.
+      App.Group.fetchByJoinCode(matches[1]).then (json) =>
+        group = App.Group.loadSingle(json)
+        @sendAction('didGoToRoom', group) if group?
+      true
+    else
+      false
 
   # When clicking a name, insert @name to mention that user.
   clickSender: (event) ->
