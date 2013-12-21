@@ -264,9 +264,15 @@ window.App = App = Ember.Application.create
           App.loadAll(json)
         else if json.object_type == 'message' && json.one_to_one_id?
           # We received a new 1-1 message.
-          App.OneToOne.find(json.one_to_one_id)
-          .then (oneToOne) =>
+          oneToOne = App.OneToOne.lookup(json.one_to_one_id)
+          if oneToOne?
             oneToOne.didReceiveUpdateFromFaye(json)
+          else
+            # This is the first message in a 1-1 we've never seen before.  We
+            # need to force notifying in the UI.
+            App.OneToOne.fetchAndLoadSingle(json.one_to_one_id)
+            .then (oneToOne) =>
+              oneToOne.didReceiveUpdateFromFaye(json, forceNotify: true)
         else if json.object_type == 'group'
           # We received a Group.
           group = App.Group.lookup(json.id)

@@ -224,17 +224,28 @@ App.Conversation = Ember.Mixin.create
       return App.loadAllWithMetaData(json)
     .fail App.rejectionHandler
 
-  didReceiveUpdateFromFaye: (json) ->
+  # Handler for when we receive an object over the socket for this conversation.
+  #
+  # options.forceNotify if true, treats message as a new message, even if it's
+  #                     been loaded already.
+  didReceiveUpdateFromFaye: (json, options = {}) ->
     Ember.Logger.log "received packet", json if App.get('useDebugLogging')
     if ! json? || json.error?
       return
 
     if json.object_type == 'message'
-      # We received a new message.
+      # We received a message over the socket.
       [message, isNew] = App.Message.loadRawWithMetaData(json)
-      # If it's a Message we've created before, just ignore it.  Otherwise,
-      # trigger our callback.
-      @didReceiveMessage(message) if isNew
+      # If it's a message we've never instantiated before, trigger our callback
+      # like usual. Otherwise, just ignore it.
+      if isNew
+        @didReceiveMessage(message)
+      else if options.forceNotify
+        # In certain cases, we may need to treat it as a new message in the UI,
+        # such as the very first message of a OneToOne we've never seen before,
+        # even if the message has been instantiated before (from loading the
+        # OneToOne).
+        @notifyInUiOfMessage(message)
 
     if json.object_type in ['group', 'one_on_one']
       # We received an update to the conversation.
@@ -296,37 +307,40 @@ App.Conversation = Ember.Mixin.create
         if ! previousActiveAt? || previousActiveAt.getTime() < newActiveAt.getTime()
           @set('lastActiveAt', newActiveAt)
 
-      return result if options.suppressNotifications
-
-      fromCurrentUser = message.get('userId') == App.get('currentUser.id')
-      wasMentioned = message.doesMentionUser(App.get('currentUser'))
-      if ! fromCurrentUser && wasMentioned
-        # The current user was mentioned.  Play sound.
-        @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
-
-      if ! fromCurrentUser &&
-      (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
-        if wasMentioned
-          @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
-        else
-          @playRecieveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
-          @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
-
-      if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
-        # Mark the room as unread.
-        @set('isUnread', true)
-
-      if ! fromCurrentUser && ! App.get('hasFocus')
-        # Flash the window's titlebar.
-        titleObj = Ember.Object.create
-          id: message.get('groupId')
-          title: message.get('title')
-        App.get('pageTitlesToFlash').unshiftObject(titleObj)
+      @notifyInUiOfMessage(message) if ! options.suppressNotifications
 
       # Make sure to return what we were given for other listeners.
       return result
 
     true
+
+  notifyInUiOfMessage: (message) ->
+    fromCurrentUser = message.get('userId') == App.get('currentUser.id')
+    wasMentioned = message.doesMentionUser(App.get('currentUser'))
+    if ! fromCurrentUser && wasMentioned
+      # The current user was mentioned.  Play sound.
+      @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
+
+    if ! fromCurrentUser &&
+    (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
+      if wasMentioned
+        @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
+      else
+        @playRecieveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
+        @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
+
+    if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
+      # Mark the room as unread.
+      @set('isUnread', true)
+
+    if ! fromCurrentUser && ! App.get('hasFocus')
+      # Flash the window's titlebar.
+      titleObj = Ember.Object.create
+        id: message.get('groupId')
+        title: message.get('title')
+      App.get('pageTitlesToFlash').unshiftObject(titleObj)
+
+    undefined
 
   playMentionSound: ->
     return unless Modernizr.audio
