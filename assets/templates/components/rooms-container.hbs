@@ -56,13 +56,20 @@
             </div>
             <div class='members-preview'>
               {{#each user in roomsContainer.roomAlphabeticMembers}}
-                <div class='member-preview name-horizontal'>
-                  {{room-avatar room=user showStatus=false alwaysShowAvatar=true}}
-                  <span class='username'>{{user.name}}</span>
+                <div class='member-preview'>
+                  {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
+                  <div class='username'>{{user.name}}</div>
+                </div>
+              {{else}}
+                <div class='no-one-here'>
+                  (no one yet)
                 </div>
               {{/each}}
               {{#if roomsContainer.roomNumberMoreMembers}}
-                and {{roomsContainer.roomNumberMoreMembers}} more.
+                <div class='member-count-more'>
+                  <div class='member-count-ellipsis'></div>
+                  +{{roomsContainer.roomNumberMoreMembers}} more
+                </div>
               {{/if}}
             </div>
             {{#if activeRoom.canJoinWithoutCode}}

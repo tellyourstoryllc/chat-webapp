@@ -15,7 +15,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isEditingTopic: false
 
-  numMembersToShow: 10
+  numMembersToShow: 7 # 4 on first row, 3 +more on second row.
 
   init: ->
     @_super(arguments...)
