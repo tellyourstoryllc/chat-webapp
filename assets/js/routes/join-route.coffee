@@ -21,12 +21,14 @@ App.JoinRoute = Ember.Route.extend
     @_super(arguments...)
     joinCode = model
     controller.set('joinCode', joinCode)
-    App.JoinUtil.loadGroupFromJoinCode(controller, joinCode)
-
-  renderTemplate: (controller, model) ->
-    @_super(arguments...)
-    # If we're on iOS or Android, render the mobile install.
-    if Modernizr.appleios || Modernizr.android
-      @render 'mobile-install',
-        into: 'application'
-        outlet: 'modal'
+    controller.set('isLoading', true)
+    App.Group.fetchByJoinCode(joinCode)
+    .always =>
+      controller.set('isLoading', false)
+    .then (json) =>
+      group = App.Group.loadSingle(json)
+      @send('goToRoom', group) if group?
+    , (xhr) =>
+      msg = "There was a problem.  Please try again later." if 500 <= xhr.status <= 599
+      msg ?= "Sorry, that room couldn't be found."
+      controller.set('userMessage', msg)
