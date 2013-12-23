@@ -41,6 +41,8 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     @get('subscription')?
   ).property('subscription')
 
+  statusText: Ember.computed.alias('topic')
+
   didClose: ->
     @_super(arguments...)
     # Stop listening for updates.

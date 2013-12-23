@@ -18,16 +18,18 @@
     <li class='room-list-item'>
       <a href='#' {{action 'showCreateRoomDialog'}}>
         <span class='create-room-icon'></span>
-        <span class='room-name'>Create Room</span>
+        <div class='room-name create-room-name'>Create Room</div>
       </a>
     </li>
     {{#if roomsLoaded}}
       {{#each room in arrangedRooms}}
-        <li {{bind-attr class=':room-list-item room.isUnread:unread:read'}} {{action 'requestNotificationPermission'}}>
+        <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
           {{#link-to 'rooms.room' room}}
             {{room-avatar room=room showStatus=true}}
-            <span class='room-name'>{{room.name}}</span>
+            <div class='room-name'>{{room.name}}</div>
             <span {{bind-attr class=':room-door-icon room.isRoom::hidden'}}></span>
+            <div class='room-status'>{{room.statusText}}</div>
+            <div class='clearfix'></div>
           {{/link-to}}
         </li>
       {{/each}}
@@ -37,10 +39,12 @@
   </ul>
 
   <div class='current-user-status-bar'>
-    <div class='current-user-status-cell' {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
+    <div {{bind-attr class=':current-user-status-cell view.showAvatars::avatars-off'}} {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
       <div class='current-user-status'>
         {{room-avatar room=currentUser showStatus=true}}
-        <span class='username'>{{currentUser.name}}</span>
+        <div class='username'>{{currentUser.name}}</div>
+        <div class='status-text'>{{currentUser.statusText}}</div>
+        <div class='clearfix'></div>
       </div>
     </div>
     <div class='settings-icon-cell' {{action 'showSettings'}}>
