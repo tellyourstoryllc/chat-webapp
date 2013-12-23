@@ -575,6 +575,7 @@ input, textarea
 room-sidebar-width = 240px
 
 .navbar
+  display none // Initially invisible.
   position fixed
   box-sizing border-box
   width room-sidebar-width
@@ -615,15 +616,13 @@ room-sidebar-width = 240px
   .brand
     margin-bottom 10px
 
-#brand-image-wide
-  display none // Initially hidden.
-
 // body
 .logged-out, .join-page
   background-color #E4E6E8
   overflow auto
 
   .navbar
+    display block
     position static
     width auto
 
@@ -635,9 +634,6 @@ room-sidebar-width = 240px
 
   .brand
     float left
-
-  #brand-image
-    display none
 
   #brand-image-wide
     display block
@@ -1145,11 +1141,15 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .rooms-sidebar
   position fixed
-  top 52px // Height of .navbar
   box-sizing border-box
   width room-sidebar-width
   height 100%
+  border-top 3px solid app-green
   background-color app-purple
+
+  .logo
+    margin-top 10px
+    text-align center
 
 .join-text
   dark-purple-round-input()
@@ -1433,7 +1433,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .lobby-join-room-callout
   position absolute
-  top 36px
+  top 31px
   left -40px
   box-sizing border-box
   max-width 50%
@@ -1454,7 +1454,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .lobby-create-room-callout
   position absolute
-  top 81px
+  top 76px
   left -26px
   box-sizing border-box
   max-width 50%

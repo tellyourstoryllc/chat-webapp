@@ -8,11 +8,16 @@
   <source src='{{webServerUrl '/audio/receive.m4a'}}'>
 </audio>
 
-<div class='toggle-sidebar-tab'>
-  <span class='toggle-sidebar-icon'></span>
-</div>
-
 <div class='rooms-sidebar'>
+  <div class='toggle-sidebar-tab'>
+    <span class='toggle-sidebar-icon'></span>
+  </div>
+
+  <div class='logo'>
+    {{#link-to 'index'}}
+      <img src='{{webServerUrl '/images/logo.png'}}' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
+    {{/link-to}}
+  </div>
   <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
   <ul class='rooms-list'>
     <li class='room-list-item'>

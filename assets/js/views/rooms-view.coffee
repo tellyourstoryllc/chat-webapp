@@ -151,7 +151,7 @@ App.RoomsView = Ember.View.extend
     isMembersVisible = $window.width() > 700
 
     height = $window.height()
-    height -= $('.navbar:first').outerHeight() ? 0
+    height -= $('.logo').outerHeight(true) ? 0
     height -= $('.join-text').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
