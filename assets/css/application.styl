@@ -1154,9 +1154,27 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     margin-top 10px
     text-align center
 
-.join-text
-  dark-purple-round-input()
-  width room-sidebar-width - 2*10px
+.join-text-container
+  position relative
+
+  &:after
+    content ''
+    sprites-background()
+    sprite-icon()
+    width 12px
+    height 12px
+    background-position -123px -11px
+    opacity .4
+    // Center vertically.
+    position absolute
+    top 0
+    bottom 0
+    right 20px
+    margin auto
+
+  .join-text
+    dark-purple-round-input()
+    width room-sidebar-width - 2*10px
 
 .rooms-list
   box-sizing border-box

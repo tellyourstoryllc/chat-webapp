@@ -18,7 +18,9 @@
       <img src='{{webServerUrl '/images/logo.png'}}' alt='{{unbound App.title}}' style='width: 49px; height: auto;'>
     {{/link-to}}
   </div>
-  <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
+  <div class='join-text-container'>
+    <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
+  </div>
   <ul class='rooms-list'>
     <li class='room-list-item'>
       <a href='#' {{action 'showCreateRoomDialog'}}>
