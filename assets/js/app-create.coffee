@@ -157,14 +157,16 @@ window.App = App = Ember.Application.create
           # Automatically transition to somewhere more interesting.
           transition = App.get('continueTransition')
           if transition?
-            transition.retry()
             App.set('continueTransition', null)
+            newTrans = transition.retry()
+            # Replace /login with this new URL.
+            newTrans.method('replace')
           else
             appController = App.__container__.lookup('controller:application')
             # We're currently on the login or home page, so go to the default
             # place.
             if appController.get('currentPath') in ['index', 'login']
-              App._getRouter().transitionTo('rooms.index')
+              App._getRouter().replaceWith('rooms.index')
       , (e) =>
         App.set('isLoggingIn', false)
         if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')

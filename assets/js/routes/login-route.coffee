@@ -7,7 +7,7 @@ App.LoginRoute = Ember.Route.extend
 
   afterModel: (model, transition) ->
     if App.isLoggedIn()
-      @transitionTo('rooms.index')
+      @replaceWith('rooms.index')
       return
 
   setupController: (controller, model) ->
