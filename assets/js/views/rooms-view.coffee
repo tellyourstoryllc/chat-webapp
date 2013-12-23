@@ -162,6 +162,7 @@ App.RoomsView = Ember.View.extend
 
     # The list of members needs an explicit height so that it can be scrollable.
     height = $window.height()
+    height -= 2 * 10 # .room-content margin height.
     height -= @$('.admin-room-actions').outerHeight(true) ? 0
     height -= @$('.invite-room-actions').outerHeight(true) ? 0
     @$('.room-members-sidebar .title').each ->
