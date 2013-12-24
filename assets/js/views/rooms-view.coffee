@@ -32,6 +32,8 @@ App.RoomsView = Ember.View.extend
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onToggleRoomsSidebarTouchStart',
       'onJoinTextKeyDown', 'onJoinTextPaste')
+    # Force computed properties.
+    @get('isRoomContentOutOfTheWay')
 
   didInsertElement: ->
     $(window).on 'resize', @resize
@@ -88,6 +90,11 @@ App.RoomsView = Ember.View.extend
         event.preventDefault()
 
   isRoomContentOutOfTheWay: Ember.computed.alias('isShowingRoomsSidebar')
+
+  isRoomContentOutOfTheWayChanged: (->
+    Ember.run.schedule 'afterRender', @, ->
+      @updateSize()
+  ).observes('isRoomContentOutOfTheWay')
 
   onToggleRoomsSidebarTouchStart: (event) ->
     Ember.run @, ->
@@ -156,6 +163,14 @@ App.RoomsView = Ember.View.extend
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
       height: height
+
+    windowWidth = $window.width()
+    width = windowWidth
+    roomSidebarWidth = 240 # .room-sidebar room-sidebar-width
+    roomContentMarginWidth = 10 # room-content-margin-width
+    width -= if windowWidth <= 515 then 41 else roomSidebarWidth
+    @$('.room-content').css
+      width: width
 
     @$('.room-members-sidebar').css
       display: if isMembersVisible then 'block' else 'none'
