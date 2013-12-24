@@ -120,7 +120,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
 
-    height = $window.height()
+    height = @containerHeight($window)
     messagesWidth = @messagesWidth($window)
     width = messagesWidth
     @$('.room-container').css
@@ -142,12 +142,20 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.send-message-file-button').css
         right: @$('.send-button').outerWidth() + 11
 
-    @updateMessagesSize($window, messagesWidth)
+    @updateMessagesSize($window, height, messagesWidth)
 
-  updateMessagesSize: ($window = $(window), messagesWidth = @messagesWidth($window)) ->
+    $('.room-members-sidebar').css
+      left: messagesWidth
+
+  containerHeight: ($window = $(window)) ->
+    height = $window.height()
+    height -= 2 * 10 # .room-content margin height.
+    height
+
+  updateMessagesSize: ($window = $(window), containerHeight = @containerHeight($window), messagesWidth = @messagesWidth($window)) ->
     # This method needs to work for multiple message view elements.
 
-    height = $window.height()
+    height = containerHeight
     height -= @$('.room-info').outerHeight() ? 0
     height -= @$('.send-message-area').outerHeight(true) ? 0
 
@@ -174,6 +182,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     else
       $('.rooms-sidebar').outerWidth()
     width = windowWidth
+    width -= 2 * 10 # .room-content margin width.
     width -= roomsSidebarWidth ? 0
     width -= membersSidebarWidth if isMembersVisible
     width

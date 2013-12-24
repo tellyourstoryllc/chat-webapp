@@ -563,6 +563,7 @@ html
   min-height 100%
 
 body
+  background-color #E4E7E8
   font-family gotham_rounded, Helvetica, Arial, sans-serif
   overflow hidden
 
@@ -1142,6 +1143,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .rooms-sidebar
   position fixed
+  top 0
   box-sizing border-box
   width room-sidebar-width
   height 100%
@@ -1337,7 +1339,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .choose-status-menu
   position fixed
   left 5px
-  bottom 45px
+  bottom 57px
   width room-sidebar-width + 50px
   visibility hidden // Initially hidden.
 
@@ -1384,15 +1386,27 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   webkit-flashing-fix()
 
-.room-content
-  position fixed
-  top 0
-  width 100%
-  height 100%
-  margin-left room-sidebar-width
-  background-color #EDEDED
+room-content-margin-width = 10px
+room-content-margin-height = 10px
 
-  transition margin-left .2s ease-out
+.room-content
+  position absolute
+  top 0
+  left room-sidebar-width
+  box-sizing border-box
+  height 100%
+  overflow hidden
+  border room-content-margin-width solid transparent
+  border-top-width room-content-margin-height
+  border-bottom-width room-content-margin-height
+  border-radius 6px
+  background-color #e4e7e8
+
+  transition left .2s ease-out
+
+  &.lobby
+    // In the lobby, we show callouts that overflow.
+    overflow visible
 
 .toggle-sidebar-tab
   display none
@@ -1404,7 +1418,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 @media (max-width: 515px)
 
   .room-content:not(.out-of-the-way)
-    margin-left 41px
+    left 41px
 
   .toggle-sidebar-tab
     position fixed
@@ -1456,7 +1470,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .lobby-join-room-callout
   position absolute
-  top 31px
+  top 21px
   left -40px
   box-sizing border-box
   max-width 50%
@@ -1477,7 +1491,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .lobby-create-room-callout
   position absolute
-  top 76px
+  top 66px
   left -26px
   box-sizing border-box
   max-width 50%
@@ -1504,8 +1518,8 @@ room-members-sidebar-width = 200px
 
 .room-menu
   position fixed
-  right 5px
-  top 58px
+  right 5px + room-content-margin-width
+  top 56px + room-content-margin-height
   width room-members-sidebar-width - 10px
   font-size 14px
 
@@ -1544,16 +1558,22 @@ room-members-sidebar-width = 200px
     opacity 0
 
 .room-members-sidebar
-  position fixed
-  right 0
+  position absolute
   top 0
   box-sizing border-box
   width room-members-sidebar-width
   height 100%
   overflow hidden
+  border 1px solid #C2C7CB
+  border-left-width 0
+  border-top-right-radius 6px
+  border-bottom-right-radius 6px
   background-color #EEF0F0
   font-size 12px
   line-height 1.2em
+
+  &.hidden
+    display none !important
 
   .loading
     margin 5px 10px 10px 10px
@@ -1589,6 +1609,10 @@ room-members-sidebar-width = 200px
 
     &:hover, &.zeroclipboard-is-hover
       background-color #F8F8F8
+
+  .admin-title
+    border-top-width 0
+    border-top-right-radius 6px
 
   .admin-room-actions
     height 29px
@@ -1707,13 +1731,16 @@ room-members-sidebar-width = 200px
 
 .room-container
   position absolute
+  top 0
   overflow hidden
+  border-radius 6px left
 
   .room-info
-    border 1px solid #B4B4B4
+    border 1px solid #C2C7CB
     padding 5px
     background-color #EEF0F0
     text-shadow 0 0 3px #fff
+    border-top-left-radius 6px
 
   .room-avatar-permalink
     float left
@@ -1807,8 +1834,8 @@ room-members-sidebar-width = 200px
   min-width 100%
 
   box-sizing border-box
-  border-left 1px solid #B4B4B4
-  border-right 1px solid #B4B4B4
+  border-left 1px solid #C2C7CB
+  border-right 1px solid #C2C7CB
   background-color #fff
 
   // When the user sets a custom wallpaper, stretch it keeping the aspect ratio.
@@ -1965,7 +1992,7 @@ sender-column-width = 150px
 
   .mention
     display inline-block
-    border 1px solid #B4B4B4
+    border 1px solid #C2C7CB
     border-radius 4px
     padding 0 3px
 
@@ -2095,8 +2122,8 @@ sender-column-width = 150px
   box-sizing border-box
   height 52px
   padding 5px
-  border 1px solid #B4B4B4
-  border-bottom 0
+  border 1px solid #C2C7CB
+  border-bottom-left-radius 6px
   background-color #EEF0F0
 
   .send-message-text
