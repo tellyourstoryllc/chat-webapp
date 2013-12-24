@@ -225,7 +225,12 @@ App.Group.reopenClass
       if json? && ! json.error?
         json = Ember.makeArray(json)
         groupAttrs = json.find (o) -> o.object_type == 'group'
-        group = @loadRaw(groupAttrs)
+
+        # Fill in an active time so that it sorts to the top.
+        groupProps = @propertiesFromRawAttrs(groupAttrs)
+        groupProps.lastActiveAt ?= new Date()
+
+        group = @load(groupProps)
         return group
       else
         throw json

@@ -15,8 +15,9 @@ App.BaseModel.reopenClass
 
   all: -> @_all
 
-  loadRawWithMetaData: (json) ->
-    props = @propertiesFromRawAttrs(json)
+  # Given object properties, load it into our store.  Return instance with
+  # metadata.
+  loadWithMetaData: (props) ->
     props.isLoaded ?= true
 
     prevInst = props.id? && @_allById[props.id]
@@ -32,6 +33,17 @@ App.BaseModel.reopenClass
 
     [inst, isNew]
 
+  # Given object properties, load it into our store.  Return instance only.
+  load: (props) ->
+    [instance] = @loadWithMetaData(arguments...)
+    instance
+
+  # Given raw JSON object, load it into our store.  Return instance with
+  # metadata.
+  loadRawWithMetaData: (json) ->
+    @loadWithMetaData(@propertiesFromRawAttrs(json))
+
+  # Given raw JSON object, load it into our store.  Return instance only.
   loadRaw: (json) ->
     [instance] = @loadRawWithMetaData(arguments...)
     instance
