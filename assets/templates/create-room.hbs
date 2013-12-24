@@ -1,5 +1,5 @@
 <div class='page-overlay hidden create-room-overlay'>
-  <form class='modal modal-form create-room-form' {{action 'createRoom' target=view on='submit'}}>
+  <form class='modal form modal-form create-room-form' {{action 'createRoom' target=view on='submit'}}>
     <span class='close' {{action 'hideCreateRoomDialog'}}>&times;</span>
     <h3 class='title'>Create a New Room</h3>
     {{#if view.createGroupErrorMessage}}
@@ -10,7 +10,7 @@
         autocomplete='off' placeholder='Room Name'}}
     </div>
     <div class='form-actions'>
-      <button type='submit' class='app-btn'
+      <button type='submit' class='app-btn btn-green'
        {{bind-attr disabled='isCreatingGroup'}}>Create Room</button>
     </div>
   </form>
