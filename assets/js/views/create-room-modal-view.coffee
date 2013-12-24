@@ -3,6 +3,8 @@ App.CreateRoomModalView = Ember.View.extend
   # Text entered in create a new room dialog.
   newRoomName: ''
 
+  isCreatingGroup: false
+
   createGroupErrorMessage: null
 
   init: ->
