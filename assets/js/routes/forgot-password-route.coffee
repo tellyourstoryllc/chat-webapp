@@ -3,7 +3,7 @@ App.ForgotPasswordRoute = Ember.Route.extend
   afterModel: (model, transition) ->
     if App.isLoggedIn()
       @transitionTo('rooms.index')
-      return
+    return undefined
 
   setupController: (controller, model) ->
     @_super(arguments...)

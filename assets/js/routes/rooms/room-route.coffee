@@ -29,6 +29,7 @@ App.RoomsRoomRoute = Ember.Route.extend
       joinCode = model
       App.set('joinCodeToShow', joinCode)
       @transitionTo('index')
+    return undefined
 
   setupController: (controller, model) ->
     [modelId, model] = @_tryModelFromGivenContext(model)

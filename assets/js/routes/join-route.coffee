@@ -1,8 +1,5 @@
 App.JoinRoute = Ember.Route.extend
 
-  deactivate: ->
-    @_super(arguments...)
-
   model: (params, transition) ->
     params.join_code
 

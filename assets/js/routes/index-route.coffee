@@ -3,7 +3,7 @@ App.IndexRoute = Ember.Route.extend
   afterModel: (model, transition) ->
     if App.isLoggedIn()
       @transitionTo('rooms.index')
-      return
+    return undefined
 
   setupController: (controller, model) ->
     @_super(arguments...)
@@ -44,3 +44,4 @@ App.IndexRoute = Ember.Route.extend
 
     facebookDidError: (error) ->
       App.get('indexView')?.send('facebookDidError', error)
+      return undefined

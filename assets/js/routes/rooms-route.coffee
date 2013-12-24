@@ -1,6 +1,7 @@
 App.RoomsRoute = Ember.Route.extend
 
   deactivate: ->
+    @_super(arguments...)
     # Stop listening for new messages.
     App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
 

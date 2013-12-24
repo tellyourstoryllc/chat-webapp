@@ -4,4 +4,4 @@ App.RoomsIndexRoute = Ember.Route.extend
     if ! App.isLoggedIn()
       App.set('continueTransition', transition)
       @transitionTo('login')
-      return
+    return undefined
