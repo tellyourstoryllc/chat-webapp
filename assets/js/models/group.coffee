@@ -164,6 +164,11 @@ App.Group.reopenClass
   _allActive: null
 
   propertiesFromRawAttrs: (json) ->
+    api = App.get('api')
+    lastActiveAt = api.deserializeUnixTimestamp(json.last_message_at)
+    # Treat room creation as activity.
+    lastActiveAt ?= api.deserializeUnixTimestamp(json.created_at)
+
     id: App.BaseModel.coerceId(json.id)
     name: json.name
     joinUrl: json.join_url
@@ -172,7 +177,7 @@ App.Group.reopenClass
     wallpaperUrl: App.UrlUtil.mediaUrlToHttps(json.wallpaper_url)
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
-    lastActiveAt: App.get('api').deserializeUnixTimestamp(json.last_message_at)
+    lastActiveAt: lastActiveAt
 
   # Fetches a Group by id and returns a promise that resolves to the Group
   # instance.
@@ -225,12 +230,7 @@ App.Group.reopenClass
       if json? && ! json.error?
         json = Ember.makeArray(json)
         groupAttrs = json.find (o) -> o.object_type == 'group'
-
-        # Fill in an active time so that it sorts to the top.
-        groupProps = @propertiesFromRawAttrs(groupAttrs)
-        groupProps.lastActiveAt ?= new Date()
-
-        group = @load(groupProps)
+        group = @loadRaw(groupAttrs)
         return group
       else
         throw json
