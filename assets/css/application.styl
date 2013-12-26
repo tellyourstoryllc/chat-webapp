@@ -253,7 +253,7 @@ button
     border-radius 2px
     box-shadow none
 
-  &:hover
+  &:hover, &.hover
     background-color lighten(#EEF0F0, 50%)
 
   &:active
@@ -264,7 +264,7 @@ button
     background-color app-green
     color #fff
 
-    &:hover
+    &:hover, &.hover
       background-color lighten(app-green, 10%)
 
   &.btn-fb
@@ -278,7 +278,7 @@ button
       background-color #3C5A99
       margin-left 45px // Space for the facebook-f icon.
 
-    &:hover
+    &:hover, &.hover
       background-color lighten(#374F81, 10%)
 
       .btn-fb-text-container
@@ -1525,6 +1525,66 @@ room-members-sidebar-width = 200px
     padding-top 8px
     padding-bottom 8px
 
+.invite-dialog
+  position absolute
+  right 7px
+  top 40px
+  visibility hidden // Initially invisible.
+
+  width room-members-sidebar-width + 20px
+
+  border 1px solid rgba(0,0,0, .5)
+  border-radius 4px
+  padding 20px
+  background-color #FBFBFB
+  box-shadow 0 0 30px rgba(0,0,0, .8)
+  text-align center
+
+  .close
+    float right
+    margin -20px -20px 0 0
+    padding 7px 10px
+    cursor pointer
+    color rgba(0,0,0, .5)
+
+    &:hover
+      color rgba(0,0,0, .8)
+
+  .instructions
+    font-size 14px
+    margin-bottom 10px
+
+  .join-link-container
+    margin-bottom 15px
+
+  .join-url-text
+    box-sizing border-box
+    width 100%
+    color #A9A9A9
+    font-size 12px
+
+  .copy-icon
+    sprite-icon()
+    width 22px
+    height 24px
+    margin-right 3px
+    sprites-background()
+    background-position -89px -30px
+
+  .copy-to-clipboard-indicator
+    position absolute
+    top 114px
+    right 50px
+    padding 5px
+    border-radius 3px
+    background-color rgba(0,0,0, 0.7)
+    color #eee
+    font-size 14px
+    z-index 1000
+
+    // Animation shows it.
+    visibility hidden
+
 @keyframes join-icon-bump
   0%
     transform translateY(0%)
@@ -1622,44 +1682,8 @@ room-members-sidebar-width = 200px
     sprites-background()
     background-position -206px -8px
 
-  .invite-room-actions
-    height 35px
-
-    &.flash-loaded
-      cursor pointer
-
-  .copy-to-clipboard-indicator
-    position absolute
-    top 114px
-    right 30px
-    padding 5px
-    border-radius 3px
-    background-color rgba(0,0,0, 0.7)
-    color #eee
-    font-size 14px
-    z-index 1000
-
-    // Animation shows it.
-    visibility hidden
-
-  .copy-icon
-    sprite-icon()
-    float left
-    width 22px
-    height 24px
-    margin-right 3px
-    sprites-background()
-    background-position -89px -30px
-
-  .join-url
-    width room-members-sidebar-width - 35px // Subtract the width of the icon.
-    overflow ellipsis
-    color #A9A9A9
-    text-shadow 0 1px 0 rgba(255,255,255, 0.8)
-    font-size 10px
-    // Don't appear like a link.
-    text-decoration none
-    cursor default
+  .invite-button-container
+    padding 10px
 
   .room-members
     overflow auto // Scrollable.

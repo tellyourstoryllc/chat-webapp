@@ -110,21 +110,10 @@
           Room Settings
         </div>
 
-        <div class='copy-to-clipboard-indicator'>
-          Copied to Clipboard
-        </div>
-
-        <div class='title'>Invite Link</div>
-        <div class='room-actions invite-room-actions' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-          <span class='copy-icon'></span>
-          <div class='join-code' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-            Room Key: {{upcase activeRoom.joinCode}}
-          </div>
-          <div>
-            <a {{bind-attr href='activeRoom.joinUrl'}} {{action 'ignore'}}
-            class='join-url'>{{displayUrl activeRoom.joinUrl}}</a>
-          </div>
-          <div class='clearfix'></div>
+        <div class='invite-button-container'>
+          <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' target=view bubbles=false}}>
+            Invite
+          </button>
         </div>
       </div>
     {{/if}}
@@ -179,3 +168,22 @@
   <li class='separator'></li>
   <li class='menu-item' {{action 'leaveRoom' target=view}}>Leave Room...</li>
 </ul>
+
+<div class='dialog invite-dialog' {{action 'ignore' bubbles=false}}>
+  <div class='close' {{action 'dismissInviteDialog' target=view}} title='Close'>
+    &times;
+  </div>
+  <div class='instructions'>
+    You can invite people to join this room by sending this link:
+  </div>
+  <div class='join-link-container'>
+    <input type='text' {{bind-attr value='activeRoom.joinUrl'}} class='join-url-text' readonly>
+  </div>
+  <button class='app-btn btn-block btn-green btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+    <span class='copy-icon'></span>
+    Copy Link to Clipboard
+  </button>
+  <div class='copy-to-clipboard-indicator'>
+    Copied to Clipboard
+  </div>
+</div>

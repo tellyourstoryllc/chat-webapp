@@ -15,6 +15,8 @@ App.RoomsView = Ember.View.extend
 
   isRoomMenuVisible: false
 
+  isInviteDialogVisible: false
+
   isChooseStatusMenuVisible: false
 
   isStatusTextMenuVisible: false
@@ -115,13 +117,12 @@ App.RoomsView = Ember.View.extend
 
   setupCopyToClipboard: ->
     return if @get('zeroClipboard')? || ! @get('activeRoom')?
-    clip = new ZeroClipboard(@$('.invite-room-actions'))
+    clip = new ZeroClipboard(@$('.copy-join-link-button'))
     @set('zeroClipboard', clip)
     clip.on 'load', (client, args) =>
       # Flash has been loaded.  Indicate in the UI that clicking copies.
-      $e = @$('.invite-room-actions')
+      $e = @$('.copy-join-link-button')
       $e.addClass('flash-loaded')
-      $e.attr('title', 'Copy Invite Link to Clipboard')
 
       client.on 'complete', (client, args) =>
         # Copied to clipboard.
@@ -188,6 +189,7 @@ App.RoomsView = Ember.View.extend
   documentClick: (event) ->
     Ember.run @, ->
       @closeRoomMenu()
+      @closeInviteDialog()
       @closeChooseStatusMenu()
       @closeStatusTextMenu()
 
@@ -245,6 +247,7 @@ App.RoomsView = Ember.View.extend
 
       # Make sure the room menu is closed.
       @closeRoomMenu() if @get('isRoomMenuVisible')
+      @closeInviteDialog() if @get('isInviteDialogVisible')
 
       roomId = App.get('currentlyViewingRoom.id')
       if roomId?
@@ -355,6 +358,16 @@ App.RoomsView = Ember.View.extend
   closeRoomMenu: ->
     @$('.room-menu').removeClass('expand-down')
     @set('isRoomMenuVisible', false)
+
+  showInviteDialog: ->
+    @$('.invite-dialog').addClass('expand-down')
+    @set('isInviteDialogVisible', true)
+    Ember.run.schedule 'afterRender', @, ->
+      @$('.join-url-text').focus().textrange('set') # Select all.
+
+  closeInviteDialog: ->
+    @$('.invite-dialog').removeClass('expand-down')
+    @set('isInviteDialogVisible', false)
 
   showChooseStatusMenu: ->
     @$('.choose-status-menu').addClass('expand-up')
@@ -487,6 +500,14 @@ App.RoomsView = Ember.View.extend
         alert(errorMsg)
       .fail App.rejectionHandler
 
+      return undefined
+
+    toggleInviteDialog: ->
+      @showInviteDialog()
+      return undefined
+
+    dismissInviteDialog: ->
+      @closeInviteDialog()
       return undefined
 
     toggleChooseStatusMenu: ->

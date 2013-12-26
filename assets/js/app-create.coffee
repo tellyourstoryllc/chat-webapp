@@ -175,7 +175,7 @@ window.App = App = Ember.Application.create
       .fail App.rejectionHandler
 
     # Setup copying to clipboard.  Versioning the URL to prevent caching issues.
-    ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf')
+    ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf', hoverClass: 'hover')
 
   # Common promise rejection handler.  Use this as the final handler whenever
   # you create a promise so that errors don't get swallowed.  For example:
