@@ -8,6 +8,7 @@ App.RoomAvatarComponent = Ember.Component.extend
       'showAvatars::avatars-off' # For preference.
       'showStatus::no-status'
       'isGroup:group'
+      'alwaysShowAvatar:always-show-avatar'
     ]
   attributeBindings: ['style']
 
@@ -17,8 +18,8 @@ App.RoomAvatarComponent = Ember.Component.extend
   alwaysShowAvatar: false
 
   showAvatars: (->
-    App.get('preferences.clientWeb.showAvatars') || @get('alwaysShowAvatar')
-  ).property('App.preferences.clientWeb.showAvatars', 'alwaysShowAvatar')
+    App.get('preferences.clientWeb.showAvatars')
+  ).property('App.preferences.clientWeb.showAvatars')
 
   status: (->
     room = @get('room')
