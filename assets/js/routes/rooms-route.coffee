@@ -30,7 +30,7 @@ App.RoomsRoute = Ember.Route.extend
     return undefined
 
   _uiRooms: ->
-    @controllerFor('rooms').get('arrangedRooms').toArray()
+    @controllerFor('rooms').get('arrangedRooms')
 
   _transitionAwayFromRoom: (room) ->
     return unless room == App.get('currentlyViewingRoom')
@@ -53,22 +53,30 @@ App.RoomsRoute = Ember.Route.extend
 
     showPreviousRoom: ->
       uiRooms = @_uiRooms()
-      index = uiRooms.indexOf(App.get('currentlyViewingRoom'))
-      if index >= 0
-        index--
-        index = uiRooms.length - 1 if index < 0
-        inst = uiRooms.objectAt(index)
-        @transitionTo('rooms.room', inst)
+      room = App.get('currentlyViewingRoom')
+      if room?
+        index = uiRooms.indexOf(room)
+        newIndex = index - 1 if index >= 0
+        newIndex = uiRooms.get('length') - 1 if newIndex < 0
+      else
+        newIndex = uiRooms.get('length') - 1
+      if newIndex?
+        inst = uiRooms.objectAt(newIndex)
+        @transitionTo('rooms.room', inst) if inst?
       return undefined
 
     showNextRoom: ->
       uiRooms = @_uiRooms()
-      index = uiRooms.indexOf(App.get('currentlyViewingRoom'))
-      if index >= 0
-        index++
-        index = 0 if index >= uiRooms.length
-        inst = uiRooms.objectAt(index)
-        @transitionTo('rooms.room', inst)
+      room = App.get('currentlyViewingRoom')
+      if room?
+        index = uiRooms.indexOf(room)
+        newIndex = index + 1 if index >= 0
+        newIndex = 0 if newIndex >= uiRooms.get('length')
+      else
+        newIndex = 0
+      if newIndex?
+        inst = uiRooms.objectAt(newIndex)
+        @transitionTo('rooms.room', inst) if inst?
       return undefined
 
     willLeaveRoom: (room) ->
