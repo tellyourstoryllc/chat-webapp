@@ -32,6 +32,23 @@ App.RoomsRoute = Ember.Route.extend
   _uiRooms: ->
     @controllerFor('rooms').get('arrangedRooms').toArray()
 
+  _transitionAwayFromRoom: (room) ->
+    return unless room == App.get('currentlyViewingRoom')
+    # User is viewing the room, so switch view to another room.
+    controller = @controllerFor('rooms')
+    rooms = controller.get('arrangedRooms')
+    index = rooms.indexOf(room)
+    if index >= 0
+      if index + 1 < rooms.get('length')
+        newRoom = rooms.objectAt(index + 1)
+        @transitionTo('rooms.room', newRoom)
+      else if 0 <= index - 1 < rooms.get('length')
+        newRoom = rooms.objectAt(index - 1)
+        @transitionTo('rooms.room', newRoom)
+      else
+        # Transitioning away from the last room; go to the lobby.
+        @transitionTo('rooms.index')
+
   actions:
 
     showPreviousRoom: ->
@@ -54,23 +71,12 @@ App.RoomsRoute = Ember.Route.extend
         @transitionTo('rooms.room', inst)
       return undefined
 
-    closeRoom: (room) ->
-      controller = @controllerFor('rooms')
-      if room == App.get('currentlyViewingRoom')
-        # User is viewing the room, so switch view to another room.
-        rooms = controller.get('rooms')
-        index = rooms.indexOf(room)
-        if index >= 0
-          if index + 1 < rooms.length
-            newRoom = rooms.objectAt(index + 1)
-            @transitionTo('rooms.room', newRoom)
-          else if 0 <= index - 1 < rooms.length
-            newRoom = rooms.objectAt(index - 1)
-            @transitionTo('rooms.room', newRoom)
-          else
-            # Closing the last room; go to the lobby.
-            @transitionTo('rooms.index')
+    willLeaveRoom: (room) ->
+      @_transitionAwayFromRoom(room)
+      return undefined
 
+    closeRoom: (room) ->
+      @_transitionAwayFromRoom(room)
       room.set('isOpen', false)
       return undefined
 

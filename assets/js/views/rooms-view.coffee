@@ -447,6 +447,10 @@ App.RoomsView = Ember.View.extend
 
       return if ! window.confirm("Permanently leave the \"#{room.get('name')}\" room?")
 
+      # Notify up the chain before closing so that it knows where to transition
+      # to.
+      @get('controller').send('willLeaveRoom', room)
+
       api = App.get('api')
       url = api.buildURL("/groups/#{room.get('id')}/leave")
       room.withLockedPropertyTransaction url, 'POST', {}, 'isDeleted', =>
