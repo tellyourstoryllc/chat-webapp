@@ -152,12 +152,9 @@
         disabledBinding='roomsContainer.isSendDisabled'
         target=roomsContainer}}
       {{#if doesBrowserSupportAjaxFileUpload}}
-        <button type='button' class='app-btn send-message-file-button'
-          {{bind-attr disabled='roomsContainer.isSendDisabled'}}
+        <span {{bind-attr class=':message-attach-icon roomsContainer.isSendDisabled:disabled'}}
           {{action 'chooseFile' target=roomsContainer}}
-          title='Attach File'>
-          <span class='message-attach-icon'></span>
-        </button>
+          title='Attach File'></span>
         <input type='file' class='send-message-file'>
       {{/if}}
       <button type='button' {{action 'sendMessage' target=roomsContainer}}

@@ -131,16 +131,16 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-area').css
       width: width
     # The send message text input.
-    textWidth = width - @$('.send-button').outerWidth() - 20
-    if App.doesBrowserSupportAjaxFileUpload()
-      textWidth -= @$('.send-message-file-button').outerWidth() + 5
+    textWidth = width
+    textWidth -= @$('.send-button').outerWidth(true) + 18
     @$('.send-message-text').css
       width: Math.max(10, textWidth)
 
     # The send message file button.
     if App.doesBrowserSupportAjaxFileUpload()
-      @$('.send-message-file-button').css
-        right: @$('.send-button').outerWidth() + 11
+      # Send button text width can vary due to encryption.
+      @$('.message-attach-icon').css
+        right: @$('.send-button').outerWidth(true) + 18
 
     @updateMessagesSize($window, height, messagesWidth)
 
