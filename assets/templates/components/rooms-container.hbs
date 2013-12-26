@@ -142,11 +142,11 @@
       {{/if}}
     {{/each}}
 
-    <div class='connecting-status-bar'>
+    <div {{bind-attr class=':connecting-status-bar activeRoom::hidden'}}>
       Connecting...
     </div>
 
-    <div class='send-message-area'>
+    <div {{bind-attr class=':send-message-area activeRoom::hidden'}}>
       {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
         valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
         disabledBinding='roomsContainer.isSendDisabled'
