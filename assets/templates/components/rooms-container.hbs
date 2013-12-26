@@ -154,12 +154,9 @@
       {{#if doesBrowserSupportAjaxFileUpload}}
         <button type='button' class='app-btn send-message-file-button'
           {{bind-attr disabled='roomsContainer.isSendDisabled'}}
-          {{action 'chooseFile' target=roomsContainer}}>
-          {{#if activeRoom.newMessageFile}}
-            Change
-          {{else}}
-            Attach
-          {{/if}}
+          {{action 'chooseFile' target=roomsContainer}}
+          title='Attach File'>
+          <span class='message-attach-icon'></span>
         </button>
         <input type='file' class='send-message-file'>
       {{/if}}
