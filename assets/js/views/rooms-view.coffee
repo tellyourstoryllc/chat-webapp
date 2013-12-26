@@ -159,7 +159,7 @@ App.RoomsView = Ember.View.extend
 
     height = $window.height()
     height -= $('.logo').outerHeight(true) ? 0
-    height -= $('.join-text').outerHeight(true) ? 0
+    height -= $('.join-text-container').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
     @$('.rooms-list').css
       height: height
