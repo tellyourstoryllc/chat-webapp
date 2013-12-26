@@ -80,6 +80,8 @@ App.RoomsView = Ember.View.extend
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
       if event.which == 27      # Escape
+        @closeRoomMenu()
+        @closeInviteDialog()
         @closeChooseStatusMenu()
         @closeStatusTextMenu()
     # Ctrl.
