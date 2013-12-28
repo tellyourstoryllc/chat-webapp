@@ -845,7 +845,7 @@ room-sidebar-width = 240px
     padding 30px
     background-color transparent
 
-  .home-content
+  .home-content, .text-row-content
     max-width 960px
     margin 0 auto
 
@@ -905,6 +905,35 @@ room-sidebar-width = 240px
     width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
+
+  .text-row
+    padding 50px 100px
+    text-align left
+
+    &.light-row
+      background-color #fff
+
+    &.dark-row
+      background-color #EDF0F1
+
+    h3
+      margin-bottom 15px
+      color #384657
+      font-size 28px
+      font-weight bold
+
+    p
+      color #5A7786
+      line-height 1.2em
+      font-size 18px
+
+  .big-image
+    &.pull-left
+      float left
+      margin-right 80px
+    &.pull-right
+      float right
+      margin-left 80px
 
   .footer
     margin-top 0
