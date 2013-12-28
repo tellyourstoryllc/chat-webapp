@@ -133,6 +133,7 @@ window.App = App = Ember.Application.create
         App.set 'blowUpWithMessage',
           title: "500 Internal Server Error"
           message: "There was an error connecting to the messaging server."
+          shouldRetry: true
       else
         throw e
     @set('fayeClient', fayeClient)

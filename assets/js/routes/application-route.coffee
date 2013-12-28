@@ -7,6 +7,7 @@ App.ApplicationRoute = Ember.Route.extend
       controller.setProperties
         userErrorTitle: obj.title
         userErrorMessage: obj.message
+        userShouldRetry: obj.shouldRetry
       @render 'error'
     else
       @_super(arguments...)
@@ -62,6 +63,10 @@ App.ApplicationRoute = Ember.Route.extend
 
     logOut: ->
       @transitionTo('logout')
+
+    reloadPage: ->
+      window.location.reload(true)
+      return undefined
 
     error: (reason) ->
       Ember.Logger.error(reason)
