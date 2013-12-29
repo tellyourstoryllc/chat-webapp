@@ -7,10 +7,6 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
 
   actions:
 
-    installMobileApp: ->
-      Ember.Logger.error "TODO: installMobileApp"
-      return undefined
-
     launchMobileApp: ->
       joinCode = @get('joinCode')
       if joinCode?
