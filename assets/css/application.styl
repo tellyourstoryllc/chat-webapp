@@ -10,6 +10,7 @@ app-green = #56C0A5
 
 link-color = #3f9bcd
 
+base-font-family = gotham_rounded, Helvetica, Arial, sans-serif
 base-line-height = 20px
 
 warning-text-color = #c09853
@@ -209,6 +210,9 @@ button
   // Fix browser defaults, especially IE9.
   padding-left 6px
   padding-right 6px
+
+input, button, select, textarea
+  font-family base-font-family
 
 .pull-left
   float left
@@ -566,7 +570,7 @@ html
 
 body
   background-color #E4E7E8
-  font-family gotham_rounded, Helvetica, Arial, sans-serif
+  font-family base-font-family
   overflow hidden
 
 a
