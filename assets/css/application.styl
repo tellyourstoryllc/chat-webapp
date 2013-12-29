@@ -839,7 +839,7 @@ room-sidebar-width = 240px
   background-image url('/images/purple-bkg.png')
   background-size cover
   color #fff
-  text-align center
+  text-align left
 
   .navbar
     padding 30px
@@ -849,9 +849,33 @@ room-sidebar-width = 240px
     max-width 960px
     margin 0 auto
 
+  .home-content
+    margin-bottom -120px
+
   .title
-    margin 40px 0 30px
-    font-size 30px
+    margin 25px 0 30px
+    max-width 450px
+    font-size 40px
+
+  .home-download-area
+    width 250px
+    text-align center
+
+    .app-btn
+      margin-bottom 10px
+      padding-top 14px
+      padding-bottom 14px
+      font-size 24px
+      font-weight bold
+
+    .signup-link
+      color rgba(255,250,255, .4)
+      font-size 12px
+      text-decoration none
+
+      &:hover
+        color rgba(255,240,255, .6)
+        text-decoration underline
 
   .room-key-form
     position relative
@@ -902,6 +926,9 @@ room-sidebar-width = 240px
     margin-top 7px
 
   .screenshot
+    position relative
+    top -120px
+    float right
     width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
@@ -944,6 +971,28 @@ room-sidebar-width = 240px
     .footer-link
       color rgba(0,0,0, .8)
       text-transform uppercase
+
+@media (max-width: 897px)
+  .home-page
+    // At this width there isn't enough room for the screenshot to the right, so
+    // move it below.
+    .home-content
+      margin-bottom 0
+      text-align center
+    .screenshot
+      float none
+      top 0
+      margin-top 10px
+
+@media (max-width: 480px)
+  .home-page
+    .title
+      text-align center
+
+    .home-download-area
+      width 98%
+      max-width 250px
+      margin 10px auto
 
 home-modal-width = 350px
 home-modal-horiz-padding = 30px

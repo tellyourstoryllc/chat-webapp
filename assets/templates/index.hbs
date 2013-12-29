@@ -1,11 +1,24 @@
 <div class='home-content'>
+
   <h1 class='title'>
     {{! Note: if you're changing this, remember to also change the noscript
       and meta tags. }}
     Free Group Chat that Works <strong>Anywhere</strong>
   </h1>
 
-  <form class='room-key-form' {{action 'submitRoomKey' on='submit' target=view}}>
+  <div class='home-download-area'>
+    <button class='app-btn btn-block btn-green btn-flat'>
+      Get the Mac App
+    </button>
+    <a class='signup-link' href='#' {{action 'goToSignUp' target=view}}>
+      Sign Up for Web Version
+    </a>
+  </div>
+
+  <img class='screenshot' src='{{unbound webServerUrl '/images/screenshot.png'}}' style='max-width: 540px'>
+
+  {{! TODO }}
+  <form style='display:none' class='room-key-form' {{action 'submitRoomKey' on='submit' target=view}}>
     <input type='text' class='room-key-input' placeholder='Room Key' autocomplete='off'>
     <div class='room-key-icon'></div>
     <div class='submit-room-key-button' {{action 'submitRoomKey' target=view}}>
@@ -102,7 +115,7 @@
     </div>
   </div>
 
-  <img class='screenshot' src='{{unbound webServerUrl '/images/screenshot.png'}}' style='max-width: 906px'>
+  <div class='clearfix'></div> {{! Clear the screenshot. }}
 
 </div>
 
