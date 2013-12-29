@@ -34,6 +34,7 @@ window.App = App = Ember.Application.create
 
   # Set to a Group's join code to display on the home page.
   joinCodeToShow: null
+  roomKeyTextToShow: null
 
   # Set to a Group instance to auto join it and go to it after the user logs in.
   autoJoinAfterLoggingIn: null

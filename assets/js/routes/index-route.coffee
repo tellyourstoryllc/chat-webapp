@@ -26,6 +26,18 @@ App.IndexRoute = Ember.Route.extend
 
   actions:
 
+    submitRoomKey: (keyText) ->
+      indexView = App.get('indexView')
+      if indexView?
+        # Note: IndexView should not pass this up the hierarchy back to here.
+        # TODO: not sure if this is async or not, so not sure the best way to
+        # prevent infinite looping.
+        indexView.send('submitRoomKey', keyText)
+      else
+        # Bubble up.
+        return true
+      return undefined
+
     goToSignUp: ->
       indexView = App.get('indexView')
       if indexView?

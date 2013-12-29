@@ -17,18 +17,6 @@
 
   <img class='screenshot' src='{{unbound webServerUrl '/images/screenshot.png'}}' style='max-width: 540px'>
 
-  {{! TODO }}
-  <form style='display:none' class='room-key-form' {{action 'submitRoomKey' on='submit' target=view}}>
-    <input type='text' class='room-key-input' placeholder='Room Key' autocomplete='off'>
-    <div class='room-key-icon'></div>
-    <div class='submit-room-key-button' {{action 'submitRoomKey' target=view}}>
-      <span class='submit-room-key-icon'></span>
-    </div>
-    <div class='room-key-help'>
-      Have a room key?
-    </div>
-  </form>
-
   <div class='page-overlay hidden home-signup-overlay'>
     <div {{bind-attr class=':modal :home-signup-modal room:with-room view.isShowingEmailForm:is-showing-email-form view.hasErrorMessage:has-error'}}>
       {{#if isLoadingRoom}}

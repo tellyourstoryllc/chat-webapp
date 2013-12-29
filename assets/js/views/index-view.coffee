@@ -17,8 +17,8 @@ App.IndexView = Ember.View.extend
     Ember.run.schedule 'afterRender', @, ->
       joinCode = @get('joinCodeToShow')
       if joinCode?
-        @$('.room-key-input').val("#{joinCode}")
-        @send('submitRoomKey')
+        App.set('roomKeyTextToShow', joinCode)
+        @send('submitRoomKey', joinCode)
 
   willDestroyElement: ->
     App.set('indexView', null)
@@ -56,8 +56,7 @@ App.IndexView = Ember.View.extend
 
   actions:
 
-    submitRoomKey: ->
-      keyText = @$('.room-key-input').val()
+    submitRoomKey: (keyText) ->
       roomKey = App.Group.parseJoinCode(keyText)
       return if Ember.isEmpty(roomKey)
 

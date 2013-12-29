@@ -882,15 +882,18 @@ room-sidebar-width = 240px
         color rgba(255,240,255, .6)
         text-decoration underline
 
+  .room-key-form-component
+    display inline-block
+
   .room-key-form
     position relative
-    margin 0 0 30px
     color rgba(255,255,255, .6)
 
   .room-key-input
     dark-purple-round-input()
 
     width 230px
+    margin 0 10px 0 0
     padding 14px 45px
     border-radius 25px
     font-size 16px
@@ -898,7 +901,7 @@ room-sidebar-width = 240px
 
   .room-key-icon
     position absolute
-    top 24px
+    top 14px
     left 50%
     margin-left -105px
 
@@ -912,7 +915,7 @@ room-sidebar-width = 240px
 
   .submit-room-key-button
     position absolute
-    top 19px
+    top 9px
     right 50%
     margin-right -105px
     width 32px
@@ -920,6 +923,7 @@ room-sidebar-width = 240px
     border-radius 20px
     background-color app-green
     cursor pointer
+    text-align center
 
   .submit-room-key-icon
     sprites-background()

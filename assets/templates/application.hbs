@@ -10,6 +10,7 @@
       </div>
       {{#unless isLoggedIn}}
         <div class='pull-right'>
+          {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=App.roomKeyTextToShow}}
           {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
           <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
         </div>
