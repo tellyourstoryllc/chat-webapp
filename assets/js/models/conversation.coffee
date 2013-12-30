@@ -307,7 +307,12 @@ App.Conversation = Ember.Mixin.create
         if ! previousActiveAt? || previousActiveAt.getTime() < newActiveAt.getTime()
           @set('lastActiveAt', newActiveAt)
 
-      @notifyInUiOfMessage(message) if ! options.suppressNotifications
+      # Determine if this message has already been seen on another client.
+      messageRank = message.get('rank')
+      lastSeenRank = @get('lastSeenRank')
+      userSawOnAnotherClient = messageRank? && lastSeenRank? && messageRank <= lastSeenRank
+
+      @notifyInUiOfMessage(message) if ! options.suppressNotifications && ! userSawOnAnotherClient
 
       # Make sure to return what we were given for other listeners.
       return result

@@ -178,6 +178,7 @@ App.Group.reopenClass
     adminIds: (json.admin_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     memberIds: (json.member_ids ? []).map (id) -> App.BaseModel.coerceId(id)
     lastActiveAt: lastActiveAt
+    lastSeenRank: json.last_seen_rank
 
   # Fetches a Group by id and returns a promise that resolves to the Group
   # instance.
