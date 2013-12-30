@@ -854,7 +854,8 @@ room-sidebar-width = 240px
     margin 0 auto
 
   .home-content
-    margin-bottom 132px
+    position relative // For .screenshot.
+    padding-bottom 132px
 
   .title
     margin 25px 0 30px
@@ -938,7 +939,7 @@ room-sidebar-width = 240px
   .screenshot
     position absolute
     left 50%
-    top 199px
+    bottom 0
     margin-left -100px
     width 98% // Leave some margin on small displays.
     height auto
@@ -989,6 +990,7 @@ room-sidebar-width = 240px
     // move it below.
     .home-content
       margin 0 auto
+      padding-bottom 0
       text-align center
     .title
       margin-left auto
