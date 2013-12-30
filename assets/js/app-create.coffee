@@ -34,6 +34,11 @@ window.App = App = Ember.Application.create
 
   # Set to a Group's join code to display on the home page.
   joinCodeToShow: null
+  roomKeyTextToShow: null
+
+  # Set to true to show the room key form (and not signup button) in the
+  # application navbar.
+  showRoomKeyForm: false
 
   # Set to a Group instance to auto join it and go to it after the user logs in.
   autoJoinAfterLoggingIn: null

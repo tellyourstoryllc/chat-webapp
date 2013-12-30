@@ -1,8 +1,30 @@
 extends layout
 
+block head-content
+  //- Make sure robots don't treat this as duplicate content.
+  link(rel='canonical' href='' + config.webServerProtocolAndHost + '/')
+
 block content
   script(src="#{config.fayeProtocolAndHost}/faye/client.js")
 
   //- For robots.
   noscript
     h1 Free Group Chat that Works Anywhere
+    section
+      img(src='/images/feature1_2x.png')
+      h3 Chat From Your Phone or Computer
+      p
+        | Login from any iOS device, computer, or web browser.  When you&rsquo;re
+        | offline, your important messages will forward to your email.
+    section
+      img(src='/images/feature2_2x.png')
+      h3 Stay Connected To Your People
+      p
+        | Create clubhouses for friends, family, and any group or organization.
+        | Keep your office or team connected at their desk or on the go.
+    section
+      img(src='/images/feature3_2x.png')
+      h3 Send Photos, Videos, Doodles, &amp; More
+      p
+        | Fun features like custom wallpaper, emoticons, and fun filters make it
+        | easy to express yourself using text, audio, and video.

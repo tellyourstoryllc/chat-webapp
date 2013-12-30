@@ -2,6 +2,7 @@
 @import 'nib/text/ellipsis'
 @import 'nib/overflow'
 @import 'nib/vendor'
+@import 'defaults'
 
 app-purple = #341B45
 app-dark-purple = #2E1C38
@@ -9,6 +10,7 @@ app-green = #56C0A5
 
 link-color = #3f9bcd
 
+base-font-family = gotham_rounded, Helvetica, Arial, sans-serif
 base-line-height = 20px
 
 warning-text-color = #c09853
@@ -208,6 +210,9 @@ button
   // Fix browser defaults, especially IE9.
   padding-left 6px
   padding-right 6px
+
+input, button, select, textarea
+  font-family base-font-family
 
 .pull-left
   float left
@@ -565,7 +570,7 @@ html
 
 body
   background-color #E4E7E8
-  font-family gotham_rounded, Helvetica, Arial, sans-serif
+  font-family base-font-family
   overflow hidden
 
 a
@@ -583,7 +588,7 @@ room-sidebar-width = 240px
   box-sizing border-box
   width room-sidebar-width
   min-height 52px
-  border-top 3px solid #26BE9D
+  border-top 4px solid #26BE9D
   padding 10px 10px
   background-color app-purple
 
@@ -593,7 +598,7 @@ room-sidebar-width = 240px
 
   .nav-link
     display inline-block
-    border 1px solid #fff
+    border 2px solid #fff
     border-radius 3px
     padding 10px 25px
 
@@ -838,39 +843,73 @@ room-sidebar-width = 240px
   background-image url('/images/purple-bkg.png')
   background-size cover
   color #fff
-  text-align center
+  text-align left
 
   .navbar
     padding 30px
     background-color transparent
 
-  .home-content
+  .home-content, .text-row-content
     max-width 960px
     margin 0 auto
 
+  .home-content
+    position relative // For .screenshot.
+    padding-bottom 184px
+
   .title
-    margin 40px 0 30px
-    font-size 30px
+    margin 25px 0 30px
+    max-width 450px
+    font-size 40px
+    font-weight 300
+    line-height 120%
+
+    strong
+      font-weight normal
+
+  .home-download-area
+    width 250px
+    text-align center
+
+    .app-btn
+      margin-bottom 10px
+      padding-top 14px
+      padding-bottom 14px
+      border-radius 4px
+      font-size 24px
+      font-weight bold
+
+    .signup-link
+      color rgba(255,250,255, .4)
+      font-size 12px
+      text-decoration none
+
+      &:hover
+        color rgba(255,240,255, .6)
+        text-decoration underline
+
+  .room-key-form-component
+    display inline-block
 
   .room-key-form
     position relative
-    margin 0 0 30px
     color rgba(255,255,255, .6)
 
   .room-key-input
     dark-purple-round-input()
 
-    width 230px
-    padding 14px 45px
+    width 180px
+    margin 0 10px 0 0
+    padding 10px 38px
     border-radius 25px
-    font-size 16px
+    font-size 12px
     text-align center
 
   .room-key-icon
     position absolute
-    top 24px
+    top 8px
     left 50%
-    margin-left -105px
+    margin-left -88px
 
     sprites-background()
     sprite-icon()
@@ -882,14 +921,15 @@ room-sidebar-width = 240px
 
   .submit-room-key-button
     position absolute
-    top 19px
+    top 6px
     right 50%
-    margin-right -105px
-    width 32px
-    height 32px
+    margin-right -79px
+    width 25px
+    height 25px
     border-radius 20px
     background-color app-green
     cursor pointer
+    text-align center
 
   .submit-room-key-icon
     sprites-background()
@@ -898,22 +938,98 @@ room-sidebar-width = 240px
     width 20px
     height 20px
     margin-left 3px
-    margin-top 7px
+    margin-top 4px
 
   .screenshot
+    position absolute
+    right 0
+    bottom 0
     width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
 
+  .text-row
+    padding 50px 100px
+    text-align left
+
+    &.light-row
+      background-color #fff
+
+    &.dark-row
+      background-color #EDF0F1
+      border 1px solid rgba(213,215,215, .7)
+      border-left-width 0
+      border-right-width 0
+
+    h3
+      margin-bottom 15px
+      color #384657
+      font-size 27px
+      font-weight bold
+
+    p
+      max-width 854px
+      color #5c7987
+      line-height 28px
+      font-size 18px
+
+  .big-image
+    &.pull-left
+      float left
+      margin-right 80px
+    &.pull-right
+      float right
+      margin-left 80px
+
   .footer
     margin-top 0
+    border-top 1px solid rgba(213,215,215, .7)
     padding 40px
-    background-color #344751
-    color rgba(0,0,0, .8)
+    background-color #EDF0F1
+    color #5c7987
+    font-size 12px
 
     .footer-link
-      color rgba(0,0,0, .8)
-      text-transform uppercase
+      color #5B7887
+
+@media (max-width: 867px)
+  .home-page
+    // At this width there isn't enough room for the screenshot to the right, so
+    // move it below.
+    .home-content
+      margin 0 auto
+      padding-bottom 0
+      text-align center
+    .title
+      margin-left auto
+      margin-right auto
+      text-align center
+    .home-download-area
+      width 98%
+      max-width 250px
+      margin 10px auto
+
+    .screenshot
+      position static
+      margin 10px 0 0 0
+
+@media (max-width: 480px)
+  .room-key-form-component
+    margin-bottom 10px
+
+  .home-page
+    .text-row
+      padding-left 20px
+      padding-right 20px
+
+      h3
+        padding-top 0 !important
+
+    // Center images on their own line.
+    .big-image
+      display block
+      margin 0 auto 10px !important
+      float none !important
 
 home-modal-width = 350px
 home-modal-horiz-padding = 30px
@@ -932,6 +1048,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   .loading
     margin 20px
+    text-align center
 
   .close
     float right
@@ -1002,6 +1119,9 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     &.hidden
       visibility hidden !important
       left -100%
+
+  .or-divider
+    text-align center
 
   &.with-room
     .signup-auth-choice
@@ -1483,9 +1603,6 @@ room-content-margin-height = 10px
   .arrow
     font-size 18px
 
-  strong
-    font-weight bold
-
 
 .lobby-create-room-callout
   position absolute
@@ -1502,9 +1619,6 @@ room-content-margin-height = 10px
 
   .arrow
     font-size 18px
-
-  strong
-    font-weight bold
 
 @media (max-width: 515px)
   .lobby-join-room-callout, .lobby-create-room-callout
@@ -2223,6 +2337,3 @@ sender-column-width = 150px
   &.active
     background-color #417ACE
     color #f0f0f0
-
-  strong
-    font-weight bold

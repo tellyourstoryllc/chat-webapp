@@ -10,8 +10,13 @@
       </div>
       {{#unless isLoggedIn}}
         <div class='pull-right'>
+          {{#if App.showRoomKeyForm}}
+            {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=App.roomKeyTextToShow}}
+          {{/if}}
           {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
-          <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
+          {{#unless App.showRoomKeyForm}}
+            <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
+          {{/unless}}
         </div>
       {{/unless}}
       <div class='clearfix'></div>
