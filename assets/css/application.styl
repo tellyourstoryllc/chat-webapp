@@ -862,6 +862,10 @@ room-sidebar-width = 240px
     max-width 450px
     font-size 40px
     font-weight 300
+    line-height 120%
+
+    strong
+      font-weight normal
 
   .home-download-area
     width 250px
@@ -938,9 +942,8 @@ room-sidebar-width = 240px
 
   .screenshot
     position absolute
-    left 50%
+    right 0
     bottom 0
-    margin-left -123px
     width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
@@ -985,7 +988,7 @@ room-sidebar-width = 240px
     .footer-link
       color #5B7887
 
-@media (max-width: 897px)
+@media (max-width: 867px)
   .home-page
     // At this width there isn't enough room for the screenshot to the right, so
     // move it below.
