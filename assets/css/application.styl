@@ -987,21 +987,24 @@ room-sidebar-width = 240px
     // At this width there isn't enough room for the screenshot to the right, so
     // move it below.
     .home-content
-      margin-bottom 0
+      margin 0 auto
       text-align center
-    .screenshot
-      position static
-      margin-top 10px
-
-@media (max-width: 480px)
-  .home-page
     .title
+      margin-left auto
+      margin-right auto
       text-align center
-
     .home-download-area
       width 98%
       max-width 250px
       margin 10px auto
+
+    .screenshot
+      position static
+      margin 10px 0 0 0
+
+@media (max-width: 480px)
+  .room-key-form-component
+    margin-bottom 10px
 
 home-modal-width = 350px
 home-modal-horiz-padding = 30px
