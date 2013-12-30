@@ -7,12 +7,14 @@
   </h1>
 
   <div class='home-download-area'>
-    <button class='app-btn btn-block btn-green btn-flat'>
-      Get the Mac App
+    <button class='app-btn btn-block btn-green btn-flat' {{action 'goToSignUp' target=view}}>
+      Sign Up
     </button>
-    <a class='signup-link' href='#' {{action 'goToSignUp' target=view}}>
+    {{!
+    <a class='signup-link' href='#' {\{ action 'goToSignUp' target=view}\}>
       Sign Up for Web Version
     </a>
+    }}
   </div>
 
   <img class='screenshot' src='{{unbound webServerUrl '/images/screenshot.png'}}' style='max-width: 540px'>
