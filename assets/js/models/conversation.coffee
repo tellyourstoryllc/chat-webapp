@@ -18,6 +18,9 @@ App.Conversation = Ember.Mixin.create
   # messages count as activity.
   lastActiveAt: null
 
+  # Local version of `lastSeenRank`.
+  localLastSeenRank: null
+
   # Boolean set to false when the beginning of the messages is reached.
   canLoadEarlierMessages: true
   isLoadingEarlierMessages: false
@@ -308,9 +311,7 @@ App.Conversation = Ember.Mixin.create
           @set('lastActiveAt', newActiveAt)
 
       # Determine if this message has already been seen on another client.
-      messageRank = message.get('rank')
-      lastSeenRank = @get('lastSeenRank')
-      userSawOnAnotherClient = messageRank? && lastSeenRank? && messageRank <= lastSeenRank
+      userSawOnAnotherClient = @hasMessageBeenSeen(message)
 
       @notifyInUiOfMessage(message) if ! options.suppressNotifications && ! userSawOnAnotherClient
 
@@ -318,6 +319,41 @@ App.Conversation = Ember.Mixin.create
       return result
 
     true
+
+  hasMessageBeenSeen: (message) ->
+    messageRank = message.get('rank')
+    lastSeenRank = @get('localLastSeenRank')
+    lastSeenRank ?= @get('lastSeenRank')
+
+    messageRank? && lastSeenRank? && messageRank <= lastSeenRank
+
+  isUserActivelyViewing: ->
+    App.get('currentlyViewingRoom') == @ && App.get('hasFocus') &&
+    ! App.get('isIdle') && App.get('idleForSeconds') < 60
+
+  markLastMessageAsSeen: ->
+    message = @get('messages').get('lastObject')
+    return unless message?
+    # Update local last seen message rank.
+    messageRank = message.get('rank')
+    localLastSeenRank = @get('localLastSeenRank')
+    if messageRank? && (! localLastSeenRank? || messageRank > localLastSeenRank)
+      @set('localLastSeenRank', messageRank)
+      # The local rank changed.  Push the update to the API.
+      @updateLastSeenRank()
+    undefined
+
+  _updateLastSeenRank: ->
+    localLastSeenRank = @get('localLastSeenRank')
+    lastSeenRank = @get('lastSeenRank')
+    if localLastSeenRank? && (! lastSeenRank? || localLastSeenRank > lastSeenRank)
+      # Our local rank is more recent than our best known remote rank, so really
+      # send it to the API.
+      App.get('api').updateLastSeenRank(@, localLastSeenRank)
+
+  updateLastSeenRank: _.throttle ->
+    @_updateLastSeenRank()
+  , 1000, leading: false
 
   notifyInUiOfMessage: (message) ->
     fromCurrentUser = message.get('userId') == App.get('currentUser.id')

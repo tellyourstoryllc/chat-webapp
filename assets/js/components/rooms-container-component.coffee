@@ -106,6 +106,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     Ember.run.scheduleOnce 'afterRender', @, 'updateMessagesSize'
   ).observes('rooms.@each.associationsLoaded')
 
+  click: (event) ->
+    room = @get('activeRoom')
+    # If the room's view is scrolled to the bottom, mark it as seen.
+    if room? && App.roomMessagesViewFromRoom(room)?.isScrolledToLastMessage()
+      room.markLastMessageAsSeen()
+
   resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()

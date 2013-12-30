@@ -60,6 +60,9 @@ App.OneToOne = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   fetchUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}")
 
+  updateUrl: ->
+    App.get('api').buildURL("/one_to_ones/#{@get('id')}/update")
+
   earlierMessagesUrl: ->
     App.get('api').buildURL("/one_to_ones/#{@get('id')}/messages")
 

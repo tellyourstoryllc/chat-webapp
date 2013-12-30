@@ -214,7 +214,11 @@ App.RoomMessagesView = Ember.View.extend
     return unless $msgs?
     props = scrollTop: $msgs.get(0).scrollHeight
     if animate && @get('isCurrentlyViewingRoom')
-      $msgs.animate props, 200
+      # Make sure to capture room before yielding for the animation.
+      room = @get('room')
+      $msgs.animate props, 200, =>
+        # After scrolling the message into view, mark it as seen.
+        room.markLastMessageAsSeen() if room.isUserActivelyViewing()
     else
       $msgs.prop(props)
 

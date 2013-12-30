@@ -121,6 +121,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   fetchUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}")
 
+  updateUrl: ->
+    App.get('api').buildURL("/groups/#{@get('id')}/update")
+
   earlierMessagesUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}/messages")
 

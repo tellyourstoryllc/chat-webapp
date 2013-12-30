@@ -457,6 +457,9 @@ window.App = App = Ember.Application.create
       $preview = $(".video-attachment-preview-#{messageGuid}")
       $preview.show()
 
+  roomMessagesViewFromRoom: (room) ->
+    App.get('roomMessagesViews').get(room)
+
   # Attempts to open the mobile app with the given URL.  URL should have a
   # protocol that the app understand.
   attemptToOpenMobileApp: (path) ->

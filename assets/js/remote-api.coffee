@@ -174,6 +174,11 @@ App.RemoteApi = Ember.Object.extend
       throw new Error(App.userMessageFromError(xhr))
     .fail App.rejectionHandler
 
+  updateLastSeenRank: (conversation, lastSeenRank) ->
+    data =
+      last_seen_rank: lastSeenRank
+    # Fire and forget.
+    @ajax(conversation.updateUrl(), 'POST', data: data)
 
   fetchAllConversations: ->
     api = App.get('api')
