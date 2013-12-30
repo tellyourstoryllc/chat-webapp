@@ -854,7 +854,7 @@ room-sidebar-width = 240px
     margin 0 auto
 
   .home-content
-    margin-bottom -120px
+    margin-bottom 122px
 
   .title
     margin 25px 0 30px
@@ -935,9 +935,10 @@ room-sidebar-width = 240px
     margin-top 7px
 
   .screenshot
-    position relative
-    top -120px
-    float right
+    position absolute
+    left 50%
+    top 199px
+    margin-left -100px
     width 98% // Leave some margin on small displays.
     height auto
     vertical-align middle
@@ -989,8 +990,7 @@ room-sidebar-width = 240px
       margin-bottom 0
       text-align center
     .screenshot
-      float none
-      top 0
+      position static
       margin-top 10px
 
 @media (max-width: 480px)
