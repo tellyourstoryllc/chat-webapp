@@ -1,5 +1,9 @@
 extends layout
 
+block head-content
+  //- Make sure robots don't treat this as duplicate content.
+  link(rel='canonical' href='' + config.webServerProtocolAndHost + '/')
+
 block content
   script(src="#{config.fayeProtocolAndHost}/faye/client.js")
 
