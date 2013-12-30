@@ -1,5 +1,13 @@
 App.IndexRoute = Ember.Route.extend
 
+  activate: ->
+    @_super(arguments...)
+    App.set('showRoomKeyForm', true)
+
+  deactivate: ->
+    @_super(arguments...)
+    App.set('showRoomKeyForm', false)
+
   afterModel: (model, transition) ->
     if App.isLoggedIn()
       @transitionTo('rooms.index')
