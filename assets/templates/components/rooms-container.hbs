@@ -1,5 +1,5 @@
 {{#with this as roomsContainer}}
-  <div class='room-container'>
+  <div {{bind-attr class=':room-container activeRoom:has-active-room'}}>
     {{#if activeRoom}}
       <div class='room-info'>
         {{#link-to 'rooms.room' activeRoom classNames='room-avatar-permalink'}}
