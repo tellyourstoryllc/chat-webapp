@@ -436,6 +436,12 @@ App.Conversation = Ember.Mixin.create
         objs = titleObjs.filterBy('id', tag)
         titleObjs.removeObjects(objs)
 
+  dismissNotifications: ->
+    results = @get('notificationResults')
+    if results?
+      results.forEach (result) -> result.close()
+      results.clear()
+
   messageRanks: Ember.computed.mapBy('messages', 'rank')
 
   # The min message rank.

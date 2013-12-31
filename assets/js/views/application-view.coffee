@@ -63,10 +63,7 @@ App.ApplicationView = Ember.View.extend
   ).observes('App.currentlyViewingRoom')
 
   hideNotifications: ->
-    results = App.get('currentlyViewingRoom.notificationResults')
-    if results?
-      results.forEach (result) -> result.close()
-      results.clear()
+    App.get('currentlyViewingRoom')?.dismissNotifications()
 
   pageTitlesToFlashChanged: (->
     if Ember.isEmpty(App.get('pageTitlesToFlash'))
