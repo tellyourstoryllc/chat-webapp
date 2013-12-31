@@ -1,7 +1,7 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didJoinGroup, didGoToRoom
+# Actions: didJoinGroup, didGoToRoom, didCloseRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -822,6 +822,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           # Stop listening for messages.
           room.set('isOpen', false)
 
+      return undefined
+
+    hideRoom: ->
+      room = @get('activeRoom')
+      return unless room?
+      @sendAction('didCloseRoom', room)
       return undefined
 
     toggleInviteDialog: ->

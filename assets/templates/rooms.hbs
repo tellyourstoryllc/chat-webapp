@@ -90,5 +90,6 @@
 <div {{bind-attr class=':room-content view.isRoomContentOutOfTheWay:out-of-the-way'}}>
   {{outlet}}
 
-  {{rooms-container rooms=rooms activeRoom=activeRoom didGoToRoom='goToRoom'}}
+  {{rooms-container rooms=rooms activeRoom=activeRoom didGoToRoom='goToRoom'
+    didCloseRoom='closeRoom'}}
 </div>

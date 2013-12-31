@@ -231,20 +231,24 @@
 {{/with}}
 
 <ul class='menu room-menu' role='menu'>
-  <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
-    {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
-  {{#if hasRoomAvatar}}
+  {{#if isActiveRoomOneToOne}}
+    <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
+  {{else}}
     <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
-      {{action 'removeRoomAvatar'}}>Remove Room Avatar</li>
-  {{/if}}
-  <li {{bind-attr class=':menu-item canUpdateRoomWallpaper::disabled'}}
-    {{action 'chooseRoomWallpaper'}}>Change Wallpaper...</li>
-  {{#if hasRoomWallpaper}}
+      {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
+    {{#if hasRoomAvatar}}
+      <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
+        {{action 'removeRoomAvatar'}}>Remove Room Avatar</li>
+    {{/if}}
     <li {{bind-attr class=':menu-item canUpdateRoomWallpaper::disabled'}}
-      {{action 'removeRoomWallpaper'}}>Remove Wallpaper</li>
+      {{action 'chooseRoomWallpaper'}}>Change Wallpaper...</li>
+    {{#if hasRoomWallpaper}}
+      <li {{bind-attr class=':menu-item canUpdateRoomWallpaper::disabled'}}
+        {{action 'removeRoomWallpaper'}}>Remove Wallpaper</li>
+    {{/if}}
+    <li class='separator'></li>
+    <li class='menu-item' {{action 'leaveRoom'}}>Leave Room...</li>
   {{/if}}
-  <li class='separator'></li>
-  <li class='menu-item' {{action 'leaveRoom'}}>Leave Room...</li>
 </ul>
 
 <div class='dialog invite-dialog' {{action 'ignore' bubbles=false}}>
