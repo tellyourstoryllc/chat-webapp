@@ -417,6 +417,10 @@ App.Conversation = Ember.Mixin.create
   createDesktopNotification: (message) ->
     # Create a desktop notification.
     notif = message.toNotification()
+
+    # Create a desktop notification for the native app.
+    macgap?.skymob?.notify?(_.clone(notif))
+
     title = notif.title
     delete notif.title
     result = window.notify.createNotification(title, notif)
