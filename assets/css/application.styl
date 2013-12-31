@@ -312,25 +312,34 @@ input, button, select, textarea
   position absolute
   box-sizing border-box
   overflow hidden
-  background-color #ccc
+  background-color #FBFBFB
+  color #858C94
   border-radius 4px
-  box-shadow 0 0 3px rgba(0,0,0, .2)
+  box-shadow 0 0 30px rgba(0,0,0, .25)
   z-index 100
   visibility hidden // Initially hidden.
+
+  font-size 11px
+  font-weight bold
+  text-transform uppercase
 
   webkit-flashing-fix()
 
   .menu-item
-    padding 5px 10px
+    border 1px solid transparent
+    border-left-width 0
+    border-right-width 0
+    padding 10px
     cursor pointer
 
+
     &:hover:not(.disabled)
-      background-color #E0E0E0
+      border-color rgba(44,62,80, .1)
+      background-color rgba(44,62,80,.06)
 
   .separator
     height 0
-    border 1px solid #888
-    border-bottom-color #eee
+    border-top 1px solid rgba(44,62,80, .1)
 
 .disabled, .app-btn[disabled]
   opacity .6
@@ -1464,6 +1473,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   width room-sidebar-width + 50px
   visibility hidden // Initially hidden.
 
+  .room-avatar
+    margin-top 0
+    margin-bottom 1px
+
 .status-text-menu
   position fixed
   left 5px
@@ -1630,14 +1643,8 @@ room-members-sidebar-width = 200px
 .room-menu
   position fixed
   right 5px + room-content-margin-width
-  top 56px + room-content-margin-height
+  top 51px + room-content-margin-height
   width room-members-sidebar-width - 10px
-  font-size 14px
-
-  .menu-item
-    // Give some extra padding for touch devices since the font is smaller.
-    padding-top 8px
-    padding-bottom 8px
 
 .invite-dialog
   position absolute
