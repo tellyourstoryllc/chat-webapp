@@ -5,25 +5,15 @@ App.RoomsView = Ember.View.extend
   # Text from input textbox to join room.
   enteredJoinText: ''
 
-  copiedIndicatorTimer: null
-
   isJoiningRoom: false
 
   joinRoomErrorMessage: null
 
   isShowingRoomsSidebar: false
 
-  isRoomMenuVisible: false
-
-  isInviteDialogVisible: false
-
   isChooseStatusMenuVisible: false
 
   isStatusTextMenuVisible: false
-
-  isSendingRoomAvatar: false
-
-  isSendingRoomWallpaper: false
 
   activeRoom: Ember.computed.alias('controller.activeRoom')
 
@@ -31,7 +21,6 @@ App.RoomsView = Ember.View.extend
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onMacGapActive', 'onMacGapIdle',
-      'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onToggleRoomsSidebarTouchStart',
       'onJoinTextKeyDown', 'onJoinTextPaste')
     # Force computed properties.
@@ -46,8 +35,6 @@ App.RoomsView = Ember.View.extend
       $(document).on 'systemidle', @onMacGapIdle
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
-    @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
-    @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').on 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     @$('.join-text').on 'keydown', @onJoinTextKeyDown
     @$('.join-text').on 'paste', @onJoinTextPaste
@@ -55,7 +42,6 @@ App.RoomsView = Ember.View.extend
 
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
-      @setupCopyToClipboard()
 
   willDestroyElement: ->
     $(window).off 'resize', @resize
@@ -65,8 +51,6 @@ App.RoomsView = Ember.View.extend
       $(document).off 'systemactive', @onMacGapActive
       $(document).off 'systemidle', @onMacGapIdle
     $('body').off 'keydown', @bodyKeyDown
-    @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
-    @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
     @$('.toggle-sidebar-tab').off 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     @$('.join-text').off 'keydown', @onJoinTextKeyDown
     @$('.join-text').off 'paste', @onJoinTextPaste
@@ -80,8 +64,6 @@ App.RoomsView = Ember.View.extend
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
       if event.which == 27      # Escape
-        @closeRoomMenu()
-        @closeInviteDialog()
         @closeChooseStatusMenu()
         @closeStatusTextMenu()
     # Ctrl.
@@ -117,34 +99,9 @@ App.RoomsView = Ember.View.extend
     Ember.run.next @, ->
       @send('joinRoom', $('.join-text').val())
 
-  setupCopyToClipboard: ->
-    return if @get('zeroClipboard')? || ! @get('activeRoom')?
-    clip = new ZeroClipboard(@$('.copy-join-link-button'))
-    @set('zeroClipboard', clip)
-    clip.on 'load', (client, args) =>
-      # Flash has been loaded.  Indicate in the UI that clicking copies.
-      $e = @$('.copy-join-link-button')
-      $e.addClass('flash-loaded')
-
-      client.on 'complete', (client, args) =>
-        # Copied to clipboard.
-        @$('.copy-to-clipboard-indicator').addClass('copied-fade-in-out')
-        timer = @get('copiedIndicatorTimer')
-        Ember.run.cancel timer if timer?
-        timer = Ember.run.later @, ->
-          @set('copiedIndicatorTimer', null)
-          @$('.copy-to-clipboard-indicator').removeClass('copied-fade-in-out')
-        , 1000 # Animation duration.
-        @set('copiedIndicatorTimer', timer)
-
   activeRoomDidChange: (->
-    # Reset file pickers.
-    @$('.room-avatar-file, .room-wallpaper-file').val('')
     # When the user shows the sidebar and selects a room, hide the sidebar.
     @set('isShowingRoomsSidebar', false)
-    # Make sure copy to clipboard is setup.
-    Ember.run.schedule 'afterRender', @, ->
-      @setupCopyToClipboard()
   ).observes('activeRoom')
 
   resize: _.debounce (event) ->
@@ -158,7 +115,6 @@ App.RoomsView = Ember.View.extend
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
-    isMembersVisible = $window.width() > 700
 
     height = $window.height()
     height -= $('.logo').outerHeight(true) ? 0
@@ -175,23 +131,8 @@ App.RoomsView = Ember.View.extend
     @$('.room-content').css
       width: width
 
-    @$('.room-members-sidebar').css
-      display: if isMembersVisible then 'block' else 'none'
-
-    # The list of members needs an explicit height so that it can be scrollable.
-    height = $window.height()
-    height -= 2 * 10 # .room-content margin height.
-    height -= @$('.admin-room-actions').outerHeight(true) ? 0
-    height -= @$('.invite-room-actions').outerHeight(true) ? 0
-    @$('.room-members-sidebar .title').each ->
-      height -= $(@).outerHeight(true) ? 0
-    @$('.room-members').css
-      height: height
-
   documentClick: (event) ->
     Ember.run @, ->
-      @closeRoomMenu()
-      @closeInviteDialog()
       @closeChooseStatusMenu()
       @closeStatusTextMenu()
 
@@ -275,102 +216,6 @@ App.RoomsView = Ember.View.extend
     App.get('preferences.clientWeb.showAvatars')
   ).property('App.preferences.clientWeb.showAvatars')
 
-  hasRoomAvatar: Ember.computed.notEmpty('activeRoom.avatarUrl')
-
-  canUpdateRoomAvatar: (->
-    room = @get('activeRoom')
-    room instanceof App.Group && ! @get('isSendingRoomAvatar') &&
-      room.get('isCurrentUserAdmin')
-  ).property('activeRoom', 'activeRoom.isCurrentUserAdmin', 'isSendingRoomAvatar')
-
-  onChangeRoomAvatarFile: (event) ->
-    Ember.run @, ->
-      file = event.target.files?[0]
-      @_updateRoomAvatar(file) if file?
-
-  # Persists the file to the API.  Use `null` file to remove it.
-  _updateRoomAvatar: (file) ->
-    return if @get('isSendingRoomAvatar')
-    api = App.get('api')
-    formData = new FormData()
-    formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('avatar_image_file', file)
-    @set('isSendingRoomAvatar', true)
-    room = @get('activeRoom')
-    api.ajax(room.updateAvatarUrl(), 'POST',
-      data: formData
-      processData: false
-      contentType: false
-    )
-    .always =>
-      @set('isSendingRoomAvatar', false)
-    .then (json) =>
-      if ! json || json.error?
-        throw json
-      App.loadAll(json)
-    .fail App.rejectionHandler
-
-    # Clear out the file input so that selecting the same file again triggers a
-    # change event.
-    @$('.room-avatar-file').val('')
-
-  hasRoomWallpaper: Ember.computed.notEmpty('activeRoom.wallpaperUrl')
-
-  canUpdateRoomWallpaper: (->
-    room = @get('activeRoom')
-    room instanceof App.Group && ! @get('isSendingRoomWallpaper') &&
-      room.get('isCurrentUserAdmin')
-  ).property('activeRoom', 'activeRoom.isCurrentUserAdmin', 'isSendingRoomWallpaper')
-
-  onChangeRoomWallpaperFile: (event) ->
-    Ember.run @, ->
-      file = event.target.files?[0]
-      @_updateRoomWallpaper(file) if file?
-
-  # Persists the file to the API.  Use `null` file to remove it.
-  _updateRoomWallpaper: (file) ->
-    return if @get('isSendingRoomWallpaper')
-    api = App.get('api')
-    formData = new FormData()
-    formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('wallpaper_image_file', file)
-    @set('isSendingRoomWallpaper', true)
-    room = @get('activeRoom')
-    api.ajax(room.updateWallpaperUrl(), 'POST',
-      data: formData
-      processData: false
-      contentType: false
-    )
-    .always =>
-      @set('isSendingRoomWallpaper', false)
-    .then (json) =>
-      if ! json || json.error?
-        throw json
-      App.loadAll(json)
-    .fail App.rejectionHandler
-
-    # Clear out the file input so that selecting the same file again triggers a
-    # change event.
-    @$('.room-wallpaper-file').val('')
-
-  showRoomMenu: ->
-    @$('.room-menu').addClass('expand-down')
-    @set('isRoomMenuVisible', true)
-
-  closeRoomMenu: ->
-    @$('.room-menu').removeClass('expand-down')
-    @set('isRoomMenuVisible', false)
-
-  showInviteDialog: ->
-    @$('.invite-dialog').addClass('expand-down')
-    @set('isInviteDialogVisible', true)
-    Ember.run.schedule 'afterRender', @, ->
-      @$('.join-url-text').focus().textrange('set') # Select all.
-
-  closeInviteDialog: ->
-    @$('.invite-dialog').removeClass('expand-down')
-    @set('isInviteDialogVisible', false)
-
   showChooseStatusMenu: ->
     @$('.choose-status-menu').addClass('expand-up')
     @set('isChooseStatusMenuVisible', true)
@@ -397,89 +242,6 @@ App.RoomsView = Ember.View.extend
 
   actions:
 
-    toggleRoomMenu: ->
-      if @get('isRoomMenuVisible')
-        @closeRoomMenu()
-      else
-        @showRoomMenu()
-      return undefined
-
-    chooseRoomAvatar: ->
-      activeRoom = @get('activeRoom')
-      if ! activeRoom.get('isCurrentUserAdmin')
-        if activeRoom instanceof App.OneToOne
-          alert "The room avatar you see is set by the other user.  You can change your avatar from your settings dialog."
-        else
-          alert "You must be an admin to change the room avatar."
-        return
-      return unless @get('canUpdateRoomAvatar')
-      @$('.room-avatar-file').trigger('click')
-      return undefined
-
-    removeRoomAvatar: ->
-      activeRoom = @get('activeRoom')
-      if ! activeRoom.get('isCurrentUserAdmin')
-        if activeRoom instanceof App.OneToOne
-          alert "The room avatar you see is set by the other user.  You can change your avatar from your settings dialog."
-        else
-          alert "You must be an admin to change the room avatar."
-        return
-      @$('.room-avatar-file').val('')
-      @_updateRoomAvatar(null)
-      return undefined
-
-    chooseRoomWallpaper: ->
-      activeRoom = @get('activeRoom')
-      if ! activeRoom.get('isCurrentUserAdmin')
-        if activeRoom instanceof App.OneToOne
-          alert "The room wallpaper you see is set by the other user.  You can change your wallpaper from your settings dialog."
-        else
-          alert "You must be an admin to change the room wallpaper."
-        return
-      return unless @get('canUpdateRoomWallpaper')
-      @$('.room-wallpaper-file').trigger('click')
-      return undefined
-
-    removeRoomWallpaper: ->
-      activeRoom = @get('activeRoom')
-      if ! activeRoom.get('isCurrentUserAdmin')
-        if activeRoom instanceof App.OneToOne
-          alert "The room wallpaper you see is set by the other user.  You can change your wallpaper from your settings dialog."
-        else
-          alert "You must be an admin to change the room wallpaper."
-        return
-      @$('.room-wallpaper-file').val('')
-      @_updateRoomWallpaper(null)
-      return undefined
-
-    leaveRoom: ->
-      room = @get('activeRoom')
-      return unless room?
-
-      if room.isPropertyLocked('isDeleted')
-        Ember.Logger.warn "I can't delete a room when I'm still waiting for a response from the server."
-        return
-
-      return if ! window.confirm("Permanently leave the \"#{room.get('name')}\" room?")
-
-      # Notify up the chain before closing so that it knows where to transition
-      # to.
-      @get('controller').send('willLeaveRoom', room)
-
-      api = App.get('api')
-      url = api.buildURL("/groups/#{room.get('id')}/leave")
-      room.withLockedPropertyTransaction url, 'POST', {}, 'isDeleted', =>
-        room.set('isDeleted', true)
-      , =>
-        room.set('isDeleted', false)
-      .then =>
-        # Make sure the transaction succeeded.
-        if room.get('isDeleted')
-          # Stop listening for messages.
-          room.set('isOpen', false)
-
-      return undefined
-
     joinRoom: (joinText) ->
       return if @get('isJoiningRoom')
       joinCode = App.Group.parseJoinCode(joinText)
@@ -502,14 +264,6 @@ App.RoomsView = Ember.View.extend
         alert(errorMsg)
       .fail App.rejectionHandler
 
-      return undefined
-
-    toggleInviteDialog: ->
-      @showInviteDialog()
-      return undefined
-
-    dismissInviteDialog: ->
-      @closeInviteDialog()
       return undefined
 
     toggleChooseStatusMenu: ->

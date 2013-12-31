@@ -49,7 +49,7 @@ disable-grayscale-image()
 
 sprites-background()
   background-image url('/images/sprites2x.png')
-  background-size 260px 57px
+  background-size 260px 82px
   background-repeat no-repeat
 
 sprite-icon()
@@ -1516,7 +1516,6 @@ room-content-margin-height = 10px
   left room-sidebar-width
   box-sizing border-box
   height 100%
-  overflow hidden
   border room-content-margin-width solid transparent
   border-top-width room-content-margin-height
   border-bottom-width room-content-margin-height
@@ -1719,14 +1718,11 @@ room-members-sidebar-width = 200px
 
 .room-members-sidebar
   position absolute
-  top 0
   box-sizing border-box
   width room-members-sidebar-width
   height 100%
   overflow hidden
-  border 1px solid #C2C7CB
-  border-left-width 0
-  border-top-right-radius 6px
+  border-left 1px solid #C2C7CB
   border-bottom-right-radius 6px
   background-color #EEF0F0
   font-size 12px
@@ -1752,38 +1748,6 @@ room-members-sidebar-width = 200px
     .status-text
       margin 0 10px 10px
       max-height 4.8em !important // Override rules below.
-
-  .title
-    padding 5px 10px
-    border-top 1px solid #BDC2C7
-    border-bottom 1px solid #BDC2C7
-    background-color #E5E6E7
-    color #3C495A
-    font-weight bold
-
-  .room-actions
-    box-sizing border-box
-    padding 5px
-    background-color #EEF0F0
-    color #3C495A
-
-    &:hover, &.zeroclipboard-is-hover
-      background-color #F8F8F8
-
-  .admin-title
-    border-top-width 0
-    border-top-right-radius 6px
-
-  .admin-room-actions
-    height 29px
-    cursor pointer
-
-  .room-settings-icon
-    sprite-icon()
-    width 20px
-    height 22px
-    sprites-background()
-    background-position -206px -8px
 
   .invite-button-container
     padding 10px
@@ -1856,15 +1820,20 @@ room-members-sidebar-width = 200px
 .room-container
   position absolute
   top 0
+  width 100%
   overflow hidden
-  border-radius 6px left
+  border-radius 6px
+
+  &.has-active-room
+    border 1px solid #C2C7CB
 
   .room-info
-    border 1px solid #C2C7CB
+    position relative // For .room-actions-toggle.
+    border-bottom 1px solid #C2C7CB
     padding 5px
     background-color #EEF0F0
     text-shadow 0 0 3px #fff
-    border-top-left-radius 6px
+    border-radius top 6px
 
   .room-avatar-permalink
     float left
@@ -1917,6 +1886,36 @@ room-members-sidebar-width = 200px
     padding-top 4px
     color #848894
 
+  .room-actions-toggle
+    // Center vertically.
+    position absolute
+    top 0
+    bottom 0
+    right 5px
+    width 34px
+    height 30px
+    margin auto
+
+    padding-top 4px
+    padding-left 4px
+
+    box-sizing border-box
+    cursor pointer
+    opacity .35
+
+    &:hover
+      opacity .7
+
+  .room-settings-icon
+    sprite-icon()
+    width 24px
+    height 21px
+    sprites-background()
+    background-position -5px -58px
+
+.room-container-messages
+  position relative
+
   .room-alert-dialog
     position absolute
     z-index 1 // Show on top of .room-messages-view
@@ -1956,8 +1955,6 @@ room-members-sidebar-width = 200px
   width 100%
 
   box-sizing border-box
-  border-left 1px solid #C2C7CB
-  border-right 1px solid #C2C7CB
   background-color #fff
 
   // When the user sets a custom wallpaper, stretch it keeping the aspect ratio.
@@ -2247,7 +2244,7 @@ sender-column-width = 150px
   box-sizing border-box
   height 52px
   padding 5px
-  border 1px solid #C2C7CB
+  border-top 1px solid #C2C7CB
   border-bottom-left-radius 6px
   background-color #EEF0F0
 
