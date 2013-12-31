@@ -1718,14 +1718,11 @@ room-members-sidebar-width = 200px
 
 .room-members-sidebar
   position absolute
-  top 0
   box-sizing border-box
   width room-members-sidebar-width
   height 100%
   overflow hidden
-  border 1px solid #C2C7CB
-  border-left-width 0
-  border-top-right-radius 6px
+  border-left 1px solid #C2C7CB
   border-bottom-right-radius 6px
   background-color #EEF0F0
   font-size 12px
@@ -1760,6 +1757,9 @@ room-members-sidebar-width = 200px
     color #3C495A
     font-weight bold
 
+  .admin-title
+    border-top-width 0
+
   .room-actions
     box-sizing border-box
     padding 5px
@@ -1768,10 +1768,6 @@ room-members-sidebar-width = 200px
 
     &:hover, &.zeroclipboard-is-hover
       background-color #F8F8F8
-
-  .admin-title
-    border-top-width 0
-    border-top-right-radius 6px
 
   .admin-room-actions
     height 29px
@@ -1855,15 +1851,17 @@ room-members-sidebar-width = 200px
 .room-container
   position absolute
   top 0
+  width 100%
   overflow hidden
-  border-radius 6px left
+  border 1px solid #C2C7CB
+  border-radius 6px
 
   .room-info
-    border 1px solid #C2C7CB
+    border-bottom 1px solid #C2C7CB
     padding 5px
     background-color #EEF0F0
     text-shadow 0 0 3px #fff
-    border-top-left-radius 6px
+    border-radius top 6px
 
   .room-avatar-permalink
     float left
@@ -1916,6 +1914,9 @@ room-members-sidebar-width = 200px
     padding-top 4px
     color #848894
 
+.room-container-messages
+  position relative
+
   .room-alert-dialog
     position absolute
     z-index 1 // Show on top of .room-messages-view
@@ -1955,8 +1956,6 @@ room-members-sidebar-width = 200px
   width 100%
 
   box-sizing border-box
-  border-left 1px solid #C2C7CB
-  border-right 1px solid #C2C7CB
   background-color #fff
 
   // When the user sets a custom wallpaper, stretch it keeping the aspect ratio.
@@ -2246,7 +2245,7 @@ sender-column-width = 150px
   box-sizing border-box
   height 52px
   padding 5px
-  border 1px solid #C2C7CB
+  border-top 1px solid #C2C7CB
   border-bottom-left-radius 6px
   background-color #EEF0F0
 

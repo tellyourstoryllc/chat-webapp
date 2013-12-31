@@ -170,10 +170,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
 
-    height = @containerHeight($window)
+    containerHeight = @containerHeight($window)
+    height = containerHeight
+    height -= @$('.room-info').outerHeight() ? 0
     messagesWidth = @messagesWidth($window)
     width = messagesWidth
-    @$('.room-container').css
+    @$('.room-container-messages').css
       width: width
       height: height
 
@@ -192,11 +194,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.message-attach-icon').css
         right: @$('.send-button').outerWidth(true) + 18
 
-    @updateMessagesSize($window, height, messagesWidth)
+    @updateMessagesSize($window, containerHeight, messagesWidth)
 
     isMembersVisible = $window.width() > 700
     $('.room-members-sidebar').css
       left: messagesWidth
+      top: @$('.room-info').outerHeight() ? 0
       display: if isMembersVisible then 'block' else 'none'
 
     # The list of members needs an explicit height so that it can be scrollable.

@@ -47,186 +47,189 @@
         </div>
         <div class='clearfix'></div>
       </div>
-
-      {{#unless activeRoom.isCurrentUserMember}}
-        <div class='room-alert-dialog'>
-          <div class='room-alert-content'>
-            <div class='room-alert-message'>
-              <div class='members-preview-subtitle'>Who's already here...</div>
-            </div>
-            <div class='members-preview'>
-              {{#each user in roomsContainer.roomAlphabeticMembers}}
-                <div class='member-preview'>
-                  {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
-                  <div class='username'>{{user.name}}</div>
-                </div>
-              {{else}}
-                <div class='no-one-here'>
-                  (no one yet)
-                </div>
-              {{/each}}
-              {{#if roomsContainer.roomNumberMoreMembers}}
-                <div class='member-count-more'>
-                  <div class='member-count-ellipsis'></div>
-                  +{{roomsContainer.roomNumberMoreMembers}} more
-                </div>
-              {{/if}}
-            </div>
-            {{#if activeRoom.canJoinWithoutCode}}
-              <button type='button' {{action 'joinGroup' target=roomsContainer}}
-                class='app-btn btn-green join-button'>Enter Room</button>
-            {{else}}
-              <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
-                <div class='title'>Input room key to enter.</div>
-                {{input type='text' value=activeRoom.enteredJoinCode placeholder='Room Key'}}
-                <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Enter Room</button>
-              </form>
-            {{/if}}
-          </div>
-        </div>
-      {{/unless}}
-
     {{/if}}
 
-    {{#each rooms}}
-      {{#if associationsLoaded}}
-        {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
-          {{#with view as messagesView}}
-            <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}} {{bind-attr data-conversation-id='id'}}>
-              <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
-                Loading...
+    <div class='room-container-messages'>
+      {{#if activeRoom}}
+        {{#unless activeRoom.isCurrentUserMember}}
+          <div class='room-alert-dialog'>
+            <div class='room-alert-content'>
+              <div class='room-alert-message'>
+                <div class='members-preview-subtitle'>Who's already here...</div>
+              </div>
+              <div class='members-preview'>
+                {{#each user in roomsContainer.roomAlphabeticMembers}}
+                  <div class='member-preview'>
+                    {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
+                    <div class='username'>{{user.name}}</div>
+                  </div>
+                {{else}}
+                  <div class='no-one-here'>
+                    (no one yet)
+                  </div>
+                {{/each}}
+                {{#if roomsContainer.roomNumberMoreMembers}}
+                  <div class='member-count-more'>
+                    <div class='member-count-ellipsis'></div>
+                    +{{roomsContainer.roomNumberMoreMembers}} more
+                  </div>
+                {{/if}}
+              </div>
+              {{#if activeRoom.canJoinWithoutCode}}
+                <button type='button' {{action 'joinGroup' target=roomsContainer}}
+                  class='app-btn btn-green join-button'>Enter Room</button>
+              {{else}}
+                <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
+                  <div class='title'>Input room key to enter.</div>
+                  {{input type='text' value=activeRoom.enteredJoinCode placeholder='Room Key'}}
+                  <button type='submit' {{bind-attr class=':app-btn :join-button roomsContainer.activeRoom.isJoining:disabled'}}>Enter Room</button>
+                </form>
+              {{/if}}
+            </div>
+          </div>
+        {{/unless}}
+      {{/if}}
+
+      {{#each rooms}}
+        {{#if associationsLoaded}}
+          {{#view App.RoomMessagesView roomBinding='this' roomsBinding='roomsContainer.rooms'}}
+            {{#with view as messagesView}}
+              <div {{bind-attr class=':messages messagesView.isCurrentlyViewingRoom:active:inactive messagesView.isRoomBeforeCursor:before-cursor:after-cursor'}} {{bind-attr data-conversation-id='id'}}>
+                <div {{bind-attr class=':loading-more-messages isLoadingEarlierMessages::hidden'}}>
+                  Loading...
+                </div>
+
+                {{#each message in messages}}
+                  <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
+                    {{bind-attr data-message-id='message.id'}}>
+                    <div class='message-table'>
+                      <div class='sender-cell'>
+                        <div class='sender'>
+                          {{message.user.name}}
+                        </div>
+                      </div>
+                      <div class='body-cell'>
+                        <span class='status'>
+                          {{#if message.isSaving}}Sending...{{/if}}
+                          {{#if message.isError}}
+                            <span class='error'>{{message.errorMessage}}</span>
+                          {{/if}}
+                          {{compact-timestamp-element message.createdAt classNames='timestamp'}}
+                        </span>
+
+                        {{! Passing attachmentUrl so that this re-renders when it changes. }}
+                        {{messageAttachmentDisplay message
+                          attachmentUrlBinding=message.attachmentUrl}}
+
+                        <div class='message-body'>{{message.body}}</div>
+                      </div>
+                      <div class='clearfix'></div>
+                    </div>
+                  </div>
+                {{/each}}
               </div>
 
-              {{#each message in messages}}
-                <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
-                  {{bind-attr data-message-id='message.id'}}>
-                  <div class='message-table'>
-                    <div class='sender-cell'>
-                      <div class='sender'>
-                        {{message.user.name}}
-                      </div>
-                    </div>
-                    <div class='body-cell'>
-                      <span class='status'>
-                        {{#if message.isSaving}}Sending...{{/if}}
-                        {{#if message.isError}}
-                          <span class='error'>{{message.errorMessage}}</span>
-                        {{/if}}
-                        {{compact-timestamp-element message.createdAt classNames='timestamp'}}
-                      </span>
+              {{! Preview thumbnail of the file attached. }}
+              <div {{bind-attr class=':attachment-thumbnail messagesView.hasAttachment:has-attachment'}}>
+                <span class='remove' title='Remove Attachment' {{action 'removeAttachment' target=roomsContainer}}>
+                  &times;
+                </span>
+                {{#if messagesView.attachmentPreviewUrl}}
+                  <img class='attachment-thumbnail-image' {{bind-attr src='messagesView.attachmentPreviewUrl'}}>
+                {{/if}}
+                <div class='filename'>{{messagesView.attachmentName}}</div>
+              </div>
+            {{/with}}
+          {{/view}}
+        {{/if}}
+      {{/each}}
 
-                      {{! Passing attachmentUrl so that this re-renders when it changes. }}
-                      {{messageAttachmentDisplay message
-                        attachmentUrlBinding=message.attachmentUrl}}
-
-                      <div class='message-body'>{{message.body}}</div>
-                    </div>
-                    <div class='clearfix'></div>
-                  </div>
-                </div>
-              {{/each}}
-            </div>
-
-            {{! Preview thumbnail of the file attached. }}
-            <div {{bind-attr class=':attachment-thumbnail messagesView.hasAttachment:has-attachment'}}>
-              <span class='remove' title='Remove Attachment' {{action 'removeAttachment' target=roomsContainer}}>
-                &times;
-              </span>
-              {{#if messagesView.attachmentPreviewUrl}}
-                <img class='attachment-thumbnail-image' {{bind-attr src='messagesView.attachmentPreviewUrl'}}>
-              {{/if}}
-              <div class='filename'>{{messagesView.attachmentName}}</div>
-            </div>
-          {{/with}}
-        {{/view}}
-      {{/if}}
-    {{/each}}
-
-    <div {{bind-attr class=':connecting-status-bar activeRoom::hidden'}}>
-      Connecting...
-    </div>
-
-    <div {{bind-attr class=':send-message-area activeRoom::hidden'}}>
-      {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
-        valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
-        disabledBinding='roomsContainer.isSendDisabled'
-        target=roomsContainer}}
-      {{#if doesBrowserSupportAjaxFileUpload}}
-        <span {{bind-attr class=':message-attach-icon roomsContainer.isSendDisabled:disabled'}}
-          {{action 'chooseFile' target=roomsContainer}}
-          title='Attach File'></span>
-        <input type='file' class='send-message-file'>
-      {{/if}}
-      <button type='button' {{action 'sendMessage' target=roomsContainer}}
-        {{bind-attr class=':app-btn :send-button activeRoom.isEncrypted:encrypted-send-button'}}
-        {{bind-attr disabled='roomsContainer.isSendDisabled'}}
-        >Send</button>
-    </div>
-
-    {{message-autocomplete viewName='autocompleteView'
-      matchText=roomsContainer.suggestMatchText
-      suggestions=roomsContainer.suggestions
-      isShowing=roomsContainer.suggestionsShowing
-      didSelectSuggestion='didSelectSuggestion'
-      target=roomsContainer}}
-  </div>
-
-  <div {{bind-attr class=':room-members-sidebar activeRoom::hidden'}}>
-    {{! Always render the file input so that event listeners can bind to it. }}
-    <input type='file' class='room-avatar-file' style='display: none;'>
-    <input type='file' class='room-wallpaper-file' style='display: none;'>
-    {{#if activeRoom}}
-      <div {{bind-attr class=':one-to-one-specific isActiveRoomOneToOne::hidden'}}>
-        <div class='room-avatar big-one-to-one-avatar' {{bind-attr style='roomsContainer.activeRoomAvatarStyle'}}></div>
-        <div class='username'>{{activeRoom.name}}</div>
-        <div class='status-text'>{{activeRoom.statusText}}</div>
+      <div {{bind-attr class=':connecting-status-bar activeRoom::hidden'}}>
+        Connecting...
       </div>
+
+      <div {{bind-attr class=':send-message-area activeRoom::hidden'}}>
+        {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
+          valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
+          disabledBinding='roomsContainer.isSendDisabled'
+          target=roomsContainer}}
+        {{#if doesBrowserSupportAjaxFileUpload}}
+          <span {{bind-attr class=':message-attach-icon roomsContainer.isSendDisabled:disabled'}}
+            {{action 'chooseFile' target=roomsContainer}}
+            title='Attach File'></span>
+          <input type='file' class='send-message-file'>
+        {{/if}}
+        <button type='button' {{action 'sendMessage' target=roomsContainer}}
+          {{bind-attr class=':app-btn :send-button activeRoom.isEncrypted:encrypted-send-button'}}
+          {{bind-attr disabled='roomsContainer.isSendDisabled'}}
+          >Send</button>
+      </div>
+
+      {{message-autocomplete viewName='autocompleteView'
+        matchText=roomsContainer.suggestMatchText
+        suggestions=roomsContainer.suggestions
+        isShowing=roomsContainer.suggestionsShowing
+        didSelectSuggestion='didSelectSuggestion'
+        target=roomsContainer}}
+    </div>
+
+    <div {{bind-attr class=':room-members-sidebar activeRoom::hidden'}}>
+      {{! Always render the file input so that event listeners can bind to it. }}
+      <input type='file' class='room-avatar-file' style='display: none;'>
+      <input type='file' class='room-wallpaper-file' style='display: none;'>
+      {{#if activeRoom}}
+        <div {{bind-attr class=':one-to-one-specific isActiveRoomOneToOne::hidden'}}>
+          <div class='room-avatar big-one-to-one-avatar' {{bind-attr style='roomsContainer.activeRoomAvatarStyle'}}></div>
+          <div class='username'>{{activeRoom.name}}</div>
+          <div class='status-text'>{{activeRoom.statusText}}</div>
+        </div>
+
+        <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
+          <div class='title admin-title'>Admin</div>
+          <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' bubbles=false}}>
+            <span class='room-settings-icon'></span>
+            Room Settings
+          </div>
+
+          <div class='invite-button-container'>
+            <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
+              Invite
+            </button>
+          </div>
+        </div>
+      {{/if}}
 
       <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
-        <div class='title admin-title'>Admin</div>
-        <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' bubbles=false}}>
-          <span class='room-settings-icon'></span>
-          Room Settings
-        </div>
-
-        <div class='invite-button-container'>
-          <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
-            Invite
-          </button>
-        </div>
+        <div class='title'>People</div>
+        {{#if activeRoomUsersLoaded}}
+          <ul class='room-members'>
+            {{#each user in activeRoomArrangedMembers}}
+              <li class='room-member'>
+                {{#link-to 'rooms.room' user classNames='room-member-link'
+                  classNameBindings='roomsContainer.showAvatars::avatars-off'}}
+                  <div class='room-member-avatar-cell'>
+                    {{room-avatar room=user showStatus=true}}
+                  </div>
+                  <div class='room-member-info-cell'>
+                    <span class='username'>{{user.name}}</span>
+                    {{#if user.shouldDisplayIdleDuration}}
+                      <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
+                    {{/if}}
+                    {{#if user.statusText}}
+                      <div class='status-text'>{{user.statusText}}</div>
+                    {{/if}}
+                  </div>
+                  <div class='clearfix'></div>
+                {{/link-to}}
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class='loading'>
+            Loading...
+          </div>
+        {{/if}}
       </div>
-    {{/if}}
-
-    <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
-      <div class='title'>People</div>
-      {{#if activeRoomUsersLoaded}}
-        <ul class='room-members'>
-          {{#each user in activeRoomArrangedMembers}}
-            <li class='room-member'>
-              {{#link-to 'rooms.room' user classNames='room-member-link'
-                classNameBindings='roomsContainer.showAvatars::avatars-off'}}
-                <div class='room-member-avatar-cell'>
-                  {{room-avatar room=user showStatus=true}}
-                </div>
-                <div class='room-member-info-cell'>
-                  <span class='username'>{{user.name}}</span>
-                  {{#if user.shouldDisplayIdleDuration}}
-                    <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
-                  {{/if}}
-                  {{#if user.statusText}}
-                    <div class='status-text'>{{user.statusText}}</div>
-                  {{/if}}
-                </div>
-                <div class='clearfix'></div>
-              {{/link-to}}
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <div class='loading'>
-          Loading...
-        </div>
-      {{/if}}
     </div>
   </div>
 {{/with}}
