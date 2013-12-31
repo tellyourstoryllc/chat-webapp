@@ -255,6 +255,7 @@ App.Conversation = Ember.Mixin.create
       type = App.classFromRawObject(json)
       convo = type.lookup(json.id)
       oldMemberIds = convo.get('memberIds').copy()
+      oldLastSeenRank = convo.get('lastSeenRank')
 
       # Load the new data.
       @constructor.loadRawWithMetaData(json)
@@ -276,6 +277,14 @@ App.Conversation = Ember.Mixin.create
               # Invalidate the cache of members.
               @incrementProperty('_membersAssociationLoaded')
               @userDidJoin(user)
+
+      # Mark any unseen conversations as seen if they were seen on another
+      # client.
+      newLastSeenRank = convo.get('lastSeenRank')
+      if newLastSeenRank? && (! oldLastSeenRank? || newLastSeenRank > oldLastSeenRank)
+        lastMessageRank = @lastMessageRank()
+        if lastMessageRank? && lastMessageRank <= newLastSeenRank
+          @set('isUnread', false)
 
   userDidJoin: (user) ->
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
@@ -320,6 +329,17 @@ App.Conversation = Ember.Mixin.create
 
     true
 
+  # This is linear in the number of messages in the worst case, but usually the
+  # very first message checked is our answer.
+  lastMessageRank: ->
+    messages = @get('messages')
+    len = messages.get('length')
+    # System messages may not have a rank, so need to look for one.
+    for i in [len - 1 .. 0] by -1
+      rank = messages.objectAt(i).get('rank')
+      return rank if rank?
+    null
+
   hasMessageBeenSeen: (message) ->
     messageRank = message.get('rank')
     lastSeenRank = @get('localLastSeenRank')
@@ -332,10 +352,8 @@ App.Conversation = Ember.Mixin.create
     ! App.get('isIdle') && App.get('idleForSeconds') < 60
 
   markLastMessageAsSeen: ->
-    message = @get('messages').get('lastObject')
-    return unless message?
     # Update local last seen message rank.
-    messageRank = message.get('rank')
+    messageRank = @lastMessageRank()
     localLastSeenRank = @get('localLastSeenRank')
     if messageRank? && (! localLastSeenRank? || messageRank > localLastSeenRank)
       @set('localLastSeenRank', messageRank)
