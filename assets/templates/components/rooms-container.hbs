@@ -45,6 +45,9 @@
             {{/if}}
           </div>
         </div>
+        <div class='room-actions-toggle' {{action 'toggleRoomMenu' bubbles=false}}>
+          <span class='room-settings-icon'></span>
+        </div>
         <div class='clearfix'></div>
       </div>
     {{/if}}
@@ -185,12 +188,6 @@
         </div>
 
         <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
-          <div class='title admin-title'>Admin</div>
-          <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' bubbles=false}}>
-            <span class='room-settings-icon'></span>
-            Room Settings
-          </div>
-
           <div class='invite-button-container'>
             <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
               Invite
@@ -200,7 +197,6 @@
       {{/if}}
 
       <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
-        <div class='title'>People</div>
         {{#if activeRoomUsersLoaded}}
           <ul class='room-members'>
             {{#each user in activeRoomArrangedMembers}}
