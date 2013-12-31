@@ -385,7 +385,7 @@ App.Conversation = Ember.Mixin.create
       if wasMentioned
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
       else
-        @playRecieveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
+        @playReceiveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
 
     if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
@@ -407,7 +407,7 @@ App.Conversation = Ember.Mixin.create
     audio.currentTime = 0 if audio.currentTime > 0
     audio.play()
 
-  playRecieveMessageSound: ->
+  playReceiveMessageSound: ->
     return unless Modernizr.audio
     audio = $('.receive-message-sound').get(0)
     audio.currentTime = 0 if audio.currentTime > 0
