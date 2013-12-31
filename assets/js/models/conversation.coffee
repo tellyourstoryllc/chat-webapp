@@ -250,7 +250,7 @@ App.Conversation = Ember.Mixin.create
         # OneToOne).
         @notifyInUiOfMessage(message)
 
-    if json.object_type in ['group', 'one_on_one']
+    if json.object_type in ['group', 'one_to_one']
       # We received an update to the conversation.
       type = App.classFromRawObject(json)
       convo = type.lookup(json.id)
