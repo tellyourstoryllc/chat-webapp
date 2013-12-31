@@ -170,4 +170,99 @@
       didSelectSuggestion='didSelectSuggestion'
       target=roomsContainer}}
   </div>
+
+  <div {{bind-attr class=':room-members-sidebar activeRoom::hidden'}}>
+    {{! Always render the file input so that event listeners can bind to it. }}
+    <input type='file' class='room-avatar-file' style='display: none;'>
+    <input type='file' class='room-wallpaper-file' style='display: none;'>
+    {{#if activeRoom}}
+      <div {{bind-attr class=':one-to-one-specific isActiveRoomOneToOne::hidden'}}>
+        <div class='room-avatar big-one-to-one-avatar' {{bind-attr style='roomsContainer.activeRoomAvatarStyle'}}></div>
+        <div class='username'>{{activeRoom.name}}</div>
+        <div class='status-text'>{{activeRoom.statusText}}</div>
+      </div>
+
+      <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
+        <div class='title admin-title'>Admin</div>
+        <div class='room-actions admin-room-actions' {{action 'toggleRoomMenu' bubbles=false}}>
+          <span class='room-settings-icon'></span>
+          Room Settings
+        </div>
+
+        <div class='invite-button-container'>
+          <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
+            Invite
+          </button>
+        </div>
+      </div>
+    {{/if}}
+
+    <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
+      <div class='title'>People</div>
+      {{#if activeRoomUsersLoaded}}
+        <ul class='room-members'>
+          {{#each user in activeRoomArrangedMembers}}
+            <li class='room-member'>
+              {{#link-to 'rooms.room' user classNames='room-member-link'
+                classNameBindings='roomsContainer.showAvatars::avatars-off'}}
+                <div class='room-member-avatar-cell'>
+                  {{room-avatar room=user showStatus=true}}
+                </div>
+                <div class='room-member-info-cell'>
+                  <span class='username'>{{user.name}}</span>
+                  {{#if user.shouldDisplayIdleDuration}}
+                    <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
+                  {{/if}}
+                  {{#if user.statusText}}
+                    <div class='status-text'>{{user.statusText}}</div>
+                  {{/if}}
+                </div>
+                <div class='clearfix'></div>
+              {{/link-to}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class='loading'>
+          Loading...
+        </div>
+      {{/if}}
+    </div>
+  </div>
 {{/with}}
+
+<ul class='menu room-menu' role='menu'>
+  <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
+    {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
+  {{#if hasRoomAvatar}}
+    <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
+      {{action 'removeRoomAvatar'}}>Remove Room Avatar</li>
+  {{/if}}
+  <li {{bind-attr class=':menu-item canUpdateRoomWallpaper::disabled'}}
+    {{action 'chooseRoomWallpaper'}}>Change Wallpaper...</li>
+  {{#if hasRoomWallpaper}}
+    <li {{bind-attr class=':menu-item canUpdateRoomWallpaper::disabled'}}
+      {{action 'removeRoomWallpaper'}}>Remove Wallpaper</li>
+  {{/if}}
+  <li class='separator'></li>
+  <li class='menu-item' {{action 'leaveRoom'}}>Leave Room...</li>
+</ul>
+
+<div class='dialog invite-dialog' {{action 'ignore' bubbles=false}}>
+  <div class='close' {{action 'dismissInviteDialog'}} title='Close'>
+    &times;
+  </div>
+  <div class='instructions'>
+    You can invite people to join this room by sending this link:
+  </div>
+  <div class='join-link-container'>
+    <input type='text' {{bind-attr value='activeRoom.joinUrl'}} class='join-url-text' readonly>
+  </div>
+  <button class='app-btn btn-block btn-green btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+    <span class='copy-icon'></span>
+    Copy Link to Clipboard
+  </button>
+  <div class='copy-to-clipboard-indicator'>
+    Copied to Clipboard
+  </div>
+</div>
