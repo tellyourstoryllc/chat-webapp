@@ -742,6 +742,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       return undefined
 
     toggleRoomMenu: ->
+      @closeInviteDialog()
       if @get('isRoomMenuVisible')
         @closeRoomMenu()
       else
