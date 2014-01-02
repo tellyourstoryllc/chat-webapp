@@ -1409,6 +1409,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   bottom 0
   box-sizing border-box
   width room-sidebar-width
+  // Determined experimentally.  Prevents us from needing to resize the left
+  // sidebar when turning on and off the display of avatars.
+  height 58px
+
   border-top 1px solid #42314C
   background-color app-dark-purple
   color #aaa

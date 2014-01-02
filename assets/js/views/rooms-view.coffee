@@ -120,6 +120,7 @@ App.RoomsView = Ember.View.extend
     height -= $('.logo').outerHeight(true) ? 0
     height -= $('.join-text-container').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
+    height -= 3 # Extra pixels to line up perfectly.
     @$('.rooms-list').css
       height: height
 
