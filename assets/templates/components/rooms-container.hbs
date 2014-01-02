@@ -182,7 +182,7 @@
       <input type='file' class='room-wallpaper-file' style='display: none;'>
       {{#if activeRoom}}
         <div {{bind-attr class=':one-to-one-specific isActiveRoomOneToOne::hidden'}}>
-          <div class='room-avatar big-one-to-one-avatar' {{bind-attr style='roomsContainer.activeRoomAvatarStyle'}}></div>
+          <div class='room-avatar big-one-to-one-avatar no-status always-show-avatar' {{bind-attr style='roomsContainer.activeRoomAvatarStyle'}}></div>
           <div class='username'>{{activeRoom.name}}</div>
           <div class='status-text'>{{activeRoom.statusText}}</div>
         </div>
