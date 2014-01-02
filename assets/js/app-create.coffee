@@ -535,11 +535,11 @@ window.App = App = Ember.Application.create
 
     msg
 
-  webServerUrl: (path) ->
-    if process? && AppConfig.webServerProtocolAndHost?
-      AppConfig.webServerProtocolAndHost + path
-    else
+  webServerUrl: (pathOrName) ->
+    if AppAssets && (path = AppAssets[pathOrName])?
       path
+    else
+      pathOrName
 
   # Returns the path part of the URL including the beginning slash if it's an
   # internal URL, i.e. within the current site (protocol, domain, port).  I

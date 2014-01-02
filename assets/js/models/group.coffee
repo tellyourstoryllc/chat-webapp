@@ -21,7 +21,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
   # Show room door icon in UI.
   isRoom: true
 
-  defaultAvatarUrl: App.webServerUrl('/images/room.png')
+  defaultAvatarUrl: App.webServerUrl('imageRoom')
 
   avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
 

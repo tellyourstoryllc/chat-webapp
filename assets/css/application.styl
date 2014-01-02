@@ -38,7 +38,7 @@ input-placeholder()
     {block}
 
 grayscale-image()
-  filter url(/images/filters.svg#grayscale) // Firefox 3.5+
+  filter asseturl('/images/filters.svg#grayscale') // Firefox 3.5+
   filter gray // IE6-9
   -webkit-filter: grayscale(1) // Chrome, Safari 6+, Opera 15+
   filter: grayscale(100%) // Current draft standard.
@@ -48,7 +48,7 @@ disable-grayscale-image()
   -webkit-filter: grayscale(0)
 
 sprites-background()
-  background-image url('/images/sprites2x.png')
+  background-image asseturl('/images/sprites2x.png')
   background-size 260px 82px
   background-repeat no-repeat
 
@@ -862,7 +862,7 @@ room-sidebar-width = 240px
 
 .home-page
   background-color app-dark-purple
-  background-image url('/images/purple-bkg.png')
+  background-image asseturl('/images/purple-bkg.png')
   background-size cover
   color #fff
   text-align left
@@ -1245,7 +1245,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   border-top 6px solid app-green
   padding 15px
   background-color app-purple
-  background-image url('/images/purple-bkg.png')
+  background-image asseturl('/images/purple-bkg.png')
   background-size cover
   color rgba(255,255,255, 0.8)
   text-align center
@@ -1292,7 +1292,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   height 100%
   border-top 3px solid app-green
   background-color app-purple
-  background-image url('/images/purple-bkg.png')
+  background-image asseturl('/images/purple-bkg.png')
   background-repeat no-repeat
   background-size cover
 
