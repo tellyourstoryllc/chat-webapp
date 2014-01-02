@@ -121,6 +121,19 @@ dark-purple-round-input()
     transform scale(1)
     opacity 1
 
+@keyframes invite-dialog-expand-in
+  0%
+    transform scale(0.6)
+    opacity 0.2
+  60%
+    transform scale(1.05)
+  80%
+    transform scale(0.95)
+    opacity 1
+  100%
+    transform scale(1)
+    opacity 1
+
 .expand-up
   animation-name expand-up
   animation-duration .3s
@@ -1656,7 +1669,6 @@ room-members-sidebar-width = 200px
   position absolute
   right 7px
   top 40px
-  visibility hidden // Initially invisible.
 
   width room-members-sidebar-width + 20px
 
@@ -1666,6 +1678,23 @@ room-members-sidebar-width = 200px
   background-color #FBFBFB
   box-shadow 0 0 30px rgba(0,0,0, .8)
   text-align center
+
+  // Initially invisible.
+  visibility hidden
+  opacity 0
+  transform scale(0.6) translateY(-10%) translateX(10%)
+
+  // Animation for hiding.
+  transition opacity .1s ease-out, visibility .1s ease-out, transform .1s ease-out
+
+  &.invite-dialog-animate-in
+    transition none // Turn off hiding transition.
+    animation-name invite-dialog-expand-in
+    animation-duration .3s
+    animation-timing-function ease-in-out
+    visibility visible
+    opacity 1
+    transform scale(1)
 
   .close
     float right

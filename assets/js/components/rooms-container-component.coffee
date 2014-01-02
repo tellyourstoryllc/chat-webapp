@@ -610,13 +610,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         @set('copiedIndicatorTimer', timer)
 
   showInviteDialog: ->
-    @$('.invite-dialog').addClass('expand-down')
+    @$('.invite-dialog').addClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', true)
     Ember.run.schedule 'afterRender', @, ->
       @$('.join-url-text').focus().textrange('set') # Select all.
 
   closeInviteDialog: ->
-    @$('.invite-dialog').removeClass('expand-down')
+    @$('.invite-dialog').removeClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', false)
 
   actions:
