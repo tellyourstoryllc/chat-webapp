@@ -2055,12 +2055,13 @@ sender-column-width = 150px
     line-height 20px
 
   .sender
-    padding-right 5px
+    display inline-block // Shrink to fit text.
+    vertical-align middle
     cursor pointer // Clickable.
 
     // Truncate with ellipsis.
     box-sizing border-box
-    width 150px
+    max-width sender-column-width - 2 * 5px // Subtract 2 times the padding.
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
