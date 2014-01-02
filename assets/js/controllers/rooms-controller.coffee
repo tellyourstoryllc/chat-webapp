@@ -2,6 +2,17 @@
 
 App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
+  allGroups: null
+  allOneToOnes: null
+
+  init: ->
+    @_super(arguments...)
+    # Initialize to empty arrays so computed properties work.
+    for key in ['allGroups', 'allOneToOnes'] when ! @get(key)?
+      @set(key, [])
+    # Force computed properties.
+    @get('numUnreadRooms')
+
   rooms: (->
     (@get('allGroups').concat(@get('allOneToOnes'))).filter (room) ->
       room.get('isOpen') && ! room.get('isDeleted')
@@ -18,3 +29,12 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   activeRoom: (->
     App.get('currentlyViewingRoom')
   ).property('App.currentlyViewingRoom')
+
+  unreadRooms: Ember.computed.filterBy('rooms', 'isUnread')
+
+  numUnreadRooms: Ember.computed.alias('unreadRooms.length')
+
+  numUnreadRoomsChanged: (->
+    numUnreadRooms = @get('numUnreadRooms')
+    macgap?.dock.badge = if numUnreadRooms > 0 then "#{numUnreadRooms}" else null
+  ).observes('numUnreadRooms')
