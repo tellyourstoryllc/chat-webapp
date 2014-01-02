@@ -393,6 +393,10 @@ App.Conversation = Ember.Mixin.create
       @set('isUnread', true)
 
     if ! fromCurrentUser && ! App.get('hasFocus')
+      # Bounce the dock icon.
+      macgap?.app.bounce()
+
+    if ! fromCurrentUser && ! App.get('hasFocus')
       # Flash the window's titlebar.
       titleObj = Ember.Object.create
         id: message.get('groupId')
