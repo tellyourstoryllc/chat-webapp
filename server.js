@@ -67,9 +67,17 @@ app.use(function(req, res, next) {
   }
 });
 
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' || process.env.NODE_ENV === 'testing') {
+  // Build assets and compress.  connect-assets only does this for production,
+  // but we would like staging to be as similar as possible.
+  config.assetsBuild = true;
+  connectAssets.cssCompilers.styl.compress = true;
+  connectAssets.cssCompilers.less.compress = true;
+}
+
 app.use(express.bodyParser());
 app.use(app.router);
-app.use(connectAssets());
+app.use(connectAssets({ build: config.assetsBuild }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.configure('development', function() {
