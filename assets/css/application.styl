@@ -1359,10 +1359,12 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     // Subtract room avatar width, margins, and room icon width.
     width room-sidebar-width - 50px - 50px
     overflow ellipsis
+    line-height 1.2 // Since overflow is hidden, don't cut off descenders.
 
   .room-name
-    margin-top 9px
+    margin-top 5px
     font-size 14px
+    line-height 16px
 
   .create-room-name
     margin-top 6px
@@ -1803,6 +1805,7 @@ room-members-sidebar-width = 200px
     // Subtract the width of the avatar and margin.
     max-width room-members-sidebar-width - 50px - 5px
     overflow ellipsis
+    line-height 1.2 // Since overflow is hidden, don't cut off descenders.
 
   .avatars-off
     .room-member-avatar-cell
