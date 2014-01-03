@@ -1832,7 +1832,20 @@ room-members-sidebar-width = 200px
     padding 10px
 
   .room-members
+    position relative
     overflow auto // Scrollable.
+
+  .room-member
+    position absolute
+    width 100%
+
+    transition-duration 0.2s
+    transition-timing-function ease-out
+    transition-property opacity, visibility, top
+
+    &.hidden
+      opacity 0
+      visibility hidden
 
   .room-member-link
     display block

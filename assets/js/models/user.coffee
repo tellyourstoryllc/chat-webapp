@@ -112,6 +112,12 @@ App.User.reopenClass
       groupOrUsers
     users.find (u) => u.get('mentionName').toLowerCase() == lowerCaseName
 
+  allArrangedById: ->
+    @_allArranged ?= App.RecordArray.create
+      type: @
+      content: @_all
+      sortProperties: ['id']
+
   allArrangedByName: ->
     @_allArranged ?= App.RecordArray.create
       type: @

@@ -154,11 +154,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   activeRoomArrangedMembers: (->
     room = @get('activeRoom')
-    if room?
-      room.get('arrangedMembers')
-    else
-      App.User.allArrangedByName()
-  ).property('activeRoom.arrangedMembers')
+    return null unless room?
+    room.get('arrangedByIdMembers')
+  ).property('activeRoom.arrangedByIdMembers')
+
+  allUsers: (->
+    App.User.allArrangedById()
+  ).property()
 
   activeRoomUsersLoaded: (->
     # TODO: Load all contacts.
@@ -837,4 +839,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     dismissInviteDialog: ->
       @closeInviteDialog()
+      return undefined
+
+    goToRoom: (room) ->
+      @sendAction('didGoToRoom', room)
       return undefined
