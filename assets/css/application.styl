@@ -1824,7 +1824,7 @@ room-members-sidebar-width = 200px
     overflow auto // Scrollable.
 
   .room-member-link
-    display table
+    display block
     box-sizing border-box
     width 100%
     padding 5px 10px
@@ -1835,16 +1835,10 @@ room-members-sidebar-width = 200px
     &:hover
       background-color #F8F8F8 !important
 
-  .room-member-avatar-cell, .room-member-info-cell
-    display table-cell
-    vertical-align top
-
-  .room-member-avatar-cell
-    padding-right 5px
-    width 10px
-
   .room-avatar
-    vertical-align top
+    float left
+    margin-right 5px
+    vertical-align middle
 
     &:not(.avatars-off)
       width 26px
@@ -1856,6 +1850,7 @@ room-members-sidebar-width = 200px
       height room-members-sidebar-width
 
   .room-member-info-cell
+    margin-left 31px
     padding-top 1px
     text-shadow 0 1px 0 #fff
 
