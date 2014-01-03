@@ -1351,8 +1351,19 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 .rooms-list
   box-sizing border-box
-  width room-sidebar-width
+  width room-sidebar-width - 2px // Leave pixels to the right for the scrollbar margin.
   overflow auto // Scrollable.
+
+  // Scrollbars.
+  &::-webkit-scrollbar
+    width 10px
+  &::-webkit-scrollbar-track
+    background-color rgba(0,0,0, 0.5)
+    border-radius 10px
+  &::-webkit-scrollbar-thumb
+    border 1px solid rgba(255,255,255, .3)
+    border-radius 10px
+    background-color app-dark-purple
 
 .room-list-item
   position relative
@@ -1427,7 +1438,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     bottom 0
     margin auto
 
-    right 15px
+    right 7px
     sprites-background()
     sprite-icon()
     width 18px
