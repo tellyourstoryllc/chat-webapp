@@ -166,6 +166,32 @@ dark-purple-round-input()
   100%
     transform translateY(0%) scale(1) scaleY(1)
 
+.shake-side-to-side
+  animation-name shake-side-to-side
+  animation-duration .4s
+  animation-timing-function ease
+  visibility visible !important
+
+@keyframes shake-side-to-side
+  0%
+    transform translateX(0%)
+  13%
+    transform translateX(10%)
+  25%
+    transform translateX(-10%)
+  38%
+    transform translateX(8%)
+  50%
+    transform translateX(-7%)
+  63%
+    transform translateX(7%)
+  75%
+    transform translateX(-5%)
+  88%
+    transform translateX(5%)
+  100%
+    transform translateX(0%)
+
 ///////////////////////////////////////////////////////////
 // Fonts
 

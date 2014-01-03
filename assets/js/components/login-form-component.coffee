@@ -49,6 +49,7 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       return if @get('isChecking')
       @set('isChecking', true)
       @set('errorMessage', null)
+      @$('.login-form').removeClass('shake-side-to-side')
 
       if Ember.isEmpty(@get('facebookToken'))
         data =
@@ -83,5 +84,7 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       , (xhr) =>
         @set('isChecking', false)
         @set('errorMessage', App.userMessageFromError(xhr))
+        if xhr.status == 401
+          @$('.login-form').addClass('shake-side-to-side')
       .fail App.rejectionHandler
       return undefined
