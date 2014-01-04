@@ -183,6 +183,7 @@ App.UsersListComponent = Ember.Component.extend
   ).observes('users.@each.status', 'users.@each.name')
 
   updatePositions: ->
+    # TODO: update height for scrolling.
     return unless @currentState == Ember.View.states.inDOM
     room = @get('room')
     # Get the users sorted by status and name.
@@ -232,9 +233,8 @@ App.UsersListComponent = Ember.Component.extend
       $li.addClass('hidden')
     $li.appendTo(e)
 
-    # Quicksand id.
-    $li.attr('data-id', roomId)
     # For ourselves.
+    $li.attr('data-id', roomId)
     $li.attr('data-room-guid', Ember.guidFor(room))
 
     # {{#link-to 'rooms.room' user classNames='room-member-link'
@@ -243,7 +243,6 @@ App.UsersListComponent = Ember.Component.extend
     a.href = "/rooms/#{roomId}"
     $a = $(a)
     $a.addClass('room-member-link')
-    # TODO: observe.
     if ! @get('showAvatars')
       $a.addClass('avatars-off')
     $a.click (event) =>
@@ -288,14 +287,38 @@ App.UsersListComponent = Ember.Component.extend
     name = document.createElement('span')
     $name = $(name)
     $name.addClass('username')
-    $name.text(room.get('name'))
+    nameObserver = =>
+      name = room.get('name') ? ''
+      $name.text(name)
+    room.addObserver('name', nameObserver)
+    nameObserver() # Trigger immediately.
     $name.appendTo(infoCell)
-    # TODO
 
     # {{#if user.shouldDisplayIdleDuration}}
     #   <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
     # {{/if}}
-    # TODO
+    idle = document.createElement('span')
+    $idle = $(idle)
+    $idle.addClass('idle-duration')
+    mostRecentIdleDurationObserver = =>
+      text = null
+      duration = room.get('mostRecentIdleDuration')
+      if Ember.typeOf(duration) == 'number'
+        seconds = Math.round(duration)
+        text = moment.duration(seconds, 'seconds').humanize()
+      $idle.text(text)
+    shouldDisplayIdleDurationObserver = =>
+      if room.get('shouldDisplayIdleDuration')
+        # Only observe the idle duration when we're actually showing it.
+        mostRecentIdleDurationObserver() # Trigger immediately.
+        room.addObserver('mostRecentIdleDuration', mostRecentIdleDurationObserver)
+        $idle.removeClass('hidden')
+      else
+        $idle.addClass('hidden')
+        room.removeObserver('mostRecentIdleDuration', mostRecentIdleDurationObserver)
+    room.addObserver('shouldDisplayIdleDuration', shouldDisplayIdleDurationObserver)
+    shouldDisplayIdleDurationObserver() # Trigger immediately.
+    $idle.appendTo(infoCell)
 
     # {{#if user.statusText}}
     #   <div class='status-text'>{{user.statusText}}</div>
