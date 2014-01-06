@@ -616,12 +616,21 @@ input, button, select, textarea
     padding-top 7px
 
   .notification-volume
+    vertical-align middle
+
     // IE sizes range inputs differently than webkit.  It adds padding and has a
     // much wider width.
     min-height 15px
     max-width 130px
     margin 2px 3px
     padding 5px 0
+
+  .max-volume-icon
+    sprites-background()
+    sprite-icon()
+    width 16px
+    height 16px
+    background-position -26px -38px
 
 
 html
