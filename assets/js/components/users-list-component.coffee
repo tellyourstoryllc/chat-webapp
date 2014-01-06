@@ -183,7 +183,6 @@ App.UsersListComponent = Ember.Component.extend
   ).observes('users.@each.status', 'users.@each.name')
 
   updatePositions: ->
-    # TODO: update height for scrolling.
     return unless @currentState == Ember.View.states.inDOM
     room = @get('room')
     # Get the users sorted by status and name.
@@ -202,6 +201,9 @@ App.UsersListComponent = Ember.Component.extend
       $item.css
         top: top
       top += itemHeight
+
+    # Set height so it can be scrollable.
+    @$('.room-members').css height: top
 
   insertRows: (users) ->
     # TODO: use a document fragment and insert once at the end.

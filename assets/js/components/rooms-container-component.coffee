@@ -207,11 +207,9 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # The list of members needs an explicit height so that it can be scrollable.
     height = $window.height()
     height -= 2 * 10 # .room-content margin height.
-    height -= @$('.admin-room-actions').outerHeight(true) ? 0
-    height -= @$('.invite-room-actions').outerHeight(true) ? 0
-    @$('.room-members-sidebar .title').each ->
-      height -= $(@).outerHeight(true) ? 0
-    @$('.room-members').css
+    height -= $('.room-info').outerHeight(true) ? 0
+    height -= @$('.invite-button-container').outerHeight(true) ? 0
+    @$('.users-list-component').css
       height: height
 
   containerHeight: ($window = $(window)) ->
