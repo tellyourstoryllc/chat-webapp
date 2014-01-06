@@ -294,6 +294,10 @@ App.UsersListComponent = Ember.Component.extend
     nameObserver() # Trigger immediately.
     $name.appendTo(infoCell)
 
+    # Add a naturally breaking space between name and idle duration.
+    space = document.createTextNode(' ')
+    infoCell.appendChild(space)
+
     # {{#if user.shouldDisplayIdleDuration}}
     #   <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
     # {{/if}}
