@@ -30,9 +30,7 @@ App.UsersListComponent = Ember.Component.extend
       animationQueue: []
 
   didInsertElement: ->
-    console.log "************ didInsertElement"
     @insertRows(@get('allUsers'))
-    # Ember.run.schedule 'afterRender', @, ->
 
   willDestroyElement: ->
     # TODO: remove all observers.  We never actually destroy this element
@@ -55,7 +53,6 @@ App.UsersListComponent = Ember.Component.extend
   ).observes('allUsers').on('didInsertElement')
 
   allUsersWillChange: (allUsers, start, removeCount, addCount) ->
-    console.log "************* allUsersWillChange", arguments...
     usersToRemove = allUsers.slice(start, start + removeCount)
     @destroyUsers(usersToRemove)
 
@@ -64,7 +61,6 @@ App.UsersListComponent = Ember.Component.extend
     @buildUsers(usersToAdd)
 
   destroyUsers: (users) ->
-    console.log "*************** destroy Users:", users.toArray()..., @currentState == Ember.View.states.inDOM
     return unless @currentState == Ember.View.states.inDOM
     $container = @$()
     $es = Ember.$()
@@ -73,7 +69,6 @@ App.UsersListComponent = Ember.Component.extend
     $es.remove()
 
   buildUsers: (users) ->
-    console.log "*************** build Users:", users.toArray()..., @currentState == Ember.View.states.inDOM
     return unless @currentState == Ember.View.states.inDOM
     # TODO: use a document fragment and insert once at the end.
     $e = @$('.room-members')
@@ -83,10 +78,6 @@ App.UsersListComponent = Ember.Component.extend
   usersArrayDidChange: (->
     users = @get('users')
     observingUsers = @get('_users')
-    if users?
-      console.log "************* usersArrayDidChange", users...
-    else
-      console.log "************* usersArrayDidChange", users
     if users != observingUsers
       opts = willChange: 'usersWillChange', didChange: 'usersDidChange'
       observingUsers?.removeArrayObserver(@, opts)
@@ -95,17 +86,12 @@ App.UsersListComponent = Ember.Component.extend
 
     # Handle as if it were a change.
     if observingUsers? && ! users?
-      console.log "*** case 1 observingUsers"
       @usersWillChange(observingUsers, 0, observingUsers.length ? observingUsers.get('length'), 0)
     else if users? && ! observingUsers?
-      console.log "*** case 2 users"
       @usersDidChange(users, 0, 0, users.length ? users.get('length'))
     else if users? && observingUsers?
       usersToRemove = App.Util.arrayWithoutArray(observingUsers, users)
       usersToAdd = App.Util.arrayWithoutArray(users, observingUsers)
-      console.log "*** case 3 merge"
-      console.log "removing", usersToRemove
-      console.log "adding", usersToAdd
       @queueAnimation @, 'hideUsers', usersToRemove
       @queueAnimation @, 'updatePositions'
       @queueAnimation @, 'showUsers', usersToAdd
@@ -113,7 +99,6 @@ App.UsersListComponent = Ember.Component.extend
   ).observes('users').on('didInsertElement')
 
   usersWillChange: (users, start, removeCount, addCount) ->
-    console.log "************* usersWillChange", arguments...
     usersToRemove = users.slice(start, start + removeCount)
     if ! Ember.isEmpty(usersToRemove)
       @queueAnimation @, 'hideUsers', usersToRemove
@@ -128,18 +113,15 @@ App.UsersListComponent = Ember.Component.extend
       @runAnimations()
 
   hideUsers: (users) ->
-    console.log "*************** hiding Users:", @currentState == Ember.View.states.inDOM, users
     return unless @currentState == Ember.View.states.inDOM
     return if Ember.isEmpty(users)
     $container = @$()
     $es = Ember.$()
     users.forEach (room) =>
       $es = $es.add("[data-room-guid='#{Ember.guidFor(room)}']", $container)
-    console.log "***** hiding elements", $es...
     $es.addClass('hidden')
 
   showUsers: (users) ->
-    console.log "*************** showing Users:", @currentState == Ember.View.states.inDOM, users
     return unless @currentState == Ember.View.states.inDOM
     return if Ember.isEmpty(users)
     $container = @$()
@@ -219,8 +201,6 @@ App.UsersListComponent = Ember.Component.extend
       @insertUserRow(user, e)
 
     $container = @$()
-    console.log "***** replacing", e
-    #$container.empty()
     $container.append(e)
 
   insertUserRow: (user, e) ->
@@ -351,7 +331,6 @@ App.UsersListComponent = Ember.Component.extend
     prevStatus = @get('prevStatus')
     if room.get('hasStatusIcon')
       status = room.get('status')
-    console.log "************ status changing", prevStatus[Ember.guidFor(room)], status, $avatar
     if prevStatus[Ember.guidFor(room)] != status
       $avatar.removeClass(prevStatus[Ember.guidFor(room)])
     $avatar.addClass(status)
