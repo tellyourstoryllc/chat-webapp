@@ -354,8 +354,8 @@ App.UsersListComponent = Ember.Component.extend
     console.log "************ status changing", prevStatus[Ember.guidFor(room)], status, $avatar
     if prevStatus[Ember.guidFor(room)] != status
       $avatar.removeClass(prevStatus[Ember.guidFor(room)])
-      $avatar.addClass(status)
-      prevStatus[Ember.guidFor(room)] = status
+    $avatar.addClass(status)
+    prevStatus[Ember.guidFor(room)] = status
 
   clientTypeDidChange: (room) ->
     @updateClientType(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"))
@@ -366,8 +366,8 @@ App.UsersListComponent = Ember.Component.extend
       clientType = room.get('clientType')
     if prevClientType[Ember.guidFor(room)] != clientType
       $avatar.removeClass(prevClientType[Ember.guidFor(room)])
-      $avatar.addClass(clientType)
-      prevClientType[Ember.guidFor(room)] = clientType
+    $avatar.addClass(clientType)
+    prevClientType[Ember.guidFor(room)] = clientType
 
   statusTextDidChange: (room) ->
     @updateStatusText(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .status-text"))
