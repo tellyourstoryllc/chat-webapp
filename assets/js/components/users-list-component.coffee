@@ -13,8 +13,8 @@ App.UsersListComponent = Ember.Component.extend
   showStatus: true
   alwaysShowAvatar: false
 
-  prevStatus: null
-  prevClientType: null
+  prevStatusByGuid: null
+  prevClientTypeByGuid: null
 
   animationQueue: null
   isAnimationRunning: false
@@ -25,8 +25,8 @@ App.UsersListComponent = Ember.Component.extend
   init: ->
     @_super(arguments...)
     @setProperties
-      prevStatus: {}
-      prevClientType: {}
+      prevStatusByGuid: {}
+      prevClientTypeByGuid: {}
       animationQueue: []
 
   didInsertElement: ->
@@ -328,25 +328,25 @@ App.UsersListComponent = Ember.Component.extend
     @updateStatus(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"))
 
   updateStatus: (room, $avatar) ->
-    prevStatus = @get('prevStatus')
+    prevStatusByGuid = @get('prevStatusByGuid')
     if room.get('hasStatusIcon')
       status = room.get('status')
-    if prevStatus[Ember.guidFor(room)] != status
-      $avatar.removeClass(prevStatus[Ember.guidFor(room)])
+    if prevStatusByGuid[Ember.guidFor(room)] != status
+      $avatar.removeClass(prevStatusByGuid[Ember.guidFor(room)])
     $avatar.addClass(status)
-    prevStatus[Ember.guidFor(room)] = status
+    prevStatusByGuid[Ember.guidFor(room)] = status
 
   clientTypeDidChange: (room) ->
     @updateClientType(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"))
 
   updateClientType: (room, $avatar) ->
-    prevClientType = @get('prevClientType')
+    prevClientTypeByGuid = @get('prevClientTypeByGuid')
     if room.get('hasStatusIcon')
       clientType = room.get('clientType')
-    if prevClientType[Ember.guidFor(room)] != clientType
-      $avatar.removeClass(prevClientType[Ember.guidFor(room)])
+    if prevClientTypeByGuid[Ember.guidFor(room)] != clientType
+      $avatar.removeClass(prevClientTypeByGuid[Ember.guidFor(room)])
     $avatar.addClass(clientType)
-    prevClientType[Ember.guidFor(room)] = clientType
+    prevClientTypeByGuid[Ember.guidFor(room)] = clientType
 
   statusTextDidChange: (room) ->
     @updateStatusText(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .status-text"))
