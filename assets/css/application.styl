@@ -1308,6 +1308,13 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     margin-bottom 10px
     font-size 12px
 
+  .hidden-continue
+    position fixed
+    right 0
+    bottom 0
+    width 20px
+    height 20px
+
 ///////////////////////////////////////////////////////////
 
 .rooms-sidebar
@@ -1831,8 +1838,23 @@ room-members-sidebar-width = 200px
   .invite-button-container
     padding 10px
 
-  .room-members
+  .users-list-component
     overflow auto // Scrollable.
+
+  .room-members
+    position relative
+
+  .room-member
+    position absolute
+    width 100%
+
+    transition-duration 0.2s
+    transition-timing-function ease-out
+    transition-property opacity, visibility, top
+
+    &.hidden
+      opacity 0
+      visibility hidden
 
   .room-member-link
     display block
@@ -1889,6 +1911,9 @@ room-members-sidebar-width = 200px
   .idle-duration
     white-space nowrap
     vertical-align 3px
+
+    &.hidden
+      display none
 
   .status-text
     white-space pre-wrap // Preserve whitespace.

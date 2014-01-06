@@ -82,3 +82,16 @@ App.Util.reopenClass
     # If the current user sent it, we have the actual file and can try to use
     # its mime type.
     mimetype in types || file?.type in types
+
+  isUsingModifierKey: (event) ->
+    event.ctrlKey || event.altKey || event.shiftKey || event.metaKey
+
+  notUsingModifierKey: (event) ->
+    ! @isUsingModifierKey(event)
+
+  arrayWithoutArray: (arr1, arr2) ->
+    arr = []
+    arr1.forEach (obj) ->
+      arr.pushObject(obj) if ! arr2.contains(obj)
+
+    arr

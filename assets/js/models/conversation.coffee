@@ -111,6 +111,10 @@ App.Conversation = Ember.Mixin.create
     App.RecordArray.create(content: @get('members'), sortProperties: ['name'])
   ).property('members')
 
+  arrangedByIdMembers: (->
+    App.RecordArray.create(content: @get('members'), sortProperties: ['id'])
+  ).property('members')
+
   isCurrentUserMember: (->
     @get('memberIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'memberIds.@each')

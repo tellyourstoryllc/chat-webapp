@@ -198,28 +198,7 @@
 
       <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
         {{#if activeRoomUsersLoaded}}
-          <ul class='room-members'>
-            {{#each user in activeRoomArrangedMembers}}
-              <li class='room-member'>
-                {{#link-to 'rooms.room' user classNames='room-member-link'
-                  classNameBindings='roomsContainer.showAvatars::avatars-off'}}
-                  <div class='room-member-avatar-cell'>
-                    {{room-avatar room=user showStatus=true}}
-                  </div>
-                  <div class='room-member-info-cell'>
-                    <span class='username'>{{user.name}}</span>
-                    {{#if user.shouldDisplayIdleDuration}}
-                      <span class='idle-duration'>{{duration user.mostRecentIdleDuration}}</span>
-                    {{/if}}
-                    {{#if user.statusText}}
-                      <div class='status-text'>{{user.statusText}}</div>
-                    {{/if}}
-                  </div>
-                  <div class='clearfix'></div>
-                {{/link-to}}
-              </li>
-            {{/each}}
-          </ul>
+          {{users-list sortedUsers=activeRoom.arrangedMembers users=activeRoomArrangedMembers allUsers=allUsers goToRoom='goToRoom'}}
         {{else}}
           <div class='loading'>
             Loading...
