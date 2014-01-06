@@ -34,6 +34,10 @@ App.UsersListComponent = Ember.Component.extend
     @insertRows(@get('allUsers'))
     # Ember.run.schedule 'afterRender', @, ->
 
+  willDestroyElement: ->
+    # TODO: remove all observers.  We never actually destroy this element
+    # currently.
+
   allUsersArrayDidChange: (->
     allUsers = @get('allUsers')
     observingAllUsers = @get('_allUsers')
