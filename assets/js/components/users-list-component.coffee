@@ -9,9 +9,8 @@ App.UsersListComponent = Ember.Component.extend
 
   sortedUsers: null
 
-  # Currently we do not support this value changing after creation.
+  # Currently we do not support these values changing after creation.
   showStatus: true
-
   alwaysShowAvatar: false
 
   prevStatus: null
@@ -208,7 +207,6 @@ App.UsersListComponent = Ember.Component.extend
   insertRows: (users) ->
     # TODO: use a document fragment and insert once at the end.
 
-    # Internal list that quicksand uses to determine changes.
     e = document.createElement('ul')
     $e = $(e)
     $e.addClass('room-members')
