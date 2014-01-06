@@ -1385,6 +1385,28 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     color rgba(254, 255, 255, 0.65)
     text-decoration none
 
+    .active-indicator
+      position absolute
+      left 0
+      top 0
+      width 4px
+      height 100%
+      background-color app-green
+
+      // Get the height to not cover the container's borders.
+      border 1px solid transparent
+      background-clip padding-box
+      box-sizing border-box
+      border-left-width 0
+      border-right-width 0
+
+      // Initially invisible.
+      visibility hidden
+      opacity 0
+
+      transition-duration 0.2s
+      transition-property opacity, visibility
+
     &:hover
       color #ccc
 
@@ -1394,6 +1416,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       border-top-color #2E1C3A
       border-bottom-color #2E1C3A
       box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
+
+      .active-indicator
+        visibility visible
+        opacity 1
 
   &.unread
 
