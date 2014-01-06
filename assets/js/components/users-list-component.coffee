@@ -366,3 +366,11 @@ App.UsersListComponent = Ember.Component.extend
   showAvatars: (->
     App.get('preferences.clientWeb.showAvatars')
   ).property('App.preferences.clientWeb.showAvatars')
+
+  showAvatarsDidChange: (->
+    # Showing/hiding avatars can affect the item height.
+    @queueAnimationOnce @, 'updatePositions'
+    @runAnimations()
+  # Note: Need to observe the actual property, not the computed property for
+  # this observer to trigger.
+  ).observes('App.preferences.clientWeb.showAvatars')
