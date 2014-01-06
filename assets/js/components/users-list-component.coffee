@@ -70,10 +70,11 @@ App.UsersListComponent = Ember.Component.extend
 
   buildUsers: (users) ->
     return unless @currentState == Ember.View.states.inDOM
-    # TODO: use a document fragment and insert once at the end.
-    $e = @$('.room-members')
+    # Use a document fragment and insert once at the end to reduce reflows.
+    fragment = document.createDocumentFragment()
     users.forEach (room) =>
-      @insertUserRow(room, $e)
+      @insertUserRow(room, fragment)
+    @$('.room-members').append(fragment)
 
   usersArrayDidChange: (->
     users = @get('users')
