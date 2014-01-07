@@ -22,7 +22,7 @@ App.RoomsView = Ember.View.extend
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onMacGapActive', 'onMacGapIdle',
       'onToggleRoomsSidebarTouchStart',
-      'onJoinTextKeyDown', 'onJoinTextPaste')
+      'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus')
     # Force computed properties.
     @get('isRoomContentOutOfTheWay')
 
@@ -38,6 +38,7 @@ App.RoomsView = Ember.View.extend
     @$('.toggle-sidebar-tab').on 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     @$('.join-text').on 'keydown', @onJoinTextKeyDown
     @$('.join-text').on 'paste', @onJoinTextPaste
+    @$('.join-text').on 'focus', @onJoinTextFocus
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -54,6 +55,7 @@ App.RoomsView = Ember.View.extend
     @$('.toggle-sidebar-tab').off 'touchstart mousedown', @onToggleRoomsSidebarTouchStart
     @$('.join-text').off 'keydown', @onJoinTextKeyDown
     @$('.join-text').off 'paste', @onJoinTextPaste
+    @$('.join-text').off 'focus', @onJoinTextFocus
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -98,6 +100,12 @@ App.RoomsView = Ember.View.extend
     # pasting.
     Ember.run.next @, ->
       @send('joinRoom', $('.join-text').val())
+
+  onJoinTextFocus: (event) ->
+    Ember.run @, ->
+      # Move the room content and messages out of the way.
+      @set('isShowingRoomsSidebar', true)
+      return undefined
 
   activeRoomDidChange: (->
     # When the user shows the sidebar and selects a room, hide the sidebar.
