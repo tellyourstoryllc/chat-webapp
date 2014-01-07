@@ -308,7 +308,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         password: @$('.current-password-input').val()
         new_password: newPassword
       url = App.get('api').buildURL('/accounts/update')
-      App.get('api').ajax(url, 'POST', data: data)
+      App.get('api').ajax(url, 'POST', data: data, skipLogOutOnInvalidTokenFilter: true)
       .always =>
         @set('isSendingPassword', false)
       .then (json) =>

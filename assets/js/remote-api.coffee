@@ -64,8 +64,16 @@ App.RemoteApi = Ember.Object.extend
       hash.success = (json) ->
         Ember.run(null, resolve, json)
 
-      hash.error = (jqXHR, textStatus, errorThrown) ->
-        Ember.run(null, reject, jqXHR)
+      hash.error = (jqXHR, textStatus, errorThrown) =>
+        Ember.run @, ->
+          try
+            # Global ajax request filters.
+            if ! hash.skipLogOutOnInvalidTokenFilter
+              @logOutOnInvalidTokenFilter(resolve, reject, jqXHR)
+          catch e
+            Ember.Logger.error "Error in ajax filter", e, e?.message, e?.stack ? e?.stacktrace
+
+          reject(jqXHR)
 
       Ember.$.ajax(hash)
 
@@ -79,6 +87,10 @@ App.RemoteApi = Ember.Object.extend
     url = App.webServerUrl(url)
 
     url
+
+  logOutOnInvalidTokenFilter: (resolve, reject, jqXHR) ->
+    if jqXHR.status == 401 && App.get('_isLoggedIn')
+      App._getRouter().transitionTo('logout')
 
   checkin: (data) ->
     api = App.get('api')
