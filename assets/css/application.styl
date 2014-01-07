@@ -1401,6 +1401,9 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   box-sizing border-box
   width room-sidebar-width - 2px // Leave pixels to the right for the scrollbar margin.
   overflow auto // Scrollable.
+  // Use smooth scrolling on iOS webkit.  Note: This affects when scroll events
+  // fire.
+  -webkit-overflow-scrolling touch
 
   // Scrollbars.
   &::-webkit-scrollbar
@@ -2120,6 +2123,9 @@ room-members-sidebar-width = 200px
 .messages
   // Scrollable.
   overflow auto
+  // Use smooth scrolling on iOS webkit.  Note: This affects when scroll events
+  // fire.
+  -webkit-overflow-scrolling touch
 
   position absolute
   width 100%
