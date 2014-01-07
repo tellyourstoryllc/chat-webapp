@@ -88,6 +88,7 @@ App.RoomsView = Ember.View.extend
     Ember.run @, ->
       event.preventDefault()
       @toggleProperty('isShowingRoomsSidebar')
+      return undefined
 
   onJoinTextKeyDown: (event) ->
     Ember.run @, ->
