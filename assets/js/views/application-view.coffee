@@ -34,6 +34,9 @@ App.ApplicationView = Ember.View.extend
         if Ember.isEmpty(newToken)
           # User logged out.  We should log out too.
           @get('controller').transitionToRoute('logout')
+        else
+          # User got an updated token in another window.  Use it.
+          App.useNewAuthToken(newToken)
 
       if key of App.Preferences.clientPrefsDefaults
         # Another window changed localStorage preferences.  Load them.

@@ -316,6 +316,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
           throw json
         # Success.
         @set('isEditingPassword', false)
+
+        # Should return user and account.
+        json = Ember.makeArray(json)
+        # Use the updated auth token.
+        userJson = json.find (obj) -> obj.object_type == 'user'
+        token = userJson?.token
+        if token?
+          App.useNewAuthToken(token)
       .fail (xhrOrJson) =>
         Ember.Logger.error xhrOrJson
         if xhrOrJson.status == 401

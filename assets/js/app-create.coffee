@@ -366,6 +366,12 @@ window.App = App = Ember.Application.create
     data.client_type = 'web'
     App.get('fayeClient').publish('/clients/update', data)
 
+  # After getting an updated authentication token, for example, after changing
+  # the user's password, call this to begin using the new token.
+  useNewAuthToken: (token) ->
+    App.set('token', token)
+    window.localStorage.setItem('token', token)
+
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other
   # user event.
