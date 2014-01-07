@@ -520,10 +520,11 @@ input, button, select, textarea
   background-color #EDEDED
   box-shadow 0 0 40px rgba(0,0,0, 1)
 
+settings-dialog-width = 380px
 .settings-dialog
-  dialog-width = 380px
-  width dialog-width
-  margin-left -(dialog-width / 2)
+  box-sizing border-box
+  width settings-dialog-width
+  margin-left -(settings-dialog-width / 2)
   margin-top -258px // Negative height divided by 2.
   visibility hidden // Initially hidden.
 
@@ -632,6 +633,25 @@ input, button, select, textarea
     width 16px
     height 16px
     background-position -26px -38px
+
+// Stylus doesn't support arbitrary expressions in media queries.
+//
+// http://stackoverflow.com/questions/13060726/variables-in-stylus-css-media-queries
+mobile-settings-dialog-media-query = "(max-width: " + settings-dialog-width + ")"
+@media mobile-settings-dialog-media-query
+  .settings-dialog
+    // On narrow mobile devices, use the full screen width and center.
+    width 100%
+    left 0
+    margin-left 0
+
+@media (max-height: 550px)
+  .settings-dialog
+    // On short mobile devices, use the full screen height and allow scrolling.
+    height 100%
+    top 0
+    margin-top 0
+    overflow auto
 
 
 html

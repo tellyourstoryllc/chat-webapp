@@ -120,9 +120,11 @@
     <tr>
       <td class='label-cell volume-label-cell'>Volume</td>
       <td colspan='2' class='control-cell'>
-        <input type='range' min='0' max='100' value='100' class='notification-volume'
+        <nobr>
+          <input type='range' min='0' max='100' value='100' class='notification-volume'
           {{action 'changeVolumePreference' 'notificationVolume' on='change'}}>
-        <span class='max-volume-icon'></span>
+          <span class='max-volume-icon'></span>
+        </nobr>
       </td>
     </tr>
   {{/if}}
