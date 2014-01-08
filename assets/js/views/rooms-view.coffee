@@ -92,7 +92,11 @@ App.RoomsView = Ember.View.extend
   onToggleRoomsSidebarTouchStart: (event) ->
     Ember.run @, ->
       event.preventDefault()
-      @toggleProperty('isShowingRoomsSidebar')
+      room = @get('activeRoom')
+      # Don't allow user toggling when in the lobby since they won't be able to
+      # get back.
+      if room?
+        @toggleProperty('isShowingRoomsSidebar')
       return undefined
 
   onJoinTextKeyDown: (event) ->
