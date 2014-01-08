@@ -1,7 +1,7 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didJoinGroup, didGoToRoom, didCloseRoom
+# Actions: didJoinGroup, didGoToRoom, didCloseRoom, didToggleRoomsSidebar
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -25,10 +25,16 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isSendingRoomWallpaper: false
 
+  isNoSidebars: false
+
+  # Set to true to display the rooms sidebar toggle instead of the room avatar.
+  showRoomsSidebarToggle: Ember.computed.alias('isNoSidebars')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
       'onDocumentClick',
+      'onTapRoomsSidebarToggle',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onClickMessageLink',
       'onSendMessageTextCursorMove',
@@ -43,6 +49,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # Bind to the body so that it works regardless of where the focus is.
     $('body').on 'keydown', @bodyKeyDown
     $(document).on 'click', @onDocumentClick
+    $(document).on 'click', '.toggle-rooms-sidebar', @onTapRoomsSidebarToggle
     $(document).on 'click', '.message-body a[href]', @onClickMessageLink
     $(document).on 'click', '.sender', @clickSender
 
@@ -65,6 +72,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $(window).off 'resize', @resize
     $('body').off 'keydown', @bodyKeyDown
     $(document).off 'click', @onDocumentClick
+    $(document).off 'click', '.toggle-rooms-sidebar', @onTapRoomsSidebarToggle
     $(document).off 'click', '.message-body a[href]', @onClickMessageLink
     $(document).off 'click', '.sender', @clickSender
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
@@ -89,6 +97,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         else
           # Focus on send message textarea.
           @setFocus(true)
+
+  onTapRoomsSidebarToggle: (event) ->
+    Ember.run @, ->
+      @sendAction('didToggleRoomsSidebar')
+      return undefined
 
   roomChanged: (->
     # Hide autocomplete suggestions.
@@ -171,6 +184,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
     $window = $(window)
+    windowWidth = $window.width()
+
+    # Less than or equal to this window width, no sidebars are shown. This
+    # should match the CSS.
+    noSidebarsWidth = 515
+    isNoSidebars = windowWidth <= noSidebarsWidth
+    @set('isNoSidebars', isNoSidebars)
 
     containerHeight = @containerHeight($window)
     height = containerHeight
@@ -241,9 +261,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   messagesWidth: ($window = $(window)) ->
     windowWidth = $window.width()
     isMembersVisible = windowWidth > 700
+    # Less than or equal to this window width, no sidebars are shown. This
+    # should match the CSS.
+    noSidebarsWidth = 515
+    isNoSidebars = windowWidth <= noSidebarsWidth
     membersSidebarWidth = 200 # .room-members-sidebar
-    roomsSidebarWidth = if windowWidth <= 515
-      41
+    roomsSidebarWidth = if isNoSidebars
+      0
     else
       $('.rooms-sidebar').outerWidth()
     width = windowWidth

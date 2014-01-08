@@ -1683,7 +1683,7 @@ room-content-margin-height = 10px
 @media (max-width: 515px)
 
   .room-content:not(.out-of-the-way)
-    left 41px
+    left 0
 
   .toggle-sidebar-tab
     position fixed
@@ -2005,9 +2005,21 @@ room-members-sidebar-width = 200px
     text-shadow 0 0 3px #fff
     border-radius top 6px
 
-  .room-avatar-permalink
+  .room-avatar-permalink, .toggle-rooms-sidebar
     float left
     margin-right 5px
+
+  .toggle-rooms-sidebar
+    box-sizing border-box
+    width 42px
+    height 42px
+    padding-top 11px
+    padding-left 9px
+    cursor pointer
+    opacity .35
+
+    &:hover
+      opacity .8
 
   .edit-room-name-link, .edit-topic-link
     color #aaa

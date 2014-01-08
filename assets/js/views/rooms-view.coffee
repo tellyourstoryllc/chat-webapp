@@ -28,6 +28,8 @@ App.RoomsView = Ember.View.extend
     @get('isRoomContentOutOfTheWay')
 
   didInsertElement: ->
+    @get('controller').set('roomsView', @)
+
     $(window).on 'resize', @resize
     $('html').on 'click', @documentClick
     $(document).on 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
@@ -46,6 +48,8 @@ App.RoomsView = Ember.View.extend
       @updateSize()
 
   willDestroyElement: ->
+    @get('controller').set('roomsView', null)
+
     $(window).off 'resize', @resize
     $('html').off 'click', @documentClick
     $(document).off 'mousemove mousedown keydown touchstart wheel mousewheel DOMMouseScroll', @documentActive
@@ -147,10 +151,14 @@ App.RoomsView = Ember.View.extend
     width = windowWidth
     roomSidebarWidth = 240 # .room-sidebar room-sidebar-width
     roomContentMarginWidth = 10 # room-content-margin-width
-    width -= if windowWidth <= 515 then 41 else roomSidebarWidth
+    # Less than or equal to this window width, no sidebars are shown. This
+    # should match the CSS.
+    noSidebarsWidth = 515
+    isNoSidebars = windowWidth <= noSidebarsWidth
+    width -= if isNoSidebars then 0 else roomSidebarWidth
     @$('.room-content').css
       width: width
-
+  
   documentClick: (event) ->
     Ember.run @, ->
       @closeChooseStatusMenu()
@@ -261,6 +269,10 @@ App.RoomsView = Ember.View.extend
     undefined
 
   actions:
+
+    toggleRoomsSidebar: ->
+      @toggleProperty('isShowingRoomsSidebar')
+      return undefined
 
     joinRoom: (joinText) ->
       return if @get('isJoiningRoom')

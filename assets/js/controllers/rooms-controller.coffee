@@ -38,3 +38,9 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     numUnreadRooms = @get('numUnreadRooms')
     macgap?.dock.badge = if numUnreadRooms > 0 then "#{numUnreadRooms}" else null
   ).observes('numUnreadRooms')
+
+  actions:
+
+    toggleRoomsSidebar: ->
+      @get('roomsView')?.send('toggleRoomsSidebar')
+      return undefined

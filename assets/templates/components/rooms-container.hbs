@@ -2,9 +2,15 @@
   <div {{bind-attr class=':room-container activeRoom:has-active-room'}}>
     {{#if activeRoom}}
       <div class='room-info'>
-        {{#link-to 'rooms.room' activeRoom classNames='room-avatar-permalink'}}
-          <img {{bind-attr src='activeRoom.avatarUrl'}} class='medium-avatar-image'>
-        {{/link-to}}
+        {{#if roomsContainer.showRoomsSidebarToggle}}
+          <div class='toggle-rooms-sidebar'>
+            <span class='room-settings-icon'></span>
+          </div>
+        {{else}}
+          {{#link-to 'rooms.room' activeRoom classNames='room-avatar-permalink'}}
+            <img {{bind-attr src='activeRoom.avatarUrl'}} class='medium-avatar-image'>
+          {{/link-to}}
+        {{/if}}
         <div class='room-name-info-container'>
           {{#if roomsContainer.isEditingRoomName}}
             <form class='edit-room-name-form'>
