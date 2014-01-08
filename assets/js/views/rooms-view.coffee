@@ -23,6 +23,7 @@ App.RoomsView = Ember.View.extend
       'onMacGapActive', 'onMacGapIdle',
       'onToggleRoomsSidebarTouchStart',
       'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus')
+    @showDefaultSidebarView()
     # Force computed properties.
     @get('isRoomContentOutOfTheWay')
 
@@ -109,17 +110,26 @@ App.RoomsView = Ember.View.extend
       return undefined
 
   activeRoomDidChange: (->
-    # When the user shows the sidebar and selects a room, hide the sidebar.
-    @set('isShowingRoomsSidebar', false)
-  ).observes('activeRoom')
+    # When the user shows the sidebar and selects a room, go to the default
+    # sidebar state.
+    @showDefaultSidebarView()
+  ).observes('App.currentlyViewingRoom')
 
   resize: _.debounce (event) ->
     Ember.run @, ->
-      # If we had the sidebar showing, go back to the default by hiding it.
-      @set('isShowingRoomsSidebar', false)
+      # If we had the sidebar showing, go back to the default.
+      @showDefaultSidebarView()
 
       @updateSize()
   , 5
+
+  showDefaultSidebarView: ->
+    activeRoom = App.get('currentlyViewingRoom')
+    if activeRoom?
+      @set('isShowingRoomsSidebar', false)
+    else
+      # We're in the lobby, so show the rooms sidebar.
+      @set('isShowingRoomsSidebar', true)
 
   updateSize: ->
     return unless @currentState == Ember.View.states.inDOM
