@@ -12,7 +12,3 @@ App.RoomsIndexController = Ember.Controller.extend App.BaseControllerMixin,
   ).property()
 
   rooms: Ember.computed.filterBy 'allRooms', 'isDeleted', false
-
-  showCreateRoomCallout: (->
-    @get('roomsLoaded') && Ember.isEmpty(@get('rooms'))
-  ).property('roomsLoaded', 'rooms.[]')
