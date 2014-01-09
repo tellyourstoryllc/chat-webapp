@@ -312,12 +312,12 @@ App.UsersListComponent = Ember.Component.extend
     # {{#if user.statusText}}
     #   <div class='status-text'>{{user.statusText}}</div>
     # {{/if}}
-    status = document.createElement('div')
-    $status = $(status)
-    $status.addClass('status-text')
+    statusText = document.createElement('div')
+    $statusText = $(statusText)
+    $statusText.addClass('status-text')
     room.addObserver('statusText', @, 'statusTextDidChange')
-    @updateStatusText(room, $status) # Update immediately.
-    $status.appendTo(infoCell)
+    @updateStatusText(room, $statusText) # Update immediately.
+    $statusText.appendTo(infoCell)
 
     # <div class='clearfix'></div>
     clearfix = document.createElement('div')
