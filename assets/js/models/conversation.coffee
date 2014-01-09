@@ -392,7 +392,7 @@ App.Conversation = Ember.Mixin.create
         @playReceiveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
 
-    if ! fromCurrentUser && App.get('currentlyViewingRoom') != @
+    if ! fromCurrentUser && (App.get('currentlyViewingRoom') != @ || App.PageVisibility.hidden())
       # Mark the room as unread.
       @set('isUnread', true)
 

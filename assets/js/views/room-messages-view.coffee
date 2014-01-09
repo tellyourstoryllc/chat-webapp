@@ -165,6 +165,14 @@ App.RoomMessagesView = Ember.View.extend
         @scrollToLastMessage(true)
   ).observes('isCurrentlyViewingRoom')
 
+  windowHasFocusChanged: (->
+    # If we're focusing the window, set the current room to read.
+    if App.get('hasFocus')
+      room = @get('room')
+      if room? && room == App.get('currentlyViewingRoom') && @isScrolledToLastMessage()
+        room.set('isUnread', false)
+  ).observes('App.hasFocus')
+
   roomWallpaperChanged: (->
     Ember.run.schedule 'afterRender', @, ->
       room = @get('room')
