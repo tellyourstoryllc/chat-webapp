@@ -24,6 +24,7 @@ App.UsersListComponent = Ember.Component.extend
 
   init: ->
     @_super(arguments...)
+    _.bindAll(@, 'onResize')
     @setProperties
       prevStatusByGuid: {}
       prevClientTypeByGuid: {}
@@ -31,10 +32,20 @@ App.UsersListComponent = Ember.Component.extend
 
   didInsertElement: ->
     @insertRows(@get('allUsers'))
+    $(window).on 'resize', @onResize
 
   willDestroyElement: ->
+    $(window).off 'resize', @onResize
+
     # TODO: remove all observers.  We never actually destroy this element
     # currently.
+
+  onResize: _.throttle (event) ->
+    Ember.run @, ->
+      # Showing and hiding the members sidebar can cause position issues.
+      @updatePositions()
+      return undefined
+  , 500
 
   allUsersArrayDidChange: (->
     allUsers = @get('allUsers')
