@@ -63,10 +63,6 @@ window.App = App = Ember.Application.create
   # Boolean whether the current user is idle on this device.
   isIdle: false
 
-  # Messages that should flash in the browser window/tab's titlebar.  General
-  # use is to unshift an object with an id and a title.
-  pageTitlesToFlash: []
-
   # User preferences like notification settings.
   preferences: null
 

@@ -1,8 +1,5 @@
 App.ApplicationView = Ember.View.extend
 
-  _pageTitleFlashTimer: null
-  _isShowingPageTitleFlash: false
-
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'focus', 'blur', 'onStorage')
@@ -15,7 +12,6 @@ App.ApplicationView = Ember.View.extend
   focus: ->
     Ember.run @, ->
       App.set('hasFocus', true)
-      App.get('pageTitlesToFlash').clear()
       @hideNotifications()
 
   blur: ->
@@ -67,38 +63,3 @@ App.ApplicationView = Ember.View.extend
 
   hideNotifications: ->
     App.get('currentlyViewingRoom')?.dismissNotifications()
-
-  pageTitlesToFlashChanged: (->
-    if Ember.isEmpty(App.get('pageTitlesToFlash'))
-      @stopFlashingPageTitle()
-    else
-      @startFlashingPageTitle()
-  ).observes('App.pageTitlesToFlash.@each')
-
-  startFlashingPageTitle: ->
-    timer = @get('_pageTitleFlashTimer')
-    if ! timer?
-      @_flashPageTitle()
-
-  stopFlashingPageTitle: ->
-    timer = @get('_pageTitleFlashTimer')
-    if timer?
-      Ember.run.cancel(timer)
-      @set('_pageTitleFlashTimer', null)
-    @_removePageTitleFlash()
-
-  _flashPageTitle: ->
-    if @get('_isShowingPageTitleFlash')
-      @_removePageTitleFlash()
-    else
-      @_addPageTitleFlash()
-    @set('_pageTitleFlashTimer', Ember.run.later(@, '_flashPageTitle', 1000))
-
-  _removePageTitleFlash: ->
-    $(document).attr('title', App.get('title'))
-    @set('_isShowingPageTitleFlash', false)
-
-  _addPageTitleFlash: ->
-    titleObj = App.get('pageTitlesToFlash')[0]
-    $(document).attr('title', "#{titleObj.get('title')} | #{App.get('title')}")
-    @set('_isShowingPageTitleFlash', true)

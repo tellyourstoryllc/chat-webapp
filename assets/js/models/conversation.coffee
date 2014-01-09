@@ -400,13 +400,6 @@ App.Conversation = Ember.Mixin.create
       # Bounce the dock icon.
       macgap?.app.bounce()
 
-    if ! fromCurrentUser && ! App.get('hasFocus')
-      # Flash the window's titlebar.
-      titleObj = Ember.Object.create
-        id: message.get('groupId')
-        title: message.get('title')
-      App.get('pageTitlesToFlash').unshiftObject(titleObj)
-
     undefined
 
   playMentionSound: ->
@@ -442,11 +435,7 @@ App.Conversation = Ember.Mixin.create
         applicationController.send('goToRoom', message.get('conversation'))
 
       result.nativeNotification.addEventListener 'close', (event) ->
-        # The user closed the notification.  Stop flashing that message.
-        titleObjs = App.get('pageTitlesToFlash')
-        tag = message.get('notificationTag')
-        objs = titleObjs.filterBy('id', tag)
-        titleObjs.removeObjects(objs)
+        # The user closed the notification.
 
   dismissNotifications: ->
     results = @get('notificationResults')
