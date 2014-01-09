@@ -509,7 +509,12 @@ App.Conversation = Ember.Mixin.create
       target ?= processor
       method = target[method] if Ember.typeOf(method) == 'string'
       if method?
-        newText = method.call(target, message, newText)
+        try
+          # Run the processor.
+          newText = method.call(target, message, newText)
+        catch e
+          # If it fails, just show the original message to the user.
+          Ember.Logger.error "Error running incoming message processor; skipping", e, e?.message, e?.stack ? e?.stacktrace
 
     newText
 
@@ -525,6 +530,7 @@ App.Conversation = Ember.Mixin.create
       target ?= processor
       method = target[method] if Ember.typeOf(method) == 'string'
       if method?
+        # TODO: what should happen if this fails?
         newText = method.call(target, message, newText)
 
     newText
