@@ -350,7 +350,11 @@ App.UsersListComponent = Ember.Component.extend
     $clearfix.appendTo(a)
 
   statusDidChange: (room) ->
-    @updateStatus(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"))
+    sel = "[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"
+    $avatar = @$(sel)
+    if ! $avatar?
+      Ember.Logger.error "Couldn't find avatar element", room?.get('id'), sel, $(sel)
+    @updateStatus(room, $avatar)
 
   updateStatus: (room, $avatar) ->
     prevStatusByGuid = @get('prevStatusByGuid')
@@ -358,8 +362,8 @@ App.UsersListComponent = Ember.Component.extend
       status = room.get('status')
     roomGuid = Ember.guidFor(room)
     if (prevStatus = prevStatusByGuid[roomGuid])?
-      $avatar.removeClass(prevStatus)
-    $avatar.addClass(status) if status?
+      $avatar?.removeClass(prevStatus)
+    $avatar?.addClass(status) if status?
     prevStatusByGuid[roomGuid] = status
 
   clientTypeDidChange: (room) ->
@@ -371,14 +375,15 @@ App.UsersListComponent = Ember.Component.extend
       clientType = room.get('clientType')
     roomGuid = Ember.guidFor(room)
     if (prevClientType = prevClientTypeByGuid[roomGuid])?
-      $avatar.removeClass(prevClientType)
-    $avatar.addClass(clientType) if clientType?
+      $avatar?.removeClass(prevClientType)
+    $avatar?.addClass(clientType) if clientType?
     prevClientTypeByGuid[roomGuid] = clientType
 
   statusTextDidChange: (room) ->
     @updateStatusText(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .status-text"))
 
   updateStatusText: (room, $e) ->
+    return unless $e?
     statusText = room.get('statusText')
     if statusText?
       $e.text(statusText)
