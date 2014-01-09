@@ -253,8 +253,12 @@ App.UsersListComponent = Ember.Component.extend
     $avatar = $(avatar)
     $avatar.addClass('room-avatar').addClass('small-avatar')
     room.addObserver('status', @, 'statusDidChange')
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('status', @, 'statusDidChange')
     @updateStatus(room, $avatar) # Update immediately.
     room.addObserver('clientType', @, 'clientTypeDidChange')
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('clientType', @, 'clientTypeDidChange')
     @updateClientType(room, $avatar) # Update immediately.
     # TODO: observers.
     if ! @get('showStatus')
@@ -270,6 +274,8 @@ App.UsersListComponent = Ember.Component.extend
       text = if url? then "url('#{url}')" else null
       $avatar.css('background-image', text)
     room.addObserver('avatarUrl', avatarUrlObserver)
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('avatarUrl', avatarUrlObserver)
     avatarUrlObserver() # Trigger immediately.
     $avatar.appendTo(a)
 
@@ -287,6 +293,8 @@ App.UsersListComponent = Ember.Component.extend
       name = room.get('name') ? ''
       $name.text(name)
     room.addObserver('name', nameObserver)
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('name', nameObserver)
     nameObserver() # Trigger immediately.
     $name.appendTo(infoCell)
 
@@ -312,11 +320,14 @@ App.UsersListComponent = Ember.Component.extend
         # Only observe the idle duration when we're actually showing it.
         mostRecentIdleDurationObserver() # Trigger immediately.
         room.addObserver('mostRecentIdleDuration', mostRecentIdleDurationObserver)
+        # TODO: Remove observer on destroy.
         $idle.removeClass('hidden')
       else
         $idle.addClass('hidden')
         room.removeObserver('mostRecentIdleDuration', mostRecentIdleDurationObserver)
     room.addObserver('shouldDisplayIdleDuration', shouldDisplayIdleDurationObserver)
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('shouldDisplayIdleDuration', shouldDisplayIdleDurationObserver)
     shouldDisplayIdleDurationObserver() # Trigger immediately.
     $idle.appendTo(infoCell)
 
@@ -327,6 +338,8 @@ App.UsersListComponent = Ember.Component.extend
     $statusText = $(statusText)
     $statusText.addClass('status-text')
     room.addObserver('statusText', @, 'statusTextDidChange')
+    # @one 'willDestroyElement', =>
+    #   room.removeObserver('statusText', @, 'statusTextDidChange')
     @updateStatusText(room, $statusText) # Update immediately.
     $statusText.appendTo(infoCell)
 
