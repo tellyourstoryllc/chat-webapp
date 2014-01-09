@@ -343,10 +343,11 @@ App.UsersListComponent = Ember.Component.extend
     prevStatusByGuid = @get('prevStatusByGuid')
     if room.get('hasStatusIcon')
       status = room.get('status')
-    if prevStatusByGuid[Ember.guidFor(room)] != status
-      $avatar.removeClass(prevStatusByGuid[Ember.guidFor(room)])
-    $avatar.addClass(status)
-    prevStatusByGuid[Ember.guidFor(room)] = status
+    roomGuid = Ember.guidFor(room)
+    if (prevStatus = prevStatusByGuid[roomGuid])?
+      $avatar.removeClass(prevStatus)
+    $avatar.addClass(status) if status?
+    prevStatusByGuid[roomGuid] = status
 
   clientTypeDidChange: (room) ->
     @updateClientType(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"))
@@ -355,10 +356,11 @@ App.UsersListComponent = Ember.Component.extend
     prevClientTypeByGuid = @get('prevClientTypeByGuid')
     if room.get('hasStatusIcon')
       clientType = room.get('clientType')
-    if prevClientTypeByGuid[Ember.guidFor(room)] != clientType
-      $avatar.removeClass(prevClientTypeByGuid[Ember.guidFor(room)])
-    $avatar.addClass(clientType)
-    prevClientTypeByGuid[Ember.guidFor(room)] = clientType
+    roomGuid = Ember.guidFor(room)
+    if (prevClientType = prevClientTypeByGuid[roomGuid])?
+      $avatar.removeClass(prevClientType)
+    $avatar.addClass(clientType) if clientType?
+    prevClientTypeByGuid[roomGuid] = clientType
 
   statusTextDidChange: (room) ->
     @updateStatusText(room, @$("[data-room-guid='#{Ember.guidFor(room)}'] .status-text"))
