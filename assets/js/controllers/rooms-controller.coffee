@@ -37,6 +37,12 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   numUnreadRoomsChanged: (->
     numUnreadRooms = @get('numUnreadRooms')
     macgap?.dock.badge = if numUnreadRooms > 0 then "#{numUnreadRooms}" else null
+
+    # Set titlebar title.
+    title = App.get('title')
+    if numUnreadRooms > 0
+      title = "(#{numUnreadRooms}) #{title}"
+    $(document).attr('title', title)
   ).observes('numUnreadRooms')
 
   actions:
