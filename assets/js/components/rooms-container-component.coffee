@@ -763,6 +763,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       # response to a user event.
       @get('targetObject').send('requestNotificationPermission')
 
+      # On mobile devices, hide the keyboard after sending a message.
+      if Modernizr.appleios || Modernizr.android
+        @$('.send-message-text').blur()
+
       return undefined
 
     toggleRoomMenu: ->
