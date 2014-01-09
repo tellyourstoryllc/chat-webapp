@@ -1358,6 +1358,50 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 ///////////////////////////////////////////////////////////
 
+.app-install-banner
+  position absolute
+  top 0
+  left 0
+  box-sizing border-box
+  width 100%
+  z-index 100
+  padding 5px
+  border-bottom 1px solid rgba(0,0,0, .8)
+  box-shadow 0 5px 15px rgba(0,0,0, .6)
+  background-color app-purple
+  color #F8F8F8
+
+  opacity .95
+
+  transition-duration 0.2s
+  transition-timing-function ease-out
+  transition-property opacity, top, visibility
+
+  &.temporarily-hidden
+    top -100px // At least the height of the banner.
+
+  &.hidden
+    visibility hidden
+    opacity 0
+
+  .close
+    float left
+    padding 10px
+    cursor pointer
+    opacity .6
+
+    &:hover
+      opacity 1
+
+  .app-install-logo
+    float left
+
+  .for-platform
+    font-size 12px
+    line-height 1.2
+    vertical-align middle
+
+
 .rooms-sidebar
   position fixed
   top 0
