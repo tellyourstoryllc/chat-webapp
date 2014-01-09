@@ -142,6 +142,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
              'preferences.clientWeb.showNotificationOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
              'preferences.clientWeb.showAvatars',
+             'preferences.clientWeb.showWallpaper',
              'preferences.clientWeb.notificationVolume')
 
   serverPreferencesDidChange: (->
@@ -164,6 +165,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       return unless clientPrefs?
       @$('#show-join-leave-messages-checkbox').prop('checked', clientPrefs.get('showJoinLeaveMessages'))
       @$('#show-avatars-checkbox').prop('checked', clientPrefs.get('showAvatars'))
+      @$('#show-wallpaper-checkbox').prop('checked', clientPrefs.get('showWallpaper'))
       @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
       @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
       @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
@@ -344,6 +346,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       clientPrefs.setProperties
         showJoinLeaveMessages: @$('#show-join-leave-messages-checkbox').is(':checked')
         showAvatars: @$('#show-avatars-checkbox').is(':checked')
+        showWallpaper: @$('#show-wallpaper-checkbox').is(':checked')
         playSoundOnMessageReceive: @$('.play-sound-on-message-receive-checkbox').is(':checked')
         showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
         playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')

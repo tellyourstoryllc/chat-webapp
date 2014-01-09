@@ -26,6 +26,7 @@ App.Preferences.reopenClass
     # idle on this device.
     showIdleAfterMinutes: 5
     showAvatars: true
+    showWallpaper: true
     notificationVolume: 100
 
   propertiesFromRawAttrs: (json) ->

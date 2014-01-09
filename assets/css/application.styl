@@ -525,7 +525,7 @@ settings-dialog-width = 380px
   box-sizing border-box
   width settings-dialog-width
   margin-left -(settings-dialog-width / 2)
-  margin-top -258px // Negative height divided by 2.
+  margin-top -277px // Negative height divided by 2.
   visibility hidden // Initially hidden.
 
   .settings-table
@@ -645,7 +645,7 @@ mobile-settings-dialog-media-query = "(max-width: " + settings-dialog-width + ")
     left 0
     margin-left 0
 
-@media (max-height: 550px)
+@media (max-height: 574px)
   .settings-dialog
     // On short mobile devices, use the full screen height and allow scrolling.
     height 100%
@@ -2162,6 +2162,10 @@ room-members-sidebar-width = 200px
 
     &.before-cursor
       left -100%
+
+  // This class is set when the wallpaper preference is turned off.
+  &.wallpaper-off
+    background-image none !important
 
 .loading-more-messages
   position absolute

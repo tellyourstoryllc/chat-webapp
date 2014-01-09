@@ -31,6 +31,10 @@ App.RoomMessagesView = Ember.View.extend
 
   willDestroyElement: ->
 
+  showWallpaper: (->
+    App.get('preferences.clientWeb.showWallpaper')
+  ).property('App.preferences.clientWeb.showWallpaper')
+
   hasAttachment: (->
     @get('room.newMessageFile')?
   ).property('room.newMessageFile')
