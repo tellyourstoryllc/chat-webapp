@@ -361,7 +361,24 @@ window.App = App = Ember.Application.create
       idle_duration: App.get('idleForSeconds')
     else
       status: 'active'
+
+    # Client type.
     data.client_type = 'web'
+    # Use screen dimensions to determine if it's probably a phone or tablet.
+    if screen? && screen.width? && screen.height?
+      minScreenDimen = Math.min(screen.width, screen.height)
+      maxScreenDimen = Math.max(screen.width, screen.height)
+      if minScreenDimen <= 400 || maxScreenDimen <= 480
+        # If screen is 480 or smaller, we're probably on a phone no matter what.
+        # iPhone 5 (4-inch display) 320x568 should fall here.
+        data.client_type = 'phone'
+      else if maxScreenDimen < 1024
+        # If screen is less than 1024, it's probably a tablet no matter what.
+        data.client_type = 'tablet'
+      else if maxScreenDimen == 1024 && (Modernizr.appleios || Modernizr.android)
+        # If screen is 1024, it could be a tablet or a very old desktop.
+        data.client_type = 'tablet'
+
     App.get('fayeClient').publish('/clients/update', data)
 
   # After getting an updated authentication token, for example, after changing
