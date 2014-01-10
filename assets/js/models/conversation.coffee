@@ -204,7 +204,7 @@ App.Conversation = Ember.Mixin.create
         # After fetching the most recent page of messages, we found that we
         # already had one or more of them.  Notify the user of each message like
         # normal.
-        @didReceiveMessage(msg) for msg in newMessages
+        @didReceiveMessage(msg, insertInRankOrder: true) for msg in newMessages
       else
         # No overlap.  This means that we missed more than a page of messages
         # when disconnected.  Just give up and reload.  We need to clear the old
@@ -311,7 +311,10 @@ App.Conversation = Ember.Mixin.create
     message.fetchAndLoadAssociations()
     .then (result) =>
       # Add the message to the room list.
-      @get('messages').pushObject(message)
+      if options.insertInRankOrder
+        @insertMessageInRankOrder(message)
+      else
+        @get('messages').pushObject(message)
 
       @set('forceScroll', true) if options.forceScroll
 
@@ -332,6 +335,40 @@ App.Conversation = Ember.Mixin.create
       return result
 
     true
+
+  # Insert a message instance into the messages list based on rank.  Returns the
+  # index it was inserted at.  This is linear O(n) in worst case since messages
+  # aren't necessarily already in rank order.  But normally we have new messages
+  # that we're appending to the end after a reconnect.  So usually this
+  # shouldn't be bad.
+  insertMessageInRankOrder: (message) ->
+    messages = @get('messages')
+    messageRank = message.get('rank')
+    if ! messageRank?
+      # If for some reason the message doesn't have a rank of its own, just
+      # append it.
+      messages.pushObject(message)
+      return messages.get('length') - 1
+
+    foundIndex = null
+    for i in [messages.get('length') - 1 .. 0] by -1
+      curMsg = messages.objectAt(i)
+      curRank = curMsg?.get('rank')
+      # If this message has no rank, it's probably because the current user
+      # sent it and we're still waiting for a response.
+      continue if ! curRank?
+
+      if curRank < messageRank
+        messages.insertAt(i + 1, message)
+        foundIndex = i + 1
+        break
+
+    if ! foundIndex?
+      # Couldn't find a spot; just append.
+      messages.pushObject(message)
+      foundIndex = messages.get('length') - 1
+
+    foundIndex
 
   # This is linear in the number of messages in the worst case, but usually the
   # very first message checked is our answer.
