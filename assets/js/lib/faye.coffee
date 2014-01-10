@@ -36,6 +36,21 @@ App.Faye.reopenClass
           delete message.data.ext
         callback(message)
 
+    listenForConnectHeartbeat =
+      timer: null
+
+      incoming: (message, callback) ->
+        if message.channel == Faye.Channel.CONNECT && message.successful
+          App.set('isHeartbeatActive', true)
+          if @timer?
+            Ember.run.cancel @timer
+          @timer = Ember.run.later @, 'heartbeatInactive', 60000
+        callback(message)
+
+      heartbeatInactive: ->
+        @timer = null
+        App.set('isHeartbeatActive', false)
+
     implementSaneConnectEvent =
       incoming: (message, callback) ->
         if message.channel == Faye.Channel.HANDSHAKE && message.successful
@@ -45,6 +60,7 @@ App.Faye.reopenClass
     fayeClient.addExtension(clientAuth)
     fayeClient.addExtension(debugLogging)
     fayeClient.addExtension(moveExtData)
+    fayeClient.addExtension(listenForConnectHeartbeat)
     fayeClient.addExtension(implementSaneConnectEvent)
 
     fayeClient

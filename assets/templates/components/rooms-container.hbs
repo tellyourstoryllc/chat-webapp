@@ -154,10 +154,6 @@
         {{/if}}
       {{/each}}
 
-      <div {{bind-attr class=':connecting-status-bar activeRoom::hidden'}}>
-        Connecting...
-      </div>
-
       <div {{bind-attr class=':send-message-area activeRoom::hidden'}}>
         {{actionable-textarea enter-key-down='sendMessage' classNames='send-message-text'
           valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
@@ -211,6 +207,10 @@
             Loading...
           </div>
         {{/if}}
+      </div>
+
+      <div {{bind-attr class=':connecting-status-bar activeRoom::hidden App.isHeartbeatActive::offline'}}>
+        Connecting...
       </div>
     </div>
   </div>

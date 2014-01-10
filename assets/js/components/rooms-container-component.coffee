@@ -131,13 +131,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   ).property('activeRoom.associationsLoaded', 'activeRoom.isCurrentUserMember')
 
   didConnect: ->
-    bottom = if App.get('isFayeClientConnected')
-      '0'
-    else
-      "#{$('.send-message-area').outerHeight()}px"
-
-    @$('.connecting-status-bar').css
-      bottom: bottom
 
   roomsChanged: (->
     # If a room gets added later, it needs to get sized.

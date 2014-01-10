@@ -1880,7 +1880,6 @@ room-members-sidebar-width = 200px
   position absolute
   box-sizing border-box
   width room-members-sidebar-width
-  height 100%
   overflow hidden
   border-left 1px solid #C2C7CB
   border-bottom-right-radius 6px
@@ -2418,9 +2417,10 @@ sender-column-width = 150px
 
 .connecting-status-bar
   position absolute
-  right 30px
-  bottom 0
+  right 10px
+  bottom -41px // More than the height.
   box-sizing border-box
+  width room-members-sidebar-width - 2 * 10px
   border 1px solid warning-border-color
   border-top-left-radius 8px
   border-top-right-radius 8px
@@ -2428,13 +2428,16 @@ sender-column-width = 150px
   padding 10px 35px
   background-color warning-background-color
   color warning-text-color
-  opacity 0.9
+  opacity 0.95
   text-align center
 
   transition bottom 0.3s ease-out
 
   &.hidden
     display none
+
+  &.offline
+    bottom 0
 
 .send-message-area
   position absolute

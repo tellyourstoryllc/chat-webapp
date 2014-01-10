@@ -25,6 +25,8 @@ window.App = App = Ember.Application.create
 
   isFayeClientConnected: false
 
+  isHeartbeatActive: true
+
   # Ember route transition to continue to after logging in.
   continueTransition: null
 
