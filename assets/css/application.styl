@@ -1303,7 +1303,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .mobile-install-dialog
   box-sizing border-box
   width 100%
-  height 100%
+  // Mobile Safari does not properly resize the window when scrolling.
+  height 10000px
+  min-height 100%
+
   position fixed
   left 0
   top 0
