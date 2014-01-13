@@ -109,9 +109,26 @@
                   Loading...
                 </div>
 
+                {{#if messagesView.showInviteButton}}
+                  <div class='message system-message invite-system-message'>
+                    <div class='message-table'>
+                      <div class='body-cell'>
+                        <div class='message-body'>
+                          Invite people to get started!<br>
+                          <button type='button' class='app-btn btn-flat btn-green invite-button' {{action 'toggleInviteDialog' target=roomsContainer bubbles=false}}>
+                            Invite
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+
                 {{#each message in messages}}
                   <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
                     {{bind-attr data-message-id='message.id'}}>
+                    {{! Note: if you change this div structure, you probably
+                      also want to change the invite-button structure above. }}
                     <div class='message-table'>
                       <div class='sender-cell'>
                         <span class='sender'>

@@ -293,6 +293,7 @@ input, button, select, textarea
   font-size 14px
   text-align center
   text-decoration none
+  white-space normal
 
   &.btn-flat
     border-width 0
@@ -2184,10 +2185,11 @@ room-members-sidebar-width = 200px
   font-size 12px
   text-align center
 
-  transition opacity 0.1s ease-out
+  transition opacity 0.1s ease-out, visibility 0.1s ease-out
 
   &.hidden
     opacity 0
+    visibility hidden
 
 sender-column-width = 150px
 
@@ -2312,6 +2314,18 @@ sender-column-width = 150px
     overflow hidden
     white-space pre-wrap
     word-wrap break-word
+
+  // When there's no one in the room, we show an invite button.
+  &.invite-system-message
+    .body-cell
+      margin-left 0
+
+    .message-body
+      white-space normal
+      text-align center
+
+    .invite-button
+      width 150px
 
   .mention
     display inline-block
