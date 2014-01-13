@@ -1347,6 +1347,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   .btn-block
     margin-bottom 10px
+    // On iPad, don't stretch the buttons too wide.  Center them.
+    max-width 300px
+    margin-left auto
+    margin-right auto
 
   .already-text
     margin-bottom 10px
