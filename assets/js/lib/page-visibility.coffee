@@ -6,6 +6,7 @@ App.PageVisibility.reopenClass
 
   hiddenKey: undefined
   visibilityChangeKey: undefined
+  isSupported: undefined
 
   initState: ->
     # Set the name of the hidden property and the change event for visibility
@@ -21,6 +22,8 @@ App.PageVisibility.reopenClass
     else if typeof document.webkitHidden isnt "undefined"
       @hiddenKey = "webkitHidden"
       @visibilityChangeKey = "webkitvisibilitychange"
+
+    @isSupported = !! @hiddenKey
 
   hidden: ->
     @hiddenKey && document[@hiddenKey]

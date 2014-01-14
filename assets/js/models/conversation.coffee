@@ -417,23 +417,27 @@ App.Conversation = Ember.Mixin.create
   notifyInUiOfMessage: (message) ->
     fromCurrentUser = message.get('userId') == App.get('currentUser.id')
     wasMentioned = message.doesMentionUser(App.get('currentUser'))
+    hasFocus = App.get('hasFocus')
     if ! fromCurrentUser && wasMentioned
       # The current user was mentioned.  Play sound.
       @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
 
     if ! fromCurrentUser &&
-    (! App.get('hasFocus') || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
+    (! hasFocus || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
       if wasMentioned
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
       else
         @playReceiveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')
 
-    if ! fromCurrentUser && (App.get('currentlyViewingRoom') != @ || App.PageVisibility.hidden())
+    if ! fromCurrentUser &&
+      (App.get('currentlyViewingRoom') != @ || App.PageVisibility.hidden() ||
+        # This case is for when an older browser is put in a background tab.
+        ! hasFocus && ! App.PageVisibility.isSupported)
       # Mark the room as unread.
       @set('isUnread', true)
 
-    if ! fromCurrentUser && ! App.get('hasFocus')
+    if ! fromCurrentUser && ! hasFocus
       # Bounce the dock icon.
       macgap?.app.bounce()
 
