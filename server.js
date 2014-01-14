@@ -31,11 +31,31 @@ var apiProxy = function(pattern, host, port) {
       https: (useHttps ? httpsOptions : false)
     }
   });
+
+  // Return given URL with query param added.
+  var addQueryParam = function(url, name, value) {
+    if (url == null) return url;
+    url += (url.indexOf('?') >= 0) ? '&' : '?';
+    url += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+    return url;
+  };
+
+  // Given a request, return the remote client's IP address.
+  var remoteIp = function(req) {
+    return req.connection.remoteAddress;
+  };
+
+  // The actual middleware function.
   return function(req, res, next) {
     var matches = req.url.match(pattern);
     if (matches) {
       // Strip off /api prefix of the URL.
       req.url = matches[1];
+      // Add API secret and remote client IP address.
+      if (config.apiSecret != null) {
+        req.url = addQueryParam(req.url, 'api_secret', config.apiSecret);
+      }
+      req.url = addQueryParam(req.url, 'ip', remoteIp(req));
       routingProxy.proxyRequest(req, res);
     }
     else {
