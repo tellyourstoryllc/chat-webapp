@@ -138,6 +138,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     @_updateUi()
   ).observes('preferences.clientWeb.playSoundOnMessageReceive',
              'preferences.clientWeb.showNotificationOnMessageReceive',
+             'preferences.clientWeb.playSoundOnOneToOneMessageReceive',
+             'preferences.clientWeb.showNotificationOnOneToOneMessageReceive',
              'preferences.clientWeb.playSoundOnMention',
              'preferences.clientWeb.showNotificationOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
@@ -168,6 +170,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('#show-wallpaper-checkbox').prop('checked', clientPrefs.get('showWallpaper'))
       @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
       @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
+      @$('.play-sound-on-one-to-one-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnOneToOneMessageReceive'))
+      @$('.show-notification-on-one-to-one-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnOneToOneMessageReceive'))
       @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
       @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
@@ -349,6 +353,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         showWallpaper: @$('#show-wallpaper-checkbox').is(':checked')
         playSoundOnMessageReceive: @$('.play-sound-on-message-receive-checkbox').is(':checked')
         showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
+        playSoundOnOneToOneMessageReceive: @$('.play-sound-on-one-to-one-message-receive-checkbox').is(':checked')
+        showNotificationOnOneToOneMessageReceive: @$('.show-notification-on-one-to-one-message-receive-checkbox').is(':checked')
         playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')
         showNotificationOnMention: @$('.show-notification-on-mention-checkbox').is(':checked')
         notificationVolume: parseInt(@$('.notification-volume').val())

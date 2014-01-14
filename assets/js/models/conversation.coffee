@@ -418,6 +418,7 @@ App.Conversation = Ember.Mixin.create
     fromCurrentUser = message.get('userId') == App.get('currentUser.id')
     wasMentioned = message.doesMentionUser(App.get('currentUser'))
     hasFocus = App.get('hasFocus')
+    isOneToOne = message.get('oneToOneId')?
     if ! fromCurrentUser && wasMentioned
       # The current user was mentioned.  Play sound.
       @playMentionSound() if App.get('preferences.clientWeb.playSoundOnMention')
@@ -426,6 +427,9 @@ App.Conversation = Ember.Mixin.create
     (! hasFocus || App.get('currentlyViewingRoom') != @ || App.get('isIdle'))
       if wasMentioned
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMention')
+      else if isOneToOne
+        @playReceiveMessageSound() if App.get('preferences.clientWeb.playSoundOnOneToOneMessageReceive')
+        @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnOneToOneMessageReceive')
       else
         @playReceiveMessageSound() if App.get('preferences.clientWeb.playSoundOnMessageReceive')
         @createDesktopNotification(message) if App.get('preferences.clientWeb.showNotificationOnMessageReceive')

@@ -19,6 +19,8 @@ App.Preferences.reopenClass
   clientPrefsDefaults:
     playSoundOnMessageReceive: true
     showNotificationOnMessageReceive: true
+    playSoundOnOneToOneMessageReceive: true
+    showNotificationOnOneToOneMessageReceive: true
     playSoundOnMention: true
     showNotificationOnMention: true
     showJoinLeaveMessages: true
