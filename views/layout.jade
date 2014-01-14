@@ -6,6 +6,8 @@ html
     meta(property='og:image' content='/images/logo-wide.png')
     meta(property='og:description' content='Free Group Chat that Works Anywhere')
     link(rel='shortcut icon' href='/favicon.ico?v=1')
+    //- Don't leak room keys in URLs to referrer headers.
+    meta(name='referrer' content='origin')
     != css('application')
     block head-content
   body
