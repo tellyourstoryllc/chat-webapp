@@ -215,6 +215,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $('.room-members-sidebar').css
       left: messagesWidth
       top: @$('.room-info').outerHeight() ? 0
+      height: height
       display: if isMembersVisible then 'block' else 'none'
 
     # The list of members needs an explicit height so that it can be scrollable.
