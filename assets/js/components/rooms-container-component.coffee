@@ -37,7 +37,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       'onTapRoomsSidebarToggle',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onClickMessageLink',
-      'onSendMessageTextCursorMove',
+      'onSendMessageTextPaste', 'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
     App.get('eventTarget').on 'didConnect', @, @didConnect
@@ -59,6 +59,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       # `propertychange` is for IE8.
       @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
       @$('.send-message-text').on 'keyup', @onIe9KeyUp if Modernizr.msie9
+      @$('.send-message-text').on 'paste', @onSendMessageTextPaste
       @$('.send-message-file').on 'change', @fileChange
       @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
       @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
@@ -79,6 +80,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').off 'keyup click', @onSendMessageTextCursorMove
     @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
+    @$('.send-message-text').off 'paste', @onSendMessageTextPaste
     @$('.send-message-file').off 'change', @fileChange
     @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
@@ -492,6 +494,24 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     else
       @set('suggestions', newSuggestions)
       @set('suggestionsShowing', true)
+
+  onSendMessageTextPaste: (event) ->
+    Ember.run @, ->
+      # User pasted something into the message text input.
+      dataTransfer = event.originalEvent.clipboardData
+      file = dataTransfer?.files[0]
+      if ! file? && dataTransfer?.items
+        # `items` is a `DataTransferItemList`, which is an array-like object but
+        # without all the slick array methods.
+        for i in [0 ... dataTransfer.items.length]
+          item = dataTransfer.items[i]
+          if item.kind == 'file' && item.getAsFile?
+            file = item.getAsFile()
+            break if file?
+      if file?
+        # If we found a file, prevent default and attach it.
+        event.preventDefault()
+        @send('attachFile', file)
 
   fileChange: (event) ->
     Ember.run @, ->
