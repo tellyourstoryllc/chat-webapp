@@ -69,7 +69,7 @@
     <td>
       <label for='show-join-leave-messages-checkbox' class='checkbox'>
         <input type='checkbox' id='show-join-leave-messages-checkbox' class='checkbox'
-          {{action 'changeClientPreference' 'showJoinLeaveMessages' on='change'}}>
+          {{action 'changeGeneralClientPreference' 'showJoinLeaveMessages' on='change'}}>
         Show Join and Leave Messages
       </label>
     </td>
@@ -78,7 +78,7 @@
     <td>
       <label for='show-avatars-checkbox' class='checkbox'>
         <input type='checkbox' id='show-avatars-checkbox' class='checkbox'
-          {{action 'changeClientPreference' 'showAvatars' on='change'}}>
+          {{action 'changeGeneralClientPreference' 'showAvatars' on='change'}}>
         Show Avatars
       </label>
     </td>
@@ -87,87 +87,9 @@
     <td>
       <label for='show-wallpaper-checkbox' class='checkbox'>
         <input type='checkbox' id='show-wallpaper-checkbox' class='checkbox'
-          {{action 'changeClientPreference' 'showWallpaper' on='change'}}>
+          {{action 'changeGeneralClientPreference' 'showWallpaper' on='change'}}>
         Show Wallpaper
       </label>
-    </td>
-  </tr>
-</table>
-
-<hr>
-
-<h4 class='subtitle'>Notifications</h4>
-<table class='settings-table'>
-  <tr>
-    <th></th>
-    <th>Play Sound</th>
-    <th>Show Desktop<br> Notification</th>
-  </tr>
-  <tr>
-    <td class='label-cell'>When Receiving a Message</td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='play-sound-on-message-receive-checkbox'
-        {{action 'changeClientPreference' 'playSoundOnMessageReceive' on='change'}}>
-    </td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='show-notification-on-message-receive-checkbox'
-        {{action 'changeClientPreference' 'showNotificationOnMessageReceive' on='change'}}>
-    </td>
-  </tr>
-  <tr>
-    <td class='label-cell'>When Receiving a 1-1 Message</td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='play-sound-on-one-to-one-message-receive-checkbox'
-        {{action 'changeClientPreference' 'playSoundOnOneToOneMessageReceive' on='change'}}>
-    </td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='show-notification-on-one-to-one-message-receive-checkbox'
-        {{action 'changeClientPreference' 'showNotificationOnOneToOneMessageReceive' on='change'}}>
-    </td>
-  </tr>
-  <tr>
-    <td class='label-cell'>When Mentioned</td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='play-sound-on-mention-checkbox'
-        {{action 'changeClientPreference' 'playSoundOnMention' on='change'}}>
-    </td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='show-notification-on-mention-checkbox'
-        {{action 'changeClientPreference' 'showNotificationOnMention' on='change'}}>
-    </td>
-  </tr>
-  {{#if doesBrowserSupportRangeInput}}
-    <tr>
-      <td class='label-cell volume-label-cell'>Volume</td>
-      <td colspan='2' class='control-cell'>
-        <nobr>
-          <input type='range' min='0' max='100' value='100' class='notification-volume'
-          {{action 'changeVolumePreference' 'notificationVolume' on='change'}}>
-          <span class='max-volume-icon'></span>
-        </nobr>
-      </td>
-    </tr>
-  {{/if}}
-</table>
-
-<hr>
-
-<h4 class='subtitle'>Notifications When Offline, Idle, or Away</h4>
-<table class='settings-table'>
-  <tr>
-    <th></th>
-    <th>Email</th>
-  </tr>
-  <tr>
-    <td class='label-cell'>When Mentioned</td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='server-mention-email-checkbox' {{action 'changeServerPreference' on='change'}}>
-    </td>
-  </tr>
-  <tr>
-    <td class='label-cell'>When Receiving 1-1 Message</td>
-    <td class='control-cell checkbox-control-cell'>
-      <input type='checkbox' class='server-one-to-one-email-checkbox' {{action 'changeServerPreference' on='change'}}>
     </td>
   </tr>
 </table>

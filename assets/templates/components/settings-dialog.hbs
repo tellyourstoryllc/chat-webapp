@@ -7,6 +7,9 @@
     <div {{bind-attr class=':tab-handle isShowingGeneralTab:active'}} {{action 'showTab' 'general'}}>
       General
     </div>
+    <div {{bind-attr class=':tab-handle isShowingNotificationsTab:active'}} {{action 'showTab' 'notifications'}}>
+      Notifications
+    </div>
     <div {{bind-attr class=':tab-handle isShowingAccountTab:active'}} {{action 'showTab' 'account'}}>
       Account
     </div>
@@ -14,8 +17,12 @@
   {{#if isShowingGeneralTab}}
     {{partial 'components/settings-dialog-general-tab'}}
   {{else}}
-    {{#if isShowingAccountTab}}
-      {{partial 'components/settings-dialog-account-tab'}}
+    {{#if isShowingNotificationsTab}}
+      {{partial 'components/settings-dialog-notifications-tab'}}
+    {{else}}
+      {{#if isShowingAccountTab}}
+        {{partial 'components/settings-dialog-account-tab'}}
+      {{/if}}
     {{/if}}
   {{/if}}
 </div>

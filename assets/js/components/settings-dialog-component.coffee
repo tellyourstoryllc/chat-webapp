@@ -40,6 +40,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.one-to-one-wallpaper-file-input').off 'change', @onOneToOneWallpaperFileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
+  isShowingNotificationsTab: Ember.computed.equal('selectedTab', 'notifications')
   isShowingAccountTab: Ember.computed.equal('selectedTab', 'account')
 
   selectedTabChanged: (->
@@ -341,16 +342,27 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     changeVolumePreference: _.debounce (key) ->
       # This gets triggered as you slide, so need to debounce.
-      @send('changeClientPreference', key)
+      @send('changeNotificationClientPreference', key)
       return undefined
     , 200
 
-    changeClientPreference: (key) ->
+    changeGeneralClientPreference: (key) ->
       clientPrefs = @get('preferences.clientWeb')
       clientPrefs.setProperties
         showJoinLeaveMessages: @$('#show-join-leave-messages-checkbox').is(':checked')
         showAvatars: @$('#show-avatars-checkbox').is(':checked')
         showWallpaper: @$('#show-wallpaper-checkbox').is(':checked')
+      # Save to localStorage.
+      window.localStorage.setItem(key, clientPrefs.get(key))
+      # Save to server.
+      data =
+        client_web: JSON.stringify(clientPrefs)
+      App.get('api').updatePreferences(data)
+      return undefined
+
+    changeNotificationClientPreference: (key) ->
+      clientPrefs = @get('preferences.clientWeb')
+      clientPrefs.setProperties
         playSoundOnMessageReceive: @$('.play-sound-on-message-receive-checkbox').is(':checked')
         showNotificationOnMessageReceive: @$('.show-notification-on-message-receive-checkbox').is(':checked')
         playSoundOnOneToOneMessageReceive: @$('.play-sound-on-one-to-one-message-receive-checkbox').is(':checked')

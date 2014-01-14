@@ -1,0 +1,75 @@
+<h4 class='subtitle'>When Here</h4>
+<table class='settings-table'>
+  <tr>
+    <th></th>
+    <th>Play Sound</th>
+    <th>Show Desktop<br> Notification</th>
+  </tr>
+  <tr>
+    <td class='label-cell'>When Receiving a Message</td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='play-sound-on-message-receive-checkbox'
+        {{action 'changeNotificationClientPreference' 'playSoundOnMessageReceive' on='change'}}>
+    </td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='show-notification-on-message-receive-checkbox'
+        {{action 'changeNotificationClientPreference' 'showNotificationOnMessageReceive' on='change'}}>
+    </td>
+  </tr>
+  <tr>
+    <td class='label-cell'>When Receiving a 1-1 Message</td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='play-sound-on-one-to-one-message-receive-checkbox'
+        {{action 'changeNotificationClientPreference' 'playSoundOnOneToOneMessageReceive' on='change'}}>
+    </td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='show-notification-on-one-to-one-message-receive-checkbox'
+        {{action 'changeNotificationClientPreference' 'showNotificationOnOneToOneMessageReceive' on='change'}}>
+    </td>
+  </tr>
+  <tr>
+    <td class='label-cell'>When Mentioned</td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='play-sound-on-mention-checkbox'
+        {{action 'changeNotificationClientPreference' 'playSoundOnMention' on='change'}}>
+    </td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='show-notification-on-mention-checkbox'
+        {{action 'changeNotificationClientPreference' 'showNotificationOnMention' on='change'}}>
+    </td>
+  </tr>
+  {{#if doesBrowserSupportRangeInput}}
+    <tr>
+      <td class='label-cell volume-label-cell'>Volume</td>
+      <td colspan='2' class='control-cell'>
+        <nobr>
+          <input type='range' min='0' max='100' value='100' class='notification-volume'
+          {{action 'changeVolumePreference' 'notificationVolume' on='change'}}>
+          <span class='max-volume-icon'></span>
+        </nobr>
+      </td>
+    </tr>
+  {{/if}}
+</table>
+
+<hr>
+
+<h4 class='subtitle'>When Offline, Idle, or Away</h4>
+<table class='settings-table'>
+  <tr>
+    <th></th>
+    <th>Email</th>
+  </tr>
+  <tr>
+    <td class='label-cell'>When Mentioned</td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='server-mention-email-checkbox' {{action 'changeServerPreference' on='change'}}>
+    </td>
+  </tr>
+  <tr>
+    <td class='label-cell'>When Receiving 1-1 Message</td>
+    <td class='control-cell checkbox-control-cell'>
+      <input type='checkbox' class='server-one-to-one-email-checkbox' {{action 'changeServerPreference' on='change'}}>
+    </td>
+  </tr>
+</table>
