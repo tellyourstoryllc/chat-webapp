@@ -9,6 +9,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   newEmail: ''
   emailErrorMessage: null
 
+  isLoadingEmailAddresses: false
+  emailAddresses: null
+  emailAddressesFetchedAt: null
+
   isEditingPassword: false
   isSendingPassword: false
   newPassword: ''
@@ -27,6 +31,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown', 'fileChange', 'onOneToOneWallpaperFileChange')
+    @setProperties
+      emailAddresses: []
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
@@ -44,12 +50,29 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   isShowingAccountTab: Ember.computed.equal('selectedTab', 'account')
 
   selectedTabChanged: (->
+    # Cancel editing.
     @setProperties
       isEditingName: false
-      isEditingEmail: false
       isEditingPassword: false
+    @send('cancelEditingEmail')
+
+    @ensureEmailAddressesLoaded() if @get('selectedTab') == 'account'
+
     @_updateUi()
   ).observes('selectedTab')
+
+  ensureEmailAddressesLoaded: ->
+    Ember.Logger.error 'TODO: Load email addresses'
+    emailAddressesFetchedAt = @get('emailAddressesFetchedAt')
+    # Cache email addresses for a minute.
+    if ! emailAddressesFetchedAt? || (new Date().getTime() - emailAddressesFetchedAt.getTime()) / 1000 > 60
+      @set('isLoadingEmailAddresses', true)
+      App.EmailAddress.loadAll()
+      .always =>
+        @set('isLoadingEmailAddresses', false)
+      .then =>
+        # We modify this array, so make sure it's a copy.
+        @set('emailAddresses', App.EmailAddress.all().copy())
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
@@ -177,6 +200,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
       @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
 
+  canRemoveEmailAddress: Ember.computed.gt('emailAddresses.length', 1)
+
   actions:
 
     showTab: (tabName) ->
@@ -197,6 +222,10 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     hideDialog: ->
       @get('targetObject').send('hide')
+      Ember.run.later @, ->
+        # After the transition completes, clear cache of email addresses.
+        @set('emailAddressesFetchedAt', null)
+      , 1000
       return undefined
 
     editName: ->
@@ -234,15 +263,22 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
       return undefined
 
-    editEmail: ->
+    editEmail: (emailAddress) ->
       @set('isEditingEmail', true)
-      @set('newEmail', App.get('currentUser.account.email'))
+      @set('editingEmailAddress', emailAddress)
+      @set('newEmail', emailAddress.get('email'))
       Ember.run.schedule 'afterRender', @, ->
         @$('.email-input').textrange('set') # Select all.
       return undefined
 
     cancelEditingEmail: ->
+      # Remove unsaved email address from the list.
+      emailAddress = @get('editingEmailAddress')
+      if emailAddress? && ! emailAddress.get('id')?
+        @get('emailAddresses').removeObject(emailAddress)
+
       @set('isEditingEmail', false)
+      @set('editingEmailAddress', null)
       @set('emailErrorMessage', null)
       return undefined
 
@@ -252,34 +288,46 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
       @set('emailErrorMessage', null)
       user = App.get('currentUser')
-      account = user.get('account')
-      oldEmail = account.get('email')
-      if account.isPropertyLocked('email')
-        Ember.Logger.log "Can't change account email when it's locked."
+      emailAddress = @get('editingEmailAddress')
+      oldEmail = emailAddress?.get('email')
+      if emailAddress? && emailAddress.isPropertyLocked('email')
+        Ember.Logger.log "Can't change email when it's locked."
         return
 
-      # If name didn't change, we're done.
+      # If no change, we're done.
       if oldEmail == newEmail
         @set('isEditingEmail', false)
+        @set('editingEmailAddress', null)
         return
 
       @set('isSendingEmail', true)
       data =
         email: newEmail
-        password: @$('.password-input').val()
-      url = App.get('api').buildURL('/accounts/update')
-      account.withLockedPropertyTransaction url, 'POST', { data: data }, 'email', =>
-        account.set('email', newEmail)
+      if emailAddress?.get('id')?
+        url = App.get('api').buildURL("/email_addresses/#{emailAddress.get('id')}/update")
+      else
+        url = App.get('api').buildURL('/email_addresses/create')
+      emailAddress.withLockedPropertyTransaction url, 'POST', { data: data }, 'email', =>
+        emailAddress.set('email', newEmail)
       , (xhrOrJson) =>
-        account.set('email', oldEmail)
-        if xhrOrJson.status == 401
-          @set('emailErrorMessage', "Invalid password.")
-        else
-          @set('emailErrorMessage', "Unknown error occurred.  Please try again.")
+        emailAddress.set('email', oldEmail)
+        @set('emailErrorMessage', "Unknown error occurred.  Please try again.")
       .then ([isSuccessful, json]) =>
         @set('isSendingEmail', false)
-        @set('isEditingEmail', false) if isSuccessful
+        if isSuccessful
+          @set('isEditingEmail', false)
+          @set('editingEmailAddress', null)
+          # Save to our store for later.
+          emailJson = Ember.makeArray(json).find (o) -> o.object_type == 'email_address'
+          App.EmailAddress.didCreateRecord(emailAddress, emailJson) if emailJson?
 
+      return undefined
+
+    addEmailAddress: ->
+      @send('cancelEditingEmail')
+      emailAddress = App.EmailAddress.create()
+      @get('emailAddresses').pushObject(emailAddress)
+      @send('editEmail', emailAddress)
       return undefined
 
     editPassword: ->

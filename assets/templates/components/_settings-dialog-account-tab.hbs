@@ -1,32 +1,52 @@
 <table class='settings-table'>
-  <tr>
-    <td class='label-cell editable-label-cell account-first-column'>Email</td>
-    <td class='control-cell'>
-      {{#if isEditingEmail}}
-        <form> {{! Capture enter key. }}
-          {{#if emailErrorMessage}}
-            <div class='alert alert-error'>
-              {{emailErrorMessage}}
-            </div>
-          {{/if}}
-          {{input type='email' classNames='email-input' value=newEmail on-enter='saveEmail'
-            placeholder='New Email'}}
-          <br>
-          <input type='password' class='password-input' placeholder='Current Password'>
-          <button type='submit' class='save-email-button' {{action 'saveEmail'}}
-            {{bind-attr disabled='isSendingEmail'}}>
-            {{#if isSendingEmail}}Saving...{{else}}Save{{/if}}
-          </button>
-          <a href='#' {{action 'cancelEditingEmail'}}>Cancel</a>
-        </form>
-      {{else}}
-        <div class='editable-display'>
-          {{App.currentUser.account.email}}
-          <a href='#' {{action 'editEmail'}}>Edit</a>
-        </div>
-      {{/if}}
-    </td>
-  </tr>
+  {{#if isLoadingEmailAddresses}}
+    <tr>
+      <td class='label-cell account-first-column'>
+        Loading...
+      </td>
+    </tr>
+  {{else}}
+    {{#each emailAddress in emailAddresses itemViewClass='App.SettingsEmailAddressView'}}
+      <td class='label-cell editable-label-cell account-first-column'>
+        {{#if view.isFirstRow}}Email{{/if}}
+      </td>
+      <td class='control-cell'>
+        {{#if view.isEditingEmail}}
+          {{! Capture enter key. }}
+          <form {{action 'saveEmail' emailAddress on='submit'}}>
+            {{#if emailErrorMessage}}
+              <div class='alert alert-error'>
+                {{emailErrorMessage}}
+              </div>
+            {{/if}}
+            {{input type='email' classNames='email-input' value=newEmail on-enter='saveEmail'
+              placeholder='New Email'}}
+            <button type='submit' class='save-email-button'
+              {{bind-attr disabled='isSendingEmail'}}>
+              {{#if isSendingEmail}}Saving...{{else}}Save{{/if}}
+            </button>
+            {{#unless isSendingEmail}}
+              <a href='#' {{action 'cancelEditingEmail' target=view}}>Cancel</a>
+            {{/unless}}
+          </form>
+        {{else}}
+          <div class='editable-display'>
+            {{emailAddress.email}}
+            <a href='#' {{action 'editEmail' target=view}}>Edit</a>
+            <a href='#' {{action 'removeEmail' target=view}}>Remove</a>
+          </div>
+        {{/if}}
+      </td>
+    {{/each}}
+    <tr>
+      <td class='label-cell'></td>
+      <td class='control-cell'>
+        <button type='button' {{action 'addEmailAddress'}}>
+          Add Email Address
+        </button>
+      </td>
+    </tr>
+  {{/if}}
   {{#if isLinkedToFacebook}}
     <tr>
       <td colspan='2'>
