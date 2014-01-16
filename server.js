@@ -8,6 +8,7 @@ var http = require('http');
 var path = require('path');
 var httpProxy = require('http-proxy');
 var connectAssets = require('connect-assets');
+var request = require('request');
 
 var app = express();
 var config = require('./config').getConfig(process.env.NODE_ENV || 'development', app, express);
@@ -70,6 +71,22 @@ app.use('/health_check', function(req, res, next) {
   res.setHeader('Content-Type', 'text/plain');
   res.setHeader('Cache-Control', 'max-age=0, private, must-revalidate');
   res.send('Healthy');
+});
+
+// Health check for faye needs to be *before* any redirects.  Browser code needs
+// to be able to check faye with AJAX without doing a cross-domain request.
+app.use('/faye_health_check', function(req, res, next) {
+  request(config.fayeProtocolAndHost + '/health_check', function(error, fayeResponse, body) {
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader('Cache-Control', 'max-age=0, private, must-revalidate');
+    if (! error && fayeResponse.statusCode === 200) {
+      res.send('Okay');
+    }
+    else {
+      res.status(503);
+      res.send('Down');
+    }
+  });
 });
 
 // Remove www subdomain, and optionally force https.  *Before* `bodyParser`.

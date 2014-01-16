@@ -77,6 +77,17 @@ App.RemoteApi = Ember.Object.extend
 
       Ember.$.ajax(hash)
 
+  # Wraps jQuery.ajax returning an RSVP.Promise, but is lower-level than
+  # `ajax()` and doesn't muck with your params (other than the callbacks).
+  rawPromisedAjax: (ajaxOptions) ->
+    new Ember.RSVP.Promise (resolve, reject) =>
+      Ember.$.ajax(_.extend(ajaxOptions,
+        success: (result) =>
+          Ember.run null, resolve, result
+        error: (xhr) =>
+          Ember.run null, reject, xhr
+      ))
+
   buildURL: (url) ->
     if url? && url[0] != '/'
       url = '/' + url

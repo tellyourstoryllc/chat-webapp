@@ -1,5 +1,7 @@
 App.ApplicationView = Ember.View.extend
 
+  fayeRefreshCheckTimer: null
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'focus', 'blur', 'onStorage')
@@ -63,3 +65,43 @@ App.ApplicationView = Ember.View.extend
 
   hideNotifications: ->
     App.get('currentlyViewingRoom')?.dismissNotifications()
+
+  isHeartbeatActiveChanged: (->
+    if App.get('isHeartbeatActive')
+      @cancelFayeRefreshCheck()
+    else
+      @scheduleFayeRefreshCheck()
+  ).observes('App.isHeartbeatActive')
+
+  # In rare cases, faye can't reconnect.  We reload when absolutely necessary.
+  fayeRefreshCheck: ->
+    # When the faye heartbeat is active, all is well.
+    return if App.get('isHeartbeatActive')
+
+    api = App.get('api')
+    # When the faye heartbeat isn't active, check if we're online.  If we are,
+    # we may need to reload.  Wrap in a promise so we can use our standard
+    # failure handler.
+    #
+    # Checking /health_check is actually redundant since /faye_health_check is
+    # proxied through the web server to work around cross-domain non-sense.
+    api.rawPromisedAjax(url: '/faye_health_check')
+    .then =>
+      # We can connect to the web server and faye server, so reload.
+      window.location.reload(true)
+    , (xhr) =>
+      # If any of the promises fail, one of the servers is unreachable.  Check
+      # again later.
+      @scheduleFayeRefreshCheck()
+    .fail App.rejectionHandler
+
+  scheduleFayeRefreshCheck: ->
+    @cancelFayeRefreshCheck()
+    Ember.Logger.log new Date(), "Scheduling faye refresh check" if App.get('useDebugLogging')
+    @set('fayeRefreshCheckTimer', Ember.run.later(@, 'fayeRefreshCheck', 5 * 60 * 1000))
+
+  cancelFayeRefreshCheck: ->
+    timer = @get('fayeRefreshCheckTimer')
+    if timer?
+      Ember.Logger.log new Date(), "Canceling faye refresh check" if App.get('useDebugLogging')
+      Ember.run.cancel(timer)
