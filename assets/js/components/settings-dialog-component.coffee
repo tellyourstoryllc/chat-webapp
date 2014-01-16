@@ -98,6 +98,11 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   isHiddenChanged: (->
     if @get('isHidden')
       @$().removeClass('expand-in')
+      # After the transition completes, if the dialog is still hidden, clear
+      # cache of email addresses.
+      Ember.run.later @, ->
+        @set('emailAddressesFetchedAt', null) if @get('isHidden')
+      , 1000
     else
       @$().addClass('expand-in')
       # When showing the dialog, make sure email addresses are loaded and fresh.
@@ -234,10 +239,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     hideDialog: ->
       @get('targetObject').send('hide')
-      Ember.run.later @, ->
-        # After the transition completes, clear cache of email addresses.
-        @set('emailAddressesFetchedAt', null)
-      , 1000
       return undefined
 
     editName: ->
