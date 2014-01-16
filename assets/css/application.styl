@@ -592,6 +592,12 @@ settings-dialog-width = 380px
   .editable-label-cell, .editable-display
     padding-top 5px
 
+  .editable-display
+    transition opacity 0.2s ease-out
+
+    &.hidden
+      opacity .2
+
   .profile-first-column
     width 85px
 
@@ -634,6 +640,21 @@ settings-dialog-width = 380px
     width 16px
     height 16px
     background-position -26px -38px
+
+  .alert
+    // Reduce bottom margin of validation errors.
+    margin-bottom 5px
+
+  .email-input
+    width 160px
+
+  .email
+    display inline-block
+    max-width 190px
+    overflow ellipsis
+
+  .email-actions
+    white-space nowrap
 
 // Stylus doesn't support arbitrary expressions in media queries.
 //

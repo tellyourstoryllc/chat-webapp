@@ -526,6 +526,8 @@ window.App = App = Ember.Application.create
     switch obj.object_type
       when 'account'
         App.Account
+      when 'email'
+        App.Email
       when 'emoticon'
         App.Emoticon
       when 'group'
@@ -551,6 +553,13 @@ window.App = App = Ember.Application.create
     if xhrOrError?
       msg = xhrOrError.responseJSON?.error?.message
       msg ?= xhrOrError.error?.message
+
+      if xhrOrError.status == 422
+        # Validation error.  Find the actual validation message.
+        if (matches = /Validation failed:(.+)/i.exec(msg))
+          newMsg = matches[1]?.trim()
+          msg = newMsg if newMsg
+
     msg ?= defaultMessage
     msg ?= App.defaultErrorMessage
 

@@ -1,71 +1,93 @@
-<table class='settings-table'>
-  <tr>
-    <td class='label-cell editable-label-cell account-first-column'>Email</td>
-    <td class='control-cell'>
-      {{#if isEditingEmail}}
-        <form> {{! Capture enter key. }}
-          {{#if emailErrorMessage}}
-            <div class='alert alert-error'>
-              {{emailErrorMessage}}
-            </div>
-          {{/if}}
-          {{input type='email' classNames='email-input' value=newEmail on-enter='saveEmail'
-            placeholder='New Email'}}
-          <br>
-          <input type='password' class='password-input' placeholder='Current Password'>
-          <button type='submit' class='save-email-button' {{action 'saveEmail'}}
-            {{bind-attr disabled='isSendingEmail'}}>
-            {{#if isSendingEmail}}Saving...{{else}}Save{{/if}}
-          </button>
-          <a href='#' {{action 'cancelEditingEmail'}}>Cancel</a>
-        </form>
-      {{else}}
-        <div class='editable-display'>
-          {{App.currentUser.account.email}}
-          <a href='#' {{action 'editEmail'}}>Edit</a>
-        </div>
-      {{/if}}
-    </td>
-  </tr>
-  {{#if isLinkedToFacebook}}
-    <tr>
-      <td colspan='2'>
-        Your account is linked to Facebook.
+{{#if isLoadingEmailAddresses}}
+  <div class='empty-content-page'>
+    Loading...
+  </div>
+{{else}}
+  <table class='settings-table'>
+    {{#each emailAddress in emailAddresses itemViewClass='App.SettingsEmailAddressView'}}
+      <td class='label-cell editable-label-cell account-first-column'>
+        {{#if view.isFirstRow}}Email{{/if}}
       </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td class='label-cell editable-label-cell'>Password</td>
       <td class='control-cell'>
-        {{#if isEditingPassword}}
-          <form> {{! Capture enter key. }}
-            {{#if passwordErrorMessage}}
+        {{#if view.isEditingEmail}}
+          {{! Capture enter key. }}
+          <form {{action 'saveEmail' emailAddress on='submit'}}>
+            {{#if emailErrorMessage}}
               <div class='alert alert-error'>
-                {{passwordErrorMessage}}
+                {{emailErrorMessage}}
               </div>
             {{/if}}
-            <input type='password' class='current-password-input' placeholder='Current Password'>
-            <br>
-            {{input type='password' classNames='new-password-input' value=newPassword on-enter='savePassword'
-              placeholder='New Password'}}
-            <br>
-            {{input type='password' classNames='confirm-password-input' value=confirmPassword on-enter='savePassword'
-              placeholder='Confirm Password'}}
-            <button type='submit' class='save-password-button' {{action 'savePassword'}}
-              {{bind-attr disabled='isSendingPassword'}}>
-              {{#if isSendingPassword}}Saving...{{else}}Save{{/if}}
+            {{input type='email' classNames='email-input' value=newEmail on-enter='saveEmail'
+              placeholder='New Email'}}
+            <button type='submit' class='save-email-button'
+              {{bind-attr disabled='isSendingEmail'}}>
+              {{#if isSendingEmail}}Saving...{{else}}Save{{/if}}
             </button>
-            {{#unless isSendingPassword}}
-              <a href='#' {{action 'cancelEditingPassword'}}>Cancel</a>
+            {{#unless isSendingEmail}}
+              <a href='#' {{action 'cancelEditingEmail' target=view}}>Cancel</a>
             {{/unless}}
           </form>
         {{else}}
-          <div class='editable-display'>
-            ******
-            <a href='#' {{action 'editPassword'}}>Edit</a>
+          <div class='editable-display' {{bind-attr data-email-id='emailAddress.id'}}>
+            <span class='email'>{{emailAddress.email}}</span>
+            <span class='email-actions'>
+              <a href='#' {{action 'editEmail' target=view}}>Edit</a>
+              <a href='#' {{action 'removeEmail' emailAddress}}>Remove</a>
+            </span>
           </div>
         {{/if}}
       </td>
+    {{/each}}
+    <tr>
+      <td class='label-cell'></td>
+      <td class='control-cell'>
+        {{#unless isAddingNewEmailAddress}}
+          <button type='button' {{action 'addEmailAddress'}}>
+            Add Email Address
+          </button>
+        {{/unless}}
+      </td>
     </tr>
-  {{/if}}
-</table>
+    {{#if isLinkedToFacebook}}
+      <tr>
+        <td colspan='2'>
+          Your account is linked to Facebook.
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td class='label-cell editable-label-cell'>Password</td>
+        <td class='control-cell'>
+          {{#if isEditingPassword}}
+            <form> {{! Capture enter key. }}
+              {{#if passwordErrorMessage}}
+                <div class='alert alert-error'>
+                  {{passwordErrorMessage}}
+                </div>
+              {{/if}}
+              <input type='password' class='current-password-input' placeholder='Current Password'>
+              <br>
+              {{input type='password' classNames='new-password-input' value=newPassword on-enter='savePassword'
+                placeholder='New Password'}}
+              <br>
+              {{input type='password' classNames='confirm-password-input' value=confirmPassword on-enter='savePassword'
+                placeholder='Confirm Password'}}
+              <button type='submit' class='save-password-button' {{action 'savePassword'}}
+                {{bind-attr disabled='isSendingPassword'}}>
+                {{#if isSendingPassword}}Saving...{{else}}Save{{/if}}
+              </button>
+              {{#unless isSendingPassword}}
+                <a href='#' {{action 'cancelEditingPassword'}}>Cancel</a>
+              {{/unless}}
+            </form>
+          {{else}}
+            <div class='editable-display'>
+              ******
+              <a href='#' {{action 'editPassword'}}>Edit</a>
+            </div>
+          {{/if}}
+        </td>
+      </tr>
+    {{/if}}
+  </table>
+{{/if}}
