@@ -67,12 +67,12 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     # Cache email addresses for a minute.
     if ! emailAddressesFetchedAt? || (new Date().getTime() - emailAddressesFetchedAt.getTime()) / 1000 > 60
       @set('isLoadingEmailAddresses', true)
-      App.EmailAddress.loadAll()
+      App.Email.loadAll()
       .always =>
         @set('isLoadingEmailAddresses', false)
       .then =>
         # We modify this array, so make sure it's a copy.
-        @set('emailAddresses', App.EmailAddress.all().copy())
+        @set('emailAddresses', App.Email.all().copy())
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
@@ -304,9 +304,9 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       data =
         email: newEmail
       if emailAddress?.get('id')?
-        url = App.get('api').buildURL("/email_addresses/#{emailAddress.get('id')}/update")
+        url = App.get('api').buildURL("/emails/#{emailAddress.get('id')}/update")
       else
-        url = App.get('api').buildURL('/email_addresses/create')
+        url = App.get('api').buildURL('/emails/create')
       emailAddress.withLockedPropertyTransaction url, 'POST', { data: data }, 'email', =>
         emailAddress.set('email', newEmail)
       , (xhrOrJson) =>
@@ -318,14 +318,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
           @set('isEditingEmail', false)
           @set('editingEmailAddress', null)
           # Save to our store for later.
-          emailJson = Ember.makeArray(json).find (o) -> o.object_type == 'email_address'
-          App.EmailAddress.didCreateRecord(emailAddress, emailJson) if emailJson?
+          emailJson = Ember.makeArray(json).find (o) -> o.object_type == 'email'
+          App.Email.didCreateRecord(emailAddress, emailJson) if emailJson?
 
       return undefined
 
     addEmailAddress: ->
       @send('cancelEditingEmail')
-      emailAddress = App.EmailAddress.create()
+      emailAddress = App.Email.create()
       @get('emailAddresses').pushObject(emailAddress)
       @send('editEmail', emailAddress)
       return undefined

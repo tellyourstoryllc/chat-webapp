@@ -526,8 +526,8 @@ window.App = App = Ember.Application.create
     switch obj.object_type
       when 'account'
         App.Account
-      when 'email_address'
-        App.EmailAddress
+      when 'email'
+        App.Email
       when 'emoticon'
         App.Emoticon
       when 'group'

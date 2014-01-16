@@ -1,8 +1,8 @@
 #= require base-model
 
-App.EmailAddress = App.BaseModel.extend App.LockableApiModelMixin
+App.Email = App.BaseModel.extend App.LockableApiModelMixin
 
-App.EmailAddress.reopenClass
+App.Email.reopenClass
 
   # Array of all instances.  Public access is with `all()`.
   _all: []
@@ -37,4 +37,4 @@ App.EmailAddress.reopenClass
     .fail App.rejectionHandler
 
   fetchAll: ->
-    App.get('api').ajax('/email_addresses', 'GET', {})
+    App.get('api').ajax('/emails', 'GET', {})
