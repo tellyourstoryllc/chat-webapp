@@ -11,9 +11,9 @@ App.Email.reopenClass
   _allById: {}
 
   propertiesFromRawAttrs: (json) ->
-    id: App.BaseModel.coerceId(json.id)
+    id: @coerceId(json.id)
+    userId: @coerceId(json.user_id)
     email: json.email
-    isPrimary: json.is_primary
 
   didCreateRecord: (instance, attrs) ->
     hadId = instance.get('id')?
