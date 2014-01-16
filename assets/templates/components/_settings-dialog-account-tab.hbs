@@ -29,9 +29,11 @@
           </form>
         {{else}}
           <div class='editable-display'>
-            {{emailAddress.email}}
-            <a href='#' {{action 'editEmail' target=view}}>Edit</a>
-            <a href='#' {{action 'removeEmail' target=view}}>Remove</a>
+            <span class='email'>{{emailAddress.email}}</span>
+            <span class='email-actions'>
+              <a href='#' {{action 'editEmail' target=view}}>Edit</a>
+              <a href='#' {{action 'removeEmail' target=view}}>Remove</a>
+            </span>
           </div>
         {{/if}}
       </td>
@@ -39,9 +41,11 @@
     <tr>
       <td class='label-cell'></td>
       <td class='control-cell'>
-        <button type='button' {{action 'addEmailAddress'}}>
-          Add Email Address
-        </button>
+        {{#unless isAddingNewEmailAddress}}
+          <button type='button' {{action 'addEmailAddress'}}>
+            Add Email Address
+          </button>
+        {{/unless}}
       </td>
     </tr>
     {{#if isLinkedToFacebook}}

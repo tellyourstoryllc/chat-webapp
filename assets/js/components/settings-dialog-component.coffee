@@ -200,6 +200,11 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
       @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
 
+  isAddingNewEmailAddress: (->
+    emailAddress = @get('editingEmailAddress')
+    emailAddress? && ! emailAddress.get('id')?
+  ).property('editingEmailAddress.id')
+
   canRemoveEmailAddress: Ember.computed.gt('emailAddresses.length', 1)
 
   actions:
@@ -311,7 +316,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         emailAddress.set('email', newEmail)
       , (xhrOrJson) =>
         emailAddress.set('email', oldEmail)
-        @set('emailErrorMessage', "Unknown error occurred.  Please try again.")
+        @set('emailErrorMessage', App.userMessageFromError(xhrOrJson, "Unknown error occurred.  Please try again."))
       .then ([isSuccessful, json]) =>
         @set('isSendingEmail', false)
         if isSuccessful
