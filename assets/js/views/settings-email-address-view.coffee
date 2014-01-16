@@ -12,6 +12,9 @@ App.SettingsEmailAddressView = Ember.View.extend
   actions:
 
     editEmail: ->
+      # If removing and semi-transparent, don't allow editing.
+      return if @get('controller.isRemovingEmailAddress')
+
       @get('controller').send('editEmail', @get('emailAddress'))
       Ember.run.schedule 'afterRender', @, ->
         @$('.email-input').focus().textrange('set') # Select all.
@@ -19,8 +22,4 @@ App.SettingsEmailAddressView = Ember.View.extend
 
     cancelEditingEmail: ->
       @get('controller').send('cancelEditingEmail', @get('emailAddress'))
-      return undefined
-
-    removeEmail: ->
-      Ember.Logger.error 'TODO: removeEmail', @get('emailAddress'), @get('parentView.canRemoveEmailAddress')
       return undefined

@@ -28,11 +28,11 @@
             {{/unless}}
           </form>
         {{else}}
-          <div class='editable-display'>
+          <div class='editable-display' {{bind-attr data-email-id='emailAddress.id'}}>
             <span class='email'>{{emailAddress.email}}</span>
             <span class='email-actions'>
               <a href='#' {{action 'editEmail' target=view}}>Edit</a>
-              <a href='#' {{action 'removeEmail' target=view}}>Remove</a>
+              <a href='#' {{action 'removeEmail' emailAddress}}>Remove</a>
             </span>
           </div>
         {{/if}}

@@ -12,6 +12,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   isLoadingEmailAddresses: false
   emailAddresses: null
   emailAddressesFetchedAt: null
+  isRemovingEmailAddress: false
 
   isEditingPassword: false
   isSendingPassword: false
@@ -62,7 +63,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   ).observes('selectedTab')
 
   ensureEmailAddressesLoaded: ->
-    Ember.Logger.error 'TODO: Load email addresses'
     emailAddressesFetchedAt = @get('emailAddressesFetchedAt')
     # Cache email addresses for a minute.
     if ! emailAddressesFetchedAt? || (new Date().getTime() - emailAddressesFetchedAt.getTime()) / 1000 > 60
@@ -338,6 +338,34 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       emailAddress = App.Email.create()
       @get('emailAddresses').pushObject(emailAddress)
       @send('editEmail', emailAddress)
+      return undefined
+
+    removeEmail: (emailAddress) ->
+      return if @get('isRemovingEmailAddress')
+      if ! @get('canRemoveEmailAddress')
+        alert "You must add another email address before removing your last one."
+        return
+      if ! emailAddress.get('id')?
+        Ember.Logger.error "email address can't be destroyed since it has no id", emailAddress
+        return
+
+      @set('isRemovingEmailAddress', true)
+      emailAddresses = @get('emailAddresses')
+      # Hide from UI immediately.
+      @$(".editable-display[data-email-id='#{emailAddress.get('id')}']").addClass('hidden')
+
+      api = App.get('api')
+      api.ajax(api.buildURL("/emails/#{emailAddress.get('id')}/destroy"), 'POST', {})
+      .always =>
+        @set('isRemovingEmailAddress', false)
+      .then (json) =>
+        if ! json? || json.error?
+          throw json
+        emailAddresses.removeObject(emailAddress)
+        App.Email.discardRecords(emailAddress)
+      .fail (xhrOrError) =>
+        # Revert changes.
+        @$(".editable-display[data-email-id='#{emailAddress.get('id')}']").removeClass('hidden')
       return undefined
 
     editPassword: ->
