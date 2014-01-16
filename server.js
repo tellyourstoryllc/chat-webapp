@@ -68,6 +68,7 @@ app.use(apiProxy(/\/api(\/.*)/, config.apiHostname, config.apiPort));
 // Health check for load balancer needs to be *before* any redirects.
 app.use('/health_check', function(req, res, next) {
   res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Cache-Control', 'max-age=0, private, must-revalidate');
   res.send('Healthy');
 });
 
