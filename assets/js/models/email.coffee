@@ -37,4 +37,5 @@ App.Email.reopenClass
     .fail App.rejectionHandler
 
   fetchAll: ->
-    App.get('api').ajax('/emails', 'GET', {})
+    api = App.get('api')
+    api.ajax(api.buildURL('/emails'), 'GET', {})
