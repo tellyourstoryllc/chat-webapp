@@ -100,6 +100,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$().removeClass('expand-in')
     else
       @$().addClass('expand-in')
+      # When showing the dialog, make sure email addresses are loaded and fresh.
+      @ensureEmailAddressesLoaded()
   ).observes('isHidden')
 
   isLinkedToFacebook: (->
