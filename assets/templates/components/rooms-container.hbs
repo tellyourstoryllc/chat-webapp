@@ -227,7 +227,10 @@
       </div>
 
       <div {{bind-attr class=':connecting-status-bar activeRoom::hidden App.isHeartbeatActive::offline'}}>
-        Connecting...
+        Attempting to reconnect.
+        <div class='subtext'>
+          Messages may not get sent or received.
+        </div>
       </div>
     </div>
   </div>
