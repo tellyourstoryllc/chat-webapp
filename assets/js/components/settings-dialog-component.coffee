@@ -71,8 +71,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       .always =>
         @set('isLoadingEmailAddresses', false)
       .then =>
-        # We modify this array, so make sure it's a copy.
-        @set('emailAddresses', App.Email.all().copy())
+        @setProperties
+          # We modify this array, so make sure it's a copy.
+          emailAddresses: App.Email.all().copy()
+          emailAddressesFetchedAt: new Date()
+      , (e) =>
+        # Never cache bad results.
+        @set('emailAddressesFetchedAt', null)
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
