@@ -11,7 +11,7 @@ App.JoinRoute = Ember.Route.extend
     else if ! App.isLoggedIn()
       joinCode = model
       App.set('joinCodeToShow', joinCode)
-      @transitionTo('index')
+      @replaceWith('index')
     return undefined
 
   setupController: (controller, model) ->
