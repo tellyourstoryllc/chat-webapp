@@ -9,13 +9,20 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onTouchEnd')
+    _.bindAll(@, 'onTouchEnd', 'onInstallAppClick')
 
   didInsertElement: ->
     @$('.hidden-continue').on 'touchend', @onTouchEnd
+    @$('.app-store-link').on 'click', @onInstallAppClick
+    # Run later so that images can hopefully load.
+    Ember.run.later @, ->
+      if window.localStorage.getItem('autoLaunchApp') in ['1', 'true']
+        @send('launchMobileApp')
+    , 50
 
   willDestroyElement: ->
     @$('.hidden-continue').off 'touchend', @onTouchEnd
+    @$('.app-store-link').off 'click', @onInstallAppClick
 
   onTouchEnd: (event) ->
     Ember.run @, ->
@@ -24,6 +31,15 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
       if times > 0 && times % 3 == 0
         @sendAction('didDismissMobileInstallDialog')
       return undefined
+
+  onInstallAppClick: (event) ->
+    Ember.run @, ->
+      # When user clicks install app, forget auto launch setting.
+      @clearAutoLaunchSetting()
+      return undefined
+
+  clearAutoLaunchSetting: ->
+    window.localStorage.removeItem('autoLaunchApp')
 
 
   actions:
@@ -34,8 +50,15 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
         App.attemptToOpenMobileApp("/group/join_code/#{joinCode}")
       else
         App.attemptToOpenMobileApp('/')
+
+      # Save so that we automatically open next time.
+      window.localStorage.setItem('autoLaunchApp', '1')
+
       return undefined
 
     dismissMobileInstallDialog: ->
+      # When user clicks dismiss, don't auto launch the app anymore.
+      @clearAutoLaunchSetting()
+
       @sendAction('didDismissMobileInstallDialog')
       return undefined
