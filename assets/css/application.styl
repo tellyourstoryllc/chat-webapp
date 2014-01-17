@@ -1166,8 +1166,15 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   transition-property height, margin-top
 
   .loading
+    display none
     margin 20px
     text-align center
+
+    &.visible
+      display block
+
+  .content-container.hidden
+    display none
 
   .close
     float right
