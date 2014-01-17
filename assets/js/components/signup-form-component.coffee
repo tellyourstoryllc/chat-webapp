@@ -2,6 +2,8 @@
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   classNames: ['signup-form-component']
 
+  shouldRequirePassword: true
+
   email: null
   password: null
   name: null
@@ -131,7 +133,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
       password = @get('password') ? ''
       minPasswordLength = App.Account.minPasswordLength()
-      if Ember.isEmpty(facebookToken) && password.length < minPasswordLength
+      if @get('shouldRequirePassword') && Ember.isEmpty(facebookToken) && password.length < minPasswordLength
         @set('errorMessage', "Password must be at least #{minPasswordLength} characters.")
         return
 

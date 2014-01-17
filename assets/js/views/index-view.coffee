@@ -1,13 +1,18 @@
 App.IndexView = Ember.View.extend
 
   isShowingSignupDialog: false
+  isJoinGroupSignupVisible: false
   isShowingEmailForm: false
 
   joinCodeToShow: Ember.computed.alias('controller.joinCodeToShow')
 
+  room: Ember.computed.alias('controller.room')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown')
+    # Force computed properties.
+    @get('room')
 
   didInsertElement: ->
     App.set('indexView', @)
@@ -54,6 +59,14 @@ App.IndexView = Ember.View.extend
     @$('.home-signup-modal').removeClass('expand-in')
     @$('.home-signup-overlay').addClass('hidden')
 
+  roomChanged: (->
+    room = @get('room')
+    usingRoom = room?
+    @set('isJoinGroupSignupVisible', usingRoom)
+    if usingRoom
+      @set('isShowingEmailForm', false)
+  ).observes('room').on('didInsertElement')
+
   actions:
 
     submitRoomKey: (keyText) ->
@@ -81,20 +94,17 @@ App.IndexView = Ember.View.extend
       return undefined
 
     signUpWithFacebook: ->
-      console.log "TODO signUpWithFacebook"
       @get('signupForm').send('attemptSignUpWithFacebook')
       return undefined
 
     signUpWithEmail: ->
       @set('isShowingEmailForm', true)
       @$('.signup-auth-choice').addClass('hidden')
-      @$('.signup-form-component').addClass('visible')
       return undefined
 
     goBackToAuthChoices: ->
       @set('isShowingEmailForm', false)
       @$('.signup-auth-choice').removeClass('hidden')
-      @$('.signup-form-component').removeClass('visible')
       return undefined
 
     facebookDidError: (error) ->

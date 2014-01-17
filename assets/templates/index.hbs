@@ -71,18 +71,6 @@
               <div class='clearfix'></div>
             </div>
 
-            <div class='signup-auth-choice'>
-              <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>
-                <span class='facebook-f-icon'></span>
-                <div class='btn-fb-text-container'>
-                  Sign Up with Facebook
-                </div>
-              </button>
-              <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
-              <div class='login-hint'>
-                Already have an account?  <a href='/login' {{action 'logInWithRoom'}}>Log In</a>
-              </div>
-            </div>
           {{else}}
             {{! No room.  Regular signup. }}
             <div class='signup-auth-choice'>
@@ -98,8 +86,15 @@
           {{/if}}
         {{/if}}
 
-        {{! Whether a room or not, always have the signup form. }}
-        {{home-signup-form viewName='signupForm' didSignUp='didSignUp'
+        {{home-join-group-signup-form viewName='joinGroupSignupForm'
+          isElementVisible=view.isJoinGroupSignupVisible
+          didSignUp='didSignUp'
+          didLogIn='didLogIn' didGoBack='goBackToAuthChoices'
+          signUpWithFacebook='signUpWithFacebook'
+          facebookDidError='facebookDidError'}}
+        {{home-signup-form viewName='signupForm'
+          isElementVisible=view.isShowingEmailForm
+          didSignUp='didSignUp'
           didLogIn='didLogIn' didGoBack='goBackToAuthChoices'
           facebookDidError='facebookDidError'}}
       </div>
