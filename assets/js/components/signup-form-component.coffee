@@ -37,6 +37,10 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       @sendAction('didClose')
       return undefined
 
+    dismissErrorMessage: ->
+      @set('errorMessage', null)
+      return undefined
+
     attemptSignUpWithFacebook: ->
       return if @get('isAuthenticatingWithFacebook')
 
