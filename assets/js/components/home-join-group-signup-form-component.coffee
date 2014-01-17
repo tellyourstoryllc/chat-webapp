@@ -1,6 +1,6 @@
 #= require signup-form-component
 
-# Actions: signUpWithFacebook
+# Actions: signUpWithFacebook, logInWithRoom
 App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend
   classNames: ['home-join-signup-form-component']
   classNameBindings: ['isElementVisible:visible']
@@ -26,4 +26,8 @@ App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend
 
     signUpWithFacebook: ->
       @sendAction('signUpWithFacebook')
+      return undefined
+
+    logInWithRoom: ->
+      @sendAction('logInWithRoom')
       return undefined
