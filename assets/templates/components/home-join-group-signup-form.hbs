@@ -7,10 +7,14 @@
     </div>
   {{/if}}
   <div class='control-group'>
-    {{input type='email' value=email placeholder='Email Address'}}
+    {{input type='email' value=email class='email-input' placeholder='Email Address'}}
   </div>
   <div class='control-group'>
-    {{input type='text' value=name placeholder='Display Name'}}
+    {{input type='text' value=name class='name-input' placeholder='Display Name' classNameBindings='isEditingName::hidden'}}
+    <div {{bind-attr class=':default-name name::not-present isEditingName:hidden'}}>
+      Display Name: {{name}}
+      <a href='#' {{action 'editName'}}>Change</a>
+    </div>
   </div>
   <div class='form-actions'>
     <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Enter Room</button>

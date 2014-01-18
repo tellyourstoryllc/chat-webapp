@@ -1,7 +1,7 @@
 #= require signup-form-component
 
 # Actions: signUpWithFacebook, logInWithRoom
-App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend
+App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFillSignupMixin,
   classNames: ['home-join-signup-form-component']
   classNameBindings: ['isElementVisible:visible']
 
@@ -23,6 +23,12 @@ App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend
   ).observes('errorMessage')
 
   actions:
+
+    editName: ->
+      @set('isEditingName', true)
+      Ember.run.schedule 'afterRender', @, ->
+        @$('.name-input').focus().textrange('set') # Select all.
+      return undefined
 
     signUpWithFacebook: ->
       @sendAction('signUpWithFacebook')

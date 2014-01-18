@@ -1261,7 +1261,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     text-align left
 
   .or-divider
-    margin 10px
+    margin 12px
 
   .signup-with-facebook-button
     margin-bottom 10px
@@ -1286,6 +1286,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     border-width 0
     padding 0
     background-color transparent
+    text-align center
 
     input[type=text], input[type=password], input[type=email]
       box-sizing border-box
@@ -1319,6 +1320,22 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   .home-join-group-signup-form
     .signup-with-facebook-button
       margin-bottom 0
+
+  .name-input.hidden
+    display none
+
+  .default-name
+    margin-top -5px
+    margin-bottom -5px
+    font-size 11px
+    line-height 1.2
+    opacity .55
+
+    &.not-present
+      visibility hidden
+
+    &.hidden
+      display none
 
   // Facebook button has its own padding thing.
   .app-btn:not(.btn-fb)
