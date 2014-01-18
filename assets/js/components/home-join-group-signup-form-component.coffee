@@ -30,10 +30,6 @@ App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
         @$('.name-input').focus().textrange('set') # Select all.
       return undefined
 
-    signUpWithFacebook: ->
-      @sendAction('signUpWithFacebook')
-      return undefined
-
     logInWithRoom: ->
       @sendAction('logInWithRoom')
       return undefined
