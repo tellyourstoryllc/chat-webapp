@@ -1,7 +1,8 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didJoinGroup, didGoToRoom, didCloseRoom, didToggleRoomsSidebar
+# Actions: didJoinGroup, didGoToRoom, didCloseRoom, didToggleRoomsSidebar,
+#   willLeaveRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -851,7 +852,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       # Notify up the chain before closing so that it knows where to transition
       # to.
-      @get('controller').send('willLeaveRoom', room)
+      @sendAction('willLeaveRoom', room)
 
       api = App.get('api')
       url = api.buildURL("/groups/#{room.get('id')}/leave")
