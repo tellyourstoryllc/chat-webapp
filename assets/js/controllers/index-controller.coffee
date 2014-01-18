@@ -15,6 +15,9 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
   # Used by the mobile-install template.
   joinCode: Ember.computed.alias('joinCodeToShow')
 
+  joinGroupNow: (room) ->
+    @get('target').send('joinGroup', room.get('joinCode'))
+
   actions:
 
     logInWithRoom: ->
@@ -45,7 +48,14 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
       # Just do the default (bubble) if we have no room.
       return true unless room?
 
-      # Join the room.
-      @get('target').send('joinGroup', room.get('joinCode') ? room.get('id'))
+      @joinGroupNow(room)
+      return undefined
 
+    # It's possible to log in on the home page using facebook.
+    didLogIn: ->
+      room = @get('room')
+      # Just do the default (bubble) if we have no room.
+      return true unless room?
+
+      @joinGroupNow(room)
       return undefined
