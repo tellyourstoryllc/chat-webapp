@@ -148,7 +148,8 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
         email: email
         name: name
       if Ember.isEmpty(facebookToken)
-        data.password = password
+        # Password is optional, so don't send it if it's empty string.
+        data.password = password if password? && password.length > 0
       else
         data.facebook_id = @get('facebookId')
         data.facebook_token = facebookToken
