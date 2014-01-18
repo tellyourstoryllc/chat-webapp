@@ -13,6 +13,9 @@ var request = require('request');
 var app = express();
 var config = require('./config').getConfig(process.env.NODE_ENV || 'development', app, express);
 
+// Expose environment to web app.
+config.env = config.env || process.env.NODE_ENV || 'development';
+
 app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');

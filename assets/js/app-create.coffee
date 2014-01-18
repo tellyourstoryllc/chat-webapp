@@ -114,6 +114,12 @@ window.App = App = Ember.Application.create
         # Copy the URL path to hash.
         @_getRouter().location.setURL(window.location.pathname)
 
+    # Show the environment in the browser titlebar.
+    if AppConfig.env in ['development', 'staging', 'testing']
+      title = "#{App.get('title')} - #{AppConfig.env}"
+      App.set('title', title)
+      $(document).attr('title', "#{title}")
+
     # Whether we're running inside MacGap.
     @set('isMacGap', AppConfig.isMacGap)
 
