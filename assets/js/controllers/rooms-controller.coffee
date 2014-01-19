@@ -47,6 +47,10 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
   actions:
 
+    didFocusSendMessageText: ->
+      @get('roomsView')?.send('didFocusSendMessageText')
+      return undefined
+
     toggleRoomsSidebar: ->
       @get('roomsView')?.send('toggleRoomsSidebar')
       return undefined

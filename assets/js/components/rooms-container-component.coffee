@@ -1,8 +1,8 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didJoinGroup, didGoToRoom, didCloseRoom, didToggleRoomsSidebar,
-#   willLeaveRoom
+# Actions: didFocusSendMessageText, didJoinGroup, didGoToRoom, didCloseRoom,
+#   didToggleRoomsSidebar, willLeaveRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -38,6 +38,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       'onTapRoomsSidebarToggle',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onClickMessageLink',
+      'onSendMessageTextFocus',
       'onSendMessageTextPaste', 'onSendMessageTextCursorMove',
       'onIe9KeyUp', 'sendMessageTextKeyDown', 'sendMessageTextInput')
     @set('suggestions', [])
@@ -60,6 +61,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       # `propertychange` is for IE8.
       @$('.send-message-text').on 'input propertychange', @sendMessageTextInput
       @$('.send-message-text').on 'keyup', @onIe9KeyUp if Modernizr.msie9
+      @$('.send-message-text').on 'focus', @onSendMessageTextFocus
       @$('.send-message-text').on 'paste', @onSendMessageTextPaste
       @$('.send-message-file').on 'change', @fileChange
       @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
@@ -81,6 +83,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').off 'keyup click', @onSendMessageTextCursorMove
     @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
+    @$('.send-message-text').off 'focus', @onSendMessageTextFocus
     @$('.send-message-text').off 'paste', @onSendMessageTextPaste
     @$('.send-message-file').off 'change', @fileChange
     @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
@@ -495,6 +498,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     else
       @set('suggestions', newSuggestions)
       @set('suggestionsShowing', true)
+
+  onSendMessageTextFocus: (event) ->
+    Ember.run @, ->
+      @sendAction('didFocusSendMessageText')
+      return undefined
 
   onSendMessageTextPaste: (event) ->
     Ember.run @, ->
