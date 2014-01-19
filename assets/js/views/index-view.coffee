@@ -76,6 +76,9 @@ App.IndexView = Ember.View.extend
       # Go back to first step.
       @send('goBackToAuthChoices')
 
+      # On mobile, make sure the keyboard is hidden.
+      $('.room-key-input').blur()
+
       @showSignupModal()
       @get('controller').send('joinRoom', roomKey)
       return undefined
