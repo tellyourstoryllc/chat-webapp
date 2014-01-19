@@ -10,6 +10,7 @@ App.ApplicationView = Ember.View.extend
     $(window).focus @focus
     $(window).blur @blur
     $(window).on 'storage', @onStorage
+    $('body').addClass('appleios') if Modernizr.appleios
 
   focus: ->
     Ember.run @, ->

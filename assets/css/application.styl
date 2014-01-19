@@ -65,6 +65,13 @@ sprite-icon()
 webkit-flashing-fix()
   -webkit-transform translateZ(0)
 
+mobile-safari-fixed-position-fix()
+  // Use absolute position since fixed is extremely buggy.  Only do this when
+  // actually on iOS since it causes other glitches on desktop if used all the
+  // time.
+  .appleios &
+    position absolute
+
 dark-purple-round-input()
   box-sizing border-box
   margin 10px
@@ -1443,6 +1450,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   background-repeat no-repeat
   background-size cover
 
+  mobile-safari-fixed-position-fix()
+
   .logo
     margin-top 10px
     text-align center
@@ -1614,6 +1623,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   background-color app-dark-purple
   color #aaa
 
+  mobile-safari-fixed-position-fix()
+
 .current-user-status-cell
   display table-cell
   border-right 1px solid #34223F
@@ -1677,6 +1688,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   width room-sidebar-width + 50px
   visibility hidden // Initially hidden.
 
+  mobile-safari-fixed-position-fix()
+
   .room-avatar
     margin-top 0
     margin-bottom 1px
@@ -1688,6 +1701,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   width room-sidebar-width + 50px
   animation-duration .4s
   text-transform none
+
+  mobile-safari-fixed-position-fix()
 
   > .menu-item
     cursor default
@@ -1764,6 +1779,8 @@ room-content-margin-height = 10px
     display block
     padding 8px 8px 16px
     cursor pointer
+
+    mobile-safari-fixed-position-fix()
 
   .toggle-sidebar-icon
     width 16px
