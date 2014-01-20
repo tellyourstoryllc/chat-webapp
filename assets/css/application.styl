@@ -1359,6 +1359,12 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
 // body
 .with-mobile-dialog
+  // Need to put the background here, otherwise on tall displays, the .mobile-
+  // install-dialog does not fill the height.
+  background-color app-purple
+  background-image asseturl('/images/purple-bkg.png')
+  background-size cover
+
   .navbar
     display none !important
 
@@ -1371,9 +1377,6 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   border-top 6px solid app-green
   padding 15px
-  background-color app-purple
-  background-image asseturl('/images/purple-bkg.png')
-  background-size cover
   color rgba(255,255,255, 0.8)
   text-align center
 
