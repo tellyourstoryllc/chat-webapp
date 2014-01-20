@@ -24,12 +24,6 @@ App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
 
   actions:
 
-    editName: ->
-      @set('isEditingName', true)
-      Ember.run.schedule 'afterRender', @, ->
-        @$('.name-input').focus().textrange('set') # Select all.
-      return undefined
-
     logInWithRoom: ->
       @sendAction('logInWithRoom')
       return undefined

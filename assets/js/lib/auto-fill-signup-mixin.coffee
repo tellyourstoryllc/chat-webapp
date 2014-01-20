@@ -26,8 +26,9 @@ App.AutoFillSignupMixin = Ember.Mixin.create
 
   onEmailInput: (event) ->
     Ember.run @, ->
-      name = @defaultName(@$('.email-input').val())
-      @set('name', name) if ! @get('userHasChangedName')
+      if ! @get('userHasChangedName')
+        name = @defaultName(@$('.email-input').val())
+        @set('name', name)
       return undefined
 
   onEmailBlur: (event) ->
