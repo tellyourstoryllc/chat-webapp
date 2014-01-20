@@ -30,6 +30,10 @@
   <button class='app-btn btn-block' {{action 'launchMobileApp'}}>
     Launch skymob
   </button>
+
+  <a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>
+    Use Web Version
+  </a>
 {{else}}
   {{#if isAndroid}}
     <p class='to-enter no-join-code'>
