@@ -25,14 +25,21 @@ App.IndexRoute = Ember.Route.extend
     controller.set('joinCodeToShow', joinCode)
 
   renderTemplate: (controller, model) ->
-    @_super(arguments...)
     # If we're on iOS or Android, render the mobile install.
     if Modernizr.appleios || Modernizr.android
       @render 'mobile-install',
         into: 'application'
         outlet: 'modal'
+    else
+      @_super(arguments...)
 
   actions:
+
+    didDismissMobileInstallDialog: ->
+      # Render the normal template.
+      @render()
+      # Bubble and do the default to hide the modal.
+      return true
 
     submitRoomKey: (keyText) ->
       indexView = App.get('indexView')

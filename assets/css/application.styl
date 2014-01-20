@@ -1357,17 +1357,17 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 ///////////////////////////////////////////////////////////
 // Mobile Install
 
+// body
+.with-mobile-dialog
+  .navbar
+    display none !important
+
+// Note: Can't just used fixed position div with high z-index since it's broken
+// on iOS mobile Safari.
 .mobile-install-dialog
   box-sizing border-box
   width 100%
-  // Mobile Safari does not properly resize the window when scrolling.
-  height 10000px
   min-height 100%
-
-  position fixed
-  left 0
-  top 0
-  z-index 1100
 
   border-top 6px solid app-green
   padding 15px
