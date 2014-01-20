@@ -353,7 +353,7 @@ App.UsersListComponent = Ember.Component.extend
     sel = "[data-room-guid='#{Ember.guidFor(room)}'] .small-avatar"
     $avatar = @$(sel)
     if ! $avatar?
-      Ember.Logger.error "Couldn't find avatar element", room?.get('id'), sel, $(sel)
+      Ember.Logger.error "Couldn't find avatar element", room?.get('id'), sel, $(sel), $avatar, @
     @updateStatus(room, $avatar)
 
   updateStatus: (room, $avatar) ->
