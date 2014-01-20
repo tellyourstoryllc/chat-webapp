@@ -354,6 +354,9 @@ App.UsersListComponent = Ember.Component.extend
     $avatar = @$(sel)
     if ! $avatar?
       Ember.Logger.error "Couldn't find avatar element", room?.get('id'), sel, $(sel), $avatar, @
+      if @currentState == Ember.View.states.inDOM
+        Ember.logger.log "falling back to global selector"
+        $avatar = $(sel)
     @updateStatus(room, $avatar)
 
   updateStatus: (room, $avatar) ->
