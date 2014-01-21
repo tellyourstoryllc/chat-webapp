@@ -4,10 +4,13 @@
       {{userMessage}}
     </div>
   {{/if}}
-  {{#if isLoading}}
-    <div class='loading'>Loading...</div>
-  {{/if}}
-  {{link-to 'Go Back to Chat' 'index'}}
+  <div class='text-content'>
+    {{#if isLoading}}
+      Loading...
+    {{else}}
+      {{link-to 'Go Back to Chat' 'index'}}
+    {{/if}}
+  </div>
 </div>
 
 {{footer-bar}}
