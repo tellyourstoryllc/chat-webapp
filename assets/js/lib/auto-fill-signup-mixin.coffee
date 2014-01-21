@@ -7,11 +7,13 @@ App.AutoFillSignupMixin = Ember.Mixin.create
     _.bindAll(@, 'onEmailInput', 'onEmailBlur', 'onNameInput')
 
   didInsertElement: ->
+    @_super(arguments...)
     @$('.email-input').on 'input', @onEmailInput
     @$('.email-input').on 'blur', @onEmailBlur
     @$('.name-input').on 'input', @onNameInput
 
   willDestroyElement: ->
+    @_super(arguments...)
     @$('.email-input').off 'input', @onEmailInput
     @$('.email-input').off 'blur', @onEmailBlur
     @$('.name-input').off 'input', @onNameInput
