@@ -9,15 +9,7 @@ App.RoomsRoute = Ember.Route.extend
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
     if App.isLoggedIn()
-      App.get('api').fetchAllConversations()
-      .then (rooms) =>
-        if rooms?
-          controller.set('roomsLoaded', true)
-          # Fetch all Conversations after subscribing.
-          rooms.forEach (room) =>
-            room.subscribeToMessages().then =>
-              room.reload()
-      .fail App.rejectionHandler
+      @_fetchAllConversationsAndSubscribe(controller)
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)
@@ -68,6 +60,19 @@ App.RoomsRoute = Ember.Route.extend
       outlet: 'modal'
       parentView: 'application'
 
+  _fetchAllConversationsAndSubscribe: (controller = null) ->
+    controller ?= @controllerFor('rooms')
+    App.get('api').fetchAllConversations()
+    .then (rooms) =>
+      if rooms?
+        controller.set('roomsLoaded', true)
+        # Fetch all Conversations after subscribing.
+        rooms.forEach (room) =>
+          room.subscribeToMessages().then =>
+            room.reload()
+      return rooms
+    .fail App.rejectionHandler
+
   actions:
 
     didSignUp: ->
@@ -77,6 +82,7 @@ App.RoomsRoute = Ember.Route.extend
 
       @_joinGroupNow(room)
       @_hideJoinGroupSignupDialog()
+      @_fetchAllConversationsAndSubscribe()
       return undefined
 
     didLogIn: ->
@@ -86,6 +92,7 @@ App.RoomsRoute = Ember.Route.extend
 
       @_joinGroupNow(room)
       @_hideJoinGroupSignupDialog()
+      @_fetchAllConversationsAndSubscribe()
       return undefined
 
     showPreviousRoom: ->
