@@ -8,15 +8,16 @@ App.RoomsRoute = Ember.Route.extend
   setupController: (controller, model) ->
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
-    App.get('api').fetchAllConversations()
-    .then (rooms) =>
-      if rooms?
-        controller.set('roomsLoaded', true)
-        # Fetch all Conversations after subscribing.
-        rooms.forEach (room) =>
-          room.subscribeToMessages().then =>
-            room.reload()
-    .fail App.rejectionHandler
+    if App.isLoggedIn()
+      App.get('api').fetchAllConversations()
+      .then (rooms) =>
+        if rooms?
+          controller.set('roomsLoaded', true)
+          # Fetch all Conversations after subscribing.
+          rooms.forEach (room) =>
+            room.subscribeToMessages().then =>
+              room.reload()
+      .fail App.rejectionHandler
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)

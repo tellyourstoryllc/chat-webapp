@@ -23,6 +23,7 @@ App.RoomAvatarComponent = Ember.Component.extend
 
   status: (->
     room = @get('room')
+    return null unless room?
     if room.get('hasStatusIcon')
       room.get('status')
     else
@@ -31,6 +32,7 @@ App.RoomAvatarComponent = Ember.Component.extend
 
   clientType: (->
     room = @get('room')
+    return null unless room?
     if room.get('hasStatusIcon')
       room.get('clientType')
     else
