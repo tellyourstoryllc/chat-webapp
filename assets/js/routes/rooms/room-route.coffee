@@ -18,6 +18,12 @@ App.RoomsRoomRoute = Ember.Route.extend
   model: (params, transition) ->
     params.room_id
 
+  afterModel: (model, transition) ->
+    if App.get('isLoggingIn')
+      App.set('continueTransition', transition)
+      @replaceWith('login')
+    return undefined
+
   setupController: (controller, model) ->
     [modelId, model] = @_tryModelFromGivenContext(model)
 
