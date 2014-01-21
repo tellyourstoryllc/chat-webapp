@@ -30,7 +30,7 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
     $window = $(window)
     windowWidth = $window.width()
     windowHeight = $window.height()
-    bannerHeight = 55
+    bannerHeight = if Modernizr.appleios || Modernizr.android then 55 else 0
     visibleHeight = windowHeight - bannerHeight
 
     $e.css
