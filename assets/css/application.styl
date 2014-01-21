@@ -2220,17 +2220,34 @@ room-members-sidebar-width = 200px
     .join-button
       margin-top 0
 
-.room-join-group-signup-form-component
-  position absolute
-  z-index 1 // Show on top of .room-messages-view
-
-  width 100%
 
 room-join-dialog-width = 350px
+
+.room-join-group-page-overlay
+  // Make the background more visible than most overlays.
+  background-color rgba(0,0,0, 0.1) // For browsers that don't support radial gradient.
+  background radial-gradient(rgba(0,0,0,0) room-join-dialog-width, rgba(0,0,0, 0.4))
+
+  // Show over the room, but under the app mobile install banner.
+  z-index 99
+
+  mobile-safari-fixed-position-fix()
+
+.room-join-group-signup-form-component
+  position absolute
+  top 55px // Space for the banner.
+
+  transition-duration .2s
+  transition-timing-function ease-out
+  transition-property left, top
+
 .room-join-group-signup-form
+  position relative
+  margin 0
+  z-index 100
+
   box-sizing border-box
   width room-join-dialog-width
-  margin 30px auto
   border 1px solid rgba(0,0,0, .28)
   border-radius 6px
   padding 30px
@@ -2301,9 +2318,11 @@ room-join-dialog-width = 350px
 
 // This is the width of iPhone 5 (4-inch display) rotated horizontally.
 @media (max-width: 568px)
+  .room-join-group-signup-form-component
+    max-width 99% // Make sure we don't overflow the width.
+
   .room-join-group-signup-form
     max-width 100% // Make sure we don't overflow the width.
-    margin-top 10px // Reduce the top margin.
     padding 15px // Reduce the padding.
 
     .title

@@ -28,6 +28,14 @@ App.RoomsRoute = Ember.Route.extend
       outlet: 'settingsModal'
       view: 'settingsModal'
       controller: 'settingsModal'
+    if ! App.isLoggedIn() && ! App.get('isLoggingIn')
+      # Logged out.  Show signup form.
+      @render 'room-join-signup-modal',
+        into: 'application'
+        outlet: 'modal'
+      controller.set('showRoomsPageOverlay', true)
+    else
+      controller.set('showRoomsPageOverlay', false)
     return undefined
 
   _uiRooms: ->
