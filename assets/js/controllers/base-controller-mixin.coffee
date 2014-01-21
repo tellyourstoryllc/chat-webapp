@@ -9,6 +9,8 @@ App.BaseControllerMixin = Ember.Mixin.create
     App.isLoggedIn()
   ).property('App._isLoggedIn')
 
+  isNotLoggedIn: Ember.computed.not('isLoggedIn')
+
   # Note: Ember.computed.alias doesn't work here.
   currentUser: (->
     App.get('currentUser')

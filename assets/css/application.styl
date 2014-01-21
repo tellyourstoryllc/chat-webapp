@@ -2220,6 +2220,76 @@ room-members-sidebar-width = 200px
     .join-button
       margin-top 0
 
+.room-join-group-signup-form-component
+  position absolute
+  z-index 1 // Show on top of .room-messages-view
+
+  width 100%
+
+.room-join-group-signup-form
+  width home-modal-inner-width
+  margin 30px auto
+  border 1px solid rgba(0,0,0, .28)
+  border-radius 6px
+  padding 30px
+  background-clip padding-box
+  background-color rgba(238, 240, 240, .96)
+  box-shadow 0 0 30px rgba(0,0,0, .5)
+  text-align center
+
+  input[type=text], input[type=password], input[type=email]
+    box-sizing border-box
+    width 100%
+    text-align left
+
+  .alert
+    max-height 55px
+    overflow hidden
+
+    // Possibly displaying on top of member previews.
+    box-shadow 0 0 30px rgba(0,0,0,.6)
+
+    position relative
+    top 5px
+    opacity 0
+
+    transition-duration 0.2s
+    transition-timing-function ease-out
+    transition-property opacity, top
+
+    &.visible
+      top 0
+      opacity 1
+
+    .close
+      float right
+      padding 0 8px
+      cursor pointer
+
+  .control-group
+    line-height 1.2
+    text-align left
+
+  .control-label
+    display inline-block
+    margin-bottom 1px
+
+  .help-text
+    color rgba(0,0,0, .5)
+
+  .or-divider
+    margin 10px
+    text-align center
+
+  .signup-with-facebook-button
+    margin-bottom 0
+
+  .login-hint
+    margin-top 10px
+    color rgba(0,0,0, 0.5)
+    font-size 10px
+    text-align left
+
 .messages
   // Scrollable.
   overflow auto
