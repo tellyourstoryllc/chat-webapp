@@ -166,6 +166,8 @@ App.Group.reopenClass
 
   _allActive: null
 
+  initialFetchLimit: 40
+
   propertiesFromRawAttrs: (json) ->
     api = App.get('api')
     lastActiveAt = api.deserializeUnixTimestamp(json.last_message_at)
@@ -217,14 +219,14 @@ App.Group.reopenClass
   fetchById: (id) ->
     api = App.get('api')
     data =
-      limit: 40
+      limit: App.Group.initialFetchLimit
     api.ajax(api.buildURL("/groups/#{id}"), 'GET', data: data)
 
   fetchByJoinCode: (joinCode) ->
     api = App.get('api')
     data =
       join_code: joinCode
-      limit: 40
+      limit: App.Group.initialFetchLimit
     api.ajax(api.buildURL('/groups/find'), 'GET', data: data)
 
   createRecord: (data) ->

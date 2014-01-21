@@ -135,7 +135,7 @@ App.OneToOne.reopenClass
   fetchById: (id) ->
     api = App.get('api')
     data =
-      limit: 40
+      limit: App.Group.initialFetchLimit
     api.ajax(api.buildURL("/one_to_ones/#{id}"), 'GET', data: data)
 
   # Given json for a OneToOne and all its associations, load it, and return the

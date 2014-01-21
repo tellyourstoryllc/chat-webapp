@@ -177,7 +177,9 @@ App.RemoteApi = Ember.Object.extend
       user.set('statusText', oldStatusText)
 
   joinGroup: (joinCode) ->
-    @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', {})
+    data =
+      limit: App.Group.initialFetchLimit
+    @ajax(@buildURL("/groups/join/#{joinCode}"), 'POST', data: data)
     .then (json) =>
       if ! json? || json.error?
         throw new Error(App.userMessageFromError(json))
