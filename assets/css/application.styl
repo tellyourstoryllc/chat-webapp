@@ -2254,7 +2254,10 @@ room-members-sidebar-width = 200px
       margin-top 0
 
 
-room-join-dialog-width = 350px
+room-join-left-side-width = 290px
+room-join-right-side-width = 290px
+room-join-center-margin = 20px
+room-join-dialog-width = room-join-left-side-width+room-join-right-side-width+room-join-center-margin
 
 .room-join-group-page-overlay
   // Make the background more visible than most overlays.
@@ -2283,7 +2286,6 @@ room-join-dialog-width = 350px
   margin 0
   z-index 100
 
-  box-sizing border-box
   width room-join-dialog-width
   border 1px solid rgba(0,0,0, .28)
   border-radius 6px
@@ -2293,6 +2295,30 @@ room-join-dialog-width = 350px
   box-shadow 0 0 30px rgba(0,0,0, .5)
   color rgb(0,0,0)
   text-align center
+
+  .left-side-container
+    float left
+    box-sizing border-box
+    width room-join-left-side-width
+
+    .big-image
+      display inline-block
+      margin-bottom 10px
+
+    .text-title
+      font-size 19px
+      line-height 1.2
+      font-weight bold
+      margin-bottom 7px
+
+    .text
+      font-size 12px
+      line-height 1.2
+
+  .right-side-container
+    margin-left room-join-left-side-width + room-join-center-margin
+    box-sizing border-box
+    width room-join-right-side-width
 
   .title
     margin-bottom 3px
