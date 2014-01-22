@@ -1,70 +1,49 @@
 {{! Use a form tag to capture enter key. }}
 <form class='form signup-form room-join-group-signup-form' {{action 'attemptSignup' on='submit'}}>
-  <div class='left-side-container'>
-    <img class='big-image' src='{{webServerUrl 'imageFeature1'}}' style='width: 253px; height: auto'>
-    <div class='text-title'>
-      Group Chat with Email,<br>
-      Phone, or the Web
-    </div>
-    <div class='text'>
-      Login from any iOS device, computer, or web browser.  When you&rsquo;re
-      offline, your important messages will forward to your email.
-    </div>
+  <div class='title'>
+    This group chat has already started.
   </div>
-  <div class='right-side-container'>
-    <div class='title'>
-      This group chat has already started.
+  <div class='subtitle'>
+    Enter your email address to join:
+  </div>
+  {{#if errorMessage}}
+    <div class='alert alert-error'>
+      <span class='close' {{action 'dismissErrorMessage'}}>&times;</span>
+      {{errorMessage}}
     </div>
-    <div class='subtitle'>
-      Enter your email address to join:
-    </div>
-    {{#if errorMessage}}
-      <div class='alert alert-error'>
-        <span class='close' {{action 'dismissErrorMessage'}}>&times;</span>
-        {{errorMessage}}
-      </div>
+  {{/if}}
+  <div class='control-group'>
+    {{input type='email' value=email class='email-input' placeholder='Email Address'}}
+  </div>
+  <div class='form-actions'>
+    <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Join Group</button>
+
+    {{#if showFacebookChoice}}
+      <div class='or-divider'>OR</div>
+
+      <button type='button' class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'
+        {{bind-attr disabled='isSignupDisabled'}}
+        {{action 'attemptSignUpWithFacebook'}}>
+        <span class='facebook-f-icon'></span>
+        <div class='btn-fb-text-container'>
+          Connect with Facebook
+        </div>
+      </button>
     {{/if}}
-    <div class='control-group'>
-      {{input type='email' value=email class='email-input' placeholder='Email Address'}}
+
+    <div class='login-hint'>
+      Already have an account?  <a href='/login' {{action 'logInWithRoom'}}>Log In</a>
     </div>
-    <div class='form-actions'>
-      <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Join Group</button>
 
-      {{#if showFacebookChoice}}
-        <div class='or-divider'>OR</div>
-
-        <button type='button' class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'
-          {{bind-attr disabled='isSignupDisabled'}}
-          {{action 'attemptSignUpWithFacebook'}}>
-          <span class='facebook-f-icon'></span>
-          <div class='btn-fb-text-container'>
-            Connect with Facebook
-          </div>
-        </button>
-      {{/if}}
-
-      <div class='login-hint'>
-        Already have an account?  <a href='/login' {{action 'logInWithRoom'}}>Log In</a>
-      </div>
-
-      <div class='terms'>
-        By joining, you agree to the<br>
-        <a href='/legal/tos' target='_blank'>Terms of Service</a>
-        &amp;
-        <a href='/legal/privacy' target='_blank'>Privacy Policy</a>.
-      </div>
+    <div class='terms'>
+      By joining, you agree to the<br>
+      <a href='/legal/tos' target='_blank'>Terms of Service</a>
+      &amp;
+      <a href='/legal/privacy' target='_blank'>Privacy Policy</a>.
     </div>
-  </div>
 
-  <div class='narrow-bottom-container'>
-    <img class='big-image' src='{{webServerUrl 'imageFeature1'}}' style='width: 253px; height: auto'>
-    <div class='text-title'>
-      Group Chat with Email,<br>
-      Phone, or the Web
-    </div>
-    <div class='text'>
-      Login from any iOS device, computer, or web browser.  When you&rsquo;re
-      offline, your important messages will forward to your email.
+    <div class='learn-more'>
+      <a href='/?src=learn-more' target='_blank'>Learn More</a>
     </div>
   </div>
 
