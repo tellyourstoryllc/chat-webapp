@@ -7,9 +7,7 @@
     </div>
   {{/if}}
   <div class='control-group'>
-    <label class='control-label'>Email Address</label>
-    <br>
-    {{input type='email' value=email class='email-input'}}
+    {{input type='email' value=email class='email-input' placeholder='Email Address'}}
   </div>
   <div class='form-actions'>
     <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Join Group</button>
