@@ -1,3 +1,9 @@
+<div class='logo-container'>
+  {{#link-to 'index'}}
+    <img class='logo' src='{{webServerUrl 'imageLogoWide'}}' alt='{{unbound App.title}}' style='width: 190px; height: auto;'>
+  {{/link-to}}
+</div>
+
 <div class='empty-page-content join-page-content'>
   {{#if userMessage}}
     <div class='alert alert-error'>

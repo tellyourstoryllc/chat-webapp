@@ -768,9 +768,15 @@ room-sidebar-width = 240px
 .join-page
   background-image asseturl('/images/purple-bkg.png')
   background-size cover
+  color rgba(255,255,255, .5)
 
   .navbar
-    background-color transparent
+    display none
+
+  .logo-container
+    border-top 4px solid app-green
+    padding-top 10px
+    text-align center
 
   .footer
     margin-bottom 10px
@@ -2285,6 +2291,7 @@ room-join-dialog-width = 350px
   background-clip padding-box
   background-color rgba(238, 240, 240, .96)
   box-shadow 0 0 30px rgba(0,0,0, .5)
+  color rgb(0,0,0)
   text-align center
 
   .title
