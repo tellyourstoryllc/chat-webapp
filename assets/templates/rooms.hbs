@@ -37,33 +37,35 @@
       <img src='{{webServerUrl 'imageLogo'}}' alt='{{unbound App.title}}' style='width: 49px; height: 32px;'>
     {{/link-to}}
   </div>
-  <div class='join-text-container'>
-    <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
-  </div>
-  <ul class='rooms-list'>
-    <li class='room-list-item'>
-      <a href='#' {{action 'showCreateRoomDialog'}}>
-        <span class='create-room-icon'></span>
-        <div class='room-name create-room-name'>Create Room</div>
-      </a>
-    </li>
-    {{#if roomsLoaded}}
-      {{#each room in arrangedRooms}}
-        <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
-          {{#link-to 'rooms.room' room}}
-            <div class='active-indicator'></div>
-            {{room-avatar room=room showStatus=true}}
-            <div class='room-name'>{{room.name}}</div>
-            <span {{bind-attr class=':room-door-icon room.isRoom::hidden'}}></span>
-            <div class='room-status'>{{room.statusText}}</div>
-            <div class='clearfix'></div>
-          {{/link-to}}
-        </li>
-      {{/each}}
-    {{else}}
-      Loading...
-    {{/if}}
-  </ul>
+  {{#if isLoggedIn}}
+    <div class='join-text-container'>
+      <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
+    </div>
+    <ul class='rooms-list'>
+      <li class='room-list-item'>
+        <a href='#' {{action 'showCreateRoomDialog'}}>
+          <span class='create-room-icon'></span>
+          <div class='room-name create-room-name'>Create Room</div>
+        </a>
+      </li>
+      {{#if roomsLoaded}}
+        {{#each room in arrangedRooms}}
+          <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
+            {{#link-to 'rooms.room' room}}
+              <div class='active-indicator'></div>
+              {{room-avatar room=room showStatus=true}}
+              <div class='room-name'>{{room.name}}</div>
+              <span {{bind-attr class=':room-door-icon room.isRoom::hidden'}}></span>
+              <div class='room-status'>{{room.statusText}}</div>
+              <div class='clearfix'></div>
+            {{/link-to}}
+          </li>
+        {{/each}}
+      {{else}}
+        Loading...
+      {{/if}}
+    </ul>
+  {{/if}}
 
   <div class='current-user-status-bar'>
     <div {{bind-attr class=':current-user-status-cell view.showAvatars::avatars-off'}} {{action 'toggleChooseStatusMenu' target='view' bubbles=false}}>
