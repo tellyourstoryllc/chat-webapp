@@ -1,5 +1,13 @@
 App.JoinRoute = Ember.Route.extend
 
+  activate: ->
+    @_super(arguments...)
+    @controllerFor('application').set('doNotShowLoginSignup', true)
+
+  deactivate: ->
+    @_super(arguments...)
+    @controllerFor('application').set('doNotShowLoginSignup', false)
+
   model: (params, transition) ->
     params.join_code
 

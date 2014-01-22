@@ -8,16 +8,18 @@
           <img id='brand-image-wide' src='{{webServerUrl 'imageLogoWide'}}' alt='{{unbound App.title}}' id='brand-image-wide' style='width: 190px; height: auto;'>
         {{/link-to}}
       </div>
-      {{#unless isLoggedIn}}
-        <div class='pull-right'>
-          {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
-          {{#unless App.showRoomKeyForm}}
-            <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
-          {{/unless}}
-          {{#if App.showRoomKeyForm}}
-            {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=App.roomKeyTextToShow}}
-          {{/if}}
-        </div>
+      {{#unless doNotShowLoginSignup}}
+        {{#unless isLoggedIn}}
+          <div class='pull-right'>
+            {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
+            {{#unless App.showRoomKeyForm}}
+              <a href='/signup' class='nav-link signup-nav-link' {{action 'goToSignUp'}}>Sign Up</a>
+            {{/unless}}
+            {{#if App.showRoomKeyForm}}
+              {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=App.roomKeyTextToShow}}
+            {{/if}}
+          </div>
+        {{/unless}}
       {{/unless}}
       <div class='clearfix'></div>
     </div>
