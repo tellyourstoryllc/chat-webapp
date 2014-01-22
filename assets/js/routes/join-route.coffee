@@ -28,6 +28,7 @@ App.JoinRoute = Ember.Route.extend
       controller.set('isLoading', false)
     .then (json) =>
       group = App.Group.loadSingle(json)
+      controller.set('room', group)
       if App.isLoggedIn() && group?.get('isCurrentUserMember')
         @send('goToRoom', group)
     , (xhr) =>
