@@ -1,7 +1,11 @@
 {{! Use a form tag to capture enter key. }}
 <form class='form signup-form room-join-group-signup-form' {{action 'attemptSignup' on='submit'}}>
   <div class='title'>
-    Universal Group Messenger
+    Skymob: group chat<br>
+    that works anywhere.
+  </div>
+  <div class='subtitle'>
+    Enter your email address to start chatting.
   </div>
   {{#if errorMessage}}
     <div class='alert alert-error'>
