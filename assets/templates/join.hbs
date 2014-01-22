@@ -8,7 +8,13 @@
     {{#if isLoading}}
       Loading...
     {{else}}
-      {{link-to 'Go Back to Chat' 'index'}}
+      {{room-join-group-signup-form viewName='joinGroupSignupForm'
+        isInline=true
+        didSignUp='didSignUp'
+        didLogIn='didLogIn'
+        signUpWithFacebook='signUpWithFacebook'
+        facebookDidError='facebookDidError'
+        logInWithRoom='logInWithRoom'}}
     {{/if}}
   </div>
 </div>

@@ -3,6 +3,7 @@
 # Actions: signUpWithFacebook, logInWithRoom
 App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFillSignupMixin,
   classNames: ['room-join-group-signup-form-component']
+  classNameBindings: ['isInline:inline']
 
   showRelatedLinks: false
   showFacebookChoice: true

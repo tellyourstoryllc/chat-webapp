@@ -20,7 +20,8 @@ App.JoinRoute = Ember.Route.extend
       controller.set('isLoading', false)
     .then (json) =>
       group = App.Group.loadSingle(json)
-      @send('goToRoom', group) if group?
+      if App.isLoggedIn() && group?.get('isCurrentUserMember')
+        @send('goToRoom', group)
     , (xhr) =>
       msg = "There was a problem.  Please try again later." if 500 <= xhr.status <= 599
       msg ?= "Sorry, that room couldn't be found."
