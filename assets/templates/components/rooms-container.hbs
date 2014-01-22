@@ -214,9 +214,15 @@
 
         <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
           <div class='invite-button-container'>
-            <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
-              Invite
-            </button>
+            {{#if isLoggedIn}}
+              <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
+                Invite
+              </button>
+            {{else}}
+              <div class='members-title'>
+                Members
+              </div>
+            {{/if}}
           </div>
         </div>
       {{/if}}
