@@ -50,9 +50,6 @@ App.RoomsRoute = Ember.Route.extend
         # Transitioning away from the last room; go to the lobby.
         @transitionTo('rooms.index')
 
-  _joinGroupNow: (room) ->
-    @send('joinGroup', room.get('joinCode'))
-
   _hideJoinGroupSignupDialog: ->
     controller = @controllerFor('rooms')
     controller.set('showRoomsPageOverlay', false)
@@ -80,7 +77,7 @@ App.RoomsRoute = Ember.Route.extend
       # Just do the default (bubble) if we have no room.
       return true unless room?
 
-      @_joinGroupNow(room)
+      @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
       return undefined
@@ -90,7 +87,7 @@ App.RoomsRoute = Ember.Route.extend
       # Just do the default (bubble) if we have no room.
       return true unless room?
 
-      @_joinGroupNow(room)
+      @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
       return undefined

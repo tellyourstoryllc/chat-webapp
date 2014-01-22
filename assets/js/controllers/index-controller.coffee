@@ -16,7 +16,7 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
   joinCode: Ember.computed.alias('joinCodeToShow')
 
   joinGroupNow: (room) ->
-    @get('target').send('joinGroup', room.get('joinCode'))
+    @get('target').send('joinGroup', room)
 
   actions:
 
