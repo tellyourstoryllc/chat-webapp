@@ -4,6 +4,16 @@ App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
 
   room: null
 
+  userMessage: null
+  isLoading: false
+  isSignupDisabled: false
+
+  reset: ->
+    @setProperties
+      userMessage: null
+      isLoading: false
+      isSignupDisabled: false
+
   actions:
 
     logInWithRoom: ->
@@ -15,6 +25,9 @@ App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
       @transitionToRoute('login')
 
     didSignUp: ->
+      # Disable the signup UI.
+      @set('isSignupDisabled', true)
+
       room = @get('room')
       # Just do the default (bubble) if we have no room.
       return true unless room?
@@ -23,6 +36,9 @@ App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
       return undefined
 
     didLogIn: ->
+      # Disable the signup UI.
+      @set('isSignupDisabled', true)
+
       room = @get('room')
       # Just do the default (bubble) if we have no room.
       return true unless room?

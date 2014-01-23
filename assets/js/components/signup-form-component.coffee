@@ -8,15 +8,19 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   password: null
   name: null
 
+  # Public binding you can set to true to disable the UI.
+  isUiDisabled: false
+
   facebookId: null
   facebookToken: null
   avatarImageUrl: null
 
+  # Internal state.
   isCreatingUser: false
   isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn')
+  isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn', 'isUiDisabled')
 
   errorMessage: null
   facebookErrorMessage: null

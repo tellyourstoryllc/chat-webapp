@@ -13,6 +13,7 @@ App.JoinRoute = Ember.Route.extend
 
   setupController: (controller, model) ->
     @_super(arguments...)
+    controller.reset?()
     joinCode = model
     controller.set('joinCode', joinCode)
     controller.set('isLoading', true)
