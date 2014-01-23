@@ -2529,15 +2529,28 @@ sender-column-width = 150px
   .expand-indicator
     position absolute
     top 5px
-    right 5px
+    left 5px
     border-radius 3px
     padding 8px 12px
     background-color rgba(0,0,0, .75)
     color #ddd
     cursor pointer
-    opacity .6
+    opacity .8
+
+    > .play-icon
+      display inline-block
+      width 0
+      height 0
+      border 10px solid transparent
+      border-left 15px solid #ddd
+      border-right 0
 
     &.expanded
+      left auto
+      right 5px
+      top 5px
+      background-color rgba(0,0,0, .75)
+      opacity .6
       // When it's expanded, only show it on mouse over.
       display none
 
@@ -2546,8 +2559,8 @@ sender-column-width = 150px
     display inline-block
     // Min dimensions to have enough space for the .expand-indicator needed
     // when the preview image is super tiny or doesn't load.
-    min-width 38px
-    min-height 30px
+    min-width 45px
+    min-height 45px
 
     > img
       // Prevent space below the image.
