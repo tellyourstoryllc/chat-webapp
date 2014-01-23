@@ -85,7 +85,7 @@ App.Message = App.BaseModel.extend
       # since it otherwise requires server support.
       return '' unless Modernizr.adownload
       """
-      <div>
+      <div class='download-link'>
         <a href='#{escape(attachmentUrl)}' download>Download</a>
       </div>
       """
