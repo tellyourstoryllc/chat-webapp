@@ -145,10 +145,17 @@ App.RoomsView = Ember.View.extend
 
     height = $window.height()
     height -= $('.logo').outerHeight(true) ? 0
+    height -= $('.left-sidebar-tab-handles').outerHeight(true) ? 0
+    height -= 3 # Extra pixels to line up perfectly.
+    commonSidebarHeight = height
     height -= $('.join-text-container').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
-    height -= 3 # Extra pixels to line up perfectly.
     @$('.rooms-list').css
+      height: height
+
+    height = commonSidebarHeight
+    # height -= $('.contacts-search-container').outerHeight(true) ? 0
+    @$('.contacts-list').css
       height: height
 
     windowWidth = $window.width()

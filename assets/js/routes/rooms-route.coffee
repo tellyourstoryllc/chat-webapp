@@ -8,6 +8,7 @@ App.RoomsRoute = Ember.Route.extend
   setupController: (controller, model) ->
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
+    controller.set('allContacts', []) if ! controller.get('allContacts')?
     if App.isLoggedIn()
       @_fetchAllConversationsAndSubscribe(controller)
 

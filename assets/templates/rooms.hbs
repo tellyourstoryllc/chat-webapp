@@ -26,33 +26,67 @@
     {{/link-to}}
   </div>
   {{#if isLoggedIn}}
-    <div class='join-text-container'>
-      <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
+    <div class='left-sidebar-tabs-container'>
+      <div class='left-sidebar-tab-handles'>
+        <div {{bind-attr class=':tab-handle :rooms-tab isRoomsTabActive:active'}} {{action 'showRoomsTab'}}>
+          Rooms
+        </div>
+        <div {{bind-attr class=':tab-handle :contacts-tab isContactsTabActive:active'}} {{action 'showContactsTab'}}>
+          Contacts
+        </div>
+      </div>
     </div>
-    <ul class='rooms-list'>
-      <li class='room-list-item'>
-        <a href='#' {{action 'showCreateRoomDialog'}}>
-          <span class='create-room-icon'></span>
-          <div class='room-name create-room-name'>Create Room</div>
-        </a>
-      </li>
-      {{#if roomsLoaded}}
-        {{#each room in arrangedRooms}}
-          <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
-            {{#link-to 'rooms.room' room}}
-              <div class='active-indicator'></div>
-              {{room-avatar room=room showStatus=true}}
-              <div class='room-name'>{{room.name}}</div>
-              <span {{bind-attr class=':room-door-icon room.isRoom::hidden'}}></span>
-              <div class='room-status'>{{room.statusText}}</div>
+    <div {{bind-attr class=':tab-content :rooms-tab-content isRoomsTabActive::hidden'}}>
+      <div class='join-text-container'>
+        <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
+      </div>
+      <ul class='rooms-list'>
+        <li class='room-list-item'>
+          <a href='#' {{action 'showCreateRoomDialog'}}>
+            <span class='create-room-icon'></span>
+            <div class='room-name create-room-name'>Create Room</div>
+          </a>
+        </li>
+        {{#if roomsLoaded}}
+          {{#each room in arrangedRooms}}
+            <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
+              {{#link-to 'rooms.room' room}}
+                <div class='active-indicator'></div>
+                {{room-avatar room=room showStatus=true}}
+                <div class='room-name'>{{room.name}}</div>
+                <span {{bind-attr class=':room-door-icon room.isRoom::hidden'}}></span>
+                <div class='room-status'>{{room.statusText}}</div>
+                <div class='clearfix'></div>
+              {{/link-to}}
+            </li>
+          {{/each}}
+        {{else}}
+          Loading...
+        {{/if}}
+      </ul>
+    </div>
+    <div {{bind-attr class=':tab-content :contacts-tab-content isContactsTabActive::hidden'}}>
+      {{!
+      <div class='contacts-search-container'>
+        <input type='text' class='contacts-search-text' placeholder='Search' autocomplete='off'>
+      </div>
+      }}
+      <div class='contacts-list'>
+        {{#if contactsLoaded}}
+          {{#each user in arrangedContacts}}
+            <div class='contact-list-item'>
+              {{room-avatar room=user showStatus=true}}
+              <span class='username'>{{user.name}}</span>
               <div class='clearfix'></div>
-            {{/link-to}}
-          </li>
-        {{/each}}
-      {{else}}
-        Loading...
-      {{/if}}
-    </ul>
+            </div>
+          {{else}}
+            None Found
+          {{/each}}
+        {{else}}
+          Loading...
+        {{/if}}
+      </div>
+    </div>
   {{/if}}
 
   <div class='current-user-status-bar'>

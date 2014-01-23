@@ -217,6 +217,9 @@ App.RemoteApi = Ember.Object.extend
       instances = App.loadAll(json)
       return instances.filter (o) -> o.get('actsLikeConversation')
 
+  fetchContacts: (data) ->
+    @ajax(@buildURL('/contacts'), 'GET', data: data)
+
   updatePreferences: (data) ->
     @ajax(@buildURL('/preferences/update'), 'POST', data: data)
 
