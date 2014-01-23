@@ -31,6 +31,7 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
   ).observes('room', 'room._membersAssociationLoaded')
 
   updateSize: ->
+    return unless @currentState == Ember.View.states.inDOM
     $e = @$()
     width = $e.outerWidth()
     height = $e.outerHeight()
