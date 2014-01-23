@@ -3,6 +3,8 @@ extends layout
 block head-content
   //- Make sure robots don't treat this as duplicate content.
   link(rel='canonical' href='' + config.webServerProtocolAndHost + '/')
+
+block content
   //- Asset paths with md5 sums.
   script.
     window.AppAssets = {
@@ -16,8 +18,6 @@ block head-content
       imageRoom: !{JSON.stringify(img('/images/room.png'))},
       imageScreenshot: !{JSON.stringify(img('/images/screenshot.png'))}
     };
-
-block content
   script(src="#{config.fayeProtocolAndHost}/faye/client.js")
 
   //- For robots.
