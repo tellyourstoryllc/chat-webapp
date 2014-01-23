@@ -6,6 +6,9 @@ window.App = App = Ember.Application.create
   # Set to true to enable more verbose logging to the console.
   useDebugLogging: false
 
+  # Query string that is appended to tracked URL for analytics.
+  pendingQueryString: null
+
   # Object that mixes in `Ember.Evented` and receives application events.
   #
   # List of events:
@@ -105,6 +108,10 @@ window.App = App = Ember.Application.create
     useDebugLogging = window.localStorage.getItem('useDebugLogging')
     if useDebugLogging in ['1', 'true']
       @set('useDebugLogging', true)
+
+    # Ember blows away the query string, so we extract it now.  Our analytics
+    # tracking uses this.
+    App.set('pendingQueryString', window.location.search)
 
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -627,6 +634,13 @@ App.Router.reopen
     Ember.run.schedule 'afterRender', =>
       location = @get('location')
       url = location.getURL()
+
+      # If we have a query string waiting, consume it.
+      pendingQueryString = App.get('pendingQueryString')
+      App.set('pendingQueryString', null)
+      if ! Ember.isEmpty(pendingQueryString)
+        url += pendingQueryString
+
       if @get('lastPageViewUrl') == url
         # Skip double trigger of the same url.
         return
