@@ -74,7 +74,7 @@
       <div class='contacts-list'>
         {{#if contactsLoaded}}
           {{#each user in arrangedContacts}}
-            <div class='contact-list-item'>
+            <div class='contact-list-item' {{bind-attr data-user-id=user.id}}>
               {{room-avatar room=user showStatus=true}}
               <span class='username'>{{user.name}}</span>
               <div class='clearfix'></div>
@@ -128,6 +128,12 @@
       <button type='submit' class='save-status-text-button'>Save</button>
       <div class='clearfix'></div>
     </form>
+  </li>
+</ul>
+
+<ul class='menu contact-actions-menu' role='menu'>
+  <li class='menu-item' {{action 'goToContactOneToOne' target=view}}>
+    Go To 1-1 Conversation
   </li>
 </ul>
 
