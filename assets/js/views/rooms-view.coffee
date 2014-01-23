@@ -47,22 +47,6 @@ App.RoomsView = Ember.View.extend
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()
 
-      # Show the app install banner after a delay.
-      Ember.run.later =>
-        return unless @currentState == Ember.View.states.inDOM
-        $forPlatform = @$('.for-platform')
-        if $forPlatform?
-          platform = if Modernizr.iphone
-            'iPhone'
-          else if Modernizr.ipad
-            'iPad'
-          else if Modernizr.ipod
-            'iPod'
-          if platform?
-            $forPlatform.text("for #{platform}")
-        @$('.app-install-banner')?.removeClass('temporarily-hidden')
-      , 2500
-
   willDestroyElement: ->
     @get('controller').set('roomsView', null)
 
@@ -289,10 +273,6 @@ App.RoomsView = Ember.View.extend
     undefined
 
   actions:
-
-    dismissAppInstallBanner: ->
-      @$('.app-install-banner').addClass('hidden')
-      return undefined
 
     toggleRoomsSidebar: ->
       @toggleProperty('isShowingRoomsSidebar')

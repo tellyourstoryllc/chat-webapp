@@ -8,19 +8,7 @@
   <source src='{{webServerUrl '/audio/receive.m4a'}}'>
 </audio>
 
-{{#if isAppleIos}}
-  <div class='app-install-banner temporarily-hidden'>
-    <div class='close' {{action 'dismissAppInstallBanner' target=view}}>&times;</div>
-    <img src='{{webServerUrl 'imageLogo'}}' alt='{{unbound App.title}}' style='width: 49px; height: 32px; padding-top: 2px' class='app-install-logo'>
-    <div class='pull-right' style='margin: 10px 0'>
-      <span class='for-platform'></span>
-      <a class='app-btn btn-flat btn-green' href='https://itunes.apple.com/us/app/skymob-best-app-for-group/id778593574?ls=1&mt=8' target='_blank'>
-        Install App
-      </a>
-    </div>
-    <div class='clearfix'></div>
-  </div>
-{{/if}}
+{{app-install-banner}}
 
 {{#if showRoomsPageOverlay}}
   <div class='page-overlay room-join-group-page-overlay'>
