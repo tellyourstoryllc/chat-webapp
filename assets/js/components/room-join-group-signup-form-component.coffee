@@ -5,6 +5,8 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
   classNames: ['room-join-group-signup-form-component']
   classNameBindings: ['isInline:inline']
 
+  room: null
+
   showRelatedLinks: false
   showFacebookChoice: true
   shouldRequirePassword: false
@@ -23,6 +25,10 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
       @updateSize()
       return undefined
   , 100, leading: false
+
+  roomChanged: (->
+    Ember.run.schedule 'afterRender', @, 'updateSize'
+  ).observes('room', 'room._membersAssociationLoaded')
 
   updateSize: ->
     $e = @$()

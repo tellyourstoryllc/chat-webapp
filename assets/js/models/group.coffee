@@ -25,6 +25,10 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
 
+  admins: (->
+    @get('adminIds').map((id) -> App.User.lookup(id)).compact()
+  ).property('adminIds.@each', '_membersAssociationLoaded')
+
   joinCode: (->
     App.Group.parseJoinCode(@get('joinUrl'))
   ).property('joinUrl')
