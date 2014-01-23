@@ -2,6 +2,7 @@
 
 App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
 
+  joinCode: null
   room: null
 
   userMessage: null

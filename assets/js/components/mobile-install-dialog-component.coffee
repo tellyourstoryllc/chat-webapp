@@ -17,6 +17,7 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
     @$('.app-store-link').on 'click', @onInstallAppClick
     # Run later so that images can hopefully load.
     Ember.run.later @, ->
+      # If the setting is saved, auto-launch the mobile app.
       if window.localStorage.getItem('autoLaunchApp') in ['1', 'true']
         @send('launchMobileApp')
     , 50
