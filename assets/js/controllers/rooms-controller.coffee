@@ -47,6 +47,18 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
   actions:
 
+    logInWithRoom: ->
+      room = @get('activeRoom')
+      if room?
+        # Auto-join room after logging in.
+        App.set('autoJoinAfterLoggingIn', room)
+
+      @transitionToRoute('login')
+
+    didFocusSendMessageText: ->
+      @get('roomsView')?.send('didFocusSendMessageText')
+      return undefined
+
     toggleRoomsSidebar: ->
       @get('roomsView')?.send('toggleRoomsSidebar')
       return undefined

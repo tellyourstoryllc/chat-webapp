@@ -6,6 +6,9 @@ window.App = App = Ember.Application.create
   # Set to true to enable more verbose logging to the console.
   useDebugLogging: false
 
+  # Query string that is appended to tracked URL for analytics.
+  pendingQueryString: null
+
   # Object that mixes in `Ember.Evented` and receives application events.
   #
   # List of events:
@@ -106,6 +109,10 @@ window.App = App = Ember.Application.create
     if useDebugLogging in ['1', 'true']
       @set('useDebugLogging', true)
 
+    # Ember blows away the query string, so we extract it now.  Our analytics
+    # tracking uses this.
+    App.set('pendingQueryString', window.location.search)
+
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
       # we have a hash, we were probably on IE9 or below and refreshed the page
@@ -183,6 +190,12 @@ window.App = App = Ember.Application.create
           Ember.Logger.log "Invalid token; logging out"
           window.localStorage.removeItem('token')
       .fail App.rejectionHandler
+    else
+      # No token.  Not logged in.
+
+      # Use localStorage or default preferences.  Not kept in our local store so
+      # that when we do fetch Preferences, those are used.
+      App.usePreferences(App.Preferences.create())
 
     # Setup copying to clipboard.  Versioning the URL to prevent caching issues.
     ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf', hoverClass: 'hover')
@@ -248,18 +261,7 @@ window.App = App = Ember.Application.create
   # This is triggered after logging in and checking in.
   didCheckIn: ->
     # Setup preferences.
-    prefs = App.Preferences.all()[0]
-    clientPrefs = prefs.get('clientWeb')
-    for key, defaultVal of App.Preferences.clientPrefsDefaults
-      val = undefined
-      # Prefer localStorage value.
-      strVal = window.localStorage.getItem(key)
-      if strVal?
-        val ?= App.Preferences.coerceValueFromStorage(key, strVal)
-      val ?= clientPrefs.get(key)
-      val ?= defaultVal
-      clientPrefs.set(key, val)
-    @set('preferences', prefs)
+    @usePreferences(App.Preferences.all()[0])
 
     user = @get('currentUser')
 
@@ -392,6 +394,21 @@ window.App = App = Ember.Application.create
   useNewAuthToken: (token) ->
     App.set('token', token)
     window.localStorage.setItem('token', token)
+
+  # Given an `App.Preferences` instance, load defaults and set it up to actually
+  # be used.
+  usePreferences: (prefs) ->
+    clientPrefs = prefs.get('clientWeb')
+    for key, defaultVal of App.Preferences.clientPrefsDefaults
+      val = undefined
+      # Prefer localStorage value.
+      strVal = window.localStorage.getItem(key)
+      if strVal?
+        val ?= App.Preferences.coerceValueFromStorage(key, strVal)
+      val ?= clientPrefs.get(key)
+      val ?= defaultVal
+      clientPrefs.set(key, val)
+    @set('preferences', prefs)
 
   # Note: due to browser restrictions, the actual infobar to ask the user to
   # enable notifications can only be displayed as the result of a click or other
@@ -617,6 +634,13 @@ App.Router.reopen
     Ember.run.schedule 'afterRender', =>
       location = @get('location')
       url = location.getURL()
+
+      # If we have a query string waiting, consume it.
+      pendingQueryString = App.get('pendingQueryString')
+      App.set('pendingQueryString', null)
+      if ! Ember.isEmpty(pendingQueryString)
+        url += pendingQueryString
+
       if @get('lastPageViewUrl') == url
         # Skip double trigger of the same url.
         return

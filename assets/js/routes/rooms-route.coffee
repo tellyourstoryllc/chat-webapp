@@ -8,15 +8,8 @@ App.RoomsRoute = Ember.Route.extend
   setupController: (controller, model) ->
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
-    App.get('api').fetchAllConversations()
-    .then (rooms) =>
-      if rooms?
-        controller.set('roomsLoaded', true)
-        # Fetch all Conversations after subscribing.
-        rooms.forEach (room) =>
-          room.subscribeToMessages().then =>
-            room.reload()
-    .fail App.rejectionHandler
+    if App.isLoggedIn()
+      @_fetchAllConversationsAndSubscribe(controller)
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)
@@ -27,6 +20,14 @@ App.RoomsRoute = Ember.Route.extend
       outlet: 'settingsModal'
       view: 'settingsModal'
       controller: 'settingsModal'
+    if ! App.isLoggedIn() && ! App.get('isLoggingIn')
+      # Logged out.  Show signup form.
+      @render 'room-join-signup-modal',
+        into: 'application'
+        outlet: 'modal'
+      controller.set('showRoomsPageOverlay', true)
+    else
+      controller.set('showRoomsPageOverlay', false)
     return undefined
 
   _uiRooms: ->
@@ -49,7 +50,47 @@ App.RoomsRoute = Ember.Route.extend
         # Transitioning away from the last room; go to the lobby.
         @transitionTo('rooms.index')
 
+  _hideJoinGroupSignupDialog: ->
+    controller = @controllerFor('rooms')
+    controller.set('showRoomsPageOverlay', false)
+    @disconnectOutlet
+      outlet: 'modal'
+      parentView: 'application'
+
+  _fetchAllConversationsAndSubscribe: (controller = null) ->
+    controller ?= @controllerFor('rooms')
+    App.get('api').fetchAllConversations()
+    .then (rooms) =>
+      if rooms?
+        controller.set('roomsLoaded', true)
+        # Fetch all Conversations after subscribing.
+        rooms.forEach (room) =>
+          room.subscribeToMessages().then =>
+            room.reload()
+      return rooms
+    .fail App.rejectionHandler
+
   actions:
+
+    didSignUp: ->
+      room = App.get('currentlyViewingRoom')
+      # Just do the default (bubble) if we have no room.
+      return true unless room?
+
+      @send('joinGroup', room)
+      @_hideJoinGroupSignupDialog()
+      @_fetchAllConversationsAndSubscribe()
+      return undefined
+
+    didLogIn: ->
+      room = App.get('currentlyViewingRoom')
+      # Just do the default (bubble) if we have no room.
+      return true unless room?
+
+      @send('joinGroup', room)
+      @_hideJoinGroupSignupDialog()
+      @_fetchAllConversationsAndSubscribe()
+      return undefined
 
     showPreviousRoom: ->
       uiRooms = @_uiRooms()

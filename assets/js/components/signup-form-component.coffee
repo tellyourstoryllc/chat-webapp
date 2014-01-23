@@ -2,19 +2,25 @@
 App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   classNames: ['signup-form-component']
 
+  shouldRequirePassword: true
+
   email: null
   password: null
   name: null
+
+  # Public binding you can set to true to disable the UI.
+  isUiDisabled: false
 
   facebookId: null
   facebookToken: null
   avatarImageUrl: null
 
+  # Internal state.
   isCreatingUser: false
   isLoggingIn: false
   isAuthenticatingWithFacebook: false
 
-  isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn')
+  isSignupDisabled: Ember.computed.or('isCheckingLogIn', 'isCreatingUser', 'isLoggingIn', 'isUiDisabled')
 
   errorMessage: null
   facebookErrorMessage: null
@@ -33,6 +39,10 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
     close: ->
       @sendAction('didClose')
+      return undefined
+
+    dismissErrorMessage: ->
+      @set('errorMessage', null)
       return undefined
 
     attemptSignUpWithFacebook: ->
@@ -131,7 +141,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
       password = @get('password') ? ''
       minPasswordLength = App.Account.minPasswordLength()
-      if Ember.isEmpty(facebookToken) && password.length < minPasswordLength
+      if @get('shouldRequirePassword') && Ember.isEmpty(facebookToken) && password.length < minPasswordLength
         @set('errorMessage', "Password must be at least #{minPasswordLength} characters.")
         return
 
@@ -142,7 +152,8 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
         email: email
         name: name
       if Ember.isEmpty(facebookToken)
-        data.password = password
+        # Password is optional, so don't send it if it's empty string.
+        data.password = password if password? && password.length > 0
       else
         data.facebook_id = @get('facebookId')
         data.facebook_token = facebookToken

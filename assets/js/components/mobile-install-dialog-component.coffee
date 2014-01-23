@@ -12,6 +12,7 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
     _.bindAll(@, 'onTouchEnd', 'onInstallAppClick')
 
   didInsertElement: ->
+    $('body').addClass('with-mobile-dialog')
     @$('.hidden-continue').on 'touchend', @onTouchEnd
     @$('.app-store-link').on 'click', @onInstallAppClick
     # Run later so that images can hopefully load.
@@ -23,6 +24,7 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
   willDestroyElement: ->
     @$('.hidden-continue').off 'touchend', @onTouchEnd
     @$('.app-store-link').off 'click', @onInstallAppClick
+    $('body').removeClass('with-mobile-dialog')
 
   onTouchEnd: (event) ->
     Ember.run @, ->

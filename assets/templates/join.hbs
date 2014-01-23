@@ -1,13 +1,30 @@
+<div class='logo-container'>
+  {{#link-to 'index'}}
+    <img class='logo' src='{{webServerUrl 'imageLogoWide'}}' alt='{{unbound App.title}}' style='width: 190px; height: auto;'>
+  {{/link-to}}
+</div>
+
 <div class='empty-page-content join-page-content'>
   {{#if userMessage}}
     <div class='alert alert-error'>
       {{userMessage}}
     </div>
   {{/if}}
-  {{#if isLoading}}
-    <div class='loading'>Loading...</div>
-  {{/if}}
-  {{link-to 'Go Back to Chat' 'index'}}
+  <div class='text-content'>
+    {{#if isLoading}}
+      Loading...
+    {{else}}
+      {{room-join-group-signup-form viewName='joinGroupSignupForm'
+        isInline=true
+        room=room
+        isUiDisabled=isSignupDisabled
+        didSignUp='didSignUp'
+        didLogIn='didLogIn'
+        signUpWithFacebook='signUpWithFacebook'
+        facebookDidError='facebookDidError'
+        logInWithRoom='logInWithRoom'}}
+    {{/if}}
+  </div>
 </div>
 
 {{footer-bar}}

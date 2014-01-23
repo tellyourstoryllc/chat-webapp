@@ -19,16 +19,9 @@ App.RoomsRoomRoute = Ember.Route.extend
     params.room_id
 
   afterModel: (model, transition) ->
-    if App.get('isLoggingIn') || (! App.isLoggedIn() && ! (Modernizr.appleios || Modernizr.android))
+    if App.get('isLoggingIn')
       App.set('continueTransition', transition)
       @replaceWith('login')
-    else if ! App.isLoggedIn()
-      # ***********************************************************************
-      # Note: We're treating a room ID as a join code here!  This could cause
-      # issues once we differentiate again.
-      joinCode = model
-      App.set('joinCodeToShow', joinCode)
-      @transitionTo('index')
     return undefined
 
   setupController: (controller, model) ->

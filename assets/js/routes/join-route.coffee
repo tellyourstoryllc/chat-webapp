@@ -8,14 +8,12 @@ App.JoinRoute = Ember.Route.extend
       # Save the transition so that if the user logs in in the future, we come
       # back to the join page.
       App.set('continueTransition', transition)
-    else if ! App.isLoggedIn()
-      joinCode = model
-      App.set('joinCodeToShow', joinCode)
-      @replaceWith('index')
+      @replaceWith('login')
     return undefined
 
   setupController: (controller, model) ->
     @_super(arguments...)
+    controller.reset?()
     joinCode = model
     controller.set('joinCode', joinCode)
     controller.set('isLoading', true)
@@ -24,7 +22,12 @@ App.JoinRoute = Ember.Route.extend
       controller.set('isLoading', false)
     .then (json) =>
       group = App.Group.loadSingle(json)
-      @send('goToRoom', group) if group?
+      controller.set('room', group)
+      if group?
+        if App.isLoggedIn()
+          @send('goToRoom', group)
+        else if App.get('isLoggingIn')
+          App.set('continueTransitionArgs', ['rooms.room', group])
     , (xhr) =>
       msg = "There was a problem.  Please try again later." if 500 <= xhr.status <= 599
       msg ?= "Sorry, that room couldn't be found."

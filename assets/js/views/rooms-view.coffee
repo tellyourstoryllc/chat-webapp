@@ -351,3 +351,7 @@ App.RoomsView = Ember.View.extend
       @closeChooseStatusMenu()
       @get('controller').send('logOut')
       return undefined
+
+    didFocusSendMessageText: ->
+      @set('isShowingRoomsSidebar', false)
+      return undefined

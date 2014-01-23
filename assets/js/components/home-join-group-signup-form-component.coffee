@@ -1,11 +1,13 @@
 #= require signup-form-component
 
-# Actions: didGoBack
-App.HomeSignupFormComponent = App.SignupFormComponent.extend
-  classNames: ['home-signup-form-component']
+# Actions: signUpWithFacebook, logInWithRoom
+App.HomeJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFillSignupMixin,
+  classNames: ['home-join-signup-form-component']
   classNameBindings: ['isElementVisible:visible']
 
   showRelatedLinks: false
+  showFacebookChoice: true
+  shouldRequirePassword: false
 
   userErrorMessageDidChange: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -22,6 +24,6 @@ App.HomeSignupFormComponent = App.SignupFormComponent.extend
 
   actions:
 
-    goBack: ->
-      @sendAction('didGoBack')
+    logInWithRoom: ->
+      @sendAction('logInWithRoom')
       return undefined
