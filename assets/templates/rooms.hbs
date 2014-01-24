@@ -73,6 +73,11 @@
       }}
       <div class='contacts-list'>
         {{#if contactsLoaded}}
+          <div class='contact-list-item add-contacts-list-item' {{action 'showAddContactsDialog'}}>
+            <span class='add-contacts-icon'></span>
+            <div class='username add-contacts-name'>Add Contacts</div>
+            <div class='clearfix'></div>
+          </div>
           {{#each user in arrangedContacts}}
             <div class='contact-list-item' {{bind-attr data-user-id=user.id}}>
               {{room-avatar room=user showStatus=true}}

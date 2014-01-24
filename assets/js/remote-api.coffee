@@ -232,6 +232,10 @@ App.RemoteApi = Ember.Object.extend
       user_ids: users.mapProperty('id').join(',')
     @ajax(@buildURL('/contacts/remove'), 'POST', data: data)
 
+  addEmailContacts: (data) ->
+    data.emails = data.emails.join(',') if Ember.isArray(data.emails)
+    @ajax(@buildURL('/contacts/add'), 'POST', data: data)
+
   updatePreferences: (data) ->
     @ajax(@buildURL('/preferences/update'), 'POST', data: data)
 

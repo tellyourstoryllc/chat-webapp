@@ -154,6 +154,33 @@ App.RoomsRoute = Ember.Route.extend
       , 500 # After the animation.
       return undefined
 
+    showAddContactsDialog: ->
+      @render 'add-contacts',
+        into: 'application'
+        outlet: 'modal'
+      Ember.run.schedule 'afterRender', @, ->
+        $('.add-contacts-overlay').removeClass('hidden')
+        $('.add-contacts-form').addClass('expand-in')
+        $('.new-contacts-text').focus()
+      return undefined
+
+    hideAddContactsDialog: ->
+      $('.add-contacts-overlay').addClass('hidden')
+      $('.add-contacts-form').removeClass('expand-in')
+      Ember.run.later @, ->
+        @disconnectOutlet
+          outlet: 'modal'
+          parentView: 'application'
+      , 500 # After the animation.
+      return undefined
+
+    # Trigger this action when you have received new User instances from the
+    # server which are contacts.  This handler tracks the User instances as
+    # Contacts.
+    didAddUserContacts: (users) ->
+      users = Ember.makeArray(users)
+      App.get('currentUserContacts').addObjects(users)
+
     showSettings: ->
       @controllerFor('settingsModal').send('show')
       return undefined
