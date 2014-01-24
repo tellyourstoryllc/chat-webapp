@@ -4,6 +4,8 @@
 # becomes a contact or not.
 App.ContactsSet = App.SortedSet.extend
 
+  updateUsers: true
+
   sortProperties: ['name']
 
   addObject: (obj) ->
@@ -13,7 +15,7 @@ App.ContactsSet = App.SortedSet.extend
     set = @get('content')
     alreadyExists = set.contains(obj)
     if ! alreadyExists
-      obj.set('isContact', true)
+      obj.set('isContact', true) if @get('updateUsers')
       set.addObject(obj)
       @get('contentArray').addObject(obj)
 
@@ -26,7 +28,7 @@ App.ContactsSet = App.SortedSet.extend
     set = @get('content')
     alreadyExists = set.contains(obj)
     if alreadyExists
-      obj.set('isContact', false)
+      obj.set('isContact', false) if @get('updateUsers')
       set.removeObject(obj)
       @get('contentArray').removeObject(obj)
 
