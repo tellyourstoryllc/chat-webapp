@@ -888,6 +888,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       return unless room?
       user = room.get('otherUser')
       return unless user?
+      if user == App.get('currentUser')
+        alert "You can't add yourself as a contact."
+        return
+
       @sendAction('addUserContacts', user)
       return undefined
 
