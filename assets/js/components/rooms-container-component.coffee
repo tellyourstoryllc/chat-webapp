@@ -1,8 +1,8 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didFocusSendMessageText, didJoinGroup, didGoToRoom, didCloseRoom,
-#   didToggleRoomsSidebar, willLeaveRoom
+# Actions: addUserContacts, didFocusSendMessageText, didJoinGroup, didGoToRoom,
+#   didCloseRoom, didToggleRoomsSidebar, willLeaveRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -874,6 +874,14 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           # Stop listening for messages.
           room.set('isOpen', false)
 
+      return undefined
+
+    addUserToContacts: ->
+      room = @get('activeRoom')
+      return unless room?
+      user = room.get('otherUser')
+      return unless user?
+      @sendAction('addUserContacts', user)
       return undefined
 
     hideRoom: ->

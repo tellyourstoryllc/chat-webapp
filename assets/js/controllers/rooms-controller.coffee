@@ -109,6 +109,15 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
       @transitionToRoute('login')
 
+    addUserContacts: (users) ->
+      users = Ember.makeArray(users)
+      App.get('api').addUserContacts(users)
+      .then (json) =>
+        if ! json? || json.error?
+          throw json
+        @get('allContacts').pushObjects(users)
+      .fail App.rejectionHandler
+
     didFocusSendMessageText: ->
       @get('roomsView')?.send('didFocusSendMessageText')
       return undefined

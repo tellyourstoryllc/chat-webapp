@@ -420,7 +420,7 @@ App.RoomsView = Ember.View.extend
       return unless user?
 
       allContacts = @get('allContacts')
-      App.get('api').removeContacts(user)
+      App.get('api').removeUserContacts(user)
       .then (json) =>
         if ! json || json.error?
           # Rollback.  Order in the list shouldn't matter.

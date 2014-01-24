@@ -220,7 +220,13 @@ App.RemoteApi = Ember.Object.extend
   fetchContacts: (data) ->
     @ajax(@buildURL('/contacts'), 'GET', data: data)
 
-  removeContacts: (users) ->
+  addUserContacts: (users) ->
+    users = Ember.makeArray(users)
+    data =
+      user_ids: users.mapProperty('id').join(',')
+    @ajax(@buildURL('/contacts/add'), 'POST', data: data)
+
+  removeUserContacts: (users) ->
     users = Ember.makeArray(users)
     data =
       user_ids: users.mapProperty('id').join(',')
