@@ -4,7 +4,6 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
   allGroups: null
   allOneToOnes: null
-  allContacts: null
 
   activeTab: 'rooms'
 
@@ -20,6 +19,10 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       @set(key, [])
     # Force computed properties.
     @get('numUnreadRooms')
+
+  allContacts: (->
+    App.get('currentUserContacts')
+  ).property('App.currentUserContacts')
 
   isRoomsTabActive: Ember.computed.equal('activeTab', 'rooms')
   isContactsTabActive: Ember.computed.equal('activeTab', 'contacts')

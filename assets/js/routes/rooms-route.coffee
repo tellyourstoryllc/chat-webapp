@@ -6,10 +6,12 @@ App.RoomsRoute = Ember.Route.extend
     App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
 
   setupController: (controller, model) ->
+    # Initialize contacts.  It's possible to access this when logged out.
+    if ! App.get('currentUserContacts')?
+      App.set('currentUserContacts', App.ContactsSet.create())
+
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
-    if ! controller.get('allContacts')?
-      controller.set('allContacts', App.ContactsSet.create())
     if App.isLoggedIn()
       @_fetchAllConversationsAndSubscribe(controller)
 

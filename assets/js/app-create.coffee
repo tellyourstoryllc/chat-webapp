@@ -22,6 +22,8 @@ window.App = App = Ember.Application.create
 
   currentUser: null
 
+  currentUserContacts: null
+
   _isLoggedIn: false
 
   fayeClient: null
