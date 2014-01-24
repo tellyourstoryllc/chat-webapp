@@ -419,13 +419,7 @@ App.RoomsView = Ember.View.extend
       user = @get('contactMenuContext')
       return unless user?
 
-      allContacts = @get('allContacts')
-      App.get('api').removeUserContacts(user)
-      .then (json) =>
-        if ! json || json.error?
-          # Rollback.  Order in the list shouldn't matter.
-          allContacts.pushObject(user)
-      allContacts.removeObject(user)
+      @get('controller').send('removeUserContacts', user)
       return undefined
 
     didFocusSendMessageText: ->

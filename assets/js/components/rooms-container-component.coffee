@@ -1,7 +1,8 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: addUserContacts, didFocusSendMessageText, didJoinGroup, didGoToRoom,
+# Actions: addUserContacts, removeUserContacts, didFocusSendMessageText,
+#   didJoinGroup, didGoToRoom,
 #   didCloseRoom, didToggleRoomsSidebar, willLeaveRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
@@ -279,6 +280,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   isActiveRoomOneToOne: (->
     @get('activeRoom') instanceof App.OneToOne
   ).property('activeRoom')
+
+  isActiveRoomUserContact: (->
+    room = @get('activeRoom')
+    return false unless room?
+    room.get('otherUser.isContact')
+  ).property('activeRoom.otherUser.isContact')
 
   activeRoomAvatarStyle: (->
     url = @get('activeRoom.avatarUrl')
@@ -882,6 +889,14 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       user = room.get('otherUser')
       return unless user?
       @sendAction('addUserContacts', user)
+      return undefined
+
+    removeUserFromContacts: ->
+      room = @get('activeRoom')
+      return unless room?
+      user = room.get('otherUser')
+      return unless user?
+      @sendAction('removeUserContacts', user)
       return undefined
 
     hideRoom: ->

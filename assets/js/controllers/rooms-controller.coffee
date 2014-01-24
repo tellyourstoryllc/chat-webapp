@@ -88,6 +88,8 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
       # Use the results.
       @get('allContacts').pushObjects(users)
+      users.forEach (u) =>
+        u.set('isContact', true)
 
       # Get the next page.
       offset = @get('contactsOffset')
@@ -116,7 +118,24 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
         if ! json? || json.error?
           throw json
         @get('allContacts').pushObjects(users)
+        users.forEach (u) =>
+          u.set('isContact', true)
       .fail App.rejectionHandler
+
+    removeUserContacts: (users) ->
+      users = Ember.makeArray(users)
+      allContacts = @get('allContacts')
+      App.get('api').removeUserContacts(users)
+      .then (json) =>
+        if ! json || json.error?
+          # Rollback.  Order in the list shouldn't matter.
+          allContacts.pushObjects(users)
+          users.forEach (u) =>
+            u.set('isContact', true)
+      .fail App.rejectionHandler
+      allContacts.removeObjects(users)
+      users.forEach (u) =>
+        u.set('isContact', false)
 
     didFocusSendMessageText: ->
       @get('roomsView')?.send('didFocusSendMessageText')

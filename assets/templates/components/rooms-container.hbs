@@ -243,7 +243,11 @@
 
 <ul class='menu room-menu' role='menu'>
   {{#if isActiveRoomOneToOne}}
-    <li class='menu-item' {{action 'addUserToContacts'}}>Add To Contacts</li>
+    {{#if isActiveRoomUserContact}}
+      <li class='menu-item' {{action 'removeUserFromContacts'}}>Remove From Contacts</li>
+    {{else}}
+      <li class='menu-item' {{action 'addUserToContacts'}}>Add To Contacts</li>
+    {{/if}}
     <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
   {{else}}
     <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
