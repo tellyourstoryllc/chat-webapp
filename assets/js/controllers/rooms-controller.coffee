@@ -37,11 +37,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       sortAscending: false
   ).property('rooms')
 
-  arrangedContacts: (->
-    App.RecordArray.create
-      content: @get('allContacts')
-      sortProperties: ['name']
-  ).property('allContacts')
+  arrangedContacts: Ember.computed.alias('allContacts.arrangedContent')
 
   activeRoom: (->
     App.get('currentlyViewingRoom')
@@ -87,7 +83,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       users = instances.filter (o) -> o instanceof App.User
 
       # Use the results.
-      @get('allContacts').pushObjects(users)
+      @get('allContacts').addObjects(users)
       users.forEach (u) =>
         u.set('isContact', true)
 
@@ -117,7 +113,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       .then (json) =>
         if ! json? || json.error?
           throw json
-        @get('allContacts').pushObjects(users)
+        @get('allContacts').addObjects(users)
         users.forEach (u) =>
           u.set('isContact', true)
       .fail App.rejectionHandler
@@ -129,7 +125,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       .then (json) =>
         if ! json || json.error?
           # Rollback.  Order in the list shouldn't matter.
-          allContacts.pushObjects(users)
+          allContacts.addObjects(users)
           users.forEach (u) =>
             u.set('isContact', true)
       .fail App.rejectionHandler
