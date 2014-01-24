@@ -25,7 +25,7 @@ App.SortedSet = Ember.Object.extend Ember.MutableEnumerable,
       val = @get(key)
       @set("_#{key}", val) if val?
 
-  arrangedContent: Ember.computed.alias('contentArray')
+  arrangedContent: Ember.computed.alias('sortedContent')
 
   addObject: (obj) ->
     # Ember.Set doesn't support null or undefined.
