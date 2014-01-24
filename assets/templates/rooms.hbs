@@ -76,7 +76,7 @@
           {{#each user in arrangedContacts}}
             <div class='contact-list-item' {{bind-attr data-user-id=user.id}}>
               {{room-avatar room=user showStatus=true}}
-              <span class='username'>{{user.name}}</span>
+              <div class='username'>{{user.name}}</div>
               <div class='clearfix'></div>
             </div>
           {{else}}
