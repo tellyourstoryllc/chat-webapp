@@ -55,7 +55,9 @@ App.RemoteApi = Ember.Object.extend
 
       # Add in default params for all API requests.
       hash.data ?= {}
-      _.extend hash.data, @defaultParams()
+      if hash._appUseDefaults != false
+        _.extend hash.data, @defaultParams()
+      delete hash._appUseDefaults
 
       if hash.data && type != 'GET'
         hash.contentType ?= 'application/json; charset=utf-8'
@@ -226,7 +228,11 @@ App.RemoteApi = Ember.Object.extend
   resetPassword: (token, newPassword) ->
     data =
       new_password: newPassword
-    @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data)
+    # If we're logged in, don't use that token.
+    _.extend data, @defaultParams()
+    delete data.token
+
+    @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data, _appUseDefaults: false)
 
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
