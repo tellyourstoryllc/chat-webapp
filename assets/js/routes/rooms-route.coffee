@@ -4,6 +4,9 @@ App.RoomsRoute = Ember.Route.extend
     @_super(arguments...)
     # Stop listening for new messages.
     App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
+    # Cancel loading contacts.
+    timer = @get('loadContactsTimer')
+    Ember.run.cancel(timer) if timer?
 
   setupController: (controller, model) ->
     # Initialize contacts.  It's possible to access this when logged out.
@@ -14,6 +17,9 @@ App.RoomsRoute = Ember.Route.extend
     controller.set('allOneToOnes', App.OneToOne.all())
     if App.isLoggedIn()
       @_fetchAllConversationsAndSubscribe(controller)
+
+      # By this time, conversations should be loaded.
+      @_scheduleLoadContacts(controller)
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)
@@ -33,6 +39,14 @@ App.RoomsRoute = Ember.Route.extend
     else
       controller.set('showRoomsPageOverlay', false)
     return undefined
+
+  _scheduleLoadContacts: (controller) ->
+    controller ?= @controllerFor('rooms')
+    @set('loadContactsTimer', Ember.run.later(@, '_loadContacts', controller, 30000))
+
+  _loadContacts: (controller) ->
+    @set('loadContactsTimer', null)
+    controller.loadContacts()
 
   _uiRooms: ->
     @controllerFor('rooms').get('arrangedRooms')
@@ -84,6 +98,7 @@ App.RoomsRoute = Ember.Route.extend
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
+      @_scheduleLoadContacts()
       return undefined
 
     didLogIn: ->
@@ -94,6 +109,7 @@ App.RoomsRoute = Ember.Route.extend
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
+      @_scheduleLoadContacts()
       return undefined
 
     showPreviousRoom: ->
