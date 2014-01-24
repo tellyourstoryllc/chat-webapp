@@ -296,7 +296,21 @@ App.RoomsView = Ember.View.extend
     @set('joinRoomErrorMessage', null)
     undefined
 
-  showContactActionsMenu: ($listItem) ->
+  # Deactivate previous contact item and activate item for the given User.  User
+  # can be `null`.
+  activateContactItem: (user) ->
+    # Set active list item.
+    prevUser = @get('contactMenuContext')
+    if prevUser? && prevUser != user
+      @$("[data-user-id='#{prevUser.get('id')}']").removeClass('active')
+    if user?
+      @$("[data-user-id='#{user.get('id')}']").addClass('active')
+    @set('contactMenuContext', user)
+
+  showContactActionsMenu: (user, $listItem) ->
+    @activateContactItem(user)
+
+    # Move menu to correct position and show.
     $menu = @$('.contact-actions-menu')
     offset = $listItem.offset()
     $menu.css(top: offset?.top)
@@ -304,6 +318,7 @@ App.RoomsView = Ember.View.extend
     @set('isShowingContactActionsMenu', true)
 
   closeContactActionsMenu: () ->
+    @activateContactItem(null)
     @set('closeContactActionsMenuTimer', null)
     @$('.contact-actions-menu').removeClass('expand-in')
     @set('isShowingContactActionsMenu', false)
@@ -328,9 +343,8 @@ App.RoomsView = Ember.View.extend
       userId = $target.attr('data-user-id')
       return unless userId?
       user = App.User.lookup(userId)
-      @set('contactMenuContext', user)
       if user?
-        @showContactActionsMenu($target)
+        @showContactActionsMenu(user, $target)
       return undefined
 
   onContactsListMouseLeave: (event) ->

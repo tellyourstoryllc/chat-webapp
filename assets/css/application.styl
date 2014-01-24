@@ -1546,6 +1546,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     display inline-block
     margin 5px 0 -1px 5px
     border 1px solid rgba(0,0,0, .5)
+    border-top-left-radius 3px
+    border-top-right-radius 3px
     padding 10px
     color rgba(255,255,255, 0.6)
     font-size 12px
@@ -1821,11 +1823,6 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     float right
     margin 4px 0 0 0
 
-.contact-actions-menu
-  left room-sidebar-width - 10px
-
-  transition top 0.1s ease-out
-
 .settings-icon-cell
   display table-cell
   width 18px
@@ -1850,9 +1847,25 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   webkit-flashing-fix()
 
+.contact-actions-menu
+  left room-sidebar-width - 10px
+
+  transition top 0.1s ease-out
+
 .contacts-list
-  padding 10px
   color rgba(254, 255, 255, 0.65)
+
+.contact-list-item
+  position relative
+  padding 5px 10px
+
+  &.active
+    background-color #3E274D
+    color #eee
+    border-top-color #2E1C3A
+    border-bottom-color #2E1C3A
+    box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
+
 
 room-content-margin-width = 10px
 room-content-margin-height = 10px
