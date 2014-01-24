@@ -20,6 +20,8 @@ App.RoomsView = Ember.View.extend
 
   activeRoom: Ember.computed.alias('controller.activeRoom')
 
+  allContacts: Ember.computed.alias('controller.allContacts')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
@@ -411,6 +413,19 @@ App.RoomsView = Ember.View.extend
       return unless user?
 
       @get('controller').send('goToOneToOne', user)
+      return undefined
+
+    removeContact: ->
+      user = @get('contactMenuContext')
+      return unless user?
+
+      allContacts = @get('allContacts')
+      App.get('api').removeContacts(user)
+      .then (json) =>
+        if ! json || json.error?
+          # Rollback.  Order in the list shouldn't matter.
+          allContacts.pushObject(user)
+      allContacts.removeObject(user)
       return undefined
 
     didFocusSendMessageText: ->
