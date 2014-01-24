@@ -28,8 +28,7 @@ App.RoomsView = Ember.View.extend
       'onMacGapActive', 'onMacGapIdle',
       'onToggleRoomsSidebarTouchStart',
       'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus',
-      'onContactsListItemMouseEnter', 'onContactsListMouseLeave',
-      'onContactActionsMenuMouseEnter', 'onContactActionsMenuMouseLeave')
+      'onContactsListItemClick')
     @showDefaultSidebarView()
     # Force computed properties.
     @get('isRoomContentOutOfTheWay')
@@ -49,10 +48,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').on 'keydown', @onJoinTextKeyDown
     @$('.join-text').on 'paste', @onJoinTextPaste
     @$('.join-text').on 'focus', @onJoinTextFocus
-    @$('.contacts-list').on 'mouseenter', '.contact-list-item', @onContactsListItemMouseEnter
-    @$('.contacts-list').on 'mouseleave', @onContactsListMouseLeave
-    @$('.contact-actions-menu').on 'mouseenter', @onContactActionsMenuMouseEnter
-    @$('.contact-actions-menu').on 'mouseleave', @onContactActionsMenuMouseLeave
+    @$('.contacts-list').on 'click', '.contact-list-item', @onContactsListItemClick
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -72,10 +68,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').off 'keydown', @onJoinTextKeyDown
     @$('.join-text').off 'paste', @onJoinTextPaste
     @$('.join-text').off 'focus', @onJoinTextFocus
-    @$('.contacts-list').off 'mouseenter', '.contact-list-item', @onContactsListItemMouseEnter
-    @$('.contacts-list').off 'mouseleave', @onContactsListMouseLeave
-    @$('.contact-actions-menu').off 'mouseenter', @onContactActionsMenuMouseEnter
-    @$('.contact-actions-menu').off 'mouseleave', @onContactActionsMenuMouseLeave
+    @$('.contacts-list').off 'click', '.contact-list-item', @onContactsListItemClick
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -334,33 +327,21 @@ App.RoomsView = Ember.View.extend
       Ember.run.cancel(timer)
       @set('closeContactActionsMenuTimer', null)
 
-  onContactsListItemMouseEnter: (event) ->
+  onContactsListItemClick: (event) ->
     Ember.run @, ->
       @clearHideContactActionsMenuTimer()
 
       target = event.target
       return unless target?
-      $target = $(target)
+      $target = $(target).closest('.contact-list-item')
       userId = $target.attr('data-user-id')
       return unless userId?
       user = App.User.lookup(userId)
       if user?
+        # Don't close the menu.
+        event.stopPropagation()
+
         @showContactActionsMenu(user, $target)
-      return undefined
-
-  onContactsListMouseLeave: (event) ->
-    Ember.run @, ->
-      @startHideContactActionsMenuTimer()
-      return undefined
-
-  onContactActionsMenuMouseEnter: (event) ->
-    Ember.run @, ->
-      @clearHideContactActionsMenuTimer()
-      return undefined
-
-  onContactActionsMenuMouseLeave: (event) ->
-    Ember.run @, ->
-      @startHideContactActionsMenuTimer()
       return undefined
 
   actions:
