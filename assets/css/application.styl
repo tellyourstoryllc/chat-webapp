@@ -1906,6 +1906,27 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   .add-contacts-name
     margin-top 7px
 
+  .contact-menu-arrow-icon
+    display none
+    position absolute
+    right 12px
+    width 0
+    height 0
+
+    // Right arrow.
+    border 6px solid rgba(255,255,255, .8)
+    border-top-color transparent
+    border-bottom-color transparent
+    border-right-width 0
+
+    // Center vertically.
+    margin auto
+    top 0
+    bottom 0
+
+  &:hover:not(.active)
+    .contact-menu-arrow-icon
+      display block
 
 room-content-margin-width = 10px
 room-content-margin-height = 10px

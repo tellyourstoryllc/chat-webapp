@@ -307,7 +307,8 @@ App.RoomsView = Ember.View.extend
     # Move menu to correct position and show.
     $menu = @$('.contact-actions-menu')
     offset = $listItem.offset()
-    $menu.css(top: offset?.top)
+    if offset?
+      $menu.css(top: offset.top - 3)
     $menu.addClass('expand-in')
     @set('isShowingContactActionsMenu', true)
 
