@@ -51,7 +51,7 @@ App.AddContactsDialogComponent = Ember.Component.extend
       emails = @get('newContactsText') ? ''
       emails = emails.trim()
       # Replace new lines with commas.
-      emails = emails.replace(/\r?\n/g, ',')
+      emails = emails.replace(/\s*\r?\n\s*/g, ',')
       return if Ember.isEmpty(emails) || @get('isAdding')
 
       @setProperties(isAdding: true, errorMessage: null)
