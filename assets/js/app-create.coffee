@@ -111,9 +111,28 @@ window.App = App = Ember.Application.create
     if useDebugLogging in ['1', 'true']
       @set('useDebugLogging', true)
 
-    # Ember blows away the query string, so we extract it now.  Our analytics
-    # tracking uses this.
-    App.set('pendingQueryString', window.location.search)
+    # Ember blows away the query string, so we extract it now.
+    queryString = window.location.search
+    # Parse params.
+    parts = (queryString ? '').replace(/^\?/, '').split('&')
+    pairs = parts.map (pair) -> pair.split('=')
+    # Extract invite_token.  Don't let analytics track this.
+    inviteTokenIndex = null
+    for pair, i in pairs
+      if pair[0] == 'invite_token'
+        inviteTokenIndex = i
+        break
+    if inviteTokenIndex? && (val = pairs[inviteTokenIndex][1])?
+      # Convert pluses to spaces and then decode.
+      token = decodeURIComponent(val.replace(/\+/g, ' '))
+      # Change to fake token so it doesn't get sent to analytics.
+      pairs[inviteTokenIndex][1] = 'XXX'
+    # Convert back to query string.
+    if ! Ember.isEmpty(pairs)
+      # Never decoded, so don't need to encode.
+      queryString = App.Util.arrayToQueryString(pairs, false)
+    # Our analytics tracking uses this.
+    App.set('pendingQueryString', queryString)
 
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -161,7 +180,7 @@ window.App = App = Ember.Application.create
       fayeClient.on 'transport:up', @onFayeTransportUp
       fayeClient.on 'transport:down', @onFayeTransportDown
 
-    token = window.localStorage['token']
+    token ?= window.localStorage['token']
     if token?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.

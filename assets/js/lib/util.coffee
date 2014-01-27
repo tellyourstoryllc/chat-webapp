@@ -2,6 +2,16 @@ App.Util = Ember.Object.extend()
 
 App.Util.reopenClass
 
+  # Given an array of pairs, returns query string.
+  arrayToQueryString: (arr, encode = true) ->
+    return '' if Ember.isEmpty(arr)
+    '?' + (arr.map (pair) ->
+      if encode
+        encodeURIComponent('' + pair[0]) + '=' + encodeURIComponent('' + pair[1])
+      else
+        '' + pair[0] + '=' + pair[1]
+    ).join('&')
+
   escapeRegexp: (str) ->
     (str + '').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
 
