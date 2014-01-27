@@ -69,7 +69,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   ).observes('activeTab')
 
   loadContacts: ->
-    return if @get('isLoadingContactsPage')
+    return if @get('isLoadingContactsPage') || @get('contactsLoaded')
     @set('isLoadingContactsPage', true)
     contactsPerPage = @get('contactsPerPage')
     data =
