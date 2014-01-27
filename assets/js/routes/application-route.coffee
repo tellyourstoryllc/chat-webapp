@@ -7,6 +7,7 @@ App.ApplicationRoute = Ember.Route.extend
       controller.setProperties
         userErrorTitle: obj.title
         userErrorMessage: obj.message
+        userHtmlMessage: obj.htmlMessage
         userShouldRetry: obj.shouldRetry
       @render 'error'
     else

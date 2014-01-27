@@ -1,6 +1,7 @@
 <div class='empty-content-page error-page'>
   <h1 class='error-title'>{{unbound userErrorTitle}}</h1>
   <div class='error-message'>{{unbound userErrorMessage}}</div>
+  <div class='error-message'>{{{unbound userHtmlErrorMessage}}}</div>
   {{#if userShouldRetry}}
     <div class='error-message'>
       Please <a href='#' {{action 'reloadPage'}}>try again</a>.
