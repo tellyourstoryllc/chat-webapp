@@ -1901,18 +1901,24 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   .room-avatar, .add-contacts-icon
     float left
 
+  .room-avatar
+    width 26px
+    height 26px
+    border-width 3px
+
     &.avatars-off
       margin-top 6px
 
   .username
     max-width room-sidebar-width - 50px - 35px
     overflow ellipsis
-    margin-left 50px // Avatar width.
+    margin-left 34px // Avatar width.
     margin-top 5px
     margin-bottom 5px
 
   .add-contacts-name
     margin-top 7px
+    margin-left 50px // Icon width.
 
   .contact-menu-arrow-icon
     display none
