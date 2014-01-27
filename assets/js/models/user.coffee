@@ -8,6 +8,8 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Status icon duck typing.
   hasStatusIcon: true
 
+  isContact: false
+
   # Account object.
   _account: null
 

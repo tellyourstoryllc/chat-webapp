@@ -7,6 +7,7 @@ App.ApplicationRoute = Ember.Route.extend
       controller.setProperties
         userErrorTitle: obj.title
         userErrorMessage: obj.message
+        userHtmlMessage: obj.htmlMessage
         userShouldRetry: obj.shouldRetry
       @render 'error'
     else
@@ -53,6 +54,11 @@ App.ApplicationRoute = Ember.Route.extend
 
     goToRoom: (room) ->
       @transitionTo('rooms.room', room)
+
+    goToOneToOne: (user) ->
+      id = App.OneToOne.idFromUserIds(user.get('id'), App.get('currentUser.id'))
+      @transitionTo('rooms.room', id)
+      return undefined
 
     didDismissMobileInstallDialog: ->
       # Destroy whatever was rendered to the modal outlet.

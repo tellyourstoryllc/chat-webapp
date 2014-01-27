@@ -4,12 +4,22 @@ App.RoomsRoute = Ember.Route.extend
     @_super(arguments...)
     # Stop listening for new messages.
     App.Group.all().forEach (g) -> g.cancelMessagesSubscription()
+    # Cancel loading contacts.
+    timer = @get('loadContactsTimer')
+    Ember.run.cancel(timer) if timer?
 
   setupController: (controller, model) ->
+    # Initialize contacts.  It's possible to access this when logged out.
+    if ! App.get('currentUserContacts')?
+      App.set('currentUserContacts', App.ContactsSet.create())
+
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
     if App.isLoggedIn()
       @_fetchAllConversationsAndSubscribe(controller)
+
+      # By this time, conversations should be loaded.
+      @_scheduleLoadContacts(controller)
 
   renderTemplate: (controller, model) ->
     @_super(arguments...)
@@ -29,6 +39,14 @@ App.RoomsRoute = Ember.Route.extend
     else
       controller.set('showRoomsPageOverlay', false)
     return undefined
+
+  _scheduleLoadContacts: (controller) ->
+    controller ?= @controllerFor('rooms')
+    @set('loadContactsTimer', Ember.run.later(@, '_loadContacts', controller, 30000))
+
+  _loadContacts: (controller) ->
+    @set('loadContactsTimer', null)
+    controller.loadContacts()
 
   _uiRooms: ->
     @controllerFor('rooms').get('arrangedRooms')
@@ -80,6 +98,7 @@ App.RoomsRoute = Ember.Route.extend
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
+      @_scheduleLoadContacts()
       return undefined
 
     didLogIn: ->
@@ -90,6 +109,7 @@ App.RoomsRoute = Ember.Route.extend
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
       @_fetchAllConversationsAndSubscribe()
+      @_scheduleLoadContacts()
       return undefined
 
     showPreviousRoom: ->
@@ -149,6 +169,33 @@ App.RoomsRoute = Ember.Route.extend
           parentView: 'application'
       , 500 # After the animation.
       return undefined
+
+    showAddContactsDialog: ->
+      @render 'add-contacts',
+        into: 'application'
+        outlet: 'modal'
+      Ember.run.schedule 'afterRender', @, ->
+        $('.add-contacts-overlay').removeClass('hidden')
+        $('.add-contacts-form').addClass('expand-in')
+        $('.new-contacts-text').focus()
+      return undefined
+
+    hideAddContactsDialog: ->
+      $('.add-contacts-overlay').addClass('hidden')
+      $('.add-contacts-form').removeClass('expand-in')
+      Ember.run.later @, ->
+        @disconnectOutlet
+          outlet: 'modal'
+          parentView: 'application'
+      , 500 # After the animation.
+      return undefined
+
+    # Trigger this action when you have received new User instances from the
+    # server which are contacts.  This handler tracks the User instances as
+    # Contacts.
+    didAddUserContacts: (users) ->
+      users = Ember.makeArray(users)
+      App.get('currentUserContacts').addObjects(users)
 
     showSettings: ->
       @controllerFor('settingsModal').send('show')

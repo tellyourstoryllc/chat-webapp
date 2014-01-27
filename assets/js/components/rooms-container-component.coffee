@@ -1,8 +1,9 @@
 # Contains everything specific to a single room, but for performance reasons,
 # shared among all rooms.
 #
-# Actions: didFocusSendMessageText, didJoinGroup, didGoToRoom, didCloseRoom,
-#   didToggleRoomsSidebar, willLeaveRoom
+# Actions: addUserContacts, removeUserContacts, didFocusSendMessageText,
+#   didJoinGroup, didGoToRoom,
+#   didCloseRoom, didToggleRoomsSidebar, willLeaveRoom
 App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Caller must bind this.
@@ -279,6 +280,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   isActiveRoomOneToOne: (->
     @get('activeRoom') instanceof App.OneToOne
   ).property('activeRoom')
+
+  isActiveRoomUserContact: (->
+    room = @get('activeRoom')
+    return false unless room?
+    room.get('otherUser.isContact')
+  ).property('activeRoom.otherUser.isContact')
 
   activeRoomAvatarStyle: (->
     url = @get('activeRoom.avatarUrl')
@@ -874,6 +881,26 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           # Stop listening for messages.
           room.set('isOpen', false)
 
+      return undefined
+
+    addUserToContacts: ->
+      room = @get('activeRoom')
+      return unless room?
+      user = room.get('otherUser')
+      return unless user?
+      if user == App.get('currentUser')
+        alert "You can't add yourself as a contact."
+        return
+
+      @sendAction('addUserContacts', user)
+      return undefined
+
+    removeUserFromContacts: ->
+      room = @get('activeRoom')
+      return unless room?
+      user = room.get('otherUser')
+      return unless user?
+      @sendAction('removeUserContacts', user)
       return undefined
 
     hideRoom: ->

@@ -217,6 +217,25 @@ App.RemoteApi = Ember.Object.extend
       instances = App.loadAll(json)
       return instances.filter (o) -> o.get('actsLikeConversation')
 
+  fetchContacts: (data) ->
+    @ajax(@buildURL('/contacts'), 'GET', data: data)
+
+  addUserContacts: (users) ->
+    users = Ember.makeArray(users)
+    data =
+      user_ids: users.mapProperty('id').join(',')
+    @ajax(@buildURL('/contacts/add'), 'POST', data: data)
+
+  removeUserContacts: (users) ->
+    users = Ember.makeArray(users)
+    data =
+      user_ids: users.mapProperty('id').join(',')
+    @ajax(@buildURL('/contacts/remove'), 'POST', data: data)
+
+  addEmailContacts: (data) ->
+    data.emails = data.emails.join(',') if Ember.isArray(data.emails)
+    @ajax(@buildURL('/contacts/add'), 'POST', data: data)
+
   updatePreferences: (data) ->
     @ajax(@buildURL('/preferences/update'), 'POST', data: data)
 

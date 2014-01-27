@@ -22,6 +22,8 @@ window.App = App = Ember.Application.create
 
   currentUser: null
 
+  currentUserContacts: null
+
   _isLoggedIn: false
 
   fayeClient: null
@@ -109,9 +111,28 @@ window.App = App = Ember.Application.create
     if useDebugLogging in ['1', 'true']
       @set('useDebugLogging', true)
 
-    # Ember blows away the query string, so we extract it now.  Our analytics
-    # tracking uses this.
-    App.set('pendingQueryString', window.location.search)
+    # Ember blows away the query string, so we extract it now.
+    queryString = window.location.search
+    # Parse params.
+    parts = (queryString ? '').replace(/^\?/, '').split('&')
+    pairs = parts.map (pair) -> pair.split('=')
+    # Extract invite_token.  Don't let analytics track this.
+    inviteTokenIndex = null
+    for pair, i in pairs
+      if pair[0] == 'invite_token'
+        inviteTokenIndex = i
+        break
+    if inviteTokenIndex? && (val = pairs[inviteTokenIndex][1])?
+      # Convert pluses to spaces and then decode.
+      inviteToken = decodeURIComponent(val.replace(/\+/g, ' '))
+      # Change to fake token so it doesn't get sent to analytics.
+      pairs[inviteTokenIndex][1] = 'XXX'
+    # Convert back to query string.
+    if ! Ember.isEmpty(pairs)
+      # Never decoded, so don't need to encode.
+      queryString = App.Util.arrayToQueryString(pairs, false)
+    # Our analytics tracking uses this.
+    App.set('pendingQueryString', queryString)
 
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -163,33 +184,9 @@ window.App = App = Ember.Application.create
     if token?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
-      App.set('isLoggingIn', true)
-      api.checkin(token: token)
-      .then (user) =>
-        App.set('isLoggingIn', false)
-
-        App.login(token, user)
-
-        @whenLoggedIn =>
-          # Automatically transition to somewhere more interesting.
-          transition = App.get('continueTransition')
-          if transition?
-            App.set('continueTransition', null)
-            newTrans = transition.retry()
-            # Replace /login with this new URL.
-            newTrans.method('replace')
-          else
-            appController = App.__container__.lookup('controller:application')
-            # We're currently on the login or home page, so go to the default
-            # place.
-            if appController.get('currentPath') in ['index', 'login']
-              App._getRouter().replaceWith('rooms.index')
-      , (e) =>
-        App.set('isLoggingIn', false)
-        if e? && /invalid token/i.test(e.responseJSON?.error?.message ? '')
-          Ember.Logger.log "Invalid token; logging out"
-          window.localStorage.removeItem('token')
-      .fail App.rejectionHandler
+      @logInFromToken(token)
+    else if inviteToken?
+      @logInFromInviteToken(inviteToken)
     else
       # No token.  Not logged in.
 
@@ -199,6 +196,78 @@ window.App = App = Ember.Application.create
 
     # Setup copying to clipboard.  Versioning the URL to prevent caching issues.
     ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf', hoverClass: 'hover')
+
+  logInFromToken: (token) ->
+    App.set('isLoggingIn', true)
+    App.get('api').checkin(token: token)
+    .always =>
+      App.set('isLoggingIn', false)
+    .then (user) =>
+      App.login(token, user)
+
+      @whenLoggedIn =>
+        @continueAfterLoggingIn()
+    .fail App.rejectionHandler
+
+  logInFromInviteToken: (inviteToken) ->
+    App.set('isLoggingIn', true)
+
+    blowUpWithDefaultMessage = ->
+      # TODO: This doesn't actually do anything.  Need to change how this is
+      # rendered.
+      #
+      # App.set 'blowUpWithMessage',
+      #   title: "Sorry, there was a problem with that invite link."
+      #   htmlMessage: "Go To <a href='/login'>Login</a>."
+
+    App.get('api').login(invite_token: inviteToken)
+    .always =>
+      App.set('isLoggingIn', false)
+    .then (json) =>
+      if ! json? || json.error?
+        blowUpWithDefaultMessage()
+        throw json
+
+      json = Ember.makeArray(json)
+
+      userJson = json.find (o) -> o.object_type == 'user'
+      if userJson?.token?
+        token = userJson.token
+        delete userJson.token
+
+      user = App.User.loadRaw(userJson)
+      if token?
+        App.login(token, user)
+
+        @whenLoggedIn =>
+          @continueAfterLoggingIn()
+      else
+        blowUpWithDefaultMessage()
+
+    , (xhr) =>
+      if xhr.status == 401
+        # TODO: Show this error message.
+        App.set 'blowUpWithMessage',
+          title: "Sorry, you don't have permission to view that."
+          htmlMessage: "Go To <a href='/login'>Login</a>."
+      else
+        blowUpWithDefaultMessage()
+    .fail App.rejectionHandler
+
+  # Transition to somewhere more interesting.
+  continueAfterLoggingIn: ->
+    transition = App.get('continueTransition')
+    if transition?
+      App.set('continueTransition', null)
+      newTrans = transition.retry()
+      # Replace /login with this new URL.
+      newTrans.method('replace')
+    else
+      appController = App.__container__.lookup('controller:application')
+      # We're currently on the login or home page, so go to the default
+      # place.
+      if appController.get('currentPath') in ['index', 'login']
+        App._getRouter().replaceWith('rooms.index')
 
   # Common promise rejection handler.  Use this as the final handler whenever
   # you create a promise so that errors don't get swallowed.  For example:

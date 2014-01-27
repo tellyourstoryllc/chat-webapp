@@ -15,14 +15,20 @@ App.RoomsView = Ember.View.extend
 
   isStatusTextMenuVisible: false
 
+  isShowingContactActionsMenu: false
+  closeContactActionsMenuTimer: null
+
   activeRoom: Ember.computed.alias('controller.activeRoom')
+
+  allContacts: Ember.computed.alias('controller.allContacts')
 
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onMacGapActive', 'onMacGapIdle',
       'onToggleRoomsSidebarTouchStart',
-      'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus')
+      'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus',
+      'onContactsListItemClick')
     @showDefaultSidebarView()
     # Force computed properties.
     @get('isRoomContentOutOfTheWay')
@@ -42,6 +48,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').on 'keydown', @onJoinTextKeyDown
     @$('.join-text').on 'paste', @onJoinTextPaste
     @$('.join-text').on 'focus', @onJoinTextFocus
+    @$('.contacts-list').on 'click', '.contact-list-item', @onContactsListItemClick
     Ember.run.later @, 'checkIfIdleTick', 5000
 
     Ember.run.schedule 'afterRender', @, ->
@@ -61,6 +68,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').off 'keydown', @onJoinTextKeyDown
     @$('.join-text').off 'paste', @onJoinTextPaste
     @$('.join-text').off 'focus', @onJoinTextFocus
+    @$('.contacts-list').off 'click', '.contact-list-item', @onContactsListItemClick
 
   roomsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -73,6 +81,7 @@ App.RoomsView = Ember.View.extend
       if event.which == 27      # Escape
         @closeChooseStatusMenu()
         @closeStatusTextMenu()
+        @closeContactActionsMenu()
     # Ctrl.
     if event.ctrlKey && ! (event.shiftKey || event.metaKey || event.altKey)
       if event.which == 219      # [
@@ -145,10 +154,18 @@ App.RoomsView = Ember.View.extend
 
     height = $window.height()
     height -= $('.logo').outerHeight(true) ? 0
-    height -= $('.join-text-container').outerHeight(true) ? 0
+    height -= $('.left-sidebar-tab-handles').outerHeight(true) ? 0
     height -= $('.current-user-status-bar').outerHeight() ? 0
     height -= 3 # Extra pixels to line up perfectly.
+    commonSidebarHeight = height
+    # When Contacts tab is selected, height returns 0.
+    height -= $('.join-text-container').outerHeight(true) || 48
     @$('.rooms-list').css
+      height: height
+
+    height = commonSidebarHeight
+    # height -= $('.contacts-search-container').outerHeight(true) ? 0
+    @$('.contacts-list').css
       height: height
 
     windowWidth = $window.width()
@@ -167,6 +184,7 @@ App.RoomsView = Ember.View.extend
     Ember.run @, ->
       @closeChooseStatusMenu()
       @closeStatusTextMenu()
+      @closeContactActionsMenu()
 
   # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
   documentActive: (event) ->
@@ -272,6 +290,61 @@ App.RoomsView = Ember.View.extend
     @set('joinRoomErrorMessage', null)
     undefined
 
+  # Deactivate previous contact item and activate item for the given User.  User
+  # can be `null`.
+  activateContactItem: (user) ->
+    # Set active list item.
+    prevUser = @get('contactMenuContext')
+    if prevUser? && prevUser != user
+      @$("[data-user-id='#{prevUser.get('id')}']").removeClass('active')
+    if user?
+      @$("[data-user-id='#{user.get('id')}']").addClass('active')
+    @set('contactMenuContext', user)
+
+  showContactActionsMenu: (user, $listItem) ->
+    @activateContactItem(user)
+
+    # Move menu to correct position and show.
+    $menu = @$('.contact-actions-menu')
+    offset = $listItem.offset()
+    if offset?
+      $menu.css(top: offset.top - 3)
+    $menu.addClass('expand-in')
+    @set('isShowingContactActionsMenu', true)
+
+  closeContactActionsMenu: () ->
+    @activateContactItem(null)
+    @set('closeContactActionsMenuTimer', null)
+    @$('.contact-actions-menu').removeClass('expand-in')
+    @set('isShowingContactActionsMenu', false)
+
+  startHideContactActionsMenuTimer: ->
+    timer = Ember.run.later @, 'closeContactActionsMenu', 500
+    @set('closeContactActionsMenuTimer', timer)
+
+  clearHideContactActionsMenuTimer: ->
+    timer = @get('closeContactActionsMenuTimer')
+    if timer?
+      Ember.run.cancel(timer)
+      @set('closeContactActionsMenuTimer', null)
+
+  onContactsListItemClick: (event) ->
+    Ember.run @, ->
+      @clearHideContactActionsMenuTimer()
+
+      target = event.target
+      return unless target?
+      $target = $(target).closest('.contact-list-item')
+      userId = $target.attr('data-user-id')
+      return unless userId?
+      user = App.User.lookup(userId)
+      if user?
+        # Don't close the menu.
+        event.stopPropagation()
+
+        @showContactActionsMenu(user, $target)
+      return undefined
+
   actions:
 
     toggleRoomsSidebar: ->
@@ -330,6 +403,20 @@ App.RoomsView = Ember.View.extend
     logOut: ->
       @closeChooseStatusMenu()
       @get('controller').send('logOut')
+      return undefined
+
+    goToContactOneToOne: ->
+      user = @get('contactMenuContext')
+      return unless user?
+
+      @get('controller').send('goToOneToOne', user)
+      return undefined
+
+    removeContact: ->
+      user = @get('contactMenuContext')
+      return unless user?
+
+      @get('controller').send('removeUserContacts', user)
       return undefined
 
     didFocusSendMessageText: ->
