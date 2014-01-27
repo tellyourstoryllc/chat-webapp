@@ -2079,8 +2079,13 @@ room-members-sidebar-width = 200px
       border-width 3px
 
     &.big-one-to-one-avatar
-      width room-members-sidebar-width
-      height room-members-sidebar-width
+      // Center horizontally.
+      display block
+      float none
+      margin 5px auto 0
+
+      width room-members-sidebar-width - 30px
+      height room-members-sidebar-width - 30px
 
   .room-member-info-cell
     margin-left 31px
