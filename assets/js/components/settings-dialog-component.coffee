@@ -124,7 +124,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     api = App.get('api')
     formData = new FormData()
     formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('avatar_image_file', file)
+    formData.append('avatar_image_file', file ? '')
     @set('isSendingAvatar', true)
     api.ajax(api.buildURL('/users/update'), 'POST',
       data: formData
@@ -152,7 +152,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     api = App.get('api')
     formData = new FormData()
     formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('one_to_one_wallpaper_image_file', file)
+    # Safari and WebUI send the string "null" so make sure to use empty string.
+    formData.append('one_to_one_wallpaper_image_file', file ? '')
     @set('isSendingOneToOneWallpaper', true)
     api.ajax(api.buildURL('/accounts/update'), 'POST',
       data: formData

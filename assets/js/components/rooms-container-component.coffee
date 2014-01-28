@@ -576,7 +576,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     api = App.get('api')
     formData = new FormData()
     formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('avatar_image_file', file)
+    # Safari and WebUI send the string "null" so make sure to use empty string.
+    formData.append('avatar_image_file', file ? '')
     @set('isSendingRoomAvatar', true)
     room = @get('activeRoom')
     api.ajax(room.updateAvatarUrl(), 'POST',
@@ -615,7 +616,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     api = App.get('api')
     formData = new FormData()
     formData.append(k, v) for k,v of api.defaultParams()
-    formData.append('wallpaper_image_file', file)
+    # Safari and WebUI send the string "null" so make sure to use empty string.
+    formData.append('wallpaper_image_file', file ? '')
     @set('isSendingRoomWallpaper', true)
     room = @get('activeRoom')
     api.ajax(room.updateWallpaperUrl(), 'POST',
