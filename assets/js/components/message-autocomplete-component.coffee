@@ -96,7 +96,7 @@ App.MessageAutocompleteItemView = Ember.View.extend
       display = escapedName + " (#{escapedValue})"
       user = suggestion.get('user')
       if user?
-        display = "<span class='status-icon #{user.get('computedStatus')}'></span> " + display
+        display = "<span class='room-avatar blank-avatar #{user.get('status')}'></span> " + display
     else if suggestion.get('imageUrl')
       img = "<img class='emoticon' src='#{escape(suggestion.get('imageUrl'))}'>"
       display = img + " #{escapedValue}"
@@ -107,7 +107,7 @@ App.MessageAutocompleteItemView = Ember.View.extend
   # This also depends on suggestFor.@each, but that shouldn't change and I don't
   # want to add any more observers than are needed for performance.
   ).property('content.name', 'content.value', 'content.imageUrl',
-             'content.user.computedStatus',
+             'content.user.status',
              'autocompleteView.matchText')
 
   click: ->
