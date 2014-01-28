@@ -19,12 +19,6 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
 
   oneToOneWallpaperUrl: Ember.computed.alias('account.oneToOneWallpaperUrl')
 
-  computedStatus: (->
-    clientType = @get('clientType')
-    return clientType if clientType in ['phone', 'tablet']
-    @get('status')
-  ).property('clientType', 'status')
-
   sortableComputedStatus: (->
     switch @get('status')
       when 'available'
