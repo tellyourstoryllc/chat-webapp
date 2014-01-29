@@ -67,6 +67,12 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
     $(".sent-by-#{id} .small-avatar").prop('src', @get('avatarUrl'))
   ).observes('id', 'avatarUrl')
 
+  oneToOneUrlPath: (->
+    id = App.OneToOne.idFromUser(@)
+    return null unless id?
+    "/rooms/#{id}"
+  ).property('id')
+
 
 App.User.reopenClass
 

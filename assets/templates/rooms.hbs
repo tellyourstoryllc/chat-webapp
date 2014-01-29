@@ -80,10 +80,12 @@
           </div>
           {{#each user in arrangedContacts}}
             <div class='contact-list-item' {{bind-attr data-user-id=user.id}}>
-              {{room-avatar room=user showStatus=true}}
-              <div class='username'>{{user.name}}</div>
-              <span class='contact-menu-arrow-icon'></span>
-              <div class='clearfix'></div>
+              <a {{bind-attr href='user.oneToOneUrlPath'}} {{action 'goToOneToOne' user}}>
+                {{room-avatar room=user showStatus=true}}
+                <div class='username'>{{user.name}}</div>
+                <span class='contact-menu-arrow-icon'></span>
+                <div class='clearfix'></div>
+              </a>
             </div>
           {{else}}
             <div class='none-found'>None Found</div>
