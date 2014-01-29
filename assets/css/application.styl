@@ -2693,6 +2693,14 @@ sender-column-width = 150px
     cursor pointer
     opacity .8
 
+    overflow hidden
+    box-sizing border-box
+    width 36px
+    height 2*8px + 2*10px
+    white-space nowrap
+
+    transition width .1s ease-out
+
     > .play-icon
       display inline-block
       width 0
@@ -2700,8 +2708,16 @@ sender-column-width = 150px
       border 10px solid transparent
       border-left 15px solid #ddd
       border-right 0
+      vertical-align middle
+
+    > .play-text
+      position relative
+      top 2px
+      padding-left 5px
 
     &.expanded
+      width auto
+      height auto
       left auto
       right 5px
       top 5px
@@ -2724,6 +2740,7 @@ sender-column-width = 150px
 
     &:hover
       .expand-indicator
+        width 75px
         opacity 1
 
   .video-attachment

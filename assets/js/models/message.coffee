@@ -98,7 +98,7 @@ App.Message = App.BaseModel.extend
         """
         <a href='#{escape(attachmentUrl)}' class='video-attachment-preview video-attachment-preview-#{escape(messageGuid)}' onclick='App.showVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>
           <img src='#{escape(attachmentPreviewUrl)}' onload='App.onMessageContentLoad("#{escape(convoId)}", this, "image");'>
-          <div class='expand-indicator' title='Play Video'><span class='play-icon'></span></div>
+          <div class='expand-indicator' title='Play Video'><span class='play-icon'></span> <span class='play-text'>Play</span></div>
         </a>
         <div class='video-attachment video-attachment-#{messageGuid} not-displayed'>
           <video class='video-attachment-video' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls>
