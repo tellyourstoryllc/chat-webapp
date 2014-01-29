@@ -130,7 +130,7 @@
     <form {{action 'saveStatusText' target=view on='submit'}}>
       {{! Cancel bubbling so that clicking on the textbox doesn't close the menu. }}
       <input type='text' class='new-status-text' {{action 'ignore' bubbles=false}}
-        maxlength='160'>
+        maxlength='160' placeholder='Status Message'>
       <button type='submit' class='save-status-text-button'>Save</button>
       <div class='clearfix'></div>
     </form>
