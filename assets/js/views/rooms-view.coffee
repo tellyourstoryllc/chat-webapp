@@ -279,7 +279,7 @@ App.RoomsView = Ember.View.extend
     @set('isStatusTextMenuVisible', true)
     @$('.new-status-text').val(App.get('currentUser.statusText'))
     Ember.run.schedule 'afterRender', @, ->
-      @$('.new-status-text').focus()
+      @$('.new-status-text').focus().textrange('set') # Select all.
 
   closeStatusTextMenu: ->
     @$('.status-text-menu').removeClass('expand-in-less-bounce')
