@@ -1600,6 +1600,12 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     width room-sidebar-width - 2*10px
     padding 6px 21px 6px 11px
 
+.rooms-list, .contacts-list
+  .room-avatar.unavailable
+    // Unavailable color on purple background, but fully opaque so it works in
+    // the Mac app and Safari.
+    border-color #776A7F
+
 .rooms-list
   box-sizing border-box
   width room-sidebar-width - 2px // Leave pixels to the right for the scrollbar margin.
