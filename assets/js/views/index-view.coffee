@@ -10,7 +10,7 @@ App.IndexView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown')
+    _.bindAll(@, 'onBodyKeyDown', 'onDownloadMacAppClick')
     # Force computed properties.
     @get('room')
 
@@ -24,6 +24,9 @@ App.IndexView = Ember.View.extend
       if joinCode?
         App.set('roomKeyTextToShow', joinCode)
         @send('submitRoomKey', joinCode)
+
+      if @get('controller.needsMacApp')
+        @$('.download-button')?.on 'click', @onDownloadMacAppClick
 
   willDestroyElement: ->
     App.set('indexView', null)
@@ -66,6 +69,12 @@ App.IndexView = Ember.View.extend
     if usingRoom
       @set('isShowingEmailForm', false)
   ).observes('room').on('didInsertElement')
+
+  onDownloadMacAppClick: (event) ->
+    Ember.run @, ->
+      App.Analytics.trackEvent 'download', category: 'app', label: 'Mac App'
+      # Do the default.
+      return undefined
 
   actions:
 

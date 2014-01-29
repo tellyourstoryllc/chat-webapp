@@ -7,14 +7,18 @@
   </h1>
 
   <div class='home-download-area'>
-    <button class='app-btn btn-block btn-green btn-flat' {{action 'goToSignUp' target=view}}>
-      Sign Up
-    </button>
-    {{!
-    <a class='signup-link' href='#' {\{ action 'goToSignUp' target=view}\}>
-      Sign Up for Web Version
-    </a>
-    }}
+    {{#if needsMacApp}}
+      <a href='{{webServerUrl '/downloads/skymob.pkg'}}' class='app-btn btn-block btn-green btn-flat download-button' target='_blank' download>
+        Get the Mac App
+      </a>
+      <a class='signup-link' href='#' {{action 'goToSignUp' target=view}}>
+        Sign Up for Web Version
+      </a>
+    {{else}}
+      <button class='app-btn btn-block btn-green btn-flat' {{action 'goToSignUp' target=view}}>
+        Sign Up
+      </button>
+    {{/if}}
   </div>
 
   <img class='screenshot' src='{{unbound webServerUrl 'imageScreenshot'}}' style='max-width: 557px'>
