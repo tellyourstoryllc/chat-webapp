@@ -24,6 +24,10 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     App.get('currentUserContacts')
   ).property('App.currentUserContacts')
 
+  displayContacts: (->
+    App.User.all()
+  ).property()
+
   isRoomsTabActive: Ember.computed.equal('activeTab', 'rooms')
   isContactsTabActive: Ember.computed.equal('activeTab', 'contacts')
 
@@ -40,7 +44,11 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       sortAscending: false
   ).property('rooms')
 
-  arrangedContacts: Ember.computed.alias('allContacts.arrangedContent')
+  arrangedContacts: (->
+    App.RecordArray.create
+      content: @get('displayContacts')
+      sortProperties: ['name']
+  ).property('displayContacts')
 
   activeRoom: (->
     App.get('currentlyViewingRoom')

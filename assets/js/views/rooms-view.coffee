@@ -308,7 +308,7 @@ App.RoomsView = Ember.View.extend
     $menu = @$('.contact-actions-menu')
     offset = $listItem.offset()
     if offset?
-      $menu.css(top: offset.top - 3)
+      $menu.css(top: offset.top)
     $menu.addClass('expand-in')
     @set('isShowingContactActionsMenu', true)
 
@@ -415,6 +415,10 @@ App.RoomsView = Ember.View.extend
     removeContact: ->
       user = @get('contactMenuContext')
       return unless user?
+
+      if ! user.get('isContact')
+        alert "You can't remove a contact when you're in a room with that person."
+        return
 
       @get('controller').send('removeUserContacts', user)
       return undefined

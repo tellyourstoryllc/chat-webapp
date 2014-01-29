@@ -244,9 +244,9 @@
 <ul class='menu room-menu' role='menu'>
   {{#if isActiveRoomOneToOne}}
     {{#if isActiveRoomUserContact}}
-      <li class='menu-item' {{action 'removeUserFromContacts'}}>Remove From Contacts</li>
+      <li class='menu-item' {{action 'removeUserFromContacts'}}>Don't Keep In Contacts</li>
     {{else}}
-      <li class='menu-item' {{action 'addUserToContacts'}}>Add To Contacts</li>
+      <li class='menu-item' {{action 'addUserToContacts'}}>Keep In Contacts</li>
     {{/if}}
     <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
   {{else}}
