@@ -566,7 +566,9 @@ window.App = App = Ember.Application.create
   hideVideoAttachment: (event, conversationId, element, messageGuid) ->
     Ember.run @, ->
       event.preventDefault()
-      $(element).closest('.video-attachment').addClass('not-displayed')
+      $videoContainer = $(element).closest('.video-attachment')
+      $videoContainer.addClass('not-displayed')
+      $videoContainer.find('video').each -> @pause()
       $preview = $(".video-attachment-preview-#{messageGuid}")
       $preview.show()
 
