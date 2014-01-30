@@ -6,10 +6,14 @@ App.Util.reopenClass
   arrayToQueryString: (arr, encode = true) ->
     return '' if Ember.isEmpty(arr)
     '?' + (arr.map (pair) ->
+      val = pair[1]
+      # Use empty string for undefined.
+      val = '' if val == undefined
+
       if encode
-        encodeURIComponent('' + pair[0]) + '=' + encodeURIComponent('' + pair[1])
+        encodeURIComponent('' + pair[0]) + '=' + encodeURIComponent('' + val)
       else
-        '' + pair[0] + '=' + pair[1]
+        '' + pair[0] + '=' + val
     ).join('&')
 
   escapeRegexp: (str) ->

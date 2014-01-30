@@ -113,24 +113,25 @@ window.App = App = Ember.Application.create
 
     # Ember blows away the query string, so we extract it now.
     queryString = window.location.search
-    # Parse params.
-    parts = (queryString ? '').replace(/^\?/, '').split('&')
-    pairs = parts.map (pair) -> pair.split('=')
-    # Extract invite_token.  Don't let analytics track this.
-    inviteTokenIndex = null
-    for pair, i in pairs
-      if pair[0] == 'invite_token'
-        inviteTokenIndex = i
-        break
-    if inviteTokenIndex? && (val = pairs[inviteTokenIndex][1])?
-      # Convert pluses to spaces and then decode.
-      inviteToken = decodeURIComponent(val.replace(/\+/g, ' '))
-      # Change to fake token so it doesn't get sent to analytics.
-      pairs[inviteTokenIndex][1] = 'XXX'
-    # Convert back to query string.
-    if ! Ember.isEmpty(pairs)
-      # Never decoded, so don't need to encode.
-      queryString = App.Util.arrayToQueryString(pairs, false)
+    if ! Ember.isEmpty(queryString)
+      # Parse params.
+      parts = (queryString ? '').replace(/^\?/, '').split('&')
+      pairs = parts.map (pair) -> pair.split('=')
+      # Extract invite_token.  Don't let analytics track this.
+      inviteTokenIndex = null
+      for pair, i in pairs
+        if pair[0] == 'invite_token'
+          inviteTokenIndex = i
+          break
+      if inviteTokenIndex? && (val = pairs[inviteTokenIndex][1])?
+        # Convert pluses to spaces and then decode.
+        inviteToken = decodeURIComponent(val.replace(/\+/g, ' '))
+        # Change to fake token so it doesn't get sent to analytics.
+        pairs[inviteTokenIndex][1] = 'XXX'
+      # Convert back to query string.
+      if ! Ember.isEmpty(pairs)
+        # Never decoded, so don't need to encode.
+        queryString = App.Util.arrayToQueryString(pairs, false)
     # Our analytics tracking uses this.
     App.set('pendingQueryString', queryString)
 
