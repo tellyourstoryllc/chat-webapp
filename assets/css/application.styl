@@ -2190,7 +2190,13 @@ room-members-sidebar-width = 200px
       max-width none !important // Override rules below.
       padding 10px
       text-align center
-    .status-text, .idle-duration
+    .room-avatar.blank-avatar
+      margin-top 1px
+    .user-status
+      padding 10px
+    .idle-duration
+      vertical-align baseline
+    .status-text
       margin 0 10px 10px
     .status-text
       max-height 4.8em !important // Override rules below.
@@ -2236,10 +2242,13 @@ room-members-sidebar-width = 200px
     margin-right 5px
     vertical-align middle
 
-    &:not(.avatars-off)
-      width 26px
-      height 26px
-      border-width 3px
+    width 26px
+    height 26px
+    border-width 3px
+
+    &.avatars-off:not(.always-show-avatar), &.blank-avatar
+      width 11px
+      height 11px
 
     &.big-one-to-one-avatar
       // Center horizontally.

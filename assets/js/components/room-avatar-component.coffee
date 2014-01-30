@@ -5,6 +5,7 @@ App.RoomAvatarComponent = Ember.Component.extend
     [
       'status'
       'clientType'
+      'showAvatar::blank-avatar' # To show status dot only, all the time.
       'showAvatars::avatars-off' # For preference.
       'showStatus::no-status'
       'isGroup:group'
@@ -13,6 +14,8 @@ App.RoomAvatarComponent = Ember.Component.extend
   attributeBindings: ['style']
 
   showStatus: true
+
+  showAvatar: true
 
   # Set this to true to ignore the `showAvatars` preference.
   alwaysShowAvatar: false
