@@ -341,6 +341,10 @@ App.UsersListComponent = Ember.Component.extend
         seconds = Math.round(duration)
         text = moment.duration(seconds, 'seconds').humanize()
       $idle.text(text)
+      # Idle text can affect the item height.
+      if room.get('shouldDisplayIdleDuration')
+        @queueAnimationOnce @, 'updatePositions'
+        @runAnimations()
     shouldDisplayIdleDurationObserver = =>
       if room.get('shouldDisplayIdleDuration')
         # Only observe the idle duration when we're actually showing it.
@@ -351,6 +355,9 @@ App.UsersListComponent = Ember.Component.extend
       else
         $idle.addClass('hidden')
         room.removeObserver('mostRecentIdleDuration', mostRecentIdleDurationObserver)
+      # Idle text can affect the item height.
+      @queueAnimationOnce @, 'updatePositions'
+      @runAnimations()
     room.addObserver('shouldDisplayIdleDuration', shouldDisplayIdleDurationObserver)
     # @one 'willDestroyElement', =>
     #   room.removeObserver('shouldDisplayIdleDuration', shouldDisplayIdleDurationObserver)
