@@ -236,7 +236,7 @@
       {{/if}}
 
       <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
-        {{users-list sortedUsers=activeRoom.arrangedMembers users=activeRoomArrangedMembers allUsers=allUsers activeRoomUsersLoaded=activeRoomUsersLoaded goToRoom='goToRoom'}}
+        {{users-list activeRoom=activeRoom sortedUsers=activeRoom.arrangedMembers users=activeRoomArrangedMembers allUsers=allUsers activeRoomUsersLoaded=activeRoomUsersLoaded goToRoom='goToRoom'}}
       </div>
 
       <div {{bind-attr class=':connecting-status-bar activeRoom::hidden App.isHeartbeatActive::offline'}}>

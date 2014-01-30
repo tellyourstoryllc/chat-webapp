@@ -2281,12 +2281,19 @@ room-members-sidebar-width = 200px
     .room-member-info-cell
       padding-top 0
 
-  .status-text, .idle-duration
+  .admin-indicator, .status-text, .idle-duration
     box-sizing border-box
     max-height 2.4em
     overflow hidden
     color #A9A9A9
     font-size 12px
+
+  .admin-indicator
+    font-size 14px
+    font-weight bold
+
+    &.hidden
+      display none
 
   .idle-duration
     white-space nowrap

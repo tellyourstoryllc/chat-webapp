@@ -9,6 +9,8 @@ App.UsersListComponent = Ember.Component.extend
 
   sortedUsers: null
 
+  activeRoom: null
+
   # Currently we do not support these values changing after creation.
   showStatus: true
   alwaysShowAvatar: false
@@ -298,7 +300,31 @@ App.UsersListComponent = Ember.Component.extend
     nameObserver() # Trigger immediately.
     $name.appendTo(infoCell)
 
-    # Add a naturally breaking space between name and idle duration.
+    # Add a naturally breaking space.
+    space = document.createTextNode(' ')
+    infoCell.appendChild(space)
+
+    # {{#if room.isUserAnAdmin(user)}}
+    #   <span class='admin-indicator' title='Room Admin'>*</span>
+    # {{/if}}
+    if room instanceof App.User
+      admin = document.createElement('span')
+      $admin = $(admin)
+      $admin.addClass('admin-indicator')
+      $admin.text('*').attr('title', 'Room Admin')
+      adminObserver = =>
+        activeRoom = @get('activeRoom')
+        if activeRoom?.isUserAnAdmin(room)
+          $admin.removeClass('hidden')
+        else
+          $admin.addClass('hidden')
+      @addObserver('activeRoom.admins.[]', adminObserver)
+      # @one 'willDestroyElement', =>
+      #   @removeObserver('activeRoom.admins.[]', adminObserver)
+      adminObserver() # Trigger immediately.
+      $admin.appendTo(infoCell)
+
+    # Add a naturally breaking space.
     space = document.createTextNode(' ')
     infoCell.appendChild(space)
 

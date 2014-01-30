@@ -119,6 +119,9 @@ App.Conversation = Ember.Mixin.create
     @get('memberIds').contains(App.get('currentUser.id'))
   ).property('App.currentUser.id', 'memberIds.@each')
 
+  isUserAnAdmin: (user) ->
+    (@get('admins') ? []).contains(user)
+
   # You should call this after all the User instances have been loaded for the
   # group.
   didLoadMembers: ->
