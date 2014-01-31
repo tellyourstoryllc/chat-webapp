@@ -31,19 +31,19 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown', 'fileChange', 'onOneToOneWallpaperFileChange')
+    _.bindAll(@, 'onBodyKeyDown', 'onAvatarFileChange', 'onOneToOneWallpaperFileChange')
     @setProperties
       emailAddresses: []
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
-    @$('.avatar-file-input').on 'change', @fileChange
+    @$('.avatar-file-input').on 'change', @onAvatarFileChange
     @$('.one-to-one-wallpaper-file-input').on 'change', @onOneToOneWallpaperFileChange
     @_updateUi()
 
   willDestroyElement: ->
     $('body').off 'keydown', @onBodyKeyDown
-    @$('.avatar-file-input').off 'change', @fileChange
+    @$('.avatar-file-input').off 'change', @onAvatarFileChange
     @$('.one-to-one-wallpaper-file-input').off 'change', @onOneToOneWallpaperFileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
@@ -113,7 +113,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     ! Ember.isEmpty(App.get('currentUser.account.facebookId'))
   ).property('App.currentUser.account.facebookId')
 
-  fileChange: (event) ->
+  onAvatarFileChange: (event) ->
     Ember.run @, ->
       file = event.target.files?[0]
       return unless file?
