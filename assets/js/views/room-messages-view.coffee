@@ -104,12 +104,14 @@ App.RoomMessagesView = Ember.View.extend
 
     if room?.get('isRoom')
       # Show the invite button if there are no members and no messages.  You may
-      # want to create a room for yourself.
+      # want to create a room for yourself.  Also, only show this if you're a
+      # member.
       numMembers = room.get('memberIds.length')
       noMembers = numMembers? && numMembers < 2
       noMessages = (room.get('messages.length') ? 0) == 0
-      @set('showInviteButton', noMembers && noMessages)
-  ).observes('room').on('init')
+      isMember = room.get('isCurrentUserMember')
+      @set('showInviteButton', noMembers && noMessages && isMember)
+  ).observes('room', 'room.isCurrentUserMember').on('init')
 
   roomAssociationsLoadedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
