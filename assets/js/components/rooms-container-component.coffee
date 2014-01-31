@@ -17,6 +17,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isEditingTopic: false
 
+  showSetPasswordBanner: false
+  isSettingPassword: false
+  setPasswordBannerErrorMessage: null
+
   numMembersToShow: 7 # 4 on first row, 3 +more on second row.
 
   isRoomMenuVisible: false
@@ -302,6 +306,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @get('activeRoom.canSetTopic') && Ember.isEmpty(@get('activeRoom.topic')) &&
       ! @get('isEditingTopic')
   ).property('activeRoom.canSetTopic', 'activeRoom.topic', 'isEditingTopic')
+
+  needsPasswordChanged: (->
+    if App.get('currentUser.account.needsPassword')
+      @set('showSetPasswordBanner', true)
+  ).observes('App.currentUser.account.needsPassword').on('didInsertElement')
 
   roomAlphabeticMembers: (->
     members = @get('activeRoom.alphabeticMembers')
@@ -701,6 +710,40 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     cancelEditingTopic: ->
       @set('isEditingTopic', false)
+      return undefined
+
+    dismissSetPasswordBanner: ->
+      @set('showSetPasswordBanner', false)
+      return undefined
+
+    setPassword: ->
+      return if @get('isSettingPassword')
+      password = @$('.set-password-input').val() ? ''
+      minPasswordLength = App.Account.minPasswordLength()
+      if password.length < minPasswordLength
+        @set('setPasswordBannerErrorMessage', "Password must be at least #{minPasswordLength} characters.")
+        return
+
+      @set('isSettingPassword', true)
+      @set('setPasswordBannerErrorMessage', null)
+      data =
+        new_password: password
+      api = App.get('api')
+      api.ajax(api.buildURL('/accounts/update'), 'POST', data: data, skipLogOutOnInvalidTokenFilter: true)
+      .always =>
+        @set('isSettingPassword', false)
+      .then (json) =>
+        if ! json? || json.error?
+          @set('setPasswordBannerErrorMessage', App.userMessageFromError(json))
+          return
+        @set('showSetPasswordBanner', false)
+        App.get('currentUser.account')?.set('needsPassword', false)
+        return undefined
+      , (xhr) =>
+        @set('setPasswordBannerErrorMessage', App.userMessageFromError(xhr))
+        return undefined
+      .fail App.rejectionHandler
+
       return undefined
 
     joinGroup: ->

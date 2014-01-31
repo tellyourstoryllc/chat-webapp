@@ -2421,6 +2421,41 @@ room-members-sidebar-width = 200px
 .room-container-messages
   position relative
 
+  .room-alert-banner
+    position absolute
+    z-index 1 // Show on top of .room-messages-view
+    box-sizing border-box
+    width 100%
+
+    padding 20px
+    background-color app-purple
+    color #fff
+    text-align center
+    line-height 1.2
+
+    .banner-title
+      margin-bottom 10px
+
+    .set-password-input
+      margin-bottom 5px
+      padding 8px
+      font-size 14px
+      vertical-align middle
+
+    .app-btn
+      vertical-align middle
+
+    .close
+      float right
+      margin -10px -10px 5px 5px
+      padding 5px 10px
+      cursor pointer
+      font-size 16px
+      color rgba(255,255,255, .5)
+
+      &:hover
+        color #fff
+
   .room-alert-dialog
     position absolute
     z-index 1 // Show on top of .room-messages-view

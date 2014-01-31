@@ -20,3 +20,4 @@ App.Account.reopenClass
     email: json.email
     facebookId: json.facebook_id
     oneToOneWallpaperUrl: App.UrlUtil.mediaUrlToHttps(json.one_to_one_wallpaper_url)
+    needsPassword: json.needs_password

@@ -63,7 +63,32 @@
         {{! Only show Enter Room dialog when logged in.  When logged out, signup
             form is shown. }}
         {{#if isLoggedIn}}
-          {{#unless activeRoom.isCurrentUserMember}}
+          {{#if activeRoom.isCurrentUserMember}}
+            {{#if showSetPasswordBanner}}
+              <div class='room-alert-banner'>
+                <div class='room-alert-banner-content'>
+                  <form {{action 'setPassword' on='submit'}}>
+                    <span class='close' title='Close' {{action 'dismissSetPasswordBanner'}}>
+                      &times;
+                    </span>
+                    <div class='banner-title'>Set your password:</div>
+                    {{#if setPasswordBannerErrorMessage}}
+                      <div class='alert alert-error'>
+                        {{setPasswordBannerErrorMessage}}
+                      </div>
+                    {{/if}}
+                    <div>
+                      <input type='password' class='set-password-input'>
+                      <button type='submit' class='app-btn btn-green btn-flat'
+                        {{bind-attr disabled='isSettingPassword'}}>
+                        Set Password
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            {{/if}}
+          {{else}}
             <div class='room-alert-dialog'>
               <div class='room-alert-content'>
                 <div class='room-alert-message'>
@@ -100,7 +125,7 @@
                 {{/if}}
               </div>
             </div>
-          {{/unless}}
+          {{/if}}
         {{/if}}
       {{/if}}
 
