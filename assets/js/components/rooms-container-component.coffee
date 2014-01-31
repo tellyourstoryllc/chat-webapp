@@ -34,7 +34,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'fileChange',
+    _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'onMessageFileChange',
       'onDocumentClick',
       'onTapRoomsSidebarToggle',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
@@ -64,7 +64,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.send-message-text').on 'keyup', @onIe9KeyUp if Modernizr.msie9
       @$('.send-message-text').on 'focus', @onSendMessageTextFocus
       @$('.send-message-text').on 'paste', @onSendMessageTextPaste
-      @$('.send-message-file').on 'change', @fileChange
+      @$('.send-message-file').on 'change', @onMessageFileChange
       @$('.room-avatar-file').on 'change', @onChangeRoomAvatarFile
       @$('.room-wallpaper-file').on 'change', @onChangeRoomWallpaperFile
       @updateSize()
@@ -86,7 +86,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').off 'keyup', @onIe9KeyUp if Modernizr.msie9
     @$('.send-message-text').off 'focus', @onSendMessageTextFocus
     @$('.send-message-text').off 'paste', @onSendMessageTextPaste
-    @$('.send-message-file').off 'change', @fileChange
+    @$('.send-message-file').off 'change', @onMessageFileChange
     @$('.room-avatar-file').off 'change', @onChangeRoomAvatarFile
     @$('.room-wallpaper-file').off 'change', @onChangeRoomWallpaperFile
 
@@ -529,7 +529,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         event.preventDefault()
         @send('attachFile', file)
 
-  fileChange: (event) ->
+  onMessageFileChange: (event) ->
     Ember.run @, ->
       file = if event.target.files?
         event.target.files[0]
