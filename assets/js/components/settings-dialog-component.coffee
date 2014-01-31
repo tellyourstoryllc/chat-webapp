@@ -37,8 +37,9 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
-    @$('.avatar-file-input').on 'change', @onAvatarFileChange
-    @$('.one-to-one-wallpaper-file-input').on 'change', @onOneToOneWallpaperFileChange
+    Ember.run.schedule 'afterRender', @, ->
+      @$('.avatar-file-input').on 'change', @onAvatarFileChange
+      @$('.one-to-one-wallpaper-file-input').on 'change', @onOneToOneWallpaperFileChange
     @_updateUi()
 
   willDestroyElement: ->
