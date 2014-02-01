@@ -38,6 +38,9 @@
     </div>
     <div {{bind-attr class=':tab-content :rooms-tab-content isRoomsTabActive::hidden'}}>
       <div class='join-text-container'>
+        <div class='join-text-submit' {{action 'joinRoomSubmit' target=view}}>
+          <span class='join-text-submit-icon'></span>
+        </div>
         <input type='text' class='join-text' placeholder='Enter Room (Room Key)' autocomplete='off'>
       </div>
       <ul class='rooms-list'>

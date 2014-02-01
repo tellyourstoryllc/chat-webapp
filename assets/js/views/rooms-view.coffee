@@ -350,6 +350,10 @@ App.RoomsView = Ember.View.extend
       @toggleProperty('isShowingRoomsSidebar')
       return undefined
 
+    joinRoomSubmit: ->
+      @send('joinRoom', $('.join-text').val())
+      return undefined
+
     joinRoom: (joinText) ->
       return if @get('isJoiningRoom')
       joinCode = App.Group.parseJoinCode(joinText)

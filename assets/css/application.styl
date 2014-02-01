@@ -1580,20 +1580,31 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .join-text-container, .contacts-search-container
   position relative
 
-  &:after
-    content ''
-    sprites-background()
-    sprite-icon()
+  .join-text-submit
     width 12px
     height 12px
-    background-position -123px -11px
     opacity .4
     // Center vertically.
     position absolute
     top 0
     bottom 0
-    right 20px
+    right 15px
     margin auto
+
+    padding 7px 5px
+    cursor pointer
+
+    &:hover
+      opacity .6
+
+  .join-text-submit-icon
+    sprites-background()
+    sprite-icon()
+    width 12px
+    height 12px
+    background-position -123px -11px
+    position relative
+    top -4px
 
   .join-text, .contacts-search-text
     dark-purple-round-input()
