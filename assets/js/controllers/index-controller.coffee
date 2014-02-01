@@ -16,15 +16,8 @@ App.IndexController = Ember.Controller.extend App.BaseControllerMixin, App.JoinM
   joinCode: Ember.computed.alias('joinCodeToShow')
 
   needsMacApp: (->
-    # If we're already running in the app, don't show the download stuff.
-    return false if macgap?
-
-    matches = /Mac OS X 10_(\d+)_/i.exec(navigator.userAgent)
-    return false if ! matches?
-    minor = parseInt(matches[1])
-
-    minor? && ! _.isNaN(minor) && minor >= 8
-  ).property()
+    App.get('needsMacApp')
+  ).property('App.needsMacApp')
 
   joinGroupNow: (room) ->
     @get('target').send('joinGroup', room)

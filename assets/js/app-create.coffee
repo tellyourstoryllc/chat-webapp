@@ -198,6 +198,9 @@ window.App = App = Ember.Application.create
     # Setup copying to clipboard.  Versioning the URL to prevent caching issues.
     ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf', hoverClass: 'hover')
 
+    # If we're already running in the Mac app, we don't need it.
+    App.set('needsMacApp', ! macgap? && App.doesSystemSupportMacApp())
+
   logInFromToken: (token) ->
     App.set('isLoggingIn', true)
     App.get('api').checkin(token: token)
@@ -499,6 +502,13 @@ window.App = App = Ember.Application.create
 
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
+
+  doesSystemSupportMacApp: ->
+    matches = /Mac OS X 10_(\d+)_/i.exec(navigator.userAgent)
+    return false if ! matches?
+    minor = parseInt(matches[1])
+
+    minor? && ! _.isNaN(minor) && minor >= 8
 
   conversationFromId: (conversationId) ->
     if /-/.test(conversationId)
