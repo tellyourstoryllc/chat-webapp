@@ -319,7 +319,17 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   needsDownloadMacAppChanged: (->
     if App.get('needsMacApp')
-      @set('showDownloadAppBanner', true)
+      shouldShow = true
+      # If the user dismissed the banner before, don't show it again for 3 days.
+      str = window.localStorage.getItem('dismissedDownloadAppBanner')
+      if ! Ember.isEmpty(str) && (date = App.Util.deserializeDate(str))?
+        shouldShow = moment().diff(moment(date), 'days') >= 3
+        if shouldShow
+          # Clear it out to save space.
+          window.localStorage.removeItem('dismissedDownloadAppBanner')
+
+      if shouldShow
+        @set('showDownloadAppBanner', true)
   ).observes('App.needsMacApp').on('didInsertElement')
 
   roomAlphabeticMembers: (->
@@ -346,6 +356,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       # Hide the banner.
       @set('showDownloadAppBanner', false)
+      window.localStorage.setItem('dismissedDownloadAppBanner', App.Util.serializeDate(new Date()))
       return undefined
 
   onClickMessageLink: (event) ->
@@ -737,6 +748,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     dismissDownloadAppBanner: ->
       @set('showDownloadAppBanner', false)
+      window.localStorage.setItem('dismissedDownloadAppBanner', App.Util.serializeDate(new Date()))
       return undefined
 
     setPassword: ->

@@ -97,6 +97,19 @@ App.Util.reopenClass
     # its mime type.
     mimetype in types || file?.type in types
 
+  serializeDate: (date) ->
+    month = "#{date.getMonth() + 1}"
+    month = '0' + month if month.length < 2
+    day = "#{date.getDate()}"
+    day = '0' + day if day.length < 2
+
+    "#{date.getFullYear()}-#{month}-#{day}"
+
+  deserializeDate: (str) ->
+    parts = str.split('-')
+    return null unless parts.length == 3
+    new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+
   isUsingModifierKey: (event) ->
     event.ctrlKey || event.altKey || event.shiftKey || event.metaKey
 
