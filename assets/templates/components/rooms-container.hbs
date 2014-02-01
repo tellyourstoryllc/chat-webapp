@@ -87,6 +87,23 @@
                   </form>
                 </div>
               </div>
+            {{else}}
+              {{#if showDownloadAppBanner}}
+                <div class='room-alert-banner'>
+                  <div class='room-alert-banner-content'>
+                    <span class='close' title='Close' {{action 'dismissDownloadAppBanner'}}>
+                      &times;
+                    </span>
+                    <div class='banner-title'>Install skymob for Mac and never miss a message!</div>
+                    <div class='action-link-container'>
+                      <a class='app-btn btn-green btn-flat download-app-link' href='{{webServerUrl '/downloads/skymob.pkg'}}'
+                        download>
+                        Download Mac App
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {{/if}}
             {{/if}}
           {{else}}
             <div class='room-alert-dialog'>

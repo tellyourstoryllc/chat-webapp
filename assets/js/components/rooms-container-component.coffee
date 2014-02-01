@@ -21,6 +21,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   isSettingPassword: false
   setPasswordBannerErrorMessage: null
 
+  showDownloadAppBanner: false
+
   numMembersToShow: 7 # 4 on first row, 3 +more on second row.
 
   isRoomMenuVisible: false
@@ -41,6 +43,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     _.bindAll(@, 'resize', 'bodyKeyDown', 'clickSender', 'onMessageFileChange',
       'onDocumentClick',
       'onTapRoomsSidebarToggle',
+      'onDownloadMacAppClick',
       'onChangeRoomAvatarFile', 'onChangeRoomWallpaperFile',
       'onClickMessageLink',
       'onSendMessageTextFocus',
@@ -59,6 +62,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $(document).on 'click', '.toggle-rooms-sidebar', @onTapRoomsSidebarToggle
     $(document).on 'click', '.message-body a[href]', @onClickMessageLink
     $(document).on 'click', '.sender', @clickSender
+    $(document).on 'click', '.download-app-link', @onDownloadMacAppClick
 
     Ember.run.schedule 'afterRender', @, ->
       @$('.send-message-text').on 'keydown', @sendMessageTextKeyDown
@@ -84,6 +88,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     $(document).off 'click', '.toggle-rooms-sidebar', @onTapRoomsSidebarToggle
     $(document).off 'click', '.message-body a[href]', @onClickMessageLink
     $(document).off 'click', '.sender', @clickSender
+    $(document).off 'click', '.download-app-link', @onDownloadMacAppClick
     @$('.send-message-text').off 'keydown', @sendMessageTextKeyDown
     @$('.send-message-text').off 'keyup click', @onSendMessageTextCursorMove
     @$('.send-message-text').off 'input propertychange', @sendMessageTextInput
@@ -312,6 +317,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('showSetPasswordBanner', true)
   ).observes('App.currentUser.account.needsPassword').on('didInsertElement')
 
+  needsDownloadMacAppChanged: (->
+    if App.get('needsMacApp')
+      @set('showDownloadAppBanner', true)
+  ).observes('App.needsMacApp').on('didInsertElement')
+
   roomAlphabeticMembers: (->
     members = @get('activeRoom.alphabeticMembers')
     return null unless members?
@@ -328,6 +338,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # Don't auto-focus on mobile since it opens the on-screen keyboard.
     if force || ! (Modernizr.appleios || Modernizr.android)
       @$('.send-message-text')?.focus()
+
+  onDownloadMacAppClick: (event) ->
+    Ember.run @, ->
+      App.Analytics.trackEvent 'download', category: 'app', label: 'Mac App'
+      # Do the default.
+
+      # Hide the banner.
+      @set('showDownloadAppBanner', false)
+      return undefined
 
   onClickMessageLink: (event) ->
     Ember.run @, ->
@@ -714,6 +733,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     dismissSetPasswordBanner: ->
       @set('showSetPasswordBanner', false)
+      return undefined
+
+    dismissDownloadAppBanner: ->
+      @set('showDownloadAppBanner', false)
       return undefined
 
     setPassword: ->
