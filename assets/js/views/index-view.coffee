@@ -86,19 +86,7 @@ App.IndexView = Ember.View.extend
       roomKey = App.Group.parseJoinCode(keyText)
       return if Ember.isEmpty(roomKey)
 
-      if App.get('isMacGap')
-        # For desktop app, go to the join page.
-        @get('controller').transitionToRoute('join', roomKey)
-        return
-
-      # Go back to first step.
-      @send('goBackToAuthChoices')
-
-      # On mobile, make sure the keyboard is hidden.
-      $('.room-key-input').blur()
-
-      @showSignupModal()
-      @get('controller').send('joinRoom', roomKey)
+      @get('controller').transitionToRoute('join', roomKey)
       return undefined
 
     goToSignUp: ->

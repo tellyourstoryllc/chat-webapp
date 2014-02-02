@@ -33,19 +33,6 @@
     <div {{bind-attr class=':content-container isLoadingRoom:hidden'}}>
       <a href='#' class='close' {{action 'closeSignUp' target=view}} title='Close'>&times;</a>
 
-      {{#if room}}
-        <div class='room-title'>
-          <div class='avatar'>
-            <img {{bind-attr src='room.avatarUrl'}} class='medium-avatar-image'>
-          </div>
-          <div class='room-name-info-container'>
-            <div class='room-name'>{{room.name}}</div>
-            <div class='room-topic'>{{room.topic}}</div>
-          </div>
-          <div class='clearfix'></div>
-        </div>
-      {{/if}}
-
       <div class='dialog-content'>
         {{#if userMessage}}
           <div class='clearfix'></div>
@@ -54,50 +41,20 @@
           </div>
         {{else}}
 
-          {{#if room}}
-            <div class='members-preview-subtitle'>Who's already here...</div>
-            <div class='members-preview'>
-              {{#each user in alphabeticRoomMembers}}
-                <div class='member-preview'>
-                  {{room-avatar room=user showStatus=false alwaysShowAvatar=true classNames='medium-avatar-image'}}
-                  <div class='username'>{{user.name}}</div>
-                </div>
-              {{else}}
-                <div class='no-one-here'>
-                  (no one yet)
-                </div>
-              {{/each}}
-              {{#if moreRoomMembers}}
-                <div class='member-count-more'>
-                  <div class='member-count-ellipsis'></div>
-                  +{{moreRoomMembers}} more
-                </div>
-              {{/if}}
-              <div class='clearfix'></div>
-            </div>
+          {{! No room.  Regular signup. }}
+          <div class='signup-auth-choice'>
+            <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>
+              <span class='facebook-f-icon'></span>
+              <div class='btn-fb-text-container'>
+                Sign Up with Facebook
+              </div>
+            </button>
+            <div class='or-divider'>OR</div>
+            <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
+          </div>
 
-          {{else}}
-            {{! No room.  Regular signup. }}
-            <div class='signup-auth-choice'>
-              <button type='button' {{action 'signUpWithFacebook' target=view}} class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'>
-                <span class='facebook-f-icon'></span>
-                <div class='btn-fb-text-container'>
-                  Sign Up with Facebook
-                </div>
-              </button>
-              <div class='or-divider'>OR</div>
-              <button type='button' {{action 'signUpWithEmail' target=view}} class='app-btn btn-block btn-flat btn-green signup-with-email-button'>Sign Up with Your Email</button>
-            </div>
-          {{/if}}
         {{/if}}
 
-        {{home-join-group-signup-form viewName='joinGroupSignupForm'
-          isElementVisible=view.isJoinGroupSignupVisible
-          didSignUp='didSignUp'
-          didLogIn='didLogIn' didGoBack='goBackToAuthChoices'
-          signUpWithFacebook='signUpWithFacebook'
-          facebookDidError='facebookDidError'
-          logInWithRoom='logInWithRoom'}}
         {{home-signup-form viewName='signupForm'
           isElementVisible=view.isShowingEmailForm
           didSignUp='didSignUp'
