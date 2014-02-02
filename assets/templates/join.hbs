@@ -16,15 +16,19 @@
     {{#if isLoading}}
       Loading...
     {{else}}
-      {{room-join-group-signup-form viewName='joinGroupSignupForm'
-        isInline=true
-        room=room
-        isUiDisabled=isSignupDisabled
-        didSignUp='didSignUp'
-        didLogIn='didLogIn'
-        signUpWithFacebook='signUpWithFacebook'
-        facebookDidError='facebookDidError'
-        logInWithRoom='logInWithRoom'}}
+      {{#if room}}
+        {{room-join-group-signup-form viewName='joinGroupSignupForm'
+          isInline=true
+          room=room
+          isUiDisabled=isSignupDisabled
+          didSignUp='didSignUp'
+          didLogIn='didLogIn'
+          signUpWithFacebook='signUpWithFacebook'
+          facebookDidError='facebookDidError'
+          logInWithRoom='logInWithRoom'}}
+      {{else}}
+        {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=joinCode}}
+      {{/if}}
     {{/if}}
   </div>
 </div>

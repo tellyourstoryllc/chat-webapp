@@ -987,6 +987,57 @@ room-sidebar-width = 240px
     &:hover
       text-decoration underline
 
+.room-key-form-component
+  .room-key-form
+    position relative
+    margin-left 10px
+    color rgba(255,255,255, .6)
+
+  .room-key-input
+    dark-purple-round-input()
+
+    width 180px
+    margin 0
+    padding 10px 38px
+    border-radius 25px
+    font-size 12px
+    text-align center
+
+  .room-key-icon
+    position absolute
+    top 8px
+    left 50%
+    margin-left -85px
+
+    sprites-background()
+    sprite-icon()
+    background-position -133px -32px
+    width 23px
+    height 23px
+
+    opacity .7
+
+  .submit-room-key-button
+    position absolute
+    top 6px
+    right 50%
+    margin-right -84px
+    width 25px
+    height 25px
+    border-radius 20px
+    background-color app-green
+    cursor pointer
+    text-align center
+
+  .submit-room-key-icon
+    sprites-background()
+    sprite-icon()
+    background-position -121px -9px
+    width 20px
+    height 20px
+    margin-left 3px
+    margin-top 4px
+
 // Home page
 
 .home-page
@@ -1041,56 +1092,6 @@ room-sidebar-width = 240px
 
   .room-key-form-component
     display inline-block
-
-  .room-key-form
-    position relative
-    margin-left 10px
-    color rgba(255,255,255, .6)
-
-  .room-key-input
-    dark-purple-round-input()
-
-    width 180px
-    margin 0
-    padding 10px 38px
-    border-radius 25px
-    font-size 12px
-    text-align center
-
-  .room-key-icon
-    position absolute
-    top 8px
-    left 50%
-    margin-left -85px
-
-    sprites-background()
-    sprite-icon()
-    background-position -133px -32px
-    width 23px
-    height 23px
-
-    opacity .7
-
-  .submit-room-key-button
-    position absolute
-    top 6px
-    right 50%
-    margin-right -84px
-    width 25px
-    height 25px
-    border-radius 20px
-    background-color app-green
-    cursor pointer
-    text-align center
-
-  .submit-room-key-icon
-    sprites-background()
-    sprite-icon()
-    background-position -121px -9px
-    width 20px
-    height 20px
-    margin-left 3px
-    margin-top 4px
 
   .screenshot
     position absolute

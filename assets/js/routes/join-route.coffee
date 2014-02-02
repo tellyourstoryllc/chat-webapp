@@ -16,8 +16,15 @@ App.JoinRoute = Ember.Route.extend
     controller.reset?()
     joinCode = model
     controller.set('joinCode', joinCode)
-    controller.set('isLoading', true)
     controller.set('room', null)
+    @_submitRoomKey(controller)
+
+  _submitRoomKey: (controller, roomKeyText) ->
+    controller ?= @controllerFor('join')
+    joinCode = roomKeyText ? controller.get('joinCode')
+
+    controller.set('isLoading', true)
+    controller.set('userMessage', null)
     App.Group.fetchByJoinCode(joinCode)
     .always =>
       controller.set('isLoading', false)
@@ -33,3 +40,9 @@ App.JoinRoute = Ember.Route.extend
       msg = "There was a problem.  Please try again later." if 500 <= xhr.status <= 599
       msg ?= "Sorry, that room couldn't be found."
       controller.set('userMessage', msg)
+
+  actions:
+
+    submitRoomKey: (roomKeyText) ->
+      @_submitRoomKey(null, roomKeyText)
+      return undefined
