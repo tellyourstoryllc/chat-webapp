@@ -17,6 +17,7 @@ App.JoinRoute = Ember.Route.extend
     joinCode = model
     controller.set('joinCode', joinCode)
     controller.set('isLoading', true)
+    controller.set('room', null)
     App.Group.fetchByJoinCode(joinCode)
     .always =>
       controller.set('isLoading', false)
