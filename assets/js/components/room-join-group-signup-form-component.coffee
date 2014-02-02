@@ -58,6 +58,12 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
       , 50
   ).observes('errorMessage')
 
+  hostedByName: (->
+    room = @get('room')
+    return null if room instanceof App.OneToOne
+    room.get('admins.firstObject.name')
+  ).property('room', 'room.admins.firstObject.name')
+
   actions:
 
     logInWithRoom: ->

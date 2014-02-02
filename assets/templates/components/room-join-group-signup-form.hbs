@@ -3,8 +3,8 @@
   {{#if room}}
     <div class='room-header'>
       <div class='room-name'>You are joining <strong>{{room.name}}</strong>.</div>
-      {{#if room.admins.firstObject.name}}
-        <div>Hosted by <strong>{{room.admins.firstObject.name}}</strong>.</div>
+      {{#if hostedByName}}
+        <div>Hosted by <strong>{{hostedByName}}</strong>.</div>
       {{/if}}
     </div>
 
