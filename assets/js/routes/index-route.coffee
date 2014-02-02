@@ -30,6 +30,9 @@ App.IndexRoute = Ember.Route.extend
       @render 'mobile-install',
         into: 'application'
         outlet: 'modal'
+    else if App.get('isMacGap')
+      @render 'desktop-index',
+        view: 'index'
     else
       @_super(arguments...)
 

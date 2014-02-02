@@ -19,6 +19,9 @@ App.IndexView = Ember.View.extend
     $('body').on 'keydown', @onBodyKeyDown
     $('body').addClass('home-page')
 
+    # For the desktop app landing page.
+    $('body').addClass('desktop-home-page') if App.get('isMacGap')
+
     Ember.run.schedule 'afterRender', @, ->
       joinCode = @get('joinCodeToShow')
       if joinCode?
@@ -32,6 +35,7 @@ App.IndexView = Ember.View.extend
     App.set('indexView', null)
     $('body').off 'keydown', @onBodyKeyDown
     $('body').removeClass('home-page')
+    $('body').removeClass('desktop-home-page')
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
