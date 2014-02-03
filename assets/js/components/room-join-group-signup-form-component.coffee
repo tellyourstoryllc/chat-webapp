@@ -8,8 +8,9 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
   room: null
 
   showRelatedLinks: false
-  showFacebookChoice: true
   shouldRequirePassword: false
+
+  authStep: 'email'
 
   init: ->
     @_super(arguments...)
@@ -19,6 +20,10 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
     @_super(arguments...)
     $(window).on 'resize', @onResize
     Ember.run.schedule 'afterRender', @, 'updateSize'
+
+  isAuthStepEmail: Ember.computed.equal('authStep', 'email')
+
+  isAuthStepPassword: Ember.computed.equal('authStep', 'password')
 
   onResize: _.throttle (event) ->
     Ember.run @, ->
@@ -58,6 +63,21 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
       , 50
   ).observes('errorMessage')
 
+  # Called when the user submits a duplicate email address.
+  userDidEnterDuplicateEmail: (xhr) ->
+    # Use the same email address, but prompt the user for password.
+    @set('authStep', 'password')
+
+  authStepChanged: (->
+    # Set focus to the right input.
+    Ember.run.schedule 'afterRender', @, ->
+      if @get('authStep') == 'email'
+        $control = @$('.email-input')
+      else
+        $control = @$('.password-input')
+      $control.focus()
+  ).observes('authStep').on('didInsertElement')
+
   hostedByName: (->
     room = @get('room')
     return null if room instanceof App.OneToOne
@@ -65,6 +85,13 @@ App.RoomJoinGroupSignupFormComponent = App.SignupFormComponent.extend App.AutoFi
   ).property('room', 'room.admins.firstObject.name')
 
   actions:
+
+    attemptSignup: ->
+      if @get('isAuthStepPassword')
+        @send('attemptLogin')
+      else
+        @_super(arguments...)
+      return undefined
 
     logInWithRoom: ->
       @sendAction('logInWithRoom')

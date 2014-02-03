@@ -35,6 +35,11 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   showClose: Ember.computed.alias('didClose')
 
+  # Called when the user submits a duplicate email address.
+  userDidEnterDuplicateEmail: (xhr) ->
+    # Default implementation just shows the error message.
+    @set('errorMessage', App.userMessageFromError(xhr))
+
   actions:
 
     close: ->
@@ -182,6 +187,55 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
       , (xhr) =>
         @set('isCreatingUser', false)
+        # If we're signing up with facebook, just show the error.  Don't treat
+        # it specially.
+        if ! facebookToken? && /Email has already been taken/i.test(xhr?.responseJSON?.error?.message)
+          @userDidEnterDuplicateEmail(xhr)
+        else
+          @set('errorMessage', App.userMessageFromError(xhr))
+      .fail App.rejectionHandler
+      return undefined
+
+    attemptLogin: ->
+      return if @get('isCheckingLogIn')
+      @set('isCheckingLogIn', true)
+      @set('errorMessage', null)
+      @$('.signup-form').removeClass('shake-side-to-side')
+
+      if Ember.isEmpty(@get('facebookToken'))
+        data =
+          email: @get('email')
+          password: @get('password')
+      else
+        data =
+          facebook_id: @get('facebookId')
+          facebook_token: @get('facebookToken')
+      App.get('api').login(data)
+      .always =>
+        @set('isCheckingLogIn', false)
+      .then (json) =>
+        if ! json? || json.error?
+          @set('errorMessage', App.userMessageFromError(json))
+          return
+
+        json = Ember.makeArray(json)
+
+        userJson = json.find (o) -> o.object_type == 'user'
+        if userJson.token?
+          token = userJson.token
+          delete userJson.token
+
+        user = App.User.loadRaw(userJson)
+        if token?
+          @set('isLoggingIn', true)
+          App.login(token, user)
+          App.whenLoggedIn @, ->
+            @set('isLoggingIn', false)
+            @sendAction('didLogIn')
+
+      , (xhr) =>
         @set('errorMessage', App.userMessageFromError(xhr))
+        if xhr.status == 401
+          @$('.signup-form').addClass('shake-side-to-side')
       .fail App.rejectionHandler
       return undefined

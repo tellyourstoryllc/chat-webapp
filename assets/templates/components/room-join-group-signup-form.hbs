@@ -14,7 +14,13 @@
   {{/if}}
 
   <div class='subtitle'>
-    Enter your email address to join:
+    {{#if isAuthStepEmail}}
+      Enter your email address to join:
+    {{else}}
+      {{#if isAuthStepPassword}}
+        Enter your password:
+      {{/if}}
+    {{/if}}
   </div>
   {{#if errorMessage}}
     <div class='alert alert-error'>
@@ -22,24 +28,33 @@
       {{errorMessage}}
     </div>
   {{/if}}
-  <div class='control-group'>
-    {{input type='email' value=email class='email-input' placeholder='Email Address'}}
-  </div>
+  {{#if isAuthStepEmail}}
+    <div class='control-group'>
+      {{input type='email' value=email class='email-input' placeholder='Email Address'}}
+    </div>
+  {{else}}
+    {{#if isAuthStepPassword}}
+      <div class='control-group'>
+        {{input type='password' value=password class='password-input' placeholder='Password'}}
+      </div>
+    {{/if}}
+  {{/if}}
   <div class='form-actions'>
     <button type='submit' class='app-btn btn-block btn-flat btn-green' {{bind-attr disabled='isSignupDisabled'}}>Join Group</button>
-
-    {{#if showFacebookChoice}}
-      <div class='or-divider'>OR</div>
-
-      <button type='button' class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'
-        {{bind-attr disabled='isSignupDisabled'}}
-        {{action 'attemptSignUpWithFacebook'}}>
-        <span class='facebook-f-icon'></span>
-        <div class='btn-fb-text-container'>
-          Connect with Facebook
-        </div>
-      </button>
+    {{#if isAuthStepPassword}}
+      <div class='related'>{{link-to 'Forgot Password?' 'forgot-password'}}</div>
     {{/if}}
+
+    <div class='or-divider'>OR</div>
+
+    <button type='button' class='app-btn btn-block btn-flat btn-fb signup-with-facebook-button'
+      {{bind-attr disabled='isSignupDisabled'}}
+      {{action 'attemptSignUpWithFacebook'}}>
+      <span class='facebook-f-icon'></span>
+      <div class='btn-fb-text-container'>
+        Connect with Facebook
+      </div>
+    </button>
 
     <div class='login-hint'>
       Already have an account?  <a href='/login' {{action 'logInWithRoom'}}>Log In</a>
