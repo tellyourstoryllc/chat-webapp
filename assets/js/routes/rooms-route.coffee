@@ -85,6 +85,14 @@ App.RoomsRoute = Ember.Route.extend
         rooms.forEach (room) =>
           room.subscribeToMessages().then =>
             room.reload()
+
+        if App.get('continueToMostRecentRoom')
+          # Consume this falg.
+          App.set('continueToMostRecentRoom', false)
+          # Transition to most recent room.
+          room = controller.get('arrangedRooms')?.objectAt(0)
+          @replaceWith('rooms.room', room) if room?
+
       return rooms
     .fail App.rejectionHandler
 

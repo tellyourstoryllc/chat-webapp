@@ -39,6 +39,8 @@ window.App = App = Ember.Application.create
   # Needs to be an args array since `undefined` is a valid context.
   continueTransitionArgs: null
 
+  continueToMostRecentRoom: false
+
   # Set to a Group's join code to display on the home page.
   joinCodeToShow: null
   roomKeyTextToShow: null
@@ -271,6 +273,9 @@ window.App = App = Ember.Application.create
       # We're currently on the login or home page, so go to the default
       # place.
       if appController.get('currentPath') in ['index', 'login']
+        # Go to most recent room if we have one.
+        App.set('continueToMostRecentRoom', true)
+
         App._getRouter().replaceWith('rooms.index')
 
   # Common promise rejection handler.  Use this as the final handler whenever
