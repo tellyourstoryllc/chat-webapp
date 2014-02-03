@@ -32,6 +32,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
   didInsertElement: ->
     @_super(arguments...)
+    @set('email', App.get('emailAddress') ? '')
 
   showClose: Ember.computed.alias('didClose')
 
@@ -39,6 +40,10 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
   userDidEnterDuplicateEmail: (xhr) ->
     # Default implementation just shows the error message.
     @set('errorMessage', App.userMessageFromError(xhr))
+
+  emailChanged: (->
+    App.set('emailAddress', @get('email'))
+  ).observes('email')
 
   actions:
 

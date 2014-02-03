@@ -8,3 +8,4 @@ App.ForgotPasswordRoute = Ember.Route.extend
   setupController: (controller, model) ->
     @_super(arguments...)
     controller.reset?()
+    controller.set('login', App.get('emailAddress') ? '')

@@ -1,5 +1,7 @@
 App.ForgotPasswordController = Ember.Controller.extend
 
+  login: ''
+
   hasSentResetEmail: false
 
   isRequesting: false
@@ -12,6 +14,12 @@ App.ForgotPasswordController = Ember.Controller.extend
     @setProperties
       errorMessage: null
       hasSentResetEmail: false
+
+  loginChanged: (->
+    login = @get('login')
+    if login? && login.indexOf('@') >= 0 && login != App.get('emailAddress')
+      App.set('emailAddress', login)
+  ).observes('login')
 
   actions:
 

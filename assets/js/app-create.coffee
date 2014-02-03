@@ -49,6 +49,9 @@ window.App = App = Ember.Application.create
   # application navbar.
   showRoomKeyForm: false
 
+  # Temporary email address to pass between pages in the UI.
+  emailAddress: null
+
   # Set to a Group instance to auto join it and go to it after the user logs in.
   autoJoinAfterLoggingIn: null
 
