@@ -52,6 +52,7 @@ window.App = App = Ember.Application.create
   # Set to a Group instance to auto join it and go to it after the user logs in.
   autoJoinAfterLoggingIn: null
 
+  isRequestingNotificationPermission: false
   hasNotificationPermission: false
 
   emoticonsVersion: 0
@@ -497,13 +498,18 @@ window.App = App = Ember.Application.create
     @updateNotificationPermissionState(permissionLevel)
     if permissionLevel == window.notify.PERMISSION_DEFAULT
       Ember.Logger.log "Requesting permission for desktop notifications"
+      App.set('isRequestingNotificationPermission', true)
       window.notify.requestPermission =>
         Ember.run @, ->
           @updateNotificationPermissionState()
 
   updateNotificationPermissionState: (permissionLevel = null) ->
     permissionLevel ?= window.notify.permissionLevel()
-    App.set('hasNotificationPermission', permissionLevel == window.notify.PERMISSION_GRANTED)
+    hasNotificationPermission = permissionLevel == window.notify.PERMISSION_GRANTED
+    App.set('hasNotificationPermission', hasNotificationPermission)
+    if hasNotificationPermission
+      # If we have permission, the requesting process is over.
+      App.set('isRequestingNotificationPermission', false)
 
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)

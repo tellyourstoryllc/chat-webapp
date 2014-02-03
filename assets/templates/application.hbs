@@ -31,3 +31,9 @@
   {{outlet 'settingsModal'}}
   {{outlet 'modal'}}
 {{/if}}
+
+<div class='chrome-permission-bar-callout' {{action 'dismissChromePermissionCallout' on='doubleClick' target=view}}>
+  <div style='margin: 150px auto 10px'>Allow desktop notifications.</div>
+  <div class='subtext'>You can always change this later.</div>
+  <div class='chrome-permission-arrow'></div>
+</div>

@@ -50,7 +50,7 @@ disable-grayscale-image()
 
 sprites-background()
   background-image asseturl('/images/sprites2x.png')
-  background-size 260px 93px
+  background-size 260px 118px
   background-repeat no-repeat
 
 sprite-icon()
@@ -1502,6 +1502,54 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     bottom 10px
     width 20px
     height 20px
+
+@keyframes repeated-pointing
+  from
+    top 25px
+  to
+    top 5px
+
+.chrome-permission-bar-callout
+  position absolute
+  top 0
+  left 0
+  z-index 10000
+
+  background-color rgba(0,0,0, 0.85)
+  color #fff
+  font-size 20px
+  line-height 1.2
+  text-align center
+
+  // Initially hidden.
+  visibility hidden
+  opacity 0
+
+  transition-duration .2s
+  transition-timing-function ease-out
+  transition-property opacity, visibility
+
+  &.visible
+    transition-duration .5s
+    visibility visible
+    opacity 1
+
+  .subtext
+    font-size 12px
+    color rgba(255,255,255, .5)
+
+  .chrome-permission-arrow
+    sprites-background()
+    sprite-icon()
+    background-position -77px -58px
+
+    position absolute
+    top 5px
+    right 50px
+    width 18px
+    height 52px
+
+    animation repeated-pointing 1s ease-in-out infinite alternate
 
 ///////////////////////////////////////////////////////////
 

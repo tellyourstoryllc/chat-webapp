@@ -1,4 +1,4 @@
-App.ApplicationView = Ember.View.extend
+App.ApplicationView = Ember.View.extend App.ChromePermissionBarMixin,
 
   fayeRefreshCheckTimer: null
 
@@ -7,6 +7,8 @@ App.ApplicationView = Ember.View.extend
     _.bindAll(@, 'focus', 'blur', 'onStorage')
 
   didInsertElement: ->
+    @_super(arguments...)
+    App.set('_applicationView', @) # For debugging.
     $(window).focus @focus
     $(window).blur @blur
     $(window).on 'storage', @onStorage
