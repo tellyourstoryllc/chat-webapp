@@ -4,6 +4,9 @@
     <th></th>
     <th>Play Sound</th>
     <th>Show Desktop<br> Notification</th>
+    {{#if App.isMacGap}}
+      <th>Bounce Dock Icon</th>
+    {{/if}}
   </tr>
   <tr>
     <td class='label-cell'>When Receiving a Message</td>
@@ -15,6 +18,12 @@
       <input type='checkbox' class='show-notification-on-message-receive-checkbox'
         {{action 'changeNotificationClientPreference' 'showNotificationOnMessageReceive' on='change'}}>
     </td>
+    {{#if App.isMacGap}}
+      <td class='control-cell checkbox-control-cell'>
+        <input type='checkbox' class='bounce-dock-on-message-receive-checkbox'
+          {{action 'changeNotificationClientPreference' 'bounceDockOnMessageReceive' on='change'}}>
+      </td>
+    {{/if}}
   </tr>
   <tr>
     <td class='label-cell'>When Receiving a 1-1 Message</td>
@@ -26,6 +35,12 @@
       <input type='checkbox' class='show-notification-on-one-to-one-message-receive-checkbox'
         {{action 'changeNotificationClientPreference' 'showNotificationOnOneToOneMessageReceive' on='change'}}>
     </td>
+    {{#if App.isMacGap}}
+      <td class='control-cell checkbox-control-cell'>
+        <input type='checkbox' class='bounce-dock-on-one-to-one-message-receive-checkbox'
+          {{action 'changeNotificationClientPreference' 'bounceDockOnOneToOneMessageReceive' on='change'}}>
+      </td>
+    {{/if}}
   </tr>
   <tr>
     <td class='label-cell'>When Mentioned</td>
@@ -37,6 +52,12 @@
       <input type='checkbox' class='show-notification-on-mention-checkbox'
         {{action 'changeNotificationClientPreference' 'showNotificationOnMention' on='change'}}>
     </td>
+    {{#if App.isMacGap}}
+      <td class='control-cell checkbox-control-cell'>
+        <input type='checkbox' class='bounce-dock-on-mention-checkbox'
+          {{action 'changeNotificationClientPreference' 'bounceDockOnMention' on='change'}}>
+      </td>
+    {{/if}}
   </tr>
   {{#if doesBrowserSupportRangeInput}}
     <tr>

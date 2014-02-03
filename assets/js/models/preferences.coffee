@@ -19,10 +19,13 @@ App.Preferences.reopenClass
   clientPrefsDefaults:
     playSoundOnMessageReceive: true
     showNotificationOnMessageReceive: true
+    bounceDockOnMessageReceive: true
     playSoundOnOneToOneMessageReceive: true
     showNotificationOnOneToOneMessageReceive: true
+    bounceDockOnOneToOneMessageReceive: true
     playSoundOnMention: true
     showNotificationOnMention: true
+    bounceDockOnMention: true
     showJoinLeaveMessages: true
     # The number of minutes of inactivity after which the client is considered
     # idle on this device.

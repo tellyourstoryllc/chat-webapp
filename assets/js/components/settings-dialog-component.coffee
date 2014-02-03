@@ -178,10 +178,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     @_updateUi()
   ).observes('preferences.clientWeb.playSoundOnMessageReceive',
              'preferences.clientWeb.showNotificationOnMessageReceive',
+             'preferences.clientWeb.bounceDockOnMessageReceive',
              'preferences.clientWeb.playSoundOnOneToOneMessageReceive',
              'preferences.clientWeb.showNotificationOnOneToOneMessageReceive',
+             'preferences.clientWeb.bounceDockOnOneToOneMessageReceive',
              'preferences.clientWeb.playSoundOnMention',
              'preferences.clientWeb.showNotificationOnMention',
+             'preferences.clientWeb.bounceDockOnMention',
              'preferences.clientWeb.showJoinLeaveMessages',
              'preferences.clientWeb.showAvatars',
              'preferences.clientWeb.showWallpaper',
@@ -210,10 +213,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('#show-wallpaper-checkbox').prop('checked', clientPrefs.get('showWallpaper'))
       @$('.play-sound-on-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnMessageReceive'))
       @$('.show-notification-on-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnMessageReceive'))
+      @$('.bounce-dock-on-message-receive-checkbox').prop('checked', clientPrefs.get('bounceDockOnMessageReceive'))
       @$('.play-sound-on-one-to-one-message-receive-checkbox').prop('checked', clientPrefs.get('playSoundOnOneToOneMessageReceive'))
       @$('.show-notification-on-one-to-one-message-receive-checkbox').prop('checked', clientPrefs.get('showNotificationOnOneToOneMessageReceive'))
+      @$('.bounce-dock-on-one-to-one-message-receive-checkbox').prop('checked', clientPrefs.get('bounceDockOnOneToOneMessageReceive'))
       @$('.play-sound-on-mention-checkbox').prop('checked', clientPrefs.get('playSoundOnMention'))
       @$('.show-notification-on-mention-checkbox').prop('checked', clientPrefs.get('showNotificationOnMention'))
+      @$('.bounce-dock-on-mention-checkbox').prop('checked', clientPrefs.get('bounceDockOnMention'))
       @$('.notification-volume').val(clientPrefs.get('notificationVolume'))
 
   isAddingNewEmailAddress: (->
@@ -463,6 +469,11 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         playSoundOnMention: @$('.play-sound-on-mention-checkbox').is(':checked')
         showNotificationOnMention: @$('.show-notification-on-mention-checkbox').is(':checked')
         notificationVolume: parseInt(@$('.notification-volume').val())
+      if App.get('isMacGap')
+        clientPrefs.setProperties
+          bounceDockOnMessageReceive: @$('.bounce-dock-on-message-receive-checkbox').is(':checked')
+          bounceDockOnOneToOneMessageReceive: @$('.bounce-dock-on-one-to-one-message-receive-checkbox').is(':checked')
+          bounceDockOnMention: @$('.bounce-dock-on-mention-checkbox').is(':checked')
       # Save to localStorage.
       window.localStorage.setItem(key, clientPrefs.get(key))
       # Save to server.

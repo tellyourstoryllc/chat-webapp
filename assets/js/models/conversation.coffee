@@ -446,7 +446,10 @@ App.Conversation = Ember.Mixin.create
 
     if ! fromCurrentUser && ! hasFocus
       # Bounce the dock icon.
-      macgap?.app.bounce()
+      if wasMentioned && App.get('preferences.clientWeb.bounceDockOnMention') ||
+      isOneToOne && App.get('preferences.clientWeb.bounceDockOnOneToOneMessageReceive') ||
+      ! wasMentioned && ! isOneToOne && App.get('preferences.clientWeb.bounceDockOnMessageReceive')
+        macgap?.app.bounce()
 
     undefined
 
