@@ -28,6 +28,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   isRoomMenuVisible: false
 
   isInviteDialogVisible: false
+  inviteDialogAnimationTimer: null
 
   isSendingRoomAvatar: false
 
@@ -733,15 +734,21 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   showInviteDialog: ->
     @$('.invite-dialog').addClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', true)
+    timer = @get('inviteDialogAnimationTimer')
+    if timer?
+      Ember.run.cancel(timer)
+      @set('inviteDialogAnimationTimer', null)
     Ember.run.schedule 'afterRender', @, ->
       @$('.join-url-text').focus().textrange('set') # Select all.
 
   closeInviteDialog: ->
     @$('.invite-dialog').removeClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', false)
-    Ember.run.later @, ->
+    timer = Ember.run.later @, ->
+      @set('inviteDialogAnimationTimer', null)
       @$('.invite-dialog')?.removeClass('over-messages').css left: ''
-    , 500
+    , 300
+    @set('inviteDialogAnimationTimer', timer)
 
   actions:
 
