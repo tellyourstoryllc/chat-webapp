@@ -223,6 +223,9 @@
           valueBinding='activeRoom.newMessageText' maxlength='1000' rows='2'
           disabledBinding='roomsContainer.isSendDisabled'
           target=roomsContainer}}
+        <span {{bind-attr class=':message-emoticon-icon roomsContainer.isSendDisabled:disabled'}}
+          {{action 'chooseEmoticon' target=roomsContainer}}
+          title='Insert Emoticon'></span>
         {{#if doesBrowserSupportAjaxFileUpload}}
           <span {{bind-attr class=':message-attach-icon roomsContainer.isSendDisabled:disabled'}}
             {{action 'chooseFile' target=roomsContainer}}

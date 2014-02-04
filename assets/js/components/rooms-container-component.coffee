@@ -219,11 +219,16 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.send-message-text').css
       width: Math.max(10, textWidth)
 
+    # Send button text width can vary due to encryption.
+    sendButtonWidth = @$('.send-button').outerWidth(true)
+
+    # Emoticon picker button.
+    @$('.message-emoticon-icon').css
+      right: sendButtonWidth + 18 + 29
     # The send message file button.
     if App.doesBrowserSupportAjaxFileUpload()
-      # Send button text width can vary due to encryption.
       @$('.message-attach-icon').css
-        right: @$('.send-button').outerWidth(true) + 18
+        right: sendButtonWidth + 18
 
     @updateMessagesSize($window, containerHeight, messagesWidth)
 
@@ -486,14 +491,19 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @showAutocomplete()
       return undefined
 
-  showAutocomplete: ->
+  # options
+  # - mode String one of {auto|emoticons}.  If auto, uses message text.  If
+  #        emoticons, ignores text and shows all emoticons.
+  showAutocomplete: (options = {}) ->
+    mode = options.mode ? 'auto'
+
     # Find any @text before the cursor.
     $text = @$('.send-message-text')
     text = $text.val()
     range = $text.textrange('get')
     beforeCursorText = text[0 ... range.position]
     matches = /(?:^|\W)(@\S*)$/.exec(beforeCursorText)
-    if matches
+    if mode == 'auto' && matches
       # @text found; now figure out which names to suggest.
       @setProperties(suggestMatchText: matches[1], textCursorPosition: range.position)
       lowerCasedInputName = matches[1][1..].toLowerCase()
@@ -525,10 +535,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           value: "@" + u.get('mentionName')
           user: u
       newSuggestions.pushObjects(userSuggestions)
-    else if (matches = /(?:^|\W)(:\w*)$/.exec(beforeCursorText))
+    else if mode == 'auto' && (matches = /(?:^|\W)(:\w*)$/.exec(beforeCursorText)) || mode == 'emoticons'
       # `:text` found; now figure out which emoticons to suggest.
-      @setProperties(suggestMatchText: matches[1], textCursorPosition: range.position)
-      lowerCasedInputName = matches[1].toLowerCase()
+      matchText = if mode == 'emoticons' then '' else matches[1]
+      @setProperties(suggestMatchText: matchText, textCursorPosition: range.position)
+      lowerCasedInputName = matchText.toLowerCase()
       newSuggestions = []
 
       emoticons = App.Emoticon.allArranged()
@@ -814,6 +825,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isEditingTopic', false)
       room = @get('activeRoom')
       room.updateTopic(@get('newRoomTopic'))
+      return undefined
+
+    chooseEmoticon: ->
+      if @get('suggestionsShowing')
+        # If we're already showing emoticons, just hide them.
+        @set('suggestionsShowing', false)
+        return
+
+      @showAutocomplete(mode: 'emoticons')
       return undefined
 
     chooseFile: ->
