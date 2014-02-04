@@ -53,6 +53,17 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   statusText: Ember.computed.alias('topic')
 
+  # Returns true if this room should show in the UI an invite users tip.
+  needsInviteTip: ->
+    # Show the invite tip if there are no members and no messages.  You may want
+    # to create a room for yourself.  Also, only show this if you're a member.
+    numMembers = @get('memberIds.length')
+    noMembers = numMembers? && numMembers < 2
+    noMessages = (@get('messages.length') ? 0) == 0
+    isMember = @get('isCurrentUserMember')
+
+    noMembers && noMessages && isMember
+
   didClose: ->
     @_super(arguments...)
     # Stop listening for updates.

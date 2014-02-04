@@ -103,8 +103,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
       if event.which == 27 # Escape.
-        @closeRoomMenu()
-        @closeInviteDialog()
+        @closeRoomMenu() if @get('isRoomMenuVisible')
+        @closeInviteDialog() if @get('isInviteDialogVisible')
         # Cancel editing.
         if @get('isEditingRoomName')
           @set('isEditingRoomName', false)
@@ -134,6 +134,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       # Make sure copy to clipboard is setup.
       @setupCopyToClipboard()
+
+      # Show invite dialog.
+      Ember.run.later @, ->
+        room = @get('activeRoom')
+        if room?.needsInviteTip?()
+          @send('toggleInviteDialogOverMessages')
+      , 50
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
@@ -161,8 +168,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   onDocumentClick: (event) ->
     Ember.run @, ->
-      @closeRoomMenu()
-      @closeInviteDialog()
+      @closeRoomMenu() if @get('isRoomMenuVisible')
+      @closeInviteDialog() if @get('isInviteDialogVisible')
 
   resize: _.debounce (event) ->
     Ember.run @, ->
@@ -732,6 +739,9 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   closeInviteDialog: ->
     @$('.invite-dialog').removeClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', false)
+    Ember.run.later @, ->
+      @$('.invite-dialog')?.removeClass('over-messages').css left: ''
+    , 500
 
   actions:
 
@@ -1025,6 +1035,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       room = @get('activeRoom')
       return unless room?
       @sendAction('didCloseRoom', room)
+      return undefined
+
+    toggleInviteDialogOverMessages: ->
+      $dialog = @$('.invite-dialog')
+      $parent = @$('.room-container-messages')
+      if $dialog && $parent
+        $dialog.addClass('over-messages').css
+          left: Math.round(($parent.width() - $dialog.outerWidth()) / 2)
+      @showInviteDialog()
       return undefined
 
     toggleInviteDialog: ->
