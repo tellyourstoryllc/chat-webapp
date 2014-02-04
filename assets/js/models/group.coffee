@@ -27,6 +27,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   # TODO: load the actual preference.
   serverAllMessagesEmail: true
+  isLoadingUserGroupPreferences: false
+  isUserGroupPreferencesLoaded: false
+  loadUserGroupPreferencesTimer: null
 
   admins: (->
     @get('adminIds').map((id) -> App.User.lookup(id)).compact()
@@ -139,6 +142,34 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
         @set('serverAllMessagesEmail', newIsEnabled)
       , =>
         @set('serverAllMessagesEmail', oldValue)
+
+  scheduleLoadUserGroupPreferences: ->
+    return if @get('isUserGroupPreferencesLoaded')
+    return if @get('loadUserGroupPreferencesTimer')?
+    @set('loadUserGroupPreferencesTimer', Ember.run.later(@, '_loadUserGroupPreferences', 10000))
+
+  _loadUserGroupPreferences: ->
+    @set('loadUserGroupPreferencesTimer', null)
+    @loadUserGroupPreferences()
+
+  loadUserGroupPreferences: ->
+    return if @get('isLoadingUserGroupPreferences')
+
+    @set('isLoadingUserGroupPreferences', true)
+    api = App.get('api')
+    api.ajax(api.buildURL("/groups/#{@get('id')}/user_group_preferences"), 'GET', {})
+    .always =>
+      @set('isLoadingUserGroupPreferences', false)
+    .then (json) =>
+      if ! json? || json.error?
+        throw json
+      json = Ember.makeArray(json)
+      prefsJson = json.find (o) -> o.object_type == 'user_group_preferences'
+      if prefsJson?
+        @setProperties
+          serverAllMessagesEmail: prefsJson.server_all_messages_email
+          isUserGroupPreferencesLoaded: true
+    .fail App.rejectionHandler
 
   fetchUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}")

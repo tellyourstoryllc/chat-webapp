@@ -42,6 +42,8 @@ App.RoomsRoomRoute = Ember.Route.extend
       model.set('isUnread', false)
       # Set the room as opened to show it in the list.
       model.set('isOpen', true)
+      # Load preferences.
+      model.scheduleLoadUserGroupPreferences?()
 
     if ! model?.get('associationsLoaded')
       type = if isOneToOne
@@ -55,6 +57,8 @@ App.RoomsRoomRoute = Ember.Route.extend
         if ! model?
           controller.set('model', room)
           App.set('currentlyViewingRoom', room)
+          # Load preferences.
+          room.scheduleLoadUserGroupPreferences?()
 
         # It's possible that this isn't included in /conversations so need to
         # make sure that we're subscribed and have all messages.
