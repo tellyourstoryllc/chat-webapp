@@ -154,6 +154,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   loadUserGroupPreferences: ->
     return if @get('isLoadingUserGroupPreferences')
+    return if @get('isUserGroupPreferencesLoaded')
 
     @set('isLoadingUserGroupPreferences', true)
     api = App.get('api')
