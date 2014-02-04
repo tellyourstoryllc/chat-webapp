@@ -25,6 +25,9 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   avatarUrl: Ember.computed.defaultTo('defaultAvatarUrl')
 
+  # TODO: load the actual preference.
+  serverAllMessagesEmail: true
+
   admins: (->
     @get('adminIds').map((id) -> App.User.lookup(id)).compact()
   ).property('adminIds.@each', '_membersAssociationLoaded')
@@ -121,6 +124,21 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
       @set('topic', newTopic)
     , =>
       @set('topic', oldTopic)
+
+  updateServerAllMessagesEmail: (newIsEnabled) ->
+      # If the property is locked, we're currently sending it.
+      return if @isPropertyLocked('serverAllMessagesEmail')
+
+      oldValue = @get('serverAllMessagesEmail')
+
+      data =
+        server_all_messages_email: newIsEnabled
+      api = App.get('api')
+      url = api.buildURL("/groups/#{@get('id')}/user_group_preferences/update")
+      @withLockedPropertyTransaction url, 'POST', { data: data }, 'serverAllMessagesEmail', =>
+        @set('serverAllMessagesEmail', newIsEnabled)
+      , =>
+        @set('serverAllMessagesEmail', oldValue)
 
   fetchUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}")

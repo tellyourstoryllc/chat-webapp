@@ -302,6 +302,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     room.get('otherUser.isContact')
   ).property('activeRoom.otherUser.isContact')
 
+  isActiveRoomServerAllMessagesEmailEnabled: (->
+    room = @get('activeRoom')
+    return null unless room instanceof App.Group
+    room.get('serverAllMessagesEmail')
+  ).property('activeRoom.serverAllMessagesEmail')
+
   activeRoomAvatarStyle: (->
     url = @get('activeRoom.avatarUrl')
     return null unless url?
@@ -940,6 +946,16 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.room-wallpaper-file').val('')
       @_updateRoomWallpaper(null)
       return undefined
+
+    disableRoomNotifications: ->
+      room = @get('activeRoom')
+      return unless room instanceof App.Group
+      room.updateServerAllMessagesEmail(false)
+
+    enableRoomNotifications: ->
+      room = @get('activeRoom')
+      return unless room instanceof App.Group
+      room.updateServerAllMessagesEmail(true)
 
     leaveRoom: ->
       room = @get('activeRoom')

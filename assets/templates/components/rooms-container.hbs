@@ -310,6 +310,12 @@
         {{action 'removeRoomWallpaper'}}>Remove Wallpaper</li>
     {{/if}}
     <li class='separator'></li>
+    {{#if isActiveRoomServerAllMessagesEmailEnabled}}
+      <li class='menu-item' {{action 'disableRoomNotifications'}}>Don't Notify of All Messages</li>
+    {{else}}
+      <li class='menu-item' {{action 'enableRoomNotifications'}}>Notify of All Messages</li>
+    {{/if}}
+    <li class='separator'></li>
     <li class='menu-item' {{action 'leaveRoom'}}>Leave Room...</li>
   {{/if}}
 </ul>
