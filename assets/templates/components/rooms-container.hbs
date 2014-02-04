@@ -311,9 +311,9 @@
     {{/if}}
     <li class='separator'></li>
     {{#if isActiveRoomServerAllMessagesEmailEnabled}}
-      <li class='menu-item' {{action 'disableRoomNotifications'}}>Don't Notify of All Messages</li>
+      <li class='menu-item' {{action 'disableRoomNotifications'}}>Don't Send Email Digest of Activity in This Room</li>
     {{else}}
-      <li class='menu-item' {{action 'enableRoomNotifications'}}>Notify of All Messages</li>
+      <li class='menu-item' {{action 'enableRoomNotifications'}}>Send Email Digest of Activity in This Room</li>
     {{/if}}
     <li class='separator'></li>
     <li class='menu-item' {{action 'leaveRoom'}}>Leave Room...</li>
