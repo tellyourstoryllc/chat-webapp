@@ -134,8 +134,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       # Make sure copy to clipboard is setup.
       @setupCopyToClipboard()
-
-      @updateUsersListSize()
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
@@ -236,10 +234,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       height: height
       display: if isMembersVisible then 'block' else 'none'
 
-    @updateUsersListSize($window)
-
-  updateUsersListSize: ($window = $(window)) ->
-    return unless @currentState == Ember.View.states.inDOM
     # The list of members needs an explicit height so that it can be scrollable.
     height = $window.height()
     height -= 2 * 10 # .room-content margin height.
