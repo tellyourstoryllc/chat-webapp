@@ -689,6 +689,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @$('.room-wallpaper-file').val('')
 
   showRoomMenu: ->
+    @get('activeRoom')?.loadUserGroupPreferences?()
+
     @$('.room-menu').addClass('expand-down')
     @set('isRoomMenuVisible', true)
 
