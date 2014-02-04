@@ -339,6 +339,14 @@ App.Conversation = Ember.Mixin.create
 
     true
 
+  hasLoadedMessagesFromServer: ->
+    messages = @get('messages')
+    return false unless messages?
+
+    msgWithId = messages.find (m) => m.get('id')?
+
+    msgWithId?
+
   # Insert a message instance into the messages list based on rank.  Returns the
   # index it was inserted at.  This is linear O(n) in worst case since messages
   # aren't necessarily already in rank order.  But normally we have new messages
@@ -357,8 +365,9 @@ App.Conversation = Ember.Mixin.create
     for i in [messages.get('length') - 1 .. 0] by -1
       curMsg = messages.objectAt(i)
       curRank = curMsg?.get('rank')
-      # If this message has no rank, it's probably because the current user
-      # sent it and we're still waiting for a response.
+      # If this message has no rank, it's probably because the current user sent
+      # it and we're still waiting for a response.  Or it's a system message
+      # that we inserted and probably want to keep it near the bottom.
       continue if ! curRank?
 
       if curRank < messageRank

@@ -142,9 +142,10 @@ App.OneToOne.reopenClass
     instances = App.loadAll(json)
     oneToOne = instances.find (o) -> o instanceof App.OneToOne
     oneToOne.didLoadMembers()
-    if Ember.isEmpty(oneToOne.get('messages'))
+    if ! oneToOne.hasLoadedMessagesFromServer()
       messages = instances.filter (o) -> o instanceof App.Message
-      oneToOne.set('messages', messages)
+      # Prepend so that any system messages are shown at the end.
+      oneToOne.get('messages').replace(0, 0, messages)
       if ! oneToOne.get('lastActiveAt')?
         dates = messages.mapBy('createdAt').compact()
         newActiveAt = dates.reduce (max,date) ->

@@ -255,9 +255,10 @@ App.Group.reopenClass
     instances = App.loadAll(json)
     group = instances.find (o) -> o instanceof App.Group
     group.didLoadMembers()
-    if Ember.isEmpty(group.get('messages'))
+    if ! group.hasLoadedMessagesFromServer()
       messages = instances.filter (o) -> o instanceof App.Message
-      group.set('messages', messages)
+      # Prepend so that any system messages are shown at the end.
+      group.get('messages').replace(0, 0, messages)
       if ! group.get('lastActiveAt')?
         dates = messages.mapBy('createdAt').compact()
         newActiveAt = dates.reduce (max,date) ->
