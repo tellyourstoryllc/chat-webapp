@@ -38,14 +38,14 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
     Ember.run.schedule 'afterRender', @, ->
-      @$('.avatar-file-input').on 'change', @onAvatarFileChange
-      @$('.one-to-one-wallpaper-file-input').on 'change', @onOneToOneWallpaperFileChange
+      @$().on 'change', '.avatar-file-input', @onAvatarFileChange
+      @$().on 'change', '.one-to-one-wallpaper-file-input', @onOneToOneWallpaperFileChange
     @_updateUi()
 
   willDestroyElement: ->
     $('body').off 'keydown', @onBodyKeyDown
-    @$('.avatar-file-input').off 'change', @onAvatarFileChange
-    @$('.one-to-one-wallpaper-file-input').off 'change', @onOneToOneWallpaperFileChange
+    @$().off 'change', '.avatar-file-input', @onAvatarFileChange
+    @$().off 'change', '.one-to-one-wallpaper-file-input', @onOneToOneWallpaperFileChange
 
   isShowingGeneralTab: Ember.computed.equal('selectedTab', 'general')
   isShowingNotificationsTab: Ember.computed.equal('selectedTab', 'notifications')
