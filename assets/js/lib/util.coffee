@@ -113,6 +113,12 @@ App.Util.reopenClass
   isUsingModifierKey: (event) ->
     event.ctrlKey || event.altKey || event.shiftKey || event.metaKey
 
+  # Returns true if the mouse event occurred inside a DOM element with the given
+  # selector, including all its DOM parents.
+  isMouseEventWithin: (event, selector) ->
+    $e = $(event.target).closest(selector)
+    $e? && $e.size() > 0
+
   notUsingModifierKey: (event) ->
     ! @isUsingModifierKey(event)
 

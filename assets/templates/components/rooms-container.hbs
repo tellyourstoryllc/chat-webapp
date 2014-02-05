@@ -308,7 +308,7 @@
   {{/if}}
 </ul>
 
-<div class='dialog invite-dialog' {{action 'ignore' bubbles=false}}>
+<div class='dialog invite-dialog'>
   <div class='close' {{action 'dismissInviteDialog'}} title='Close'>
     &times;
   </div>
@@ -316,12 +316,41 @@
     Room Key: {{upcase activeRoom.joinCode}}
   </div>
   <div class='instructions'>
-    You can invite people to join this room by sending this link:
+    Add people to this room by entering a contact's name or an email address:
+  </div>
+  <div class='add-text-container'>
+    <form {{action 'addUsersToGroup' target=roomsContainer on='submit'}}>
+      <div {{bind-attr class=':alert inviteDialogErrorMessage::hidden inviteDialogAlertIsError:alert-error'}}>
+        {{inviteDialogErrorMessage}}
+      </div>
+      <input type='text' class='add-text' placeholder='Name or Email' autocomplete='off'>
+      <button type='submit' class='app-btn btn-green btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}>
+        Add
+      </button>
+    </form>
+  </div>
+
+  {{user-autocomplete viewName='userAutocompleteView'
+    classNames='add-user-autocomplete'
+    inputSelector='.add-text'
+    users=arrangedContacts
+    showAll=false
+    useAtSignPrefix=false
+    maxSuggestions=10
+    showCurrentUser=false
+    matchText=roomsContainer.addUserSuggestMatchText
+    suggestions=roomsContainer.addUserSuggestions
+    isShowing=roomsContainer.isAddUserSuggestionsShowing
+    didSelectSuggestion='didSelectAddUserSuggestion'
+    target=roomsContainer}}
+
+  <div class='link-instructions'>
+    Or share this link:
   </div>
   <div class='join-link-container'>
     <input type='text' {{bind-attr value='activeRoom.joinUrl'}} class='join-url-text' readonly>
   </div>
-  <button class='app-btn btn-block btn-green btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+  <button class='app-btn btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
     <span class='copy-icon'></span>
     Copy Link to Clipboard
   </button>

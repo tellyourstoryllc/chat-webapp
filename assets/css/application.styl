@@ -2169,7 +2169,7 @@ room-members-sidebar-width = 200px
   top 40px
   z-index 10
 
-  width room-members-sidebar-width + 20px
+  width room-members-sidebar-width + 65px
 
   border 1px solid rgba(0,0,0, .5)
   border-radius 4px
@@ -2218,6 +2218,38 @@ room-members-sidebar-width = 200px
     margin-bottom 10px
     font-size 14px
 
+  .alert
+    margin-bottom 10px
+    font-size 12px
+    line-height 1.2
+
+    transition-duration .2s
+    transition-property opacity, visibility, margin
+
+    &.hidden
+      visibility hidden
+      opacity 0
+      margin 0
+
+  .add-text
+    box-sizing border-box
+    width 191px
+    margin 0 5px 5px 0
+    padding 8px 6px
+    font-size 14px
+    line-height normal
+    text-align left
+
+    transition background-color .2s
+
+    &.with-user-selection
+      background-color warning-background-color
+
+  .link-instructions
+    margin-top 15px
+    margin-bottom 10px
+    font-size 14px
+
   .join-link-container
     margin-bottom 15px
 
@@ -2237,8 +2269,8 @@ room-members-sidebar-width = 200px
 
   .copy-to-clipboard-indicator
     position absolute
-    top 142px
-    right 50px
+    left 75px
+    bottom 15px
     padding 5px
     border-radius 3px
     background-color rgba(0,0,0, 0.7)
@@ -2265,6 +2297,16 @@ room-members-sidebar-width = 200px
   100%
     transform scale(1) translateY(100%)
     opacity 0
+
+// This is for the component.
+.user-autocomplete
+  text-align left
+
+// This is the invite dialog's add user instance of the component.
+.add-user-autocomplete
+  .autocomplete-item
+    max-width room-members-sidebar-width + 65px
+    overflow ellipsis
 
 .room-members-sidebar
   position absolute

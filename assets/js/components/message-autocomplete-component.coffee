@@ -58,6 +58,8 @@ App.MessageAutocompleteItemView = Ember.View.extend
 
   isAll: Ember.computed.bool('content.isAll')
 
+  showAtMentionName: true
+
   isActive: (->
     @get('contentIndex') == @get('autocompleteView.cursorIndex')
   ).property('contentIndex', 'autocompleteView.cursorIndex')
@@ -93,7 +95,8 @@ App.MessageAutocompleteItemView = Ember.View.extend
           escapedName = escape(name[0 ... index]) + "<strong>" +
             escape(name[index ... index + matchText.length]) + "</strong>" +
             escape(name[index + matchText.length ..])
-      display = escapedName + " (#{escapedValue})"
+      display = escapedName
+      display += " (#{escapedValue})" if @get('showAtMentionName')
       user = suggestion.get('user')
       if user?
         display = "<span class='room-avatar blank-avatar #{user.get('status')}'></span> " + display
@@ -110,5 +113,6 @@ App.MessageAutocompleteItemView = Ember.View.extend
              'content.user.status',
              'autocompleteView.matchText')
 
-  click: ->
+  click: (event) ->
+    event.stopPropagation()
     @get('autocompleteView').send('selectSuggestion', @get('content'))
