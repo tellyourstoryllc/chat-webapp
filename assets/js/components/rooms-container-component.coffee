@@ -806,13 +806,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       inviteDialogErrorMessage: null
     @$('.add-text').val('').trigger('input')
 
-  isAddUsersToGroupDisabled: (->
-    text = @get('userAutocompleteView.text')
-    isTextLikeEmail = text? && text.indexOf('@') >= 0
-
-    @get('isSendingAddUsersToGroup') ||
-    @get('addUserSelection') == null && ! isTextLikeEmail
-  ).property('isSendingAddUsersToGroup', 'addUserSelection', 'userAutocompleteView.text')
+  isAddUsersToGroupDisabled: Ember.computed.alias('isSendingAddUsersToGroup')
 
   addUserSelectionChanged: (->
     return unless @currentState == Ember.View.states.inDOM
@@ -1150,6 +1144,9 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
         # Set selection *after* clearing text.
         @set('addUserSelection', user)
+
+        # Add immediately.
+        @send('addUsersToGroup')
 
       # Hide suggestions.
       @set('isAddUserSuggestionsShowing', false)
