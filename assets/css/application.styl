@@ -2181,7 +2181,6 @@ room-members-sidebar-width = 200px
   // Initially invisible.
   visibility hidden
   opacity 0
-  transform scale(0.6) translateY(-10%) translateX(10%)
 
   // Animation for hiding.
   transition opacity .1s ease-out, visibility .1s ease-out, transform .1s ease-out
@@ -2191,6 +2190,7 @@ room-members-sidebar-width = 200px
     animation-name invite-dialog-expand-in
     animation-duration .3s
     animation-timing-function ease-in-out
+    animation-fill-mode forwards
     visibility visible
     opacity 1
     transform scale(1)

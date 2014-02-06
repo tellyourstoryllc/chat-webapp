@@ -759,8 +759,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         @set('copiedIndicatorTimer', timer)
 
   showInviteDialog: ->
-    @$('.invite-dialog').addClass('invite-dialog-animate-in')
+    $dialog = @$('.invite-dialog')
+    $dialog.css
+      transform: "scale(0.6) translateY(-10%) translateX(10%)"
+    $dialog.addClass('invite-dialog-animate-in')
+
     @set('isInviteDialogVisible', true)
+
     timer = @get('inviteDialogAnimationTimer')
     if timer?
       Ember.run.cancel(timer)
@@ -769,13 +774,29 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @$('.add-text').focus().textrange('set') # Select all.
 
   closeInviteDialog: ->
-    @$('.invite-dialog').removeClass('invite-dialog-animate-in')
+    $dialog = @$('.invite-dialog')
+    if $dialog.hasClass('over-messages')
+      # When hiding, animate towards the Invite button to show users where it
+      # is.
+      translateX = Math.round(@$('.room-container-messages').width() / 2.0) + 160
+      $dialog.css
+        transform: "scale(0.6) translateY(-30%) translateX(#{translateX}px)"
+
+      # After the animation completes, reset to default not-over-messages state.
+      timer = Ember.run.later @, ->
+        @set('inviteDialogAnimationTimer', null)
+        @$('.invite-dialog')?.removeClass('over-messages').css left: ''
+      , 300
+      @set('inviteDialogAnimationTimer', timer)
+    else
+      # Hide normally.
+      #
+      # Note: If you change this, also change the showInviteDialog code.
+      $dialog.css
+        transform: "scale(0.6) translateY(-10%) translateX(10%)"
+
+    $dialog.removeClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', false)
-    timer = Ember.run.later @, ->
-      @set('inviteDialogAnimationTimer', null)
-      @$('.invite-dialog')?.removeClass('over-messages').css left: ''
-    , 300
-    @set('inviteDialogAnimationTimer', timer)
 
   resetInviteDialogState: ->
     @setProperties
