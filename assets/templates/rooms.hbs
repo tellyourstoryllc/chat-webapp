@@ -29,7 +29,7 @@
     <div class='left-sidebar-tabs-container'>
       <div class='left-sidebar-tab-handles'>
         <div {{bind-attr class=':tab-handle :rooms-tab isRoomsTabActive:active'}} {{action 'showRoomsTab'}}>
-          Rooms
+          Chats
         </div>
         <div {{bind-attr class=':tab-handle :contacts-tab isContactsTabActive:active'}} {{action 'showContactsTab'}}>
           Contacts
@@ -47,7 +47,7 @@
         <li class='room-list-item'>
           <a href='#' {{action 'showCreateRoomDialog'}}>
             <span class='create-room-icon'></span>
-            <div class='room-name create-room-name'>Create Room</div>
+            <div class='room-name create-room-name'>Create</div>
           </a>
         </li>
         {{#if roomsLoaded}}
