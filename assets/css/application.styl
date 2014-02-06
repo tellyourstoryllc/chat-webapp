@@ -392,7 +392,7 @@ input, button, select, textarea
     cursor pointer
 
 
-    &:hover:not(.disabled)
+    &:hover:not(.disabled), &.hover:not(.disabled)
       border-color rgba(44,62,80, .1)
       background-color rgba(44,62,80,.06)
 
@@ -2209,11 +2209,6 @@ room-members-sidebar-width = 200px
     &:hover
       color rgba(0,0,0, .8)
 
-  .room-key-title
-    margin-bottom 10px
-    font-size 18px
-    font-weight bold
-
   .instructions
     margin-bottom 10px
     font-size 14px
@@ -2244,59 +2239,6 @@ room-members-sidebar-width = 200px
 
     &.with-user-selection
       background-color warning-background-color
-
-  .link-instructions
-    margin-top 15px
-    margin-bottom 10px
-    font-size 14px
-
-  .join-link-container
-    margin-bottom 15px
-
-  .join-url-text
-    box-sizing border-box
-    width 100%
-    color #000
-    font-size 12px
-
-  .copy-icon
-    sprite-icon()
-    width 22px
-    height 24px
-    margin-right 3px
-    sprites-background()
-    background-position -89px -30px
-
-  .copy-to-clipboard-indicator
-    position absolute
-    left 75px
-    bottom 15px
-    padding 5px
-    border-radius 3px
-    background-color rgba(0,0,0, 0.7)
-    color #eee
-    font-size 14px
-    z-index 1000
-
-    // Animation shows it.
-    visibility hidden
-
-.copied-fade-in-out
-  animation copied-fade-in-out 1s ease-in-out
-  visibility visible !important
-  opacity 0
-
-@keyframes copied-fade-in-out
-  0%
-    transform scale(.6) translateY(0%)
-    opacity 0
-  25%
-    opacity 1
-  50%
-    opacity 1
-  100%
-    transform scale(1) translateY(100%)
-    opacity 0
 
 // This is for the component.
 .user-autocomplete
@@ -2465,7 +2407,6 @@ room-members-sidebar-width = 200px
     border-bottom 1px solid #C2C7CB
     padding 5px
     background-color #EEF0F0
-    text-shadow 0 0 3px #fff
     border-radius top 6px
 
   .room-avatar-permalink, .toggle-rooms-sidebar
@@ -2484,11 +2425,12 @@ room-members-sidebar-width = 200px
     &:hover
       opacity .8
 
-  .edit-room-name-link, .edit-topic-link
+  .edit-room-name-link, .edit-topic-link, .room-key-text
     color #aaa
     font-size 11px
+
+  .edit-room-name-link, .edit-topic-link
     text-decoration none
-    text-shadow none
 
     &:hover
       text-decoration underline

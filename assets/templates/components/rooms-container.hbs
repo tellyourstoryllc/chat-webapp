@@ -47,6 +47,9 @@
                     <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
                   {{/if}}
                 {{/if}}
+                {{#unless isActiveRoomOneToOne}}
+                  <span class='room-key-text'>(Room Key: {{upcase activeRoom.joinCode}})</span>
+                {{/unless}}
               </div>
             {{/if}}
           </div>
@@ -254,7 +257,7 @@
           <div class='invite-button-container'>
             {{#if isLoggedIn}}
               <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
-                Invite
+                Add Members
               </button>
             {{else}}
               <div class='members-title'>
@@ -285,6 +288,9 @@
     {{/if}}
     <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
   {{else}}
+    <li class='menu-item copy-join-link-button'
+      {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>Copy Join Link to Clipboard</li>
+    <li class='separator'></li>
     <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
       {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
     {{#if hasRoomAvatar}}
@@ -312,11 +318,8 @@
   <div class='close' {{action 'dismissInviteDialog'}} title='Close'>
     &times;
   </div>
-  <div class='room-key-title'>
-    Room Key: {{upcase activeRoom.joinCode}}
-  </div>
   <div class='instructions'>
-    Add people to this room by entering a contact's name or an email address:
+    Add someone to this room by entering a contact's name or an email address:
   </div>
   <div class='add-text-container'>
     <form {{action 'addUsersToGroup' target=roomsContainer on='submit'}}>
@@ -343,18 +346,4 @@
     isShowing=roomsContainer.isAddUserSuggestionsShowing
     didSelectSuggestion='didSelectAddUserSuggestion'
     target=roomsContainer}}
-
-  <div class='link-instructions'>
-    Or share this link:
-  </div>
-  <div class='join-link-container'>
-    <input type='text' {{bind-attr value='activeRoom.joinUrl'}} class='join-url-text' readonly>
-  </div>
-  <button class='app-btn btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-    <span class='copy-icon'></span>
-    Copy Link to Clipboard
-  </button>
-  <div class='copy-to-clipboard-indicator'>
-    Copied to Clipboard
-  </div>
 </div>
