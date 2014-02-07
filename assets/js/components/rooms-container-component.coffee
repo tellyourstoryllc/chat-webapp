@@ -201,6 +201,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @updateSize()
   , 5
 
+  showAddMembersButton: (->
+    @get('isLoggedIn') && @get('activeRoom.isCurrentUserMember')
+  ).property('isLoggedIn', 'activeRoom.isCurrentUserMember')
+
   activeRoomIsEncryptedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
       @updateSize()

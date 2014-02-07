@@ -255,7 +255,7 @@
 
         <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
           <div class='invite-button-container'>
-            {{#if isLoggedIn}}
+            {{#if showAddMembersButton}}
               <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
                 Add Members
               </button>
