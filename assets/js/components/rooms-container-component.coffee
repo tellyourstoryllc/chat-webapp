@@ -23,7 +23,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   showDownloadAppBanner: false
 
-  numMembersToShow: 7 # 4 on first row, 3 +more on second row.
+  numMembersToShow: 3
 
   isRoomMenuVisible: false
 
