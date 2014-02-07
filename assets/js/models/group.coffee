@@ -55,6 +55,8 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   # Returns true if this room should show in the UI an invite users tip.
   needsInviteTip: ->
+    return false if @get('_userJustCreatedWithMembers')
+
     # Show the invite tip if there are no members and no messages.  You may want
     # to create a room for yourself.  Also, only show this if you're a member.
     numMembers = @get('memberIds.length')

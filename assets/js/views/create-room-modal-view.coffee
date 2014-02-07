@@ -174,6 +174,9 @@ App.CreateRoomModalView = Ember.View.extend
         # Group was created successfully.
         @set('group', group)
         group.subscribeToMessages()
+        # Before going to the room, prevent showing the invite dialog again.
+        if ! Ember.isEmpty(@get('membersToAdd'))
+          group.set('_userJustCreatedWithMembers', true)
         # Go to the room.
         @get('controller').send('goToRoom', group)
         # Add users to the group on the server.
