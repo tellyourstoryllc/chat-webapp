@@ -148,6 +148,15 @@ App.CreateRoomModalView = Ember.View.extend
       return undefined
 
     createRoom: ->
+      afterCreatingGroup = (wasSuccessful) =>
+        # Hide the dialog.
+        @closeModal() if wasSuccessful
+
+      if (group = @get('group'))?
+        # We already created a group, so continue with adding users.
+        @_addUsersToGroup(group).then(afterCreatingGroup)
+        return
+
       name = @get('newRoomName')
       if Ember.isEmpty(name)
         @set('createGroupErrorMessage', "Name is required.")
@@ -168,10 +177,7 @@ App.CreateRoomModalView = Ember.View.extend
         # Go to the room.
         @get('controller').send('goToRoom', group)
         # Add users to the group on the server.
-        @_addUsersToGroup(group)
-        .then (wasSuccessful) =>
-          # Hide the dialog.
-          @closeModal() if wasSuccessful
+        @_addUsersToGroup(group).then(afterCreatingGroup)
 
       , (xhrOrError) =>
         # Show error message.
