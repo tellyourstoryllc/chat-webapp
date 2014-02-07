@@ -106,7 +106,8 @@ App.CreateRoomModalView = Ember.View.extend
   ).property('isCreateGroupUiDisabled', 'createRoomUserAutocompleteView.text')
 
   isAddMemberTextValid: (text) ->
-    /.*\S+.*@.*\S.*/.test(text)
+    # Simple email-ish regex.
+    /.*\S.*@\S+\.[a-zA-Z0-9\-]{2,}/.test(text)
 
 
   actions:
