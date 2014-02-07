@@ -4,6 +4,7 @@ App.CreateRoomModalView = Ember.View.extend
   newRoomName: ''
 
   isCreatingGroup: false
+  isSendingAddUsersToGroup: false
 
   createGroupErrorMessage: null
 
@@ -13,6 +14,11 @@ App.CreateRoomModalView = Ember.View.extend
   addUserSelection: null
 
   membersToAdd: null
+
+  # This gets set after we create a group.
+  group: null
+
+  isCreateGroupUiDisabled: Ember.computed.any('isCreatingGroup', 'isSendingAddUsersToGroup')
 
   init: ->
     @_super(arguments...)
@@ -46,12 +52,52 @@ App.CreateRoomModalView = Ember.View.extend
 
   resetNewRoom: ->
     @setProperties
+      group: null
       newRoomName: ''
       createGroupErrorMessage: null
 
   hasMembers: (->
     ! Ember.isEmpty(@get('membersToAdd'))
   ).property('membersToAdd.[]')
+
+  _addUsersToGroup: (group) ->
+    return if @get('isSendingAddUsersToGroup')
+
+    @set('isSendingAddUsersToGroup', true)
+    data = {}
+    userIds = []
+    emails = []
+    @get('membersToAdd').forEach (u) =>
+      if u instanceof App.User
+        userIds.push(u.get('id'))
+      else
+        # TODO: is the text a phone number?
+        emails.push(u.get('name'))
+    
+    if userIds.length > 0
+      data.user_ids = userIds.join(',')
+
+    if emails.length > 0
+      data.emails = emails.join(',')
+
+    api = App.get('api')
+    api.ajax(api.buildURL("/groups/#{group.get('id')}/add_users"), 'POST', data: data)
+    .always =>
+      @set('isSendingAddUsersToGroup', false)
+    .then (json) =>
+      if ! json? || json.error?
+        @set('createGroupErrorMessage', App.userMessageFromError(xhr))
+        return false
+      # Success!
+      App.loadAll(json)
+      # We can clear out the form now.
+      @resetNewRoom()
+
+      return true
+    .fail (xhr) =>
+      @set('createGroupErrorMessage', App.userMessageFromError(xhr))
+      return false
+
 
   actions:
 
@@ -69,13 +115,13 @@ App.CreateRoomModalView = Ember.View.extend
         @set('addUserSelection', user)
 
         # Add immediately.
-        @send('addUsersToGroup')
+        @send('addUsersToGroupLocally')
 
       # Hide suggestions.
       @set('isAddUserSuggestionsShowing', false)
       return undefined
 
-    addUsersToGroup: ->
+    addUsersToGroupLocally: ->
       isAdding = false
       text = @$('.create-room-add-text').val()
       if (user = @get('addUserSelection'))?
@@ -103,7 +149,11 @@ App.CreateRoomModalView = Ember.View.extend
 
     createRoom: ->
       name = @get('newRoomName')
-      return if Ember.isEmpty(name) || @get('isCreatingGroup')
+      if Ember.isEmpty(name)
+        @set('createGroupErrorMessage', "Name is required.")
+        return
+
+      return if @get('isCreatingGroup')
 
       @setProperties(isCreatingGroup: true, createGroupErrorMessage: null)
       properties =
@@ -113,12 +163,15 @@ App.CreateRoomModalView = Ember.View.extend
         @set('isCreatingGroup', false)
       .then (group) =>
         # Group was created successfully.
-        @resetNewRoom()
+        @set('group', group)
         group.subscribeToMessages()
         # Go to the room.
         @get('controller').send('goToRoom', group)
-        # Hide the dialog.
-        @closeModal()
+        # Add users to the group on the server.
+        @_addUsersToGroup(group)
+        .then (wasSuccessful) =>
+          # Hide the dialog.
+          @closeModal() if wasSuccessful
 
       , (xhrOrError) =>
         # Show error message.

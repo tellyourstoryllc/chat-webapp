@@ -9,12 +9,12 @@
       <div class='control-group'>
         <form {{action 'createRoom' target=createRoomView on='submit'}}>
           {{input type='text' value=createRoomView.newRoomName classNames='room-name-text'
-            autocomplete='off' placeholder='Subject'}}
+            autocomplete='off' placeholder='Room Name'}}
         </form>
       </div>
       <div class='group-title'>Members</div>
       <div class='control-group'>
-        <form {{action 'addUsersToGroup' target=createRoomView on='submit'}}>
+        <form {{action 'addUsersToGroupLocally' target=createRoomView on='submit'}}>
           <div class='add-text-container'>
             <input type='text' class='create-room-add-text' autocomplete='off'
               placeholder='Name or Email'>
@@ -51,7 +51,7 @@
       <div class='form-actions'>
         <button type='button' class='app-btn btn-green btn-flat'
           {{action 'createRoom' target=createRoomView}}
-          {{bind-attr disabled='createRoomView.isCreatingGroup'}}>Create Chat Room</button>
+          {{bind-attr disabled='createRoomView.isCreateGroupUiDisabled'}}>Create Chat Room</button>
       </div>
     </div>
   {{/with}}
