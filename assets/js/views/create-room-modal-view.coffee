@@ -169,7 +169,7 @@ App.CreateRoomModalView = Ember.View.extend
 
       name = @get('newRoomName')
       if Ember.isEmpty(name)
-        @set('createGroupErrorMessage', "Name is required.")
+        @set('createGroupErrorMessage', "Room Name is required.")
         return
 
       return if @get('isCreatingGroup')
