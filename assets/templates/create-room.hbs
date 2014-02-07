@@ -21,7 +21,7 @@
           </div>
           <button type='submit' class='app-btn btn-green btn-flat add-member-button'
             {{bind-attr disabled='createRoomView.isCreateGroupUiDisabled'}}>
-            Add Member
+            Add
           </button>
           <div class='clearfix'></div>
         </form>
@@ -50,7 +50,7 @@
       </div>
 
       <div class='form-actions'>
-        <button type='button' class='app-btn btn-green btn-flat'
+        <button type='button' class='app-btn btn-green btn-flat create-room-button'
           {{action 'createRoom' target=createRoomView}}
           {{bind-attr disabled='createRoomView.isCreateGroupUiDisabled'}}>Create Room</button>
       </div>
