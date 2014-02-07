@@ -2,7 +2,7 @@
   {{#with view as createRoomView}}
     <div class='modal form modal-form create-room-form'>
       <span class='close' {{action 'hideCreateRoomDialog'}}>&times;</span>
-      <h3 class='title'>Create a New Room</h3>
+      <div class='title'>Create a New Room</div>
       {{#if createRoomView.createGroupErrorMessage}}
         <div class='alert alert-error'>{{createRoomView.createGroupErrorMessage}}</div>
       {{/if}}
