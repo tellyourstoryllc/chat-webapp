@@ -12,14 +12,15 @@
             autocomplete='off' placeholder='Room Name'}}
         </form>
       </div>
-      <div class='group-title'>Members</div>
+      <div class='group-title'>Add Members</div>
       <div class='control-group'>
         <form {{action 'addUsersToGroupLocally' target=createRoomView on='submit'}}>
           <div class='add-text-container'>
             <input type='text' class='create-room-add-text' autocomplete='off'
               placeholder='Name or Email'>
           </div>
-          <button type='submit' class='app-btn btn-green btn-flat add-member-button'
+          <button type='submit'
+            {{bind-attr class=':app-btn :btn-flat :add-member-button createRoomView.isAddMemberUiDisabled::btn-green'}}
             {{bind-attr disabled='createRoomView.isAddMemberUiDisabled'}}>
             Add
           </button>
