@@ -100,6 +100,14 @@ App.CreateRoomModalView = Ember.View.extend
       @set('createGroupErrorMessage', App.userMessageFromError(xhr))
       return false
 
+  isAddMemberUiDisabled: (->
+    isValid = @isAddMemberTextValid(@get('createRoomUserAutocompleteView.text'))
+    @get('isCreateGroupUiDisabled') || ! isValid
+  ).property('isCreateGroupUiDisabled', 'createRoomUserAutocompleteView.text')
+
+  isAddMemberTextValid: (text) ->
+    /.*\S+.*@.*\S.*/.test(text)
+
 
   actions:
 
