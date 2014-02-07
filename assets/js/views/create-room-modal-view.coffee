@@ -38,7 +38,10 @@ App.CreateRoomModalView = Ember.View.extend
       # No key modifiers.
       if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
         if event.which == 27      # Escape
-          @closeModal()
+          if ! @get('isAddUserSuggestionsShowing')
+            @closeModal()
+            event.preventDefault()
+            event.stopPropagation()
 
   onOverlayClick: (event) ->
     Ember.run @, ->
