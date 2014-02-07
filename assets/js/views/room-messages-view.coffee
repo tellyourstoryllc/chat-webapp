@@ -16,8 +16,6 @@ App.RoomMessagesView = Ember.View.extend
 
   useAutoScroll: true
 
-  showInviteButton: false
-
   # Messages array that we're currently observing.
   _observingMessages: null
 
@@ -101,16 +99,6 @@ App.RoomMessagesView = Ember.View.extend
     # This is used in the rare situations where we need to get to this view
     # instance when we only have a reference to the room.
     App.get('roomMessagesViews').set(room, @) if room?
-
-    if room?.get('isRoom')
-      # Show the invite button if there are no members and no messages.  You may
-      # want to create a room for yourself.  Also, only show this if you're a
-      # member.
-      numMembers = room.get('memberIds.length')
-      noMembers = numMembers? && numMembers < 2
-      noMessages = (room.get('messages.length') ? 0) == 0
-      isMember = room.get('isCurrentUserMember')
-      @set('showInviteButton', noMembers && noMessages && isMember)
   ).observes('room', 'room.isCurrentUserMember').on('init')
 
   roomAssociationsLoadedChanged: (->

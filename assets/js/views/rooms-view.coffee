@@ -184,6 +184,7 @@ App.RoomsView = Ember.View.extend
       @closeChooseStatusMenu()
       @closeStatusTextMenu()
       @closeContactActionsMenu()
+      return undefined
 
   # Triggered on any user input, e.g. mouse, keyboard, touch, etc.
   documentActive: (event) ->

@@ -47,6 +47,9 @@
                     <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
                   {{/if}}
                 {{/if}}
+                {{#unless isActiveRoomOneToOne}}
+                  <span class='room-key-text'>(Room Key: {{upcase activeRoom.joinCode}})</span>
+                {{/unless}}
               </div>
             {{/if}}
           </div>
@@ -156,21 +159,6 @@
                   Loading...
                 </div>
 
-                {{#if messagesView.showInviteButton}}
-                  <div class='message system-message invite-system-message'>
-                    <div class='message-table'>
-                      <div class='body-cell'>
-                        <div class='message-body'>
-                          Invite people to get started!<br>
-                          <button type='button' class='app-btn btn-flat btn-green invite-button' {{action 'toggleInviteDialog' target=roomsContainer bubbles=false}}>
-                            Invite
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {{/if}}
-
                 {{#each message in messages}}
                   <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
                     {{bind-attr data-message-id='message.id'}}>
@@ -267,9 +255,9 @@
 
         <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
           <div class='invite-button-container'>
-            {{#if isLoggedIn}}
+            {{#if showAddMembersButton}}
               <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
-                Invite
+                Add Members
               </button>
             {{else}}
               <div class='members-title'>
@@ -300,6 +288,9 @@
     {{/if}}
     <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
   {{else}}
+    <li class='menu-item copy-join-link-button'
+      {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>Copy Join-Room Link to Clipboard</li>
+    <li class='separator'></li>
     <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
       {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
     {{#if hasRoomAvatar}}
@@ -323,24 +314,37 @@
   {{/if}}
 </ul>
 
-<div class='dialog invite-dialog' {{action 'ignore' bubbles=false}}>
+<div class='dialog invite-dialog'>
   <div class='close' {{action 'dismissInviteDialog'}} title='Close'>
     &times;
   </div>
-  <div class='room-key-title'>
-    Room Key: {{upcase activeRoom.joinCode}}
-  </div>
   <div class='instructions'>
-    You can invite people to join this room by sending this link:
+    Add someone to this room by entering a contact's <strong>name</strong> or an
+    <strong>email</strong> address:
   </div>
-  <div class='join-link-container'>
-    <input type='text' {{bind-attr value='activeRoom.joinUrl'}} class='join-url-text' readonly>
+  <div class='add-text-container'>
+    <form {{action 'addUsersToGroup' target=roomsContainer on='submit'}}>
+      <div {{bind-attr class=':alert inviteDialogErrorMessage::hidden inviteDialogAlertIsError:alert-error'}}>
+        {{inviteDialogErrorMessage}}
+      </div>
+      <input type='text' class='add-text' placeholder='Name or Email' autocomplete='off' {{bind-attr disabled='isAddUsersToGroupDisabled'}}>
+      <button type='submit' class='app-btn btn-green btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}>
+        Add
+      </button>
+    </form>
   </div>
-  <button class='app-btn btn-block btn-green btn-flat copy-join-link-button' {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
-    <span class='copy-icon'></span>
-    Copy Link to Clipboard
-  </button>
-  <div class='copy-to-clipboard-indicator'>
-    Copied to Clipboard
-  </div>
+
+  {{user-autocomplete viewName='userAutocompleteView'
+    classNames='add-user-autocomplete'
+    inputSelector='.add-text'
+    users=arrangedContacts
+    showAll=false
+    useAtSignPrefix=false
+    maxSuggestions=10
+    showCurrentUser=false
+    matchText=roomsContainer.addUserSuggestMatchText
+    suggestions=roomsContainer.addUserSuggestions
+    isShowing=roomsContainer.isAddUserSuggestionsShowing
+    didSelectSuggestion='didSelectAddUserSuggestion'
+    target=roomsContainer}}
 </div>

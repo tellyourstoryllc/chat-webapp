@@ -294,6 +294,11 @@ App.Conversation = Ember.Mixin.create
           @set('isUnread', false)
 
   userDidJoin: (user) ->
+    if user == App.get('currentUser')
+      # If the current user is joining a room, and it was left before, re-enter.
+      @setProperties
+        isOpen: true
+        isDeleted: false
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
       message = App.SystemMessage.createFromConversation(@, localText: "#{user.get('name')} joined.")
       @didReceiveMessage(message, suppressNotifications: true)

@@ -32,6 +32,7 @@ App.AddContactsDialogComponent = Ember.Component.extend
       # Hide the dialog if user clicked the overlay.
       if $(event.target).hasClass('page-overlay')
         @closeModal()
+      return undefined
 
   closeModal: ->
     @sendAction('hideDialog')

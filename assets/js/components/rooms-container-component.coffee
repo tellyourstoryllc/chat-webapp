@@ -9,6 +9,9 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   # Caller must bind this.
   activeRoom: null
 
+  # Caller should bind this to sorted users for invite dialog autocomplete.
+  arrangedContacts: null
+
   newRoomName: ''
 
   isEditingRoomName: false
@@ -27,7 +30,19 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isRoomMenuVisible: false
 
+  # State for showing the invite dialog.
   isInviteDialogVisible: false
+  inviteDialogAnimationTimer: null
+
+  # State internal to the invite dialog.
+  inviteDialogErrorMessage: null
+  inviteDialogAlertIsError: false
+  isSendingAddUsersToGroup: false
+
+  # State for invite dialog user autocomplete.
+  addUserSuggestMatchText: ''
+  addUserSuggestions: null
+  isAddUserSuggestionsShowing: false
 
   isSendingRoomAvatar: false
 
@@ -103,8 +118,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # No key modifiers.
     if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
       if event.which == 27 # Escape.
-        @closeRoomMenu()
-        @closeInviteDialog()
+        # Hide dialogs.
+        @closeRoomMenu() if @get('isRoomMenuVisible')
+        if @get('isInviteDialogVisible') && ! @get('userAutocompleteView.isShowing')
+          @closeInviteDialog()
+          event.preventDefault()
+          event.stopPropagation()
         # Cancel editing.
         if @get('isEditingRoomName')
           @set('isEditingRoomName', false)
@@ -134,6 +153,17 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       # Make sure copy to clipboard is setup.
       @setupCopyToClipboard()
+
+      # Show invite dialog.
+      Ember.run.later @, ->
+        # This should ideally happen after the animation completes.  But it also
+        # needs to happen before the new room's animation transitions in.
+        @resetInviteDialogState()
+
+        room = @get('activeRoom')
+        if room?.needsInviteTip?()
+          @send('toggleInviteDialogOverMessages')
+      , 50
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
@@ -161,13 +191,19 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   onDocumentClick: (event) ->
     Ember.run @, ->
-      @closeRoomMenu()
-      @closeInviteDialog()
+      return if App.Util.isMouseEventWithin(event, '.invite-dialog')
+      @closeRoomMenu() if @get('isRoomMenuVisible')
+      @closeInviteDialog() if @get('isInviteDialogVisible')
+      return undefined
 
   resize: _.debounce (event) ->
     Ember.run @, ->
       @updateSize()
   , 5
+
+  showAddMembersButton: (->
+    @get('isLoggedIn') && @get('activeRoom.isCurrentUserMember')
+  ).property('isLoggedIn', 'activeRoom.isCurrentUserMember')
 
   activeRoomIsEncryptedChanged: (->
     Ember.run.schedule 'afterRender', @, ->
@@ -444,6 +480,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       # when pressing backspace or delete.
       if event.which in [8, 46] # Backspace, delete.
         @sendMessageTextInput(event)
+      return undefined
 
   sendMessageTextKeyDown: (event) ->
     Ember.run @, ->
@@ -468,9 +505,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           # message.
           event.stopPropagation()
         when 27 # Escape.
-          # Hide suggestions.
-          @set('suggestionsShowing', false)
-          event.preventDefault()
+          if @get('suggestionsShowing')
+            # Hide suggestions.
+            @set('suggestionsShowing', false)
+            event.preventDefault()
+            event.stopPropagation()
         when 38 # Arrow up.
           @get('autocompleteView').send('moveCursorUp')
           event.preventDefault()
@@ -714,24 +753,70 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       client.on 'complete', (client, args) =>
         # Copied to clipboard.
-        @$('.copy-to-clipboard-indicator').addClass('copied-fade-in-out')
-        timer = @get('copiedIndicatorTimer')
-        Ember.run.cancel timer if timer?
-        timer = Ember.run.later @, ->
-          @set('copiedIndicatorTimer', null)
-          @$('.copy-to-clipboard-indicator').removeClass('copied-fade-in-out')
-        , 1000 # Animation duration.
-        @set('copiedIndicatorTimer', timer)
+        @closeRoomMenu() if @get('isRoomMenuVisible')
 
   showInviteDialog: ->
-    @$('.invite-dialog').addClass('invite-dialog-animate-in')
+    $dialog = @$('.invite-dialog')
+    $dialog.css
+      transform: "scale(0.6) translateY(-10%) translateX(10%)"
+    $dialog.addClass('invite-dialog-animate-in')
+
     @set('isInviteDialogVisible', true)
+
+    timer = @get('inviteDialogAnimationTimer')
+    if timer?
+      Ember.run.cancel(timer)
+      @set('inviteDialogAnimationTimer', null)
     Ember.run.schedule 'afterRender', @, ->
-      @$('.join-url-text').focus().textrange('set') # Select all.
+      @$('.add-text').focus().textrange('set') # Select all.
 
   closeInviteDialog: ->
-    @$('.invite-dialog').removeClass('invite-dialog-animate-in')
+    $dialog = @$('.invite-dialog')
+    if $dialog.hasClass('over-messages')
+      # When hiding, animate towards the Invite button to show users where it
+      # is.
+      translateX = Math.round(@$('.room-container-messages').width() / 2.0) + 160
+      $dialog.css
+        transform: "scale(0.6) translateY(-30%) translateX(#{translateX}px)"
+
+      # After the animation completes, reset to default not-over-messages state.
+      timer = Ember.run.later @, ->
+        @set('inviteDialogAnimationTimer', null)
+        @$('.invite-dialog')?.removeClass('over-messages').css left: ''
+      , 300
+      @set('inviteDialogAnimationTimer', timer)
+    else
+      # Hide normally.
+      #
+      # Note: If you change this, also change the showInviteDialog code.
+      $dialog.css
+        transform: "scale(0.6) translateY(-10%) translateX(10%)"
+
+    $dialog.removeClass('invite-dialog-animate-in')
     @set('isInviteDialogVisible', false)
+
+  resetInviteDialogState: ->
+    @setProperties
+      addUserSuggestMatchText: ''
+      isAddUserSuggestionsShowing: false
+      addUserSelection: null
+      inviteDialogErrorMessage: null
+    @$('.add-text').val('').trigger('input')
+
+  isAddUsersToGroupDisabled: Ember.computed.alias('isSendingAddUsersToGroup')
+
+  addUserSelectionChanged: (->
+    return unless @currentState == Ember.View.states.inDOM
+    if @get('addUserSelection')?
+      @$('.add-text').addClass('with-user-selection')
+    else
+      @$('.add-text').removeClass('with-user-selection')
+  ).observes('addUserSelection').on('didInsertElement')
+
+  addUserTextChanged: (->
+    # When the user changes the text, clear the user selection.
+    @set('addUserSelection', null)
+  ).observes('userAutocompleteView.text')
 
   actions:
 
@@ -1027,6 +1112,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @sendAction('didCloseRoom', room)
       return undefined
 
+    toggleInviteDialogOverMessages: ->
+      $dialog = @$('.invite-dialog')
+      $parent = @$('.room-container-messages')
+      if $dialog && $parent
+        $dialog.addClass('over-messages').css
+          left: Math.round(($parent.width() - $dialog.outerWidth()) / 2)
+      @showInviteDialog()
+      return undefined
+
     toggleInviteDialog: ->
       @showInviteDialog()
       return undefined
@@ -1034,6 +1128,73 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     dismissInviteDialog: ->
       @closeInviteDialog()
       return undefined
+
+    didSelectAddUserSuggestion: (suggestion) ->
+      # User selected a suggestion.  Expand the value into the text.
+      $text = @$('.add-text')
+      user = suggestion.get('user')
+      if user?
+        name = user.get('name') ? ''
+        $text.val(name).trigger('input')
+        # Move the cursor to the end of the expansion.
+        $text.textrange('set', name.length + 1, 0)
+
+        # Set selection *after* clearing text.
+        @set('addUserSelection', user)
+
+        # Add immediately.
+        @send('addUsersToGroup')
+
+      # Hide suggestions.
+      @set('isAddUserSuggestionsShowing', false)
+      return undefined
+
+    addUsersToGroup: ->
+      return if @get('isSendingAddUsersToGroup')
+      room = @get('activeRoom')
+      return unless room instanceof App.Group
+
+      data = {}
+      isAdding = false
+      user = @get('addUserSelection')
+      email = @$('.add-text').val()
+      if user? && (userId = user.get('id'))?
+        data.user_ids = '' + userId
+        isAdding = true
+      else if email? && email.indexOf('@') >= 0
+        data.emails = email
+        isAdding = true
+
+      if ! isAdding
+        @setProperties
+          inviteDialogErrorMessage: "Start typing a contact name or enter an email address."
+          inviteDialogAlertIsError: true
+        return
+
+      @set('isSendingAddUsersToGroup', true)
+      @set('inviteDialogErrorMessage', null)
+      api = App.get('api')
+      api.ajax(api.buildURL("/groups/#{room.get('id')}/add_users"), 'POST', data: data)
+      .always =>
+        @set('isSendingAddUsersToGroup', false)
+      .then (json) =>
+        if ! json? || json.error?
+          @setProperties
+            inviteDialogErrorMessage: App.userMessageFromError(json)
+            inviteDialogAlertIsError: true
+          return
+        # Success!
+        App.loadAll(json)
+        @setProperties
+          inviteDialogErrorMessage: "User added."
+          inviteDialogAlertIsError: false
+        # Clear dialog.
+        @set('addUserSelection', null)
+        @$('.add-text').val('').trigger('input')
+      .fail (xhr) =>
+        @setProperties
+          inviteDialogErrorMessage: App.userMessageFromError(xhr)
+          inviteDialogAlertIsError: true
 
     goToRoom: (room) ->
       @sendAction('didGoToRoom', room)
