@@ -74,7 +74,6 @@ App.CreateRoomModalView = Ember.View.extend
       if u instanceof App.User
         userIds.push(u.get('id'))
       else
-        # TODO: is the text a phone number?
         emails.push(u.get('name'))
     
     if userIds.length > 0
