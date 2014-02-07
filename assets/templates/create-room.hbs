@@ -1,17 +1,58 @@
 <div class='page-overlay hidden create-room-overlay'>
-  <form class='modal form modal-form create-room-form' {{action 'createRoom' target=view on='submit'}}>
-    <span class='close' {{action 'hideCreateRoomDialog'}}>&times;</span>
-    <h3 class='title'>Create a New Chat</h3>
-    {{#if view.createGroupErrorMessage}}
-      <div class='alert alert-error'>{{view.createGroupErrorMessage}}</div>
-    {{/if}}
-    <div class='control-group'>
-      {{input type='text' value=view.newRoomName classNames='room-name-text'
-        autocomplete='off' placeholder='Subject'}}
+  {{#with view as createRoomView}}
+    <div class='modal form modal-form create-room-form'>
+      <span class='close' {{action 'hideCreateRoomDialog'}}>&times;</span>
+      <h3 class='title'>Create a New Chat Room</h3>
+      {{#if createRoomView.createGroupErrorMessage}}
+        <div class='alert alert-error'>{{createRoomView.createGroupErrorMessage}}</div>
+      {{/if}}
+      <div class='control-group'>
+        <form {{action 'createRoom' target=createRoomView on='submit'}}>
+          {{input type='text' value=createRoomView.newRoomName classNames='room-name-text'
+            autocomplete='off' placeholder='Subject'}}
+        </form>
+      </div>
+      <div class='group-title'>Members</div>
+      <div class='control-group'>
+        <form {{action 'addUsersToGroup' target=createRoomView on='submit'}}>
+          <div class='add-text-container'>
+            <input type='text' class='create-room-add-text' autocomplete='off'
+              placeholder='Name or Email'>
+          </div>
+          <button type='submit' class='app-btn btn-flat add-member-button'>
+            Add Member
+          </button>
+          <div class='clearfix'></div>
+        </form>
+      </div>
+      {{user-autocomplete viewName='createRoomUserAutocompleteView'
+        classNames='add-user-autocomplete'
+        inputSelector='.create-room-add-text'
+        users=arrangedContacts
+        showAll=false
+        useAtSignPrefix=false
+        maxSuggestions=10
+        showCurrentUser=false
+        matchText=createRoomView.addUserSuggestMatchText
+        suggestions=createRoomView.addUserSuggestions
+        isShowing=createRoomView.isAddUserSuggestionsShowing
+        didSelectSuggestion='didSelectAddUserSuggestion'
+        target=createRoomView}}
+
+      <div {{bind-attr class=':add-members-list createRoomView.hasMembers::hidden'}}>
+        {{#each user in createRoomView.membersToAdd}}
+          <div class='add-members-list-item'>
+            <span class='remove' {{action 'removeMember' user target=createRoomView}} title='Remove'>&times;</span>
+            <span class='name'>{{user.name}}</span>
+          </div>
+        {{/each}}
+      </div>
+
+      <div class='form-actions'>
+        <button type='button' class='app-btn btn-green btn-flat'
+          {{action 'createRoom' target=createRoomView}}
+          {{bind-attr disabled='createRoomView.isCreatingGroup'}}>Create Chat Room</button>
+      </div>
     </div>
-    <div class='form-actions'>
-      <button type='submit' class='app-btn btn-green'
-       {{bind-attr disabled='view.isCreatingGroup'}}>Create Chat</button>
-    </div>
-  </form>
+  {{/with}}
 </div>

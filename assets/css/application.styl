@@ -2119,9 +2119,60 @@ room-content-margin-height = 10px
     text-align right
 
 .create-room-form
-  width 205px
-  margin-left -102px // Negative width divided by 2.
-  margin-top -67px // Negative height divided by 2.
+  dialog-width = 365px
+  width dialog-width
+  margin-left -182px // Negative width divided by 2.
+  margin-top -144px // Negative height divided by 2.
+  overflow visible // So that autocomplete suggestions show.
+
+  .group-title
+    margin-top 20px
+    margin-bottom 10px
+
+  .add-members-list
+    max-height 67px
+    overflow-y auto
+    border 1px solid #d4d4d4
+    background-color #fff
+
+    &.hidden
+      display none
+
+  .add-members-list-item
+    margin-top 3px
+    margin-bottom 3px
+    max-width 95%
+    overflow ellipsis
+    line-height 1.2
+
+  .remove
+    padding 0 3px
+    color #aaa
+    cursor pointer
+
+    &:hover
+      color #444
+
+  input[type=text]
+    padding-top 9px
+    padding-bottom 9px
+
+  button-width = 132px
+  .add-text-container
+    float left
+    width 100%
+    margin-right -(button-width)
+
+  .create-room-add-text
+    width (dialog-width - button-width - 11px) !important
+    margin-right button-width + 11px !important
+
+  .add-member-button
+    float left
+    width button-width
+
+  .form-actions
+    margin-top 20px
 
 add-contacts-form-width = 355px
 .add-contacts-form

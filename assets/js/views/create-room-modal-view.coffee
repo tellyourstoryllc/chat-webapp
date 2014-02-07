@@ -7,9 +7,17 @@ App.CreateRoomModalView = Ember.View.extend
 
   createGroupErrorMessage: null
 
+  addUserSuggestMatchText: ''
+  addUserSuggestions: null
+  isAddUserSuggestionsShowing: false
+  addUserSelection: null
+
+  membersToAdd: null
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick')
+    @set('membersToAdd', []) if ! @get('membersToAdd')?
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
@@ -41,7 +49,57 @@ App.CreateRoomModalView = Ember.View.extend
       newRoomName: ''
       createGroupErrorMessage: null
 
+  hasMembers: (->
+    ! Ember.isEmpty(@get('membersToAdd'))
+  ).property('membersToAdd.[]')
+
   actions:
+
+    didSelectAddUserSuggestion: (suggestion) ->
+      # User selected a suggestion.  Expand the value into the text.
+      $text = @$('.create-room-add-text')
+      user = suggestion.get('user')
+      if user?
+        name = user.get('name') ? ''
+        $text.val(name).trigger('input')
+        # Move the cursor to the end of the expansion.
+        $text.textrange('set', name.length + 1, 0)
+
+        # Set selection *after* clearing text.
+        @set('addUserSelection', user)
+
+        # Add immediately.
+        @send('addUsersToGroup')
+
+      # Hide suggestions.
+      @set('isAddUserSuggestionsShowing', false)
+      return undefined
+
+    addUsersToGroup: ->
+      isAdding = false
+      text = @$('.create-room-add-text').val()
+      if (user = @get('addUserSelection'))?
+        isAdding = true
+        @get('membersToAdd').addObject(user)
+        # Clear user selection.
+        @set('addUserSelection', null)
+      else if ! Ember.isEmpty(text)
+        isAdding = true
+        obj = Ember.Object.create(name: text, _instantiatedFrom: 'text')
+        @get('membersToAdd').addObject(obj)
+
+      if isAdding
+        # Clear dialog.
+        @$('.create-room-add-text').val('').trigger('input')
+        # Scroll into view.
+        $e = @$('.add-members-list')
+        $e.animate { scrollTop: $e.get(0).scrollHeight }, 200
+
+      return undefined
+
+    removeMember: (user) ->
+      @get('membersToAdd').removeObject(user)
+      return undefined
 
     createRoom: ->
       name = @get('newRoomName')
