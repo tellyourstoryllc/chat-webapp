@@ -29,9 +29,11 @@
     <div class='left-sidebar-tabs-container'>
       <div class='left-sidebar-tab-handles'>
         <div {{bind-attr class=':tab-handle :rooms-tab isRoomsTabActive:active'}} {{action 'showRoomsTab'}}>
+          <span class='chats-icon'></span>
           Chats
         </div>
         <div {{bind-attr class=':tab-handle :contacts-tab isContactsTabActive:active'}} {{action 'showContactsTab'}}>
+          <span class='contacts-icon'></span>
           Contacts
         </div>
       </div>

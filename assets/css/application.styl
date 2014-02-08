@@ -1651,6 +1651,29 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     &:hover
       color rgba(255,255,255, 0.9)
 
+    .chats-icon, .contacts-icon
+      sprites-background()
+      sprite-icon()
+      opacity .6
+
+    .chats-icon
+      width 21px
+      height 18px
+      background-position -123px -61px
+
+    .contacts-icon
+      width 26px
+      height 18px
+      background-position -153px -61px
+
+    &.active
+      .chats-icon, .contacts-icon
+        opacity .92
+
+    &:hover
+      .chats-icon, .contacts-icon
+        opacity 1
+
 .tab-content.hidden
   display none !important
 
