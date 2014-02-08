@@ -818,6 +818,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @set('addUserSelection', null)
   ).observes('userAutocompleteView.text')
 
+  isAddMemberTextValid: (text) ->
+    # Simple email-ish regex.
+    /.*\S.*@\S+\.[a-zA-Z0-9\-]{2,}/.test(text)
+
   actions:
 
     editRoomName: ->
@@ -1161,7 +1165,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       if user? && (userId = user.get('id'))?
         data.user_ids = '' + userId
         isAdding = true
-      else if email? && email.indexOf('@') >= 0
+      else if email? && @isAddMemberTextValid(email)
         data.emails = email
         isAdding = true
 
