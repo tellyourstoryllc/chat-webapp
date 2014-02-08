@@ -141,13 +141,17 @@ App.CreateRoomModalView = Ember.View.extend
         # Clear user selection.
         @set('addUserSelection', null)
       else if ! Ember.isEmpty(text)
-        isAdding = true
-        obj = Ember.Object.create(name: text, _instantiatedFrom: 'text')
-        @get('membersToAdd').addObject(obj)
+        if @isAddMemberTextValid(text)
+          isAdding = true
+          obj = Ember.Object.create(name: text, _instantiatedFrom: 'text')
+          @get('membersToAdd').addObject(obj)
+        else
+          @set('createGroupErrorMessage', "Must be a valid email address.")
 
       if isAdding
         # Clear dialog.
         @$('.create-room-add-text').val('').trigger('input')
+        @set('createGroupErrorMessage', null)
         # Scroll into view.
         $e = @$('.add-members-list')
         $e.animate { scrollTop: $e.get(0).scrollHeight }, 200
