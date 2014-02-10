@@ -46,7 +46,7 @@ App.RoomsRoute = Ember.Route.extend
 
   _loadContacts: (controller) ->
     @set('loadContactsTimer', null)
-    controller.loadContacts()
+    controller.loadContacts() if App.isLoggedIn()
 
   _uiRooms: ->
     @controllerFor('rooms').get('arrangedRooms')
