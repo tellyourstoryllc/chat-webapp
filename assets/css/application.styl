@@ -2166,10 +2166,33 @@ room-content-margin-height = 10px
     margin-top 20px
     margin-bottom 10px
 
+  .control-group
+    margin-top 15px
+
+  .control-label
+    float left
+
+  .label
+    display inline-block
+    margin-top 5px
+    margin-bottom 3px
+    font-weight normal
+
+  .help-text-below-group-title
+    margin -5px 0 5px 0
+    color #888
+    font-size 80%
+
+  .help-text
+    margin 0 5px 0 0
+    color #888
+    font-size 80%
+
   .add-members-list
     max-height 67px
     overflow-y auto
     border 1px solid #d4d4d4
+    padding 0 3px
     background-color #fff
 
     &.hidden
@@ -2182,6 +2205,9 @@ room-content-margin-height = 10px
     overflow ellipsis
     line-height 1.2
 
+    &.no-members
+      color #aaa
+
   .remove
     padding 0 3px
     color #aaa
@@ -2193,6 +2219,8 @@ room-content-margin-height = 10px
   input[type=text]
     padding-top 9px
     padding-bottom 9px
+    outline 0
+    background-color #fff
 
   button-width = 78px
   .add-text-container
@@ -2201,16 +2229,27 @@ room-content-margin-height = 10px
     margin-right -(button-width)
 
   .create-room-add-text
-    width (dialog-width - button-width - 11px) !important
-    margin-right button-width + 11px !important
+    width (dialog-width - button-width) !important
+    margin-right button-width !important
+    height 39px
+    border-bottom-width 0 !important
 
   .add-member-button
     float left
     width button-width
+    height 39px
+    border-top-left-radius 0
+    border-bottom-left-radius 0
+    border-bottom-right-radius 0
+
+  .room-name-container
+    text-align right
+
+  .room-name-text
+    width 215px !important
 
   .form-actions
     margin-top 20px
-    text-align center
 
   .create-room-button
     padding-left 45px

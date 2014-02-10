@@ -23,7 +23,10 @@ App.CreateRoomModalView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick')
+
     @set('membersToAdd', []) if ! @get('membersToAdd')?
+
+    @set('newRoomName', @_defaultRoomName()) if Ember.isEmpty(@get('newRoomName'))
 
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
@@ -56,8 +59,16 @@ App.CreateRoomModalView = Ember.View.extend
   resetNewRoom: ->
     @setProperties
       group: null
-      newRoomName: ''
+      newRoomName: @_defaultRoomName()
       createGroupErrorMessage: null
+
+  _defaultRoomName: ->
+    currentUserName = App.get('currentUser.name') ? ''
+
+    if Ember.isEmpty(currentUserName)
+      "New Room"
+    else
+      "#{currentUserName}'s Room"
 
   hasMembers: (->
     ! Ember.isEmpty(@get('membersToAdd'))
@@ -141,11 +152,13 @@ App.CreateRoomModalView = Ember.View.extend
         # Clear user selection.
         @set('addUserSelection', null)
       else if ! Ember.isEmpty(text)
-        if @isAddMemberTextValid(text)
-          isAdding = true
-          obj = Ember.Object.create(name: text, _instantiatedFrom: 'text')
-          @get('membersToAdd').addObject(obj)
-        else
+        addresses = text.split(',')
+        addresses.forEach (address) =>
+          if @isAddMemberTextValid(address)
+            isAdding = true
+            obj = Ember.Object.create(name: address, _instantiatedFrom: 'text')
+            @get('membersToAdd').addObject(obj)
+        if ! isAdding
           @set('createGroupErrorMessage', "Must be a valid email address.")
 
       if isAdding
