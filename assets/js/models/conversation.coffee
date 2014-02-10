@@ -35,6 +35,9 @@ App.Conversation = Ember.Mixin.create
 
   loadPromise: null
 
+  # Date when this instance handled a reconnect.
+  reconnectedAt: null
+
   # Message processor extensions.  For example, encryption is implemented as a
   # processor.  Processors are called in order, with first being on the network
   # side and last being on the user-facing side.  I.e. it's like a stack and the
@@ -48,7 +51,7 @@ App.Conversation = Ember.Mixin.create
   # state and scroll the room to the last message.
   forceScroll: false
 
-  isListeningForMessages: Ember.required(Function)
+  isSubscribedToUpdates: Ember.required(Function)
 
   fetchUrl: Ember.required(Function)
 
@@ -193,6 +196,7 @@ App.Conversation = Ember.Mixin.create
       @didReconnect()
 
   didReconnect: ->
+    @set('reconnectedAt', new Date())
     # We just reconnected.  Fetch any messages we may have missed.
     @fetchConversationWithMostRecentMessages()
     .then (loadMetas) =>

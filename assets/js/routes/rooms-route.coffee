@@ -1,5 +1,13 @@
 App.RoomsRoute = Ember.Route.extend
 
+  didAttemptFirstFetchAllConversations: false
+  fetchingAllConversationsPromise: null
+
+  activate: ->
+    @_super(arguments...)
+
+    App.get('eventTarget').on 'didConnect', @, @_didConnect
+
   deactivate: ->
     @_super(arguments...)
     # Stop listening for new messages.
@@ -7,6 +15,8 @@ App.RoomsRoute = Ember.Route.extend
     # Cancel loading contacts.
     timer = @get('loadContactsTimer')
     Ember.run.cancel(timer) if timer?
+    # Stop listening for reconnect.
+    App.get('eventTarget').off 'didConnect', @, @_didConnect
 
   setupController: (controller, model) ->
     # Initialize contacts.  It's possible to access this when logged out.
@@ -16,7 +26,7 @@ App.RoomsRoute = Ember.Route.extend
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
     if App.isLoggedIn()
-      @_fetchAllConversationsAndSubscribe(controller)
+      @_fetchAllConversationsAndContinue(controller)
 
       # By this time, conversations should be loaded.
       @_scheduleLoadContacts(controller)
@@ -75,16 +85,12 @@ App.RoomsRoute = Ember.Route.extend
       outlet: 'modal'
       parentView: 'application'
 
-  _fetchAllConversationsAndSubscribe: (controller = null) ->
+  _fetchAllConversationsAndContinue: (controller = null) ->
     controller ?= @controllerFor('rooms')
-    App.get('api').fetchAllConversations()
+    @_fetchAllConversationsAndSubscribe()
     .then (rooms) =>
       if rooms?
         controller.set('roomsLoaded', true)
-        # Fetch all Conversations after subscribing.
-        rooms.forEach (room) =>
-          room.subscribeToMessages().then =>
-            room.reload()
 
         if App.get('continueToMostRecentRoom')
           # Consume this falg.
@@ -96,6 +102,47 @@ App.RoomsRoute = Ember.Route.extend
       return rooms
     .fail App.rejectionHandler
 
+  _fetchAllConversationsAndSubscribe: ->
+    return promise if (promise = @get('fetchingAllConversationsPromise'))?
+
+    @set('didAttemptFirstFetchAllConversations', true)
+    promise = App.get('api').fetchAllConversations()
+    .always =>
+      @set('fetchingAllConversationsPromise', null)
+    .then (rooms) =>
+      if rooms?
+        rooms.forEach (room) =>
+          # Fetch all Conversations after subscribing.
+          if room.get('isOpen') && ! room.get('isSubscribedToUpdates')
+            room.subscribeToMessages().then =>
+              room.reload()
+          else if ! room.get('reconnectedAt')?
+            # Don't subscribe if the room isn't open.  Reload if the room itself
+            # hasn't already handled the reconnect.
+            Ember.run.next room, 'reload'
+          else
+            # Clear reconnectedAt for next time.
+            room.set('reconnectedAt', null)
+
+      return rooms
+    @set('fetchingAllConversationsPromise', promise)
+
+    promise
+
+  _didConnect: ->
+    if ! @get('didAttemptFirstFetchAllConversations')
+      # If we're not loaded or not listening, we don't care.
+      return
+
+    if App.get('isFayeClientConnected')
+      @_didReconnect()
+
+  _didReconnect: ->
+    # Make sure we get updated list of conversations if the user joined a room
+    # while we were offline.
+    @_fetchAllConversationsAndSubscribe()
+    .fail(App.rejectionHandler)
+
   actions:
 
     didSignUp: ->
@@ -105,7 +152,7 @@ App.RoomsRoute = Ember.Route.extend
 
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
-      @_fetchAllConversationsAndSubscribe()
+      @_fetchAllConversationsAndContinue()
       @_scheduleLoadContacts()
       return undefined
 
@@ -116,7 +163,7 @@ App.RoomsRoute = Ember.Route.extend
 
       @send('joinGroup', room)
       @_hideJoinGroupSignupDialog()
-      @_fetchAllConversationsAndSubscribe()
+      @_fetchAllConversationsAndContinue()
       @_scheduleLoadContacts()
       return undefined
 
