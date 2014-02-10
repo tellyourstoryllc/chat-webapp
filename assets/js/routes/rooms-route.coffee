@@ -178,6 +178,27 @@ App.RoomsRoute = Ember.Route.extend
       , 500 # After the animation.
       return undefined
 
+    showJoinRoomDialog: ->
+      @render 'join-room',
+        into: 'application'
+        outlet: 'modal'
+        view: 'joinRoomModal'
+      Ember.run.schedule 'afterRender', @, ->
+        $('.join-room-overlay').removeClass('hidden')
+        $('.join-room-form').addClass('expand-in')
+        $('.room-key-text').focus()
+      return undefined
+
+    hideJoinRoomDialog: ->
+      $('.join-room-overlay').addClass('hidden')
+      $('.join-room-form').removeClass('expand-in')
+      Ember.run.later @, ->
+        @disconnectOutlet
+          outlet: 'modal'
+          parentView: 'application'
+      , 500 # After the animation.
+      return undefined
+
     showAddContactsDialog: ->
       @render 'add-contacts',
         into: 'application'

@@ -1,0 +1,23 @@
+<div class='page-overlay hidden join-room-overlay'>
+  {{#with view as joinRoomView}}
+    <form class='modal form modal-form join-room-form' {{action 'joinRoom' target=joinRoomView on='submit'}}>
+      <span class='close' {{action 'hideJoinRoomDialog'}}>&times;</span>
+      <div class='title'>Join an Existing Room</div>
+      {{#if joinRoomView.userErrorMessage}}
+        <div class='alert alert-error'>{{joinRoomView.userErrorMessage}}</div>
+      {{/if}}
+      <div class='control-group'>
+        {{input type='text' value=joinRoomView.roomKeyText classNames='room-key-text'
+          autocomplete='off'}}
+        <div class='help-text'>
+          Enter room key or join link.
+        </div>
+      </div>
+
+      <div class='form-actions'>
+        <button type='submit' class='app-btn btn-green btn-flat join-room-button'
+          {{bind-attr disabled='joinRoomView.isJoiningGroup'}}>Join Room</button>
+      </div>
+    </form>
+  {{/with}}
+</div>

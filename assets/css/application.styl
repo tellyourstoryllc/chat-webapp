@@ -332,6 +332,16 @@ input, button, select, textarea
     &:hover, &.hover
       background-color lighten(app-green, 10%)
 
+  &.btn-purple-round
+    border 2px solid rgba(255,255,255, .7)
+    border-radius 27px
+    background-color app-purple
+    color #D6D2D8
+
+    &:hover, &.hover
+      color #fff
+      background-color #493352
+
   &.btn-fb
     padding 0
     background-color #374F81 // The darker blue behind the icon.
@@ -1677,34 +1687,41 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .tab-content.hidden
   display none !important
 
-.join-text-container, .contacts-search-container
+.rooms-tab-top-actions, .contacts-search-container
   position relative
+  padding 5px
+  text-align center
 
-  .join-text-submit
-    width 12px
-    height 12px
-    opacity .4
-    // Center vertically.
-    position absolute
-    top 0
-    bottom 0
-    right 15px
-    margin auto
+  .new-room-button, .join-room-button
+    margin-right 5px
+    padding-top 7px
+    padding-bottom 7px
 
-    padding 7px 5px
-    cursor pointer
+  .new-room-button
+    padding-left 11px
+    padding-right 11px
 
-    &:hover
-      opacity .6
+  .join-room-button
+    padding-left 16px
+    padding-right 16px
 
-  .join-text-submit-icon
+  .new-room-icon
     sprites-background()
     sprite-icon()
-    width 12px
-    height 12px
-    background-position -123px -11px
-    position relative
-    top -4px
+    width 13px
+    height 20px
+    background-position -189px -62px
+    margin-left 6px
+    margin-right 3px
+
+  .join-room-icon
+    sprites-background()
+    sprite-icon()
+    width 15px
+    height 20px
+    background-position -211px -62px
+    margin-left 6px
+    margin-right 3px
 
   .join-text, .contacts-search-text
     dark-purple-round-input()
@@ -1779,23 +1796,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     > a
       color #FD7773
 
-  &.create-room-list-item
-    margin 0 10px 10px 10px
-    border 2px solid rgba(255,255,255, .7)
-    border-radius 27px
-
-    &:hover
-      background-color rgba(255,255,255, .07)
-
-  .create-room-icon
-    sprites-background()
-    sprite-icon()
-    width 26px
-    height 26px
-    background-position -2px -5px
-    margin-left 9px
-
-  .room-avatar, .create-room-icon
+  .room-avatar
     float left
 
   .room-name, .room-status
@@ -1809,9 +1810,6 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     margin-top 8px
     font-size 14px
     line-height 16px
-
-  .create-room-name
-    margin-top 6px
 
   .room-status
     margin-top 5px
@@ -2249,6 +2247,33 @@ add-contacts-form-width-media = "(max-width: " + add-contacts-form-width + ")"
   .add-contacts-form
     left 0
     margin-left 0
+
+.join-room-form
+  dialog-width = 240px
+  width dialog-width
+  margin-left -120px // Negative width divided by 2.
+  margin-top -78px // Negative height divided by 2.
+  overflow visible // So that autocomplete suggestions show.
+
+  .title
+    font-size 18px
+    font-weight bold
+
+  input[type=text]
+    padding-top 9px
+    padding-bottom 9px
+
+  .help-text
+    margin 5px 0
+    color #888
+
+  .form-actions
+    margin-top 20px
+    text-align center
+
+  .join-room-button
+    padding-left 45px
+    padding-right 45px
 
 room-members-sidebar-width = 200px
 

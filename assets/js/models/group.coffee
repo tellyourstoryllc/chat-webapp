@@ -318,5 +318,8 @@ App.Group.reopenClass
     if matches
       # If we were given a URL, strip out the join code.
       joinCode = matches[1]
+    else if (matches = /^[^\?]*\/rooms\/([a-zA-Z0-9\-]+)/.exec(joinCode))
+      # Fall back to Group id from room permalink.  Don't allow 1-1 id.
+      joinCode = matches[1] if matches[1]? && matches[1].indexOf('-') == -1
 
     joinCode

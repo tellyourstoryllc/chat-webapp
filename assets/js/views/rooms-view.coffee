@@ -5,10 +5,6 @@ App.RoomsView = Ember.View.extend
   # Text from input textbox to join room.
   enteredJoinText: ''
 
-  isJoiningRoom: false
-
-  joinRoomErrorMessage: null
-
   isShowingRoomsSidebar: false
 
   isChooseStatusMenuVisible: false
@@ -26,8 +22,7 @@ App.RoomsView = Ember.View.extend
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onMacGapActive', 'onMacGapIdle',
-      'onToggleRoomsSidebarTouchStart',
-      'onJoinTextKeyDown', 'onJoinTextPaste', 'onJoinTextFocus')
+      'onToggleRoomsSidebarTouchStart')
     @showDefaultSidebarView()
     # Force computed properties.
     @get('isRoomContentOutOfTheWay')
@@ -105,24 +100,6 @@ App.RoomsView = Ember.View.extend
       # get back.
       if room?
         @toggleProperty('isShowingRoomsSidebar')
-      return undefined
-
-  onJoinTextKeyDown: (event) ->
-    Ember.run @, ->
-      if event.which == 13  # Enter
-        event.preventDefault()
-        @send('joinRoom', $('.join-text').val())
-
-  onJoinTextPaste: (event) ->
-    # Use Ember.run.next so that we get the result of pasting, not before
-    # pasting.
-    Ember.run.next @, ->
-      @send('joinRoom', $('.join-text').val())
-
-  onJoinTextFocus: (event) ->
-    Ember.run @, ->
-      # Move the room content and messages out of the way.
-      @set('isShowingRoomsSidebar', true)
       return undefined
 
   activeRoomDidChange: (->
@@ -285,11 +262,6 @@ App.RoomsView = Ember.View.extend
     @$('.status-text-menu').removeClass('expand-in-less-bounce')
     @set('isStatusTextMenuVisible', false)
 
-  resetJoinRoom: ->
-    $('.join-text').val('')
-    @set('joinRoomErrorMessage', null)
-    undefined
-
   # Deactivate previous contact item and activate item for the given User.  User
   # can be `null`.
   activateContactItem: (user) ->
@@ -349,34 +321,6 @@ App.RoomsView = Ember.View.extend
 
     toggleRoomsSidebar: ->
       @toggleProperty('isShowingRoomsSidebar')
-      return undefined
-
-    joinRoomSubmit: ->
-      @send('joinRoom', $('.join-text').val())
-      return undefined
-
-    joinRoom: (joinText) ->
-      return if @get('isJoiningRoom')
-      joinCode = App.Group.parseJoinCode(joinText)
-      return if Ember.isEmpty(joinCode)
-
-      @setProperties(isJoiningRoom: true, joinRoomErrorMessage: null)
-      App.get('api').joinGroup(joinCode)
-      .always =>
-        @set('isJoiningRoom', false)
-      .then (group) =>
-        # Group was joined successfully.
-        @resetJoinRoom()
-        # Go to room.
-        @get('controller').send('goToRoom', group)
-      , (e) =>
-        # Show error message.
-        # TODO: There's no UI for this yet so just alert.
-        errorMsg = App.userMessageFromError(e, "Sorry, we couldn't find a room with that code.")
-        @set('joinRoomErrorMessage', errorMsg)
-        alert(errorMsg)
-      .fail App.rejectionHandler
-
       return undefined
 
     toggleChooseStatusMenu: ->
