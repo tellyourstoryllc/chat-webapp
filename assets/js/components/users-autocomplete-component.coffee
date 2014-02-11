@@ -178,11 +178,10 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
         when 9 # Tab.
           @send('selectCurrentSuggestion')
           event.preventDefault()
+          event.stopPropagation()
         when 13 # Enter.
           @send('selectCurrentSuggestion')
           event.preventDefault()
-          # For enter, we must stop propagation also; otherwise it sends the
-          # message.
           event.stopPropagation()
         when 27 # Escape.
           if @get('isShowing')
