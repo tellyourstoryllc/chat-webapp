@@ -128,7 +128,7 @@ App.OneToOne.reopenClass
           id: id
           member_ids: json.filter((o) -> o.object_type == 'user').map((o) -> o.id)
       return @loadSingle(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   fetchById: (id) ->
     api = App.get('api')

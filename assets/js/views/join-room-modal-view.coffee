@@ -81,6 +81,6 @@ App.JoinRoomModalView = Ember.View.extend
         # Show error message.
         @set('userErrorMessage', App.userMessageFromError(xhrOrError, "Sorry, we couldn't find a room with that code."))
         @$('.join-room-form').addClass('shake-side-to-side')
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
       return undefined

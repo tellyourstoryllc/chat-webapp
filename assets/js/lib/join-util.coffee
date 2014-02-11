@@ -20,4 +20,4 @@ App.JoinUtil.reopenClass
       Ember.Logger.error xhr
       # Display a friendly message to the user.
       controller.set('userMessage', "Sorry, that room couldn't be found.")
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler

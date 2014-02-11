@@ -129,7 +129,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
       , (xhr) =>
         # Ignore error; just fall back to signing up.
         @send('attemptSignup')
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
       return undefined
 
     attemptSignup: ->
@@ -198,7 +198,7 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
           @userDidEnterDuplicateEmail(xhr)
         else
           @set('errorMessage', App.userMessageFromError(xhr))
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
       return undefined
 
     attemptLogin: ->
@@ -242,5 +242,5 @@ App.SignupFormComponent = Ember.Component.extend App.FacebookAuthMixin,
         @set('errorMessage', App.userMessageFromError(xhr))
         if xhr.status == 401
           @$('.signup-form').addClass('shake-side-to-side')
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
       return undefined

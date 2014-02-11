@@ -76,6 +76,6 @@ App.AddContactsDialogComponent = Ember.Component.extend
       , (xhrOrError) =>
         # Show error message.
         @set('errorMessage', App.userMessageFromError(xhrOrError))
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
       return undefined

@@ -135,7 +135,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     )
     .always =>
       @set('isSendingAvatar', false)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
     # Clear out the file input so that selecting the same file again triggers a
     # change event.
@@ -167,7 +167,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       @set('isSendingOneToOneWallpaper', false)
     .then (json) =>
       App.loadAll(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
     # Clear out the file input so that selecting the same file again triggers a
     # change event.
@@ -376,7 +376,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
           throw json
         emailAddresses.removeObject(emailAddress)
         App.Email.discardRecords(emailAddress)
-      .fail (xhrOrError) =>
+      .catch (xhrOrError) =>
         # Revert changes.
         @$(".editable-display[data-email-id='#{emailAddress.get('id')}']").removeClass('hidden')
       return undefined
@@ -430,7 +430,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
         token = userJson?.token
         if token?
           App.useNewAuthToken(token)
-      .fail (xhrOrJson) =>
+      .catch (xhrOrJson) =>
         Ember.Logger.error xhrOrJson
         if xhrOrJson.status == 401
           @set('passwordErrorMessage', "Invalid current password.")

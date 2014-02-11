@@ -96,7 +96,7 @@ App.ApplicationView = Ember.View.extend App.ChromePermissionBarMixin,
       # If any of the promises fail, one of the servers is unreachable.  Check
       # again later.
       @scheduleFayeRefreshCheck()
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   scheduleFayeRefreshCheck: ->
     @cancelFayeRefreshCheck()

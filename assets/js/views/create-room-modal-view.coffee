@@ -107,7 +107,7 @@ App.CreateRoomModalView = Ember.View.extend
       @resetNewRoom()
 
       return true
-    .fail (xhr) =>
+    .catch (xhr) =>
       @set('createGroupErrorMessage', App.userMessageFromError(xhr))
       return false
 
@@ -213,6 +213,6 @@ App.CreateRoomModalView = Ember.View.extend
       , (xhrOrError) =>
         # Show error message.
         @set('createGroupErrorMessage', App.userMessageFromError(xhrOrError))
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
       return undefined

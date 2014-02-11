@@ -39,5 +39,5 @@ App.ForgotPasswordController = Ember.Controller.extend
           @set('hasSentResetEmail', true)
       , (xhr) =>
         @set('errorMessage', App.userMessageFromError(xhr))
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
       return undefined

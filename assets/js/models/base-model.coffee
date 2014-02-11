@@ -77,7 +77,7 @@ App.BaseModel.reopenClass
       throw json if ! instance?
 
       return instance
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   # Given json for a record and all its associations, load it, and return the
   # instance.

@@ -183,7 +183,7 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
         @setProperties
           serverAllMessagesEmail: prefsJson.server_all_messages_email
           isUserGroupPreferencesLoaded: true
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   fetchUrl: ->
     App.get('api').buildURL("/groups/#{@get('id')}")
@@ -260,7 +260,7 @@ App.Group.reopenClass
       if ! json? || json.error?
         throw json
       return @loadSingle(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   # Given json for a Group and all its associations, load it, and return the
   # `App.Group` instance.

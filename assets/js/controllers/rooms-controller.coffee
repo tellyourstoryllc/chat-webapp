@@ -104,7 +104,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
         @set('contactsLoaded', true)
       else
         Ember.run.next @, 'loadContacts'
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   actions:
 
@@ -123,7 +123,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
         if ! json? || json.error?
           throw json
         @get('allContacts').addObjects(users)
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
     removeUserContacts: (users) ->
       users = Ember.makeArray(users)
@@ -133,7 +133,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
         if ! json || json.error?
           # Rollback.  Order in the list shouldn't matter.
           allContacts.addObjects(users)
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
       allContacts.removeObjects(users)
 
     didFocusSendMessageText: ->

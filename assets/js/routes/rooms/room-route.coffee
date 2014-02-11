@@ -71,7 +71,7 @@ App.RoomsRoomRoute = Ember.Route.extend
           @transitionTo('rooms.index')
         else
           throw xhrOrError
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
   # From the given context that we transitioned here with, extract the model ID
   # and/or model without fetching anything.

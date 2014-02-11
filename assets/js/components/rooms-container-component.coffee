@@ -686,7 +686,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       if ! json || json.error?
         throw json
       App.loadAll(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
     # Clear out the file input so that selecting the same file again triggers a
     # change event.
@@ -726,7 +726,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       if ! json || json.error?
         throw json
       App.loadAll(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
     # Clear out the file input so that selecting the same file again triggers a
     # change event.
@@ -885,7 +885,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       , (xhr) =>
         @set('setPasswordBannerErrorMessage', App.userMessageFromError(xhr))
         return undefined
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
       return undefined
 
@@ -1195,7 +1195,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         # Clear dialog.
         @set('addUserSelection', null)
         @$('.add-text').val('').trigger('input')
-      .fail (xhr) =>
+      .catch (xhr) =>
         @setProperties
           inviteDialogErrorMessage: App.userMessageFromError(xhr)
           inviteDialogAlertIsError: true

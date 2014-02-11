@@ -34,7 +34,7 @@ App.Email.reopenClass
       if ! json? || json.error?
         throw json
       App.loadAll(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   fetchAll: ->
     api = App.get('api')

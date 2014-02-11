@@ -236,7 +236,7 @@ App.Conversation = Ember.Mixin.create
         throw json
       # Load everything from the response.
       return App.loadAllWithMetaData(json)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   # Handler for when we receive an object over the socket for this conversation.
   #
@@ -560,7 +560,7 @@ App.Conversation = Ember.Mixin.create
       return messages
     , (e) =>
       @set('isLoadingEarlierMessages', false)
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   # Hook that gets called with the App.Message and the payload (faye data built
   # from the message) just before it is published to the channel via socket.

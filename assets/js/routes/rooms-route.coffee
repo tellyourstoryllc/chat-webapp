@@ -100,7 +100,7 @@ App.RoomsRoute = Ember.Route.extend
           @replaceWith('rooms.room', room) if room?
 
       return rooms
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   _fetchAllConversationsAndSubscribe: ->
     return promise if (promise = @get('fetchingAllConversationsPromise'))?
@@ -141,7 +141,7 @@ App.RoomsRoute = Ember.Route.extend
     # Make sure we get updated list of conversations if the user joined a room
     # while we were offline.
     @_fetchAllConversationsAndSubscribe()
-    .fail(App.rejectionHandler)
+    .catch App.rejectionHandler
 
   actions:
 

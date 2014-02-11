@@ -217,7 +217,7 @@ window.App = App = Ember.Application.create
 
       @whenLoggedIn =>
         @continueAfterLoggingIn()
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   logInFromInviteToken: (inviteToken) ->
     App.set('isLoggingIn', true)
@@ -262,7 +262,7 @@ window.App = App = Ember.Application.create
           htmlMessage: "Go To <a href='/login'>Login</a>."
       else
         blowUpWithDefaultMessage()
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   # Transition to somewhere more interesting.
   continueAfterLoggingIn: ->
@@ -288,7 +288,7 @@ window.App = App = Ember.Application.create
   #     somethingAsync()
   #     .then (result) ->
   #       coolStuff(result) # This could accidentally throw an exception.
-  #     .fail App.rejectionHandler
+  #     .catch App.rejectionHandler
   rejectionHandler: (e) ->
     Ember.Logger.error(e, e?.message, e?.stack ? e?.stacktrace)
     throw e
@@ -338,7 +338,7 @@ window.App = App = Ember.Application.create
       # yet.
       App.get('api').checkin(token: token).then (user) =>
         @didCheckIn()
-      .fail App.rejectionHandler
+      .catch App.rejectionHandler
 
   # This is triggered after logging in and checking in.
   didCheckIn: ->

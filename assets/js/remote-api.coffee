@@ -201,7 +201,7 @@ App.RemoteApi = Ember.Object.extend
       return group
     , (xhr) =>
       throw new Error(App.userMessageFromError(xhr))
-    .fail App.rejectionHandler
+    .catch App.rejectionHandler
 
   updateLastSeenRank: (conversation, lastSeenRank) ->
     data =
