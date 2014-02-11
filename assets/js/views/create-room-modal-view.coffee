@@ -23,7 +23,7 @@ App.CreateRoomModalView = Ember.View.extend
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick',
-              'onAddTextBlur', 'onAddTextKeyDown')
+              'onAddTextBlur', 'onAddTextKeyDown', 'onAddTextInput')
 
     @set('membersToAdd', []) if ! @get('membersToAdd')?
 
@@ -34,12 +34,14 @@ App.CreateRoomModalView = Ember.View.extend
     @$('.page-overlay').on 'click', @onOverlayClick
     @$('.create-room-add-text').on 'blur', @onAddTextBlur
     @$('.create-room-add-text').on 'keydown', @onAddTextKeyDown
+    @$('.create-room-add-text').on 'input', @onAddTextInput
 
   willDestroyElement: ->
     $('body').off 'keydown', @onBodyKeyDown
     @$('.page-overlay').off 'click', @onOverlayClick
     @$('.create-room-add-text').off 'blur', @onAddTextBlur
     @$('.create-room-add-text').off 'keydown', @onAddTextKeyDown
+    @$('.create-room-add-text').off 'input', @onAddTextInput
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
@@ -107,6 +109,11 @@ App.CreateRoomModalView = Ember.View.extend
               event.stopPropagation()
       return undefined
 
+  onAddTextInput: (event) ->
+    Ember.run @, ->
+      @updateInputSize()
+      return undefined
+
   hasMembers: (->
     ! Ember.isEmpty(@get('membersToAdd'))
   ).property('membersToAdd.[]')
@@ -124,7 +131,6 @@ App.CreateRoomModalView = Ember.View.extend
     return unless @currentState == Ember.View.states.inDOM
     # Resize text input so it fits on the last line.
     $item = @$('.add-members-list-item:last')
-    $text = @$('.create-room-add-text')
     if $item? && $item.size() > 0
       offset = $item.position()
       left = (offset?.left ? 0) + $item.outerWidth(true)
@@ -133,7 +139,14 @@ App.CreateRoomModalView = Ember.View.extend
 
     fullWidth = @$('.add-text-visual').width()
     lastLineWidth = fullWidth - left
-    width = if lastLineWidth < 50
+
+    # Measure the width of the text.  If the text overflows, wrap to the next
+    # full line.
+    $text = @$('.create-room-add-text')
+    text = $text.val()
+    textWidth = App.TextMeasure.measure(text)
+
+    width = if lastLineWidth < 50 || lastLineWidth < textWidth
       fullWidth
     else
       lastLineWidth
