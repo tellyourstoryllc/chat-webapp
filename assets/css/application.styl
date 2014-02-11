@@ -2152,7 +2152,7 @@ room-content-margin-height = 10px
     text-align right
 
 .create-room-form
-  dialog-width = 365px
+  dialog-width = 455px
   width dialog-width
   margin-left -182px // Negative width divided by 2.
   margin-top -144px // Negative height divided by 2.
@@ -2178,35 +2178,40 @@ room-content-margin-height = 10px
     margin-bottom 3px
     font-weight normal
 
-  .help-text-below-group-title
-    margin -5px 0 5px 0
-    color #888
-    font-size 80%
-
   .help-text
     margin 0 5px 0 0
     color #888
     font-size 80%
 
-  .add-members-list
-    max-height 67px
-    overflow-y auto
+  .add-text-visual
+    position relative // So that input can be resized based on list items.
     border 1px solid #d4d4d4
-    padding 0 3px
+    padding 3px 5px
+    background-color #fff
+
+  .background-placeholder
+    position absolute
+    z-index -1
+
+  .add-members-list
+    padding 2px
     background-color #fff
 
     &.hidden
       display none
 
   .add-members-list-item
-    margin-top 3px
-    margin-bottom 3px
-    max-width 95%
+    display inline-block
+    max-width 100%
+    margin-right 3px
+    border 1px solid #d4d4d4
+    border-radius 4px
+    padding 2px 0 2px 3px
+    background-color #f0f0f0
+    vertical-align top
     overflow ellipsis
     line-height 1.2
-
-    &.no-members
-      color #aaa
+    cursor default
 
   .remove
     padding 0 3px
@@ -2217,36 +2222,21 @@ room-content-margin-height = 10px
       color #444
 
   input[type=text]
-    padding-top 9px
-    padding-bottom 9px
+    padding-top 6px
+    padding-bottom 6px
     outline 0
     background-color #fff
 
-  button-width = 78px
-  .add-text-container
-    float left
-    width 100%
-    margin-right -(button-width)
-
   .create-room-add-text
-    width (dialog-width - button-width) !important
-    margin-right button-width !important
-    height 39px
-    border-bottom-width 0 !important
-
-  .add-member-button
-    float left
-    width button-width
-    height 39px
-    border-top-left-radius 0
-    border-bottom-left-radius 0
-    border-bottom-right-radius 0
+    border-width 0 !important
+    padding 2px 0 !important
+    background-color transparent !important
 
   .room-name-container
     text-align right
 
   .room-name-text
-    width 215px !important
+    width 302px !important
 
   .form-actions
     margin-top 20px

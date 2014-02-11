@@ -22,7 +22,8 @@ App.CreateRoomModalView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick')
+    _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick',
+              'onAddTextBlur', 'onAddTextKeyDown')
 
     @set('membersToAdd', []) if ! @get('membersToAdd')?
 
@@ -31,10 +32,14 @@ App.CreateRoomModalView = Ember.View.extend
   didInsertElement: ->
     $('body').on 'keydown', @onBodyKeyDown
     @$('.page-overlay').on 'click', @onOverlayClick
+    @$('.create-room-add-text').on 'blur', @onAddTextBlur
+    @$('.create-room-add-text').on 'keydown', @onAddTextKeyDown
 
   willDestroyElement: ->
     $('body').off 'keydown', @onBodyKeyDown
     @$('.page-overlay').off 'click', @onOverlayClick
+    @$('.create-room-add-text').off 'blur', @onAddTextBlur
+    @$('.create-room-add-text').off 'keydown', @onAddTextKeyDown
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
@@ -70,9 +75,71 @@ App.CreateRoomModalView = Ember.View.extend
     else
       "#{currentUserName}'s Room"
 
+  onAddTextBlur: (event) ->
+    Ember.run @, ->
+      $text = @$('.create-room-add-text')
+      text = $text.val()
+      if ! Ember.isEmpty(text) && @isAddMemberTextValid(text)
+        @send('addUsersToGroupLocally')
+      return undefined
+
+  onAddTextKeyDown: (event) ->
+    Ember.run @, ->
+      # No key modifiers.
+      if ! ( event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)
+        switch event.which
+          when 188 # Comma.
+            # If the cursor is at the end, try to add the text.
+            $text = @$('.create-room-add-text')
+            text = $text.val()
+            range = $text.textrange('get')
+            if range.position == text.length
+              @send('addUsersToGroupLocally')
+              event.preventDefault()
+              event.stopPropagation()
+          when 8 # Backspace.
+            $text = @$('.create-room-add-text')
+            text = $text.val()
+            if text == ''
+              # Text is empty and user is backspacing.  Remove the last user.
+              @get('membersToAdd').popObject()
+              event.preventDefault()
+              event.stopPropagation()
+      return undefined
+
   hasMembers: (->
     ! Ember.isEmpty(@get('membersToAdd'))
   ).property('membersToAdd.[]')
+
+  showPlaceholder: (->
+    text = @get('createRoomUserAutocompleteView.text')
+    Ember.isEmpty(@get('membersToAdd')) && Ember.isEmpty(text)
+  ).property('membersToAdd.[]', 'createRoomUserAutocompleteView.text')
+
+  membersToAddChanged: (->
+    Ember.run.scheduleOnce 'afterRender', @, 'updateInputSize'
+  ).observes('membersToAdd.[]').on('didInsertElement')
+
+  updateInputSize: ->
+    return unless @currentState == Ember.View.states.inDOM
+    # Resize text input so it fits on the last line.
+    $item = @$('.add-members-list-item:last')
+    $text = @$('.create-room-add-text')
+    if $item? && $item.size() > 0
+      offset = $item.position()
+      left = (offset?.left ? 0) + $item.outerWidth(true)
+    else
+      left = 0
+
+    fullWidth = @$('.add-text-visual').width()
+    lastLineWidth = fullWidth - left
+    width = if lastLineWidth < 50
+      fullWidth
+    else
+      lastLineWidth
+
+    $text.css
+      width: width
 
   _addUsersToGroup: (group) ->
     return if @get('isSendingAddUsersToGroup')
@@ -111,11 +178,6 @@ App.CreateRoomModalView = Ember.View.extend
       @set('createGroupErrorMessage', App.userMessageFromError(xhr))
       return false
 
-  isAddMemberUiDisabled: (->
-    isValid = @isAddMemberTextValid(@get('createRoomUserAutocompleteView.text'))
-    @get('isCreateGroupUiDisabled') || ! isValid
-  ).property('isCreateGroupUiDisabled', 'createRoomUserAutocompleteView.text')
-
   isAddMemberTextValid: (text) ->
     # Simple email-ish regex.
     /.*\S.*@\S+\.[a-zA-Z0-9\-]{2,}/.test(text)
@@ -141,6 +203,10 @@ App.CreateRoomModalView = Ember.View.extend
 
       # Hide suggestions.
       @set('isAddUserSuggestionsShowing', false)
+
+      # Focus the input.
+      @$('.create-room-add-text').focus()
+
       return undefined
 
     addUsersToGroupLocally: ->
@@ -165,9 +231,6 @@ App.CreateRoomModalView = Ember.View.extend
         # Clear dialog.
         @$('.create-room-add-text').val('').trigger('input')
         @set('createGroupErrorMessage', null)
-        # Scroll into view.
-        $e = @$('.add-members-list')
-        $e.animate { scrollTop: $e.get(0).scrollHeight }, 200
 
       return undefined
 

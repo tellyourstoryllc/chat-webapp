@@ -8,35 +8,28 @@
       {{/if}}
       <div class='control-group add-members-control-group'>
         <div class='group-title'>Who would you like in your room?</div>
-        <div class='help-text-below-group-title'>Separate multiple addresses with commas.</div>
         <form {{action 'addUsersToGroupLocally' target=createRoomView on='submit'}}>
-          <div class='add-text-container'>
-            <input type='text' class='create-room-add-text' autocomplete='off'
-              placeholder='Name or Email'>
-          </div>
-          <button type='submit'
-            {{bind-attr class=':app-btn :btn-flat :add-member-button createRoomView.isAddMemberUiDisabled::btn-green'}}
-            {{bind-attr disabled='createRoomView.isAddMemberUiDisabled'}}>
-            Add
-          </button>
-          <div class='clearfix'></div>
-
-          <div class='add-members-list'>
+          <div class='add-text-visual'>
+            {{#if createRoomView.showPlaceholder}}
+              <div class='background-placeholder'>
+                Names or Emails separated by commas (optional)
+              </div>
+            {{/if}}
             {{#each user in createRoomView.membersToAdd}}
-              <div class='add-members-list-item'>
-                <span class='remove' {{action 'removeMember' user target=createRoomView}} title='Remove'>&times;</span>
+              <span class='add-members-list-item'>
                 <span class='name'>{{user.name}}</span>
-              </div>
-            {{else}}
-              <div class='add-members-list-item no-members'>
-                (no members added yet)
-              </div>
+                <span class='remove' {{action 'removeMember' user target=createRoomView}} title='Remove'>&times;</span>
+              </span>
             {{/each}}
+            <input type='text' class='create-room-add-text' autocomplete='off'
+              autocapitalize='off'>
+            <div class='clearfix'></div>
           </div>
         </form>
         {{user-autocomplete viewName='createRoomUserAutocompleteView'
           classNames='add-user-autocomplete'
           inputSelector='.create-room-add-text'
+          positionRelativeToSelector='.add-text-visual'
           users=arrangedContacts
           showAll=false
           useAtSignPrefix=false

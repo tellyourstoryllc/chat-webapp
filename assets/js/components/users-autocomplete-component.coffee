@@ -54,11 +54,11 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
 
   updatePosition: ->
     return unless @currentState == Ember.View.states.inDOM
-    $input = $(@get('inputSelector'))
-    offset = $input.position()
+    $ref = $(@get('positionRelativeToSelector') ? @get('inputSelector'))
+    offset = $ref.position()
     return unless offset?
     @$().css
-      top: offset.top + $input.outerHeight()
+      top: offset.top + $ref.outerHeight()
       bottom: 'auto'
 
   # options
