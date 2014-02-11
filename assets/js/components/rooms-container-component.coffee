@@ -456,7 +456,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       event.preventDefault()
 
       # Insert mention text.
-      textarea.textrange('replace', "@#{user.get('mentionName')} ")
+      textarea.textrange('replace', "@#{user.get('mentionName')} ")
 
       # Deselect the text we just inserted by moving the cursor to the end.
       curSel = textarea.textrange('get')
@@ -876,7 +876,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       .always =>
         @set('isSettingPassword', false)
       .then (json) =>
-        if ! json? || json.error?
+        if ! json? || json.error?
           @set('setPasswordBannerErrorMessage', App.userMessageFromError(json))
           return
         @set('showSetPasswordBanner', false)
@@ -1171,7 +1171,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
       if ! isAdding
         @setProperties
-          inviteDialogErrorMessage: "Start typing a contact name or enter an email address."
+          inviteDialogErrorMessage: "Start typing a contact name or enter an email address."
           inviteDialogAlertIsError: true
         return
 

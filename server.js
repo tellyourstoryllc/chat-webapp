@@ -1,6 +1,6 @@
 require('coffee-script');
 
-// TODO: Remove this since it's not safe!
+// TODO: Remove this since it's not safe!
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 var express = require('express');
@@ -13,7 +13,7 @@ var request = require('request');
 var app = express();
 var config = require('./config').getConfig(process.env.NODE_ENV || 'development', app, express);
 
-// Expose environment to web app.
+// Expose environment to web app.
 config.env = config.env || process.env.NODE_ENV || 'development';
 
 app.set('port', process.env.PORT || 3001);

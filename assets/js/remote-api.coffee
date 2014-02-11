@@ -253,7 +253,7 @@ App.RemoteApi = Ember.Object.extend
     _.extend data, @defaultParams()
     delete data.token
 
-    @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data, _appUseDefaults: false)
+    @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data, _appUseDefaults: false)
 
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
