@@ -324,7 +324,7 @@
     <strong>email</strong> address:
   </div>
   <div class='add-text-container'>
-    <form {{action 'addUsersToGroup' target=roomsContainer on='submit'}}>
+    <form {{action 'addUsersToGroup' on='submit'}}>
       <div {{bind-attr class=':alert inviteDialogErrorMessage::hidden inviteDialogAlertIsError:alert-error'}}>
         {{inviteDialogErrorMessage}}
       </div>
@@ -343,9 +343,8 @@
     useAtSignPrefix=false
     maxSuggestions=10
     showCurrentUser=false
-    matchText=roomsContainer.addUserSuggestMatchText
-    suggestions=roomsContainer.addUserSuggestions
-    isShowing=roomsContainer.isAddUserSuggestionsShowing
-    didSelectSuggestion='didSelectAddUserSuggestion'
-    target=roomsContainer}}
+    matchText=addUserSuggestMatchText
+    suggestions=addUserSuggestions
+    isShowing=isAddUserSuggestionsShowing
+    didSelectSuggestion='didSelectAddUserSuggestion'}}
 </div>
