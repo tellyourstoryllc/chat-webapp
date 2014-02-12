@@ -577,7 +577,11 @@ input, button, select, textarea
       display inline-block
       max-width 200px
       overflow ellipsis
-      line-height 1.2
+
+      // Line height is busted on Safari.
+      margin-bottom 2px
+      line-height 16px
+      vertical-align text-top
 
     > .remove
       position relative
