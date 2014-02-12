@@ -136,7 +136,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
     # full line.
     $text = @$('.text-input')
     text = $text.val()
-    textWidth = App.TextMeasure.measure(text)
+    textWidth = App.TextMeasure.measure(text, css: { font: $text.css('font') })
 
     width = if lastLineWidth < 50 || lastLineWidth < textWidth
       fullWidth
