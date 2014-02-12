@@ -44,14 +44,17 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   highlightedSelection: null
 
+  hasLogicalFocus: false
+
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown',
+    _.bindAll(@, 'onDocumentClick', 'onBodyKeyDown',
       'onAddTextFocus', 'onAddTextBlur', 'onAddTextKeyDown', 'onAddTextInput')
     @set('userSelections', []) if ! @get('userSelections')?
 
   didInsertElement: ->
     @_super(arguments...)
+    $(document).on 'click', @onDocumentClick
     $('body').on 'keydown', @onBodyKeyDown
     @$('.text-input').on 'focus', @onAddTextFocus
     @$('.text-input').on 'blur', @onAddTextBlur
@@ -60,6 +63,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   willDestroyElement: ->
     @_super(arguments...)
+    $(document).off 'click', @onDocumentClick
     $('body').off 'keydown', @onBodyKeyDown
     @$('.text-input').off 'focus', @onAddTextFocus
     @$('.text-input').off 'blur', @onAddTextBlur
@@ -82,11 +86,35 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
     Ember.run.scheduleOnce 'afterRender', @, 'updateInputSize'
   ).observes('userSelections.[]').on('didInsertElement')
 
+  onDocumentClick: (event) ->
+    Ember.run @, ->
+      if $(event.target).closest('.visual-text-ui').get(0) == @$('.visual-text-ui').get(0)
+        # Clicked inside the component.
+        @set('hasLogicalFocus', true)
+      else
+        # Clicked outside the component.
+        @set('hasLogicalFocus', false)
+        @send('unhighlightSelection')
+        # Continue with default.
+      return undefined
+
   onBodyKeyDown: (event) ->
     Ember.run @, ->
+      # If we're not focused, ignore.
+      return unless @get('hasLogicalFocus')
       # No key modifiers.
       if ! ( event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)
         switch event.which
+          when 9, 39 # Tab, right arrow.
+            selection = @get('highlightedSelection')
+            if selection?
+              # TODO: Move to the next selection?
+
+              # Unhighlight.
+              @send('unhighlightSelection')
+              # Focus the input.
+              @$('.text-input').focus()
+              event.preventDefault()
           when 8, 46 # Backspace, delete.
             selection = @get('highlightedSelection')
             if selection?
@@ -97,11 +125,11 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
               @$('.text-input').focus()
 
               event.preventDefault()
-              event.stopPropagation()
       return undefined
 
   onAddTextFocus: (event) ->
     Ember.run @, ->
+      @set('hasLogicalFocus', true)
       @send('unhighlightSelection')
       # Continue with default.  This is in addition to the default.
       return undefined
