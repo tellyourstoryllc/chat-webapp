@@ -26,5 +26,8 @@ Modernizr.addTest "android", ->
 ###########################################################
 # IE
 
+Modernizr.addTest "msie", ->
+  !! navigator.userAgent.match(/MSIE/)
+
 Modernizr.addTest "msie9", ->
   !! navigator.userAgent.match(/MSIE 9\./)
