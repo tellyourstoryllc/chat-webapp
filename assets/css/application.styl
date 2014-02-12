@@ -559,16 +559,19 @@ input, button, select, textarea
 
   .selection-list-item
     display inline-block
-    max-width 100%
     margin 1px 3px 0 0
     border 1px solid #d4d4d4
     border-radius 4px
     padding 2px 0 2px 3px
     background-color #f0f0f0
     vertical-align top
-    overflow ellipsis
     line-height 1.2
     cursor default
+
+    > .name
+      display inline-block
+      max-width 200px
+      overflow ellipsis
 
   .remove
     padding 0 3px
