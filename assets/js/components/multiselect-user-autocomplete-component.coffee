@@ -37,7 +37,10 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   #########################################################
   # Internal
+
   text: ''
+
+  prevInputWidth: null
 
   init: ->
     @_super(arguments...)
@@ -136,6 +139,19 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
     $text.css
       width: width
+
+    # Resizing could move expand or contract the input box by a line, and the
+    # autocomplete suggestions may need to move.
+    prevInputWidth = @get('prevInputWidth')
+    if ! prevInputWidth? || prevInputWidth != width
+      @get('userAutocompleteView').updatePosition()
+    @set('prevInputWidth', width)
+
+  userErrorMessageChanged: (->
+    # Size of the error message can move the text box.
+    Ember.run.schedule 'afterRender', @, ->
+      @get('userAutocompleteView').updatePosition()
+  ).observes('userErrorMessage')
 
   # TODO: validation should be specified by the caller.
   isAddItemTextValid: (text) ->
