@@ -1,0 +1,25 @@
+<form {{action 'addSelection' on='submit'}}>
+  <div class='visual-text-ui'>
+    {{#each selection in userSelections}}
+      <span {{bind-attr class=':selection-list-item selection.isHighlighted:active'}}
+        {{action 'highlightSelection' selection}}>
+        <span class='name'>{{selection.name}}</span>
+        <span class='remove' {{action 'removeSelection' selection bubbles=false}} title='Remove'>&times;</span>
+      </span>
+    {{/each}}
+    <input type='text' class='text-input' autocomplete='off'
+      autocapitalize='off' {{bind-attr placeholder='placeholder'}}>
+  </div>
+</form>
+{{user-autocomplete viewName='userAutocompleteView'
+  inputSelector='.text-input'
+  positionRelativeToSelector='.visual-text-ui'
+  users=users
+  showAll=false
+  useAtSignPrefix=false
+  maxSuggestions=maxSuggestions
+  showCurrentUser=showCurrentUser
+  matchFullText=true
+  text=text
+  isShowing=areSuggestionsShowing
+  didSelectSuggestion='didSelectSuggestion'}}

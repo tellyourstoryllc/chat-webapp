@@ -46,8 +46,10 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   # Array of lowercase strings that this user should be suggested for when
   # autocompleting.
   suggestFor: (->
-    [@get('mentionName')].concat(@get('name').split(/\s+/))
-    .map (s) -> s.toLowerCase()
+    name = @get('name')
+    [@get('mentionName'), name].concat(name.split(/\s+/))
+    .map((s) -> s.toLowerCase())
+    .uniq()
   ).property('mentionName', 'name')
 
   shouldDisplayIdleDuration: (->

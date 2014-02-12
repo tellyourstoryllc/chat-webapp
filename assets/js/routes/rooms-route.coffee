@@ -212,7 +212,8 @@ App.RoomsRoute = Ember.Route.extend
       Ember.run.schedule 'afterRender', @, ->
         $('.create-room-overlay').removeClass('hidden')
         $('.create-room-form').addClass('expand-in')
-        $('.create-room-add-text').focus()
+        # IE hides placeholder text on focus, so don't focus on IE.
+        $('.text-input').focus() if ! Modernizr.msie
       return undefined
 
     hideCreateRoomDialog: ->

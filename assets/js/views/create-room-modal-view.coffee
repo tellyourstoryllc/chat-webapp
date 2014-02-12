@@ -8,23 +8,16 @@ App.CreateRoomModalView = Ember.View.extend
 
   createGroupErrorMessage: null
 
-  addUserSuggestMatchText: ''
-  addUserSuggestions: null
-  isAddUserSuggestionsShowing: false
-  addUserSelection: null
-
-  membersToAdd: null
-
   # This gets set after we create a group.
   group: null
 
   isCreateGroupUiDisabled: Ember.computed.any('isCreatingGroup', 'isSendingAddUsersToGroup')
 
+  membersToAdd: Ember.computed.alias('createRoomUserMultiselectView.userSelections')
+
   init: ->
     @_super(arguments...)
     _.bindAll(@, 'onBodyKeyDown', 'onOverlayClick')
-
-    @set('membersToAdd', []) if ! @get('membersToAdd')?
 
     @set('newRoomName', @_defaultRoomName()) if Ember.isEmpty(@get('newRoomName'))
 
@@ -70,10 +63,6 @@ App.CreateRoomModalView = Ember.View.extend
     else
       "#{currentUserName}'s Room"
 
-  hasMembers: (->
-    ! Ember.isEmpty(@get('membersToAdd'))
-  ).property('membersToAdd.[]')
-
   _addUsersToGroup: (group) ->
     return if @get('isSendingAddUsersToGroup')
 
@@ -81,11 +70,12 @@ App.CreateRoomModalView = Ember.View.extend
     data = {}
     userIds = []
     emails = []
-    @get('membersToAdd').forEach (u) =>
+    @get('membersToAdd').forEach (selection) =>
+      u = selection.get('object')
       if u instanceof App.User
         userIds.push(u.get('id'))
       else
-        emails.push(u.get('name'))
+        emails.push(selection.get('name'))
     
     if userIds.length > 0
       data.user_ids = userIds.join(',')
@@ -111,69 +101,8 @@ App.CreateRoomModalView = Ember.View.extend
       @set('createGroupErrorMessage', App.userMessageFromError(xhr))
       return false
 
-  isAddMemberUiDisabled: (->
-    isValid = @isAddMemberTextValid(@get('createRoomUserAutocompleteView.text'))
-    @get('isCreateGroupUiDisabled') || ! isValid
-  ).property('isCreateGroupUiDisabled', 'createRoomUserAutocompleteView.text')
-
-  isAddMemberTextValid: (text) ->
-    # Simple email-ish regex.
-    /.*\S.*@\S+\.[a-zA-Z0-9\-]{2,}/.test(text)
-
 
   actions:
-
-    didSelectAddUserSuggestion: (suggestion) ->
-      # User selected a suggestion.  Expand the value into the text.
-      $text = @$('.create-room-add-text')
-      user = suggestion.get('user')
-      if user?
-        name = user.get('name') ? ''
-        $text.val(name).trigger('input')
-        # Move the cursor to the end of the expansion.
-        $text.textrange('set', name.length + 1, 0)
-
-        # Set selection *after* clearing text.
-        @set('addUserSelection', user)
-
-        # Add immediately.
-        @send('addUsersToGroupLocally')
-
-      # Hide suggestions.
-      @set('isAddUserSuggestionsShowing', false)
-      return undefined
-
-    addUsersToGroupLocally: ->
-      isAdding = false
-      text = @$('.create-room-add-text').val()
-      if (user = @get('addUserSelection'))?
-        isAdding = true
-        @get('membersToAdd').addObject(user)
-        # Clear user selection.
-        @set('addUserSelection', null)
-      else if ! Ember.isEmpty(text)
-        addresses = text.split(',')
-        addresses.forEach (address) =>
-          if @isAddMemberTextValid(address)
-            isAdding = true
-            obj = Ember.Object.create(name: address, _instantiatedFrom: 'text')
-            @get('membersToAdd').addObject(obj)
-        if ! isAdding
-          @set('createGroupErrorMessage', "Must be a valid email address.")
-
-      if isAdding
-        # Clear dialog.
-        @$('.create-room-add-text').val('').trigger('input')
-        @set('createGroupErrorMessage', null)
-        # Scroll into view.
-        $e = @$('.add-members-list')
-        $e.animate { scrollTop: $e.get(0).scrollHeight }, 200
-
-      return undefined
-
-    removeMember: (user) ->
-      @get('membersToAdd').removeObject(user)
-      return undefined
 
     createRoom: ->
       afterCreatingGroup = (wasSuccessful) =>

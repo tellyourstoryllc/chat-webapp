@@ -549,6 +549,64 @@ input, button, select, textarea
   background-color #EDEDED
   box-shadow 0 0 40px rgba(0,0,0, 1)
 
+.multiselect-user-autocomplete-component
+  // The visual representation of the text input.
+  .visual-text-ui
+    position relative // So that input can be resized based on list items.
+    border 1px solid #d4d4d4
+    padding 3px 5px
+    background-color #fff
+
+  .selection-list-item
+    display inline-block
+    margin 1px 3px 0 0
+    border 1px solid #d4d4d4
+    border-radius 4px
+    padding 2px 0 0 3px
+    background-color #f0f0f0
+    color #000
+    vertical-align top
+    cursor default
+
+    &.active
+      border-color #2065e3
+      background-color #417ACE
+      color #f0f0f0
+
+    > .name
+      display inline-block
+      max-width 200px
+      overflow ellipsis
+
+      // Line height is busted on Safari.
+      margin-bottom 2px
+      line-height 16px
+      vertical-align text-top
+
+    > .remove
+      position relative
+      top -2px
+      padding 0 3px
+      color #aaa
+      cursor pointer
+
+      &:hover
+        color #444
+
+    &.active
+      > .remove
+        color #ccc
+
+        &:hover
+          color #fff
+
+  input[type=text].text-input
+    border-width 0
+    padding 2px 0
+    background-color transparent
+    box-shadow none
+    outline 0
+
 settings-dialog-width = 380px
 .settings-dialog
   box-sizing border-box
@@ -2152,9 +2210,9 @@ room-content-margin-height = 10px
     text-align right
 
 .create-room-form
-  dialog-width = 365px
+  dialog-width = 471px
   width dialog-width
-  margin-left -182px // Negative width divided by 2.
+  margin-left -(dialog-width / 2)
   margin-top -144px // Negative height divided by 2.
   overflow visible // So that autocomplete suggestions show.
 
@@ -2178,75 +2236,22 @@ room-content-margin-height = 10px
     margin-bottom 3px
     font-weight normal
 
-  .help-text-below-group-title
-    margin -5px 0 5px 0
-    color #888
-    font-size 80%
-
   .help-text
     margin 0 5px 0 0
     color #888
     font-size 80%
 
-  .add-members-list
-    max-height 67px
-    overflow-y auto
-    border 1px solid #d4d4d4
-    padding 0 3px
-    background-color #fff
-
-    &.hidden
-      display none
-
-  .add-members-list-item
-    margin-top 3px
-    margin-bottom 3px
-    max-width 95%
-    overflow ellipsis
-    line-height 1.2
-
-    &.no-members
-      color #aaa
-
-  .remove
-    padding 0 3px
-    color #aaa
-    cursor pointer
-
-    &:hover
-      color #444
-
   input[type=text]
-    padding-top 9px
-    padding-bottom 9px
+    padding-top 6px
+    padding-bottom 6px
     outline 0
     background-color #fff
-
-  button-width = 78px
-  .add-text-container
-    float left
-    width 100%
-    margin-right -(button-width)
-
-  .create-room-add-text
-    width (dialog-width - button-width) !important
-    margin-right button-width !important
-    height 39px
-    border-bottom-width 0 !important
-
-  .add-member-button
-    float left
-    width button-width
-    height 39px
-    border-top-left-radius 0
-    border-bottom-left-radius 0
-    border-bottom-right-radius 0
 
   .room-name-container
     text-align right
 
   .room-name-text
-    width 215px !important
+    width 312px !important
 
   .form-actions
     margin-top 20px
