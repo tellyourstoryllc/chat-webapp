@@ -1,6 +1,6 @@
 #= require vendor/jquery
 #= require vendor/handlebars.runtime
-#= require vendor/ember.prod
+#= require vendor/ember.prod
 #= require vendor/ba-linkify
 #= require vendor/underscore
 #= require vendor/modernizr
