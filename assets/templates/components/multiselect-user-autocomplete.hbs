@@ -1,9 +1,10 @@
 <form {{action 'addSelection' on='submit'}}>
   <div class='visual-text-ui'>
     {{#each selection in userSelections}}
-      <span class='selection-list-item'>
+      <span {{bind-attr class=':selection-list-item selection.isHighlighted:active'}}
+        {{action 'highlightSelection' selection}}>
         <span class='name'>{{selection.name}}</span>
-        <span class='remove' {{action 'removeSelection' selection}} title='Remove'>&times;</span>
+        <span class='remove' {{action 'removeSelection' selection bubbles=false}} title='Remove'>&times;</span>
       </span>
     {{/each}}
     <input type='text' class='text-input' autocomplete='off'

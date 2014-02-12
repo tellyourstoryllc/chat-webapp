@@ -42,19 +42,26 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   prevInputWidth: null
 
+  highlightedSelection: null
+
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onAddTextBlur', 'onAddTextKeyDown', 'onAddTextInput')
+    _.bindAll(@, 'onBodyKeyDown',
+      'onAddTextFocus', 'onAddTextBlur', 'onAddTextKeyDown', 'onAddTextInput')
     @set('userSelections', []) if ! @get('userSelections')?
 
   didInsertElement: ->
     @_super(arguments...)
+    $('body').on 'keydown', @onBodyKeyDown
+    @$('.text-input').on 'focus', @onAddTextFocus
     @$('.text-input').on 'blur', @onAddTextBlur
     @$('.text-input').on 'keydown', @onAddTextKeyDown
     @$('.text-input').on 'input', @onAddTextInput
 
   willDestroyElement: ->
     @_super(arguments...)
+    $('body').off 'keydown', @onBodyKeyDown
+    @$('.text-input').off 'focus', @onAddTextFocus
     @$('.text-input').off 'blur', @onAddTextBlur
     @$('.text-input').off 'keydown', @onAddTextKeyDown
     @$('.text-input').off 'input', @onAddTextInput
@@ -75,6 +82,30 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
     Ember.run.scheduleOnce 'afterRender', @, 'updateInputSize'
   ).observes('userSelections.[]').on('didInsertElement')
 
+  onBodyKeyDown: (event) ->
+    Ember.run @, ->
+      # No key modifiers.
+      if ! ( event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)
+        switch event.which
+          when 8, 46 # Backspace, delete.
+            selection = @get('highlightedSelection')
+            if selection?
+              # Remove the highlighted selection.
+              @send('removeHighlightedSelection')
+
+              # Focus the input.
+              @$('.text-input').focus()
+
+              event.preventDefault()
+              event.stopPropagation()
+      return undefined
+
+  onAddTextFocus: (event) ->
+    Ember.run @, ->
+      @send('unhighlightSelection')
+      # Continue with default.  This is in addition to the default.
+      return undefined
+
   onAddTextBlur: (event) ->
     Ember.run @, ->
       @_super?(event)
@@ -82,6 +113,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
       text = $text.val()
       if ! Ember.isEmpty(text) && @isAddItemTextValid(text)
         @send('addSelection')
+        # Continue with default.  This is in addition to the default.
       return undefined
 
   onAddTextKeyDown: (event) ->
@@ -108,10 +140,15 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
             $text = @$('.text-input')
             text = $text.val()
             if text == ''
-              # Text is empty and user is backspacing.  Remove the last user.
-              @get('userSelections').popObject()
-              event.preventDefault()
-              event.stopPropagation()
+              # Text is empty and user is backspacing.  Highlight the last
+              # selection.
+              lastSelection = @get('userSelections.lastObject')
+              if lastSelection?
+                @send('highlightSelection', lastSelection)
+                # Move focus off of input.
+                $text.blur()
+                event.preventDefault()
+                event.stopPropagation()
       return undefined
 
   onAddTextInput: (event) ->
@@ -242,7 +279,33 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
     removeSelection: (selection) ->
       @get('userSelections').removeObject(selection)
+      if @get('highlightedSelection') == selection
+        selection.set('isHighlighted', false)
+        @set('highlightedSelection', null)
       @_sendAction('selectionWasRemoved', selection)
+      return undefined
+
+    removeHighlightedSelection: ->
+      selection = @get('highlightedSelection')
+      @send('removeSelection', selection)
+      return undefined
+
+    highlightSelection: (selection) ->
+      if ! selection?
+        @send('unhighlightSelection')
+        return
+
+      prevSelection = @get('highlightedSelection')
+      prevSelection?.set('isHighlighted', false)
+      @set('highlightedSelection', selection)
+      selection.set('isHighlighted', true)
+      return undefined
+
+    unhighlightSelection: ->
+      selection = @get('highlightedSelection')
+      if selection?
+        selection.set('isHighlighted', false)
+        @set('highlightedSelection', null)
       return undefined
 
 
@@ -254,3 +317,6 @@ App.MultiselectUserAutocompleteSelection = Ember.Object.extend
 
   # The user object that this selection represents.
   object: null
+
+  # True if the user selected this in the UI.
+  isHighlighted: false

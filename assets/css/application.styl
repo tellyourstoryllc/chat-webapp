@@ -564,8 +564,14 @@ input, button, select, textarea
     border-radius 4px
     padding 2px 0 0 3px
     background-color #f0f0f0
+    color #000
     vertical-align top
     cursor default
+
+    &.active
+      border-color #2065e3
+      background-color #598BEC
+      color #fff
 
     > .name
       display inline-block
@@ -573,15 +579,22 @@ input, button, select, textarea
       overflow ellipsis
       line-height 1.2
 
-  .remove
-    position relative
-    top -2px
-    padding 0 3px
-    color #aaa
-    cursor pointer
+    > .remove
+      position relative
+      top -2px
+      padding 0 3px
+      color #aaa
+      cursor pointer
 
-    &:hover
-      color #444
+      &:hover
+        color #444
+
+    &.active
+      > .remove
+        color #ccc
+
+        &:hover
+          color #fff
 
   input[type=text].text-input
     border-width 0
