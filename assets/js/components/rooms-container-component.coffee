@@ -1146,9 +1146,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
         # Set selection *after* clearing text.
         @set('addUserSelection', user)
 
-        # Add immediately.
-        @send('addUsersToGroup')
-
       # Hide suggestions.
       @set('isAddUserSuggestionsShowing', false)
       return undefined
