@@ -2206,9 +2206,9 @@ room-content-margin-height = 10px
     text-align right
 
 .create-room-form
-  dialog-width = 455px
+  dialog-width = 471px
   width dialog-width
-  margin-left -182px // Negative width divided by 2.
+  margin-left -(dialog-width / 2)
   margin-top -144px // Negative height divided by 2.
   overflow visible // So that autocomplete suggestions show.
 
@@ -2247,7 +2247,7 @@ room-content-margin-height = 10px
     text-align right
 
   .room-name-text
-    width 302px !important
+    width 312px !important
 
   .form-actions
     margin-top 20px
