@@ -562,18 +562,20 @@ input, button, select, textarea
     margin 1px 3px 0 0
     border 1px solid #d4d4d4
     border-radius 4px
-    padding 2px 0 2px 3px
+    padding 2px 0 0 3px
     background-color #f0f0f0
     vertical-align top
-    line-height 1.2
     cursor default
 
     > .name
       display inline-block
       max-width 200px
       overflow ellipsis
+      line-height 1.2
 
   .remove
+    position relative
+    top -2px
     padding 0 3px
     color #aaa
     cursor pointer
