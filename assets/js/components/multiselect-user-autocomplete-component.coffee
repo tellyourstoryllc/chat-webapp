@@ -89,13 +89,19 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
   onDocumentClick: (event) ->
     Ember.run @, ->
       if $(event.target).closest('.visual-text-ui').get(0) == @$('.visual-text-ui').get(0)
-        # Clicked inside the component.
+        # Clicked inside the visual text ui.
         @set('hasLogicalFocus', true)
       else
-        # Clicked outside the component.
+        # Clicked outside the visual text ui.
         @set('hasLogicalFocus', false)
         @send('unhighlightSelection')
-        # Continue with default.
+
+        if $(event.target).closest('.multiselect-user-autocomplete-component').size() == 0
+          # Clicked outside the component completely.  Hide autocomplete.
+          @set('areSuggestionsShowing', false)
+
+      # Continue with default event.
+
       return undefined
 
   onBodyKeyDown: (event) ->
