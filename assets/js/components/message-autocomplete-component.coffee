@@ -5,6 +5,9 @@
 App.MessageAutocompleteComponent = Ember.Component.extend
   classNameBindings: [':autocomplete', 'isShowing::hidden']
 
+  # Set to true to send actions to the view instead of the controller.
+  sendActionsTargetIsView: false
+
   # Caller should bind this to collection of objects with name and value
   # properties.  Value is what the item expands to when selected.
   suggestions: null
@@ -38,11 +41,12 @@ App.MessageAutocompleteComponent = Ember.Component.extend
     selectSuggestion: (suggestion) ->
       # Trigger the action on the containing view, instead of the controller,
       # the way `@sendAction()` would.
-      #
-      # @sendAction('didSelectSuggestion', suggestion)
-      actionName = @get('didSelectSuggestion')
-      if actionName?
-        @get('parentView').send(actionName, suggestion)
+      if @get('sendActionsTargetIsView')
+        actionName = @get('didSelectSuggestion')
+        if actionName?
+          @get('parentView').send(actionName, suggestion)
+      else
+        @sendAction('didSelectSuggestion', suggestion)
 
       # Close the autocomplete popup.
       @set('isShowing', false)

@@ -8,38 +8,14 @@
       {{/if}}
       <div class='control-group add-members-control-group'>
         <div class='group-title'>Who would you like in your room?</div>
-        <form {{action 'addUsersToGroupLocally' target=createRoomView on='submit'}}>
-          <div class='add-text-visual'>
-            {{#if createRoomView.showPlaceholder}}
-              <div class='background-placeholder'>
-                Names or Emails separated by commas (optional)
-              </div>
-            {{/if}}
-            {{#each user in createRoomView.membersToAdd}}
-              <span class='add-members-list-item'>
-                <span class='name'>{{user.name}}</span>
-                <span class='remove' {{action 'removeMember' user target=createRoomView}} title='Remove'>&times;</span>
-              </span>
-            {{/each}}
-            <input type='text' class='create-room-add-text' autocomplete='off'
-              autocapitalize='off'>
-            <div class='clearfix'></div>
-          </div>
-        </form>
-        {{user-autocomplete viewName='createRoomUserAutocompleteView'
-          classNames='add-user-autocomplete'
-          inputSelector='.create-room-add-text'
-          positionRelativeToSelector='.add-text-visual'
+        {{multiselect-user-autocomplete viewName='createRoomUserMultiselectView'
+          placeholderText="Names or Emails separated by commas (optional)"
           users=arrangedContacts
-          showAll=false
-          useAtSignPrefix=false
           maxSuggestions=10
           showCurrentUser=false
-          matchText=createRoomView.addUserSuggestMatchText
-          suggestions=createRoomView.addUserSuggestions
-          isShowing=createRoomView.isAddUserSuggestionsShowing
-          didSelectSuggestion='didSelectAddUserSuggestion'
-          target=createRoomView}}
+          areSuggestionsShowing=createRoomView.isAddUserSuggestionsShowing
+          userErrorMessage=createRoomView.createGroupErrorMessage
+          sendActionsTargetIsView=true}}
 
       </div>
 
