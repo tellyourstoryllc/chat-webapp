@@ -212,8 +212,10 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
       text = @$('.text-input').val()
       if (user = @get('addUserSelection'))?
         isAdding = true
-        @get('userSelections').addObject(user)
-        additions.pushObject(user)
+        selection = App.MultiselectUserAutocompleteSelection.create().setProperties
+          object: user
+        @get('userSelections').addObject(selection)
+        additions.pushObject(selection)
         # Clear user selection.
         @set('addUserSelection', null)
       else if ! Ember.isEmpty(text)
@@ -221,9 +223,10 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
         addresses.forEach (address) =>
           if @isAddItemTextValid(address)
             isAdding = true
-            obj = Ember.Object.create(name: address, _instantiatedFrom: 'text')
-            @get('userSelections').addObject(obj)
-            additions.pushObject(obj)
+            selection = App.MultiselectUserAutocompleteSelection.create().setProperties
+              name: address
+            @get('userSelections').addObject(selection)
+            additions.pushObject(selection)
         if ! isAdding
           @set('userErrorMessage', "Must be a valid email address.")
 
@@ -237,7 +240,17 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
       return undefined
 
-    removeSelection: (user) ->
-      @get('userSelections').removeObject(user)
-      @_sendAction('selectionWasRemoved', user)
+    removeSelection: (selection) ->
+      @get('userSelections').removeObject(selection)
+      @_sendAction('selectionWasRemoved', selection)
       return undefined
+
+
+# A single selection.
+App.MultiselectUserAutocompleteSelection = Ember.Object.extend
+
+  # The display name.  Defaults to `object.name` if not set.
+  name: Ember.computed.defaultTo('object.name')
+
+  # The user object that this selection represents.
+  object: null

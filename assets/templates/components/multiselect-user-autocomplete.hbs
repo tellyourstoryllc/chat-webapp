@@ -1,9 +1,9 @@
 <form {{action 'addSelection' on='submit'}}>
   <div class='visual-text-ui'>
-    {{#each user in userSelections}}
+    {{#each selection in userSelections}}
       <span class='selection-list-item'>
-        <span class='name'>{{user.name}}</span>
-        <span class='remove' {{action 'removeSelection' user}} title='Remove'>&times;</span>
+        <span class='name'>{{selection.name}}</span>
+        <span class='remove' {{action 'removeSelection' selection}} title='Remove'>&times;</span>
       </span>
     {{/each}}
     <input type='text' class='text-input' autocomplete='off'

@@ -70,11 +70,12 @@ App.CreateRoomModalView = Ember.View.extend
     data = {}
     userIds = []
     emails = []
-    @get('membersToAdd').forEach (u) =>
+    @get('membersToAdd').forEach (selection) =>
+      u = selection.get('object')
       if u instanceof App.User
         userIds.push(u.get('id'))
       else
-        emails.push(u.get('name'))
+        emails.push(selection.get('name'))
     
     if userIds.length > 0
       data.user_ids = userIds.join(',')
