@@ -95,7 +95,13 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
             text = $text.val()
             range = $text.textrange('get')
             if range.position == text.length
-              @send('addSelection')
+              if @get('areSuggestionsShowing')
+                # Select suggestion if it's showing.
+                @get('userAutocompleteView').send('selectCurrentSuggestion')
+              else
+                # If not showing suggestions, it's probably an email address.
+                # Just add whatever's in the text input.
+                @send('addSelection')
               event.preventDefault()
               event.stopPropagation()
           when 8 # Backspace.
