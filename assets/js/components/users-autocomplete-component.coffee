@@ -7,6 +7,9 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
 
   showAll: true
 
+  # Set to true to match against the full text including spaces.
+  matchFullText: false
+
   useAtSignPrefix: true
 
   showCurrentUser: true
@@ -73,7 +76,12 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
     range = $text.textrange('get')
     beforeCursorText = text[0 ... range.position]
     useAtSignPrefix = @get('useAtSignPrefix')
-    regex = if useAtSignPrefix then /(?:^|\W)(@\S*)$/ else /(?:^|\W)(\S+)$/
+    regex = if @get('matchFullText')
+      /^([\S\s]+)$/
+    else if useAtSignPrefix
+      /(?:^|\W)(@\S*)$/
+    else
+      /(?:^|\W)(\S+)$/
     matches = regex.exec(beforeCursorText)
     if mode == 'auto' && matches
       # @text found; now figure out which names to suggest.
