@@ -1,5 +1,6 @@
 # Actions: didSelectSuggestion, didExpandSuggestion, selectionWasAdded, selectionWasRemoved
 App.MultiselectUserAutocompleteComponent = Ember.Component.extend
+  classNames: ['multiselect-user-autocomplete-component']
 
   #########################################################
   # Input
@@ -45,15 +46,15 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   didInsertElement: ->
     @_super(arguments...)
-    @$('.create-room-add-text').on 'blur', @onAddTextBlur
-    @$('.create-room-add-text').on 'keydown', @onAddTextKeyDown
-    @$('.create-room-add-text').on 'input', @onAddTextInput
+    @$('.text-input').on 'blur', @onAddTextBlur
+    @$('.text-input').on 'keydown', @onAddTextKeyDown
+    @$('.text-input').on 'input', @onAddTextInput
 
   willDestroyElement: ->
     @_super(arguments...)
-    @$('.create-room-add-text').off 'blur', @onAddTextBlur
-    @$('.create-room-add-text').off 'keydown', @onAddTextKeyDown
-    @$('.create-room-add-text').off 'input', @onAddTextInput
+    @$('.text-input').off 'blur', @onAddTextBlur
+    @$('.text-input').off 'keydown', @onAddTextKeyDown
+    @$('.text-input').off 'input', @onAddTextInput
 
   showPlaceholder: (->
     text = @get('text')
@@ -74,7 +75,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
   onAddTextBlur: (event) ->
     Ember.run @, ->
       @_super?(event)
-      $text = @$('.create-room-add-text')
+      $text = @$('.text-input')
       text = $text.val()
       if ! Ember.isEmpty(text) && @isAddItemTextValid(text)
         @send('addSelection')
@@ -87,7 +88,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
         switch event.which
           when 188 # Comma.
             # If the cursor is at the end, try to add the text.
-            $text = @$('.create-room-add-text')
+            $text = @$('.text-input')
             text = $text.val()
             range = $text.textrange('get')
             if range.position == text.length
@@ -95,7 +96,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
               event.preventDefault()
               event.stopPropagation()
           when 8 # Backspace.
-            $text = @$('.create-room-add-text')
+            $text = @$('.text-input')
             text = $text.val()
             if text == ''
               # Text is empty and user is backspacing.  Remove the last user.
@@ -112,19 +113,19 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
   updateInputSize: ->
     return unless @currentState == Ember.View.states.inDOM
     # Resize text input so it fits on the last line.
-    $item = @$('.add-members-list-item:last')
+    $item = @$('.selection-list-item:last')
     if $item? && $item.size() > 0
       offset = $item.position()
       left = (offset?.left ? 0) + $item.outerWidth(true)
     else
       left = 0
 
-    fullWidth = @$('.add-text-visual').width()
+    fullWidth = @$('.visual-text-ui').width()
     lastLineWidth = fullWidth - left
 
     # Measure the width of the text.  If the text overflows, wrap to the next
     # full line.
-    $text = @$('.create-room-add-text')
+    $text = @$('.text-input')
     text = $text.val()
     textWidth = App.TextMeasure.measure(text)
 
@@ -159,7 +160,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
       @_sendAction('didSelectSuggestion', suggestion)
 
       # User selected a suggestion.  Expand the value into the text.
-      $text = @$('.create-room-add-text')
+      $text = @$('.text-input')
       user = suggestion.get('user')
       if user?
         name = user.get('name') ? ''
@@ -177,7 +178,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
       @set('areSuggestionsShowing', false)
 
       # Focus the input.
-      @$('.create-room-add-text').focus()
+      @$('.text-input').focus()
 
       @_sendAction('didExpandSuggestion', suggestion)
 
@@ -186,7 +187,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
     addSelection: ->
       isAdding = false
       additions = []
-      text = @$('.create-room-add-text').val()
+      text = @$('.text-input').val()
       if (user = @get('addUserSelection'))?
         isAdding = true
         @get('userSelections').addObject(user)
@@ -206,7 +207,7 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
       if isAdding
         # Clear dialog.
-        @$('.create-room-add-text').val('').trigger('input')
+        @$('.text-input').val('').trigger('input')
         @set('userErrorMessage', null)
 
         # Notify caller.

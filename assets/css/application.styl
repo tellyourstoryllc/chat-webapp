@@ -549,6 +549,42 @@ input, button, select, textarea
   background-color #EDEDED
   box-shadow 0 0 40px rgba(0,0,0, 1)
 
+.multiselect-user-autocomplete-component
+  // The visual representation of the text input.
+  .visual-text-ui
+    position relative // So that input can be resized based on list items.
+    border 1px solid #d4d4d4
+    padding 3px 5px
+    background-color #fff
+
+  .selection-list-item
+    display inline-block
+    max-width 100%
+    margin 1px 3px 1px 0
+    border 1px solid #d4d4d4
+    border-radius 4px
+    padding 2px 0 2px 3px
+    background-color #f0f0f0
+    vertical-align top
+    overflow ellipsis
+    line-height 1.2
+    cursor default
+
+  .remove
+    padding 0 3px
+    color #aaa
+    cursor pointer
+
+    &:hover
+      color #444
+
+  input[type=text].text-input
+    border-width 0
+    padding 2px 0
+    background-color transparent
+    box-shadow none
+    outline 0
+
 settings-dialog-width = 380px
 .settings-dialog
   box-sizing border-box
@@ -2183,51 +2219,11 @@ room-content-margin-height = 10px
     color #888
     font-size 80%
 
-  .add-text-visual
-    position relative // So that input can be resized based on list items.
-    border 1px solid #d4d4d4
-    padding 3px 5px
-    background-color #fff
-
-  .add-members-list
-    padding 2px
-    background-color #fff
-
-    &.hidden
-      display none
-
-  .add-members-list-item
-    display inline-block
-    max-width 100%
-    margin 1px 3px 1px 0
-    border 1px solid #d4d4d4
-    border-radius 4px
-    padding 2px 0 2px 3px
-    background-color #f0f0f0
-    vertical-align top
-    overflow ellipsis
-    line-height 1.2
-    cursor default
-
-  .remove
-    padding 0 3px
-    color #aaa
-    cursor pointer
-
-    &:hover
-      color #444
-
   input[type=text]
     padding-top 6px
     padding-bottom 6px
     outline 0
     background-color #fff
-
-  .create-room-add-text
-    border-width 0 !important
-    padding 2px 0 !important
-    background-color transparent !important
-    box-shadow none !important
 
   .room-name-container
     text-align right

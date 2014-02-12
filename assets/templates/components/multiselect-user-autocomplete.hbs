@@ -1,19 +1,18 @@
 <form {{action 'addSelection' on='submit'}}>
-  <div class='add-text-visual'>
+  <div class='visual-text-ui'>
     {{#each user in userSelections}}
-      <span class='add-members-list-item'>
+      <span class='selection-list-item'>
         <span class='name'>{{user.name}}</span>
         <span class='remove' {{action 'removeSelection' user}} title='Remove'>&times;</span>
       </span>
     {{/each}}
-    <input type='text' class='create-room-add-text' autocomplete='off'
+    <input type='text' class='text-input' autocomplete='off'
       autocapitalize='off' {{bind-attr placeholder='placeholder'}}>
   </div>
 </form>
 {{user-autocomplete viewName='userAutocompleteView'
-  classNames='add-user-autocomplete'
-  inputSelector='.create-room-add-text'
-  positionRelativeToSelector='.add-text-visual'
+  inputSelector='.text-input'
+  positionRelativeToSelector='.visual-text-ui'
   users=users
   showAll=false
   useAtSignPrefix=false
