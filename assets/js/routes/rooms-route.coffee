@@ -212,6 +212,7 @@ App.RoomsRoute = Ember.Route.extend
       Ember.run.schedule 'afterRender', @, ->
         $('.create-room-overlay').removeClass('hidden')
         $('.create-room-form').addClass('expand-in')
+        $('.text-input').focus()
       return undefined
 
     hideCreateRoomDialog: ->
