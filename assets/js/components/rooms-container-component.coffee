@@ -246,6 +246,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       width: width
       height: height
 
+    # Autocomplete suggestions height.
+    @$('.autocomplete').css
+      'max-height': height - 100
+      'overflow-y': 'auto'
+
     # The send message area, including textarea and send button.
     @$('.send-message-area').css
       width: width
