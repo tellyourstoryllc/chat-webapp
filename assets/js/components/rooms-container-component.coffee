@@ -40,8 +40,6 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   isSendingAddUsersToGroup: false
 
   # State for invite dialog user autocomplete.
-  addUserSuggestMatchText: ''
-  addUserSuggestions: null
   isAddUserSuggestionsShowing: false
 
   isSendingRoomAvatar: false
@@ -120,7 +118,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       if event.which == 27 # Escape.
         # Hide dialogs.
         @closeRoomMenu() if @get('isRoomMenuVisible')
-        if @get('isInviteDialogVisible') && ! @get('userAutocompleteView.isShowing')
+        if @get('isInviteDialogVisible') && ! @get('addUsersMultiselectView.areSuggestionsShowing')
           @closeInviteDialog()
           event.preventDefault()
           event.stopPropagation()
@@ -773,7 +771,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       Ember.run.cancel(timer)
       @set('inviteDialogAnimationTimer', null)
     Ember.run.schedule 'afterRender', @, ->
-      @$('.add-text').focus().textrange('set') # Select all.
+      @get('addUsersMultiselectView').focus()
 
   closeInviteDialog: ->
     $dialog = @$('.invite-dialog')
@@ -802,26 +800,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   resetInviteDialogState: ->
     @setProperties
-      addUserSuggestMatchText: ''
       isAddUserSuggestionsShowing: false
-      addUserSelection: null
       inviteDialogErrorMessage: null
-    @$('.add-text').val('').trigger('input')
+    @get('addUsersMultiselectView').clear()
 
   isAddUsersToGroupDisabled: Ember.computed.alias('isSendingAddUsersToGroup')
-
-  addUserSelectionChanged: (->
-    return unless @currentState == Ember.View.states.inDOM
-    if @get('addUserSelection')?
-      @$('.add-text').addClass('with-user-selection')
-    else
-      @$('.add-text').removeClass('with-user-selection')
-  ).observes('addUserSelection').on('didInsertElement')
-
-  addUserTextChanged: (->
-    # When the user changes the text, clear the user selection.
-    @set('addUserSelection', null)
-  ).observes('userAutocompleteView.text')
 
   isAddMemberTextValid: (text) ->
     # Simple email-ish regex.
@@ -1138,37 +1121,28 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       @closeInviteDialog()
       return undefined
 
-    didSelectAddUserSuggestion: (suggestion) ->
-      # User selected a suggestion.  Expand the value into the text.
-      $text = @$('.add-text')
-      user = suggestion.get('user')
-      if user?
-        name = user.get('name') ? ''
-        $text.val(name).trigger('input')
-        # Move the cursor to the end of the expansion.
-        $text.textrange('set', name.length + 1, 0)
-
-        # Set selection *after* clearing text.
-        @set('addUserSelection', user)
-
-      # Hide suggestions.
-      @set('isAddUserSuggestionsShowing', false)
-      return undefined
-
     addUsersToGroup: ->
       return if @get('isSendingAddUsersToGroup')
       room = @get('activeRoom')
       return unless room instanceof App.Group
 
       data = {}
+      userIds = []
+      emails = []
       isAdding = false
-      user = @get('addUserSelection')
-      email = @$('.add-text').val()
-      if user? && (userId = user.get('id'))?
-        data.user_ids = '' + userId
+      @get('addUsersMultiselectView.userSelections').forEach (selection) =>
+        u = selection.get('object')
+        if u instanceof App.User
+          userIds.push(u.get('id'))
+        else
+          emails.push(selection.get('name'))
+
+      if userIds.length > 0
+        data.user_ids = userIds.join(',')
         isAdding = true
-      else if email? && @isAddMemberTextValid(email)
-        data.emails = email
+
+      if emails.length > 0
+        data.emails = emails.join(',')
         isAdding = true
 
       if ! isAdding
@@ -1191,12 +1165,12 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           return
         # Success!
         App.loadAll(json)
-        @setProperties
-          inviteDialogErrorMessage: "User added."
-          inviteDialogAlertIsError: false
+
         # Clear dialog.
-        @set('addUserSelection', null)
-        @$('.add-text').val('').trigger('input')
+        @get('addUsersMultiselectView').clear()
+
+        # Hide the dialog.
+        @closeInviteDialog()
       .catch (xhr) =>
         @setProperties
           inviteDialogErrorMessage: App.userMessageFromError(xhr)

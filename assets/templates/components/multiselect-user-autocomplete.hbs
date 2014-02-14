@@ -8,10 +8,12 @@
       </span>
     {{/each}}
     <input type='text' class='text-input' autocomplete='off'
-      autocapitalize='off' {{bind-attr placeholder='placeholder'}}>
+      autocapitalize='off' {{bind-attr placeholder='placeholder'}}
+      {{bind-attr disabled='isUiDisabled'}}>
   </div>
 </form>
 {{user-autocomplete viewName='userAutocompleteView'
+  selectorScopeView=this
   inputSelector='.text-input'
   positionRelativeToSelector='.visual-text-ui'
   users=users

@@ -1,4 +1,6 @@
-# Actions: didSelectSuggestion, didExpandSuggestion, selectionWasAdded, selectionWasRemoved
+# Actions: didSelectSuggestion, didExpandSuggestion, selectionWasAdded,
+#   selectionWasRemoved, enter (when the user presses enter and suggestions
+#   aren't showing)
 App.MultiselectUserAutocompleteComponent = Ember.Component.extend
   classNames: ['multiselect-user-autocomplete-component']
 
@@ -21,6 +23,9 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
 
   # Placeholder text to display in UI when empty.
   placeholderText: null
+
+  # Set to true to disable the UI while submitting the form, for example.
+  isUiDisabled: false
 
   #########################################################
   # Input/Output
@@ -51,6 +56,24 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
     _.bindAll(@, 'onDocumentClick', 'onBodyKeyDown',
       'onAddTextFocus', 'onAddTextBlur', 'onAddTextKeyDown', 'onAddTextInput')
     @set('userSelections', []) if ! @get('userSelections')?
+
+  # Clear all selections and reset the UI.
+  clear: ->
+    # Clear highlight.
+    @send('unhighlightSelection')
+    # Clear selections.
+    @get('userSelections').clear()
+    # Hide suggestions.
+    @setProperties
+      areSuggestionsShowing: false
+    # Clear text input.
+    if @currentState == Ember.View.states.inDOM
+      $text = @$('.text-input')
+      $text.val(name).trigger('input')
+
+  # Move keyboard focus to this component.
+  focus: ->
+    @$('.text-input').focus()
 
   didInsertElement: ->
     @_super(arguments...)
@@ -183,6 +206,15 @@ App.MultiselectUserAutocompleteComponent = Ember.Component.extend
                 $text.blur()
                 event.preventDefault()
                 event.stopPropagation()
+          when 13 # Enter.
+            $text = @$('.text-input')
+            text = $text.val()
+            if text == ''
+              # Text is empty and user is pressing enter.  Prevent default first
+              # in case there's an error.
+              event.preventDefault()
+              event.stopPropagation()
+              @_sendAction('enter')
       return undefined
 
   onAddTextInput: (event) ->

@@ -5,6 +5,9 @@
 App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
   classNames: ['user-autocomplete']
 
+  # Set this to an instance of a View to scope jQuery finds to.
+  selectorScopeView: null
+
   showAll: true
 
   # Set to true to match against the full text including spaces.
@@ -46,9 +49,13 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
     $(document).off 'keyup click', inputSelector, @onCursorMove
     $(document).off 'focusOut change paste cut input', inputSelector, @elementValueDidChange
 
+  # Returns the jquery object for the text input.
+  textInput: ->
+    @get('selectorScopeView').$(@get('inputSelector'))
+
   elementValueDidChange: (event) ->
     Ember.run @, ->
-      @set('text', $(@get('inputSelector')).val())
+      @set('text', @textInput().val())
       return undefined
 
   isShowingChanged: (->
@@ -57,7 +64,7 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
 
   updatePosition: ->
     return unless @currentState == Ember.View.states.inDOM
-    $ref = $(@get('positionRelativeToSelector') ? @get('inputSelector'))
+    $ref = @get('selectorScopeView').$(@get('positionRelativeToSelector') ? @get('inputSelector'))
     offset = $ref.position()
     return unless offset?
     @$().css
@@ -71,7 +78,7 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
     mode = options.mode ? 'auto'
 
     # Find any @text before the cursor.
-    $text = $(@get('inputSelector'))
+    $text = @textInput()
     text = $text.val()
     range = $text.textrange('get')
     beforeCursorText = text[0 ... range.position]
@@ -164,7 +171,7 @@ App.UserAutocompleteComponent = App.MessageAutocompleteComponent.extend
       if prevPosition?
         # We're matching autocomplete text.  If the cursor really moved, update
         # suggestions and/or hide them.
-        $text = $(@get('inputSelector'))
+        $text = @textInput()
         range = $text.textrange('get')
         if range.position != prevPosition
           @showAutocomplete()

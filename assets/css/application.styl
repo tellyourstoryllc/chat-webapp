@@ -556,6 +556,7 @@ input, button, select, textarea
     border 1px solid #d4d4d4
     padding 3px 5px
     background-color #fff
+    text-align left
 
   .selection-list-item
     display inline-block
@@ -2333,7 +2334,7 @@ room-members-sidebar-width = 200px
   top 40px
   z-index 10
 
-  width room-members-sidebar-width + 65px
+  width 365px
 
   border 1px solid rgba(0,0,0, .5)
   border-radius 4px
@@ -2375,7 +2376,8 @@ room-members-sidebar-width = 200px
 
   .instructions
     margin-bottom 10px
-    font-size 12px
+    font-size 14px
+    line-height 1.2
 
   .alert
     margin-bottom 10px
@@ -2390,19 +2392,20 @@ room-members-sidebar-width = 200px
       opacity 0
       margin 0
 
-  .add-text
+  .multiselect-user-autocomplete-component
+    display inline-block
     box-sizing border-box
-    width 185px
+    width 285px
     margin 0 5px 5px 0
-    padding 8px 6px
+
+  .visual-text-ui
+    padding 5px 6px
     font-size 14px
     line-height normal
-    text-align left
 
-    transition background-color .2s
-
-    &.with-user-selection
-      background-color warning-background-color
+  .text-input
+    font-size 14px
+    line-height normal
 
 // This is for the component.
 .user-autocomplete

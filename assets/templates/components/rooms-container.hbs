@@ -324,27 +324,21 @@
     <strong>email</strong> address:
   </div>
   <div class='add-text-container'>
-    <form {{action 'addUsersToGroup' on='submit'}}>
-      <div {{bind-attr class=':alert inviteDialogErrorMessage::hidden inviteDialogAlertIsError:alert-error'}}>
-        {{inviteDialogErrorMessage}}
-      </div>
-      <input type='text' class='add-text' placeholder='Name or Email' autocomplete='off' {{bind-attr disabled='isAddUsersToGroupDisabled'}}>
-      <button type='submit' class='app-btn btn-green btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}>
-        Add
-      </button>
-    </form>
+    <div {{bind-attr class=':alert inviteDialogErrorMessage::hidden inviteDialogAlertIsError:alert-error'}}>
+      {{inviteDialogErrorMessage}}
+    </div>
+    {{multiselect-user-autocomplete viewName='addUsersMultiselectView'
+      placeholderText="Names or Emails separated by commas"
+      users=arrangedContacts
+      maxSuggestions=10
+      showCurrentUser=false
+      userErrorMessage=inviteDialogErrorMessage
+      sendActionsTargetIsView=true
+      isUiDisabled=isAddUsersToGroupDisabled
+      enter='addUsersToGroup'}}
+    <button type='button' class='app-btn btn-green btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}
+      {{action 'addUsersToGroup'}}>
+      Add
+    </button>
   </div>
-
-  {{user-autocomplete viewName='userAutocompleteView'
-    classNames='add-user-autocomplete'
-    inputSelector='.add-text'
-    users=arrangedContacts
-    showAll=false
-    useAtSignPrefix=false
-    maxSuggestions=10
-    showCurrentUser=false
-    matchText=addUserSuggestMatchText
-    suggestions=addUserSuggestions
-    isShowing=isAddUserSuggestionsShowing
-    didSelectSuggestion='didSelectAddUserSuggestion'}}
 </div>
