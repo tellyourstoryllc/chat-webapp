@@ -141,6 +141,11 @@ app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/rooms(/*)?', renderChatApp);
 
+// Redirect SMS /i/:invite_token to the chat app.
+app.get('/i/:invite_token', function(req, res) {
+  res.redirect('/login?invite_token=' + encodeURIComponent(req.route.params.invite_token));
+});
+
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
