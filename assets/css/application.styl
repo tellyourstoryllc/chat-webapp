@@ -2953,12 +2953,12 @@ sender-column-width = 150px
 
   .sender-cell, .body-cell
     box-sizing border-box
-    padding 5px
     vertical-align top
 
   .sender-cell
     float left
     width sender-column-width
+    padding 5px
     color #E7EBEB
     font-weight bold
     text-align right
@@ -2966,6 +2966,8 @@ sender-column-width = 150px
   .body-cell
     position relative // For bubble arrow.
     margin-left sender-column-width + 5px
+    border-radius 3px
+    padding 5px 10px
     background-color #EEF0F0
 
     &:after
@@ -2981,15 +2983,12 @@ sender-column-width = 150px
 
   &.sent-by-you
 
-    .sender-cell
-      color app-green
-
     .body-cell
-      background-color app-green
-      color #E7EBEB
+      background-color hsl(281, 29%, 30%) // Purple, lighter than normal.
+      color #fff
 
       &:after
-        border-right-color app-green
+        border-right-color hsl(281, 29%, 30%)
 
       a
         // Links.
@@ -2998,8 +2997,11 @@ sender-column-width = 150px
   &.system-message
 
     .body-cell
-      background-color rgba(255,255,255, 0.2)
+      background-color rgba(255,255,255, 0.97)
       color #777
+
+      &:after
+        border-right-color transparent
 
   .sender, .message-body
     line-height 20px
@@ -3018,8 +3020,9 @@ sender-column-width = 150px
 
     // Pill.
     border-radius 10px
-    background-color rgba(0,0,0, .5)
+    background-color rgba(255,255,255, .97)
     padding 0 5px
+    color #444
 
     // Center the text inside the pill.
     text-align center
