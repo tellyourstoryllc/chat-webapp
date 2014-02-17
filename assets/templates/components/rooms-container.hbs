@@ -40,7 +40,7 @@
             {{else}}
               <div class='topic-text'>
                 {{#if roomsContainer.showSetTopicLink}}
-                  <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'><nobr>Set Topic</nobr></a>
+                  <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Set Topic</a>
                 {{else}}
                   {{emoticonize activeRoom.topic}}
                   {{#if activeRoom.canSetTopic}}
