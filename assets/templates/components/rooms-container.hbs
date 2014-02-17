@@ -47,12 +47,25 @@
                     <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
                   {{/if}}
                 {{/if}}
-                {{#unless isActiveRoomOneToOne}}
-                  <span class='room-key-text'>(Room Key: {{upcase activeRoom.joinCode}})</span>
-                {{/unless}}
               </div>
             {{/if}}
           </div>
+        </div>
+        <div {{bind-attr class=':room-join-link-section :room-specific isActiveRoomOneToOne:hidden'}}>
+          <span class='room-key-text'>
+            Room Key: {{upcase activeRoom.joinCode}}
+          </span>
+          {{! Copy join link to clipboard.
+
+              NOTE: If you move this, you may need to change the Flash setup
+              code so that Flash is set up whenever this is rendered. }}
+          <span {{bind-attr class=':copy-join-link-button canCopyWithFlash::hidden'}}
+            {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>
+            <span class='copy-icon'></span>
+            <div class='copy-to-clipboard-tooltip'>
+              Copy Join-Room Link To Clipboard
+            </div>
+          </span>
         </div>
         <div class='room-actions-toggle' {{action 'toggleRoomMenu' bubbles=false}}>
           <span class='room-settings-icon'></span>
@@ -289,9 +302,6 @@
     {{/if}}
     <li class='menu-item' {{action 'hideRoom'}}>Hide Conversation</li>
   {{else}}
-    <li class='menu-item copy-join-link-button'
-      {{bind-attr data-clipboard-text='activeRoom.joinUrl'}}>Copy Join-Room Link to Clipboard</li>
-    <li class='separator'></li>
     <li {{bind-attr class=':menu-item canUpdateRoomAvatar::disabled'}}
       {{action 'chooseRoomAvatar'}}>Change Room Avatar...</li>
     {{#if hasRoomAvatar}}

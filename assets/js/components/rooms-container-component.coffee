@@ -16,6 +16,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isEditingRoomName: false
 
+  # Internally set to true after Flash is loaded.
+  canCopyWithFlash: false
+
+  copiedIndicatorTimer: null
+
   newRoomTopic: null
 
   isEditingTopic: false
@@ -146,11 +151,11 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # Reset file pickers.
     @$('.room-avatar-file, .room-wallpaper-file').val('')
 
+    # Make sure copy to clipboard is setup.
+    Ember.run.scheduleOnce 'afterRender', @, 'setupCopyToClipboard'
+
     Ember.run.schedule 'afterRender', @, ->
       @setFocus(false)
-
-      # Make sure copy to clipboard is setup.
-      @setupCopyToClipboard()
 
       # Show invite dialog.
       Ember.run.later @, ->
@@ -752,13 +757,24 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     clip.on 'load', (client, args) =>
       Ember.run @, ->
         # Flash has been loaded.  Indicate in the UI that clicking copies.
-        $e = @$('.copy-join-link-button')
-        $e.addClass('flash-loaded')
+        @set('canCopyWithFlash', true)
 
         client.on 'complete', (client, args) =>
           Ember.run @, ->
-            # Copied to clipboard.
-            @closeRoomMenu() if @get('isRoomMenuVisible')
+            # Copied to clipboard.  Show indicator.
+            $tooltip = @$('.copy-to-clipboard-tooltip')
+            $tooltip.attr('data-orig-text', $tooltip.text()) if ! $tooltip.attr('data-orig-text')
+            $tooltip.addClass('copied-pulse')
+            $tooltip.text('Copied!')
+            timer = @get('copiedIndicatorTimer')
+            Ember.run.cancel(timer) if timer?
+            timer = Ember.run.later @, ->
+              @set('copiedIndicatorTimer', null)
+              $tooltip = @$('.copy-to-clipboard-tooltip')
+              $tooltip.text($tooltip.attr('data-orig-text'))
+              $tooltip.removeClass('copied-pulse')
+            , 1000 # Animation duration.
+            @set('copiedIndicatorTimer', timer)
 
   showInviteDialog: ->
     $dialog = @$('.invite-dialog')
