@@ -276,7 +276,7 @@ window.App = App = Ember.Application.create
       appController = App.__container__.lookup('controller:application')
       # We're currently on the login or home page, so go to the default
       # place.
-      if appController.get('currentPath') in ['index', 'login']
+      if appController.get('currentPath') in ['index', 'login', 'signup']
         # Go to most recent room if we have one.
         App.set('continueToMostRecentRoom', true)
 
@@ -762,5 +762,6 @@ App.Router.map ->
     @route 'room', path: '/:room_id'
 
   @route 'invite', path: '/i/:invite_token'
+  @route 'mobile-prompt', path: '/mobile'
 
   @route 'index', path: '/'
