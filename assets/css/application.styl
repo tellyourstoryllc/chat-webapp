@@ -2654,9 +2654,16 @@ room-members-sidebar-width = 200px
     margin 0
     font-size 12px
 
-  .topic-text
+  .topic-text-line
+    margin-right 125px // Space for the room key.
     padding-top 4px
     color #848894
+
+  .topic-text
+    display inline-block
+    max-width 80%
+    overflow ellipsis
+    line-height 1.2
 
   .room-join-link-section
     position absolute

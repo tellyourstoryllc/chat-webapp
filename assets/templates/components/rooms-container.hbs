@@ -38,11 +38,13 @@
                 <a href='#' {{action 'cancelEditingTopic' target=roomsContainer}} class='edit-topic-link'>Cancel</a>
               </form>
             {{else}}
-              <div class='topic-text'>
+              <div class='topic-text-line'>
                 {{#if roomsContainer.showSetTopicLink}}
                   <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Set Topic</a>
                 {{else}}
-                  {{emoticonize activeRoom.topic}}
+                  <span class='topic-text'>
+                    {{emoticonize activeRoom.topic}}
+                  </span>
                   {{#if activeRoom.canSetTopic}}
                     <a href='#' {{action 'editTopic' target=roomsContainer}} class='edit-topic-link'>Edit</a>
                   {{/if}}
