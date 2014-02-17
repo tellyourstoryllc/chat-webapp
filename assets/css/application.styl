@@ -2718,16 +2718,12 @@ room-members-sidebar-width = 200px
     // Hover shows it.
     visibility hidden
 
-    // Fix the flickering on hover.  No delay hiding.
-    transition visibility 0s linear
-
-  .copy-join-link-button:hover, .copy-join-link-button.hover
+  // Use hover triggered by ZeroClipboard only to prevent flickering.
+  .copy-join-link-button.hover
     opacity 1
 
     .copy-to-clipboard-tooltip
       visibility inherit
-      // Fix the flickering on hover.  Wait a bit before showing.
-      transition visibility 0s linear 0.1s
 
 
   .room-actions-toggle
