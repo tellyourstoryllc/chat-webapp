@@ -750,13 +750,15 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     clip = new ZeroClipboard(@$('.copy-join-link-button'))
     @set('zeroClipboard', clip)
     clip.on 'load', (client, args) =>
-      # Flash has been loaded.  Indicate in the UI that clicking copies.
-      $e = @$('.copy-join-link-button')
-      $e.addClass('flash-loaded')
+      Ember.run @, ->
+        # Flash has been loaded.  Indicate in the UI that clicking copies.
+        $e = @$('.copy-join-link-button')
+        $e.addClass('flash-loaded')
 
-      client.on 'complete', (client, args) =>
-        # Copied to clipboard.
-        @closeRoomMenu() if @get('isRoomMenuVisible')
+        client.on 'complete', (client, args) =>
+          Ember.run @, ->
+            # Copied to clipboard.
+            @closeRoomMenu() if @get('isRoomMenuVisible')
 
   showInviteDialog: ->
     $dialog = @$('.invite-dialog')
