@@ -761,4 +761,6 @@ App.Router.map ->
   @resource 'rooms', path: '/rooms', ->
     @route 'room', path: '/:room_id'
 
+  @route 'invite', path: '/i/:invite_token'
+
   @route 'index', path: '/'
