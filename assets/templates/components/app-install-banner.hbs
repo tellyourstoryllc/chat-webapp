@@ -1,12 +1,20 @@
-{{#if isAppleIos}}
+{{#if isMobilePlatform}}
   <div class='app-install-banner temporarily-hidden'>
     <div class='close' {{action 'dismissAppInstallBanner'}}>&times;</div>
     <img src='{{webServerUrl 'imageLogo'}}' alt='{{unbound App.title}}' style='width: 49px; height: 32px; padding-top: 2px' class='app-install-logo'>
     <div class='pull-right' style='margin: 10px 0'>
       <span class='for-platform'></span>
-      <a class='app-btn btn-flat btn-green install-app-link' href='https://itunes.apple.com/us/app/skymob-best-app-for-group/id778593574?ls=1&mt=8' target='_blank'>
-        Install App
-      </a>
+      {{#if isAppleIos}}
+        <a class='app-btn btn-flat btn-green install-app-link' href='https://itunes.apple.com/us/app/skymob-best-app-for-group/id778593574?ls=1&mt=8' target='_blank'>
+          Install App
+        </a>
+      {{else}}
+        {{#if isAndroid}}
+          <a class='app-btn btn-flat btn-green install-app-link' href='https://play.google.com/store/apps/details?id=co.skymob' target='_blank'>
+            Install App
+          </a>
+        {{/if}}
+      {{/if}}
     </div>
     <div class='clearfix'></div>
     {{#if showLaunchAppButton}}

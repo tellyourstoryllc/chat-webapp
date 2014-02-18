@@ -16,6 +16,8 @@ App.BaseControllerMixin = Ember.Mixin.create
     App.get('currentUser')
   ).property('App.currentUser')
 
+  isMobilePlatform: Ember.computed.any('isAppleIos', 'isAndroid')
+
   isAppleIos: (->
     Modernizr.appleios
   ).property()

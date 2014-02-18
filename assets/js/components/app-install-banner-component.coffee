@@ -25,6 +25,8 @@ App.AppInstallBannerComponent = Ember.Component.extend App.BaseControllerMixin,
           'iPad'
         else if Modernizr.ipod
           'iPod'
+        else if Modernizr.android
+          'Android'
         if platform?
           $forPlatform.text("for #{platform}")
       @$('.app-install-banner')?.removeClass('temporarily-hidden')

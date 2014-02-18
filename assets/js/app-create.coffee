@@ -603,7 +603,7 @@ window.App = App = Ember.Application.create
   # Attempts to open the mobile app with the given URL.  URL should have a
   # protocol that the app understand.
   attemptToOpenMobileApp: (path) ->
-    return unless Modernizr.appleios
+    return unless Modernizr.appleios || Modernizr.android
     path = '/' + path if path[0] != '/'
     window.location = "skymob:/" + path
     # If the app isn't installed, fall back to opening the App Store.
