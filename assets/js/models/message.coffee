@@ -179,7 +179,13 @@ App.Message = App.BaseModel.extend
         # so that our wbr tags don't get lost.
         escapedDisplay = escapedDisplay.replace /\//g, '/<wbr>'
 
-        "<a href='" + escape(href) + "'" + attrs + " target='_blank'>" + escapedDisplay + '</a>'
+        buffer = ["<a href='", escape(href), "'"]
+        buffer.push(attrs) if attrs?
+        buffer.push(" target='_blank'>")
+        buffer.push(escapedDisplay)
+        buffer.push('</a>')
+
+        buffer.join('')
 
     # Mentions.
     currentUser = App.get('currentUser')
