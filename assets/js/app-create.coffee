@@ -701,6 +701,13 @@ window.App = App = Ember.Application.create
           newMsg = matches[1]?.trim()
           msg = newMsg if newMsg
 
+      # Clean up the message.  If it ends with 2 periods, cut the last off.
+      if /[a-zA-Z0-9'"]\.\.$/.test(msg)
+        msg = msg[0 ... msg.length - 1]
+      # Replace "group" with "room".
+      if msg?
+        msg = msg.replace(/\bgroup\b/g, 'room')
+
     msg ?= defaultMessage
     msg ?= App.defaultErrorMessage
 
