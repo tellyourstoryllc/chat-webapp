@@ -180,7 +180,7 @@ App.Conversation = Ember.Mixin.create
           loadMetas = App.loadAllWithMetaData(json)
           instances = App.allInstancesFromLoadMetaData(loadMetas)
 
-          convo = instances.find (o) -> o instanceof @constructor
+          convo = instances.find (o) => o instanceof @constructor
           convo.didLoadMembers()
           if Ember.isEmpty(convo.get('messages'))
             newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
