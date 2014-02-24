@@ -39,7 +39,11 @@ window.App = App = Ember.Application.create
   # Needs to be an args array since `undefined` is a valid context.
   continueTransitionArgs: null
 
+  # State to tell the rooms route where to transition to when the transition
+  # needs to be delayed, only after fully logging in and mobile dialogs have
+  # been dismissed.
   continueToMostRecentRoom: false
+  continueToRoomWhenReady: null
 
   # Set to a Group's join code to display on the home page.
   joinCodeToShow: null
@@ -244,6 +248,13 @@ window.App = App = Ember.Application.create
       if userJson?.token?
         token = userJson.token
         delete userJson.token
+
+      # Remember the group that this invite token was for, if it was for a
+      # group.
+      groupJson = json.find (o) -> o.object_type == 'group'
+      if groupJson?
+        group = App.Group.loadRaw(groupJson)
+        App.set('continueToRoomWhenReady', group)
 
       user = App.User.loadRaw(userJson)
       if token?

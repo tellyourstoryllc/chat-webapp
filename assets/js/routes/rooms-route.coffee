@@ -92,9 +92,17 @@ App.RoomsRoute = Ember.Route.extend
       if rooms?
         controller.set('roomsLoaded', true)
 
-        if App.get('continueToMostRecentRoom')
-          # Consume this falg.
-          App.set('continueToMostRecentRoom', false)
+        continueToMostRecentRoom = App.get('continueToMostRecentRoom')
+        # Always consume this flag regardless of whether it was set.
+        App.set('continueToMostRecentRoom', false)
+
+        # Prefer a specific room over the most recent room.
+        if (room = App.get('continueToRoomWhenReady'))?
+          # Always consume this.
+          App.set('continueToRoomWhenReady', null)
+          # Transition to the room.
+          @replaceWith('rooms.room', room)
+        else if continueToMostRecentRoom
           # Transition to most recent room.
           room = controller.get('arrangedRooms')?.objectAt(0)
           @replaceWith('rooms.room', room) if room?
