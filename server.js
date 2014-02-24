@@ -143,6 +143,7 @@ app.get('/rooms(/*)?', renderChatApp);
 
 // SMS invite link /i/:invite_token.
 app.get('/i/:invite_token', renderChatApp);
+app.get('/mobile', renderChatApp);
 
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
