@@ -145,6 +145,11 @@ window.App = App = Ember.Application.create
     # Our analytics tracking uses this.
     App.set('pendingQueryString', queryString)
 
+    # Parse out invite_token from the invite URL so we can override any stored
+    # token.  URL pattern is `/i/:invite_token`
+    if (matches = /^\/i\/([^\/\?]+)/.exec(window.location.pathname))
+      inviteToken = matches[1]
+
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
       # we have a hash, we were probably on IE9 or below and refreshed the page
