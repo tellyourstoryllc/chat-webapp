@@ -191,13 +191,17 @@ window.App = App = Ember.Application.create
       fayeClient.on 'transport:up', @onFayeTransportUp
       fayeClient.on 'transport:down', @onFayeTransportDown
 
-    token = window.localStorage['token']
-    if token?
+    if inviteToken?
+      # Blow away any logged in token we may already have.
+      #
+      # TODO: merge these two accounts?
+      window.localStorage.removeItem('token')
+      # Log in with the invite_token.
+      @logInFromInviteToken(inviteToken)
+    else if (token = window.localStorage.getItem('token'))?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
       @logInFromToken(token)
-    else if inviteToken?
-      @logInFromInviteToken(inviteToken)
     else
       # No token.  Not logged in.
 
