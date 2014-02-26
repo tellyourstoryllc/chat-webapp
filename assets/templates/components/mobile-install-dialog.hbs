@@ -4,7 +4,12 @@
 
 {{#if joinCode}}
   <p class='to-enter'>
-    To enter, launch skymob<br>
+    {{#if hasMessagesWaiting}}
+      To view your message,
+    {{else}}
+      To enter,
+    {{/if}}
+    launch skymob<br>
     and enter code:
   </p>
 

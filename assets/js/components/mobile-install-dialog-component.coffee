@@ -5,6 +5,9 @@ App.MobileInstallDialogComponent = Ember.Component.extend App.BaseControllerMixi
 
   joinCode: null
 
+  # Set to true to change the text displayed in the UI.
+  hasMessagesWaiting: false
+
   hiddenTimes: 0
 
   init: ->
