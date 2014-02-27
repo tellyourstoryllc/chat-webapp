@@ -1,0 +1,8 @@
+if config.env == 'production'
+  //- TODO: What should this be?
+else
+  //- Disallow all spiders.
+  | User-Agent: *
+  | Disallow: /
+//- Make sure to have a newline at the end.
+= "\n"

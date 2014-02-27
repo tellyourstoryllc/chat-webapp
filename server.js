@@ -157,6 +157,11 @@ app.get('/legal/privacy', function(req, res) {
 app.get('/legal/tos', function(req, res) {
   res.render('legal-tos', { config: config, title: "Terms of Service" });
 });
+app.get('/robots.txt', function(req, res) {
+  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Cache-Control', 'max-age=0, private, must-revalidate');
+  res.render('robots', { config: config });
+});
 
 
 http.createServer(app).listen(app.get('port'), function() {
