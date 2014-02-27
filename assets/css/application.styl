@@ -3065,7 +3065,7 @@ sender-column-width = 150px
     margin-left sender-column-width + 5px
     border-radius 3px
     padding 5px 10px
-    background-color #EEF0F0
+    background-color #FBFBFB
 
     &:after
       content ''
@@ -3073,7 +3073,7 @@ sender-column-width = 150px
       top 9px
       left -6px
       // Left arrow.
-      border 6px solid #EEF0F0
+      border 6px solid #FBFBFB
       border-top-color transparent
       border-bottom-color transparent
       border-left-width 0
@@ -3081,15 +3081,10 @@ sender-column-width = 150px
   &.sent-by-you
 
     .body-cell
-      background-color app-green
-      color #fff
+      background-color #ECEDEE
 
       &:after
-        border-right-color app-green
-
-      a
-        // Links.
-        color #E7EBEB
+        border-right-color #ECEDEE
 
   &.system-message
 
@@ -3098,7 +3093,8 @@ sender-column-width = 150px
       color #777
 
       &:after
-        border-right-color transparent
+        // No arrow on system messages.
+        background-color transparent
 
   &.is-sending
     .body-cell
