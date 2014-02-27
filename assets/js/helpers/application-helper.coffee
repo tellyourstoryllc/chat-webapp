@@ -83,7 +83,7 @@ Ember.Handlebars.registerBoundHelper 'message-status-display', (message, options
 , 'isSaving', 'isError', 'errorMessage'
 
 
-Ember.Handlebars.registerBoundHelper 'messageAttachmentDisplay', (message, options) ->
+Ember.Handlebars.registerBoundHelper 'message-attachment-display', (message, options) ->
   opts = options.hash
 
   message.attachmentDisplayHtml?(opts)
