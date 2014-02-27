@@ -177,8 +177,6 @@
                 {{#each message in messages}}
                   <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message'}}
                     {{bind-attr data-message-id='message.id'}}>
-                    {{! Note: if you change this div structure, you probably
-                      also want to change the invite-button structure above. }}
                     <div class='message-table'>
                       <div class='sender-cell'>
                         <span class='sender'>
