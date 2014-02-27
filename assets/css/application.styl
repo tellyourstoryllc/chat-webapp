@@ -3036,6 +3036,8 @@ sender-column-width = 150px
   margin-right 3px
   font-size 14px
 
+  transition opacity .1s ease-out
+
   .message-table
     width 100%
 
@@ -3090,6 +3092,10 @@ sender-column-width = 150px
 
       &:after
         border-right-color transparent
+
+  &.is-sending
+    .body-cell
+      opacity .8
 
   .sender, .message-body
     line-height 20px
