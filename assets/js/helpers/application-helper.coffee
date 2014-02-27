@@ -64,6 +64,25 @@ Ember.Handlebars.registerHelper 'actionable-textarea', (options) ->
   Ember.Handlebars.helpers.view.call(@, App.ActionableTextareaComponent, options)
 
 
+Ember.Handlebars.registerBoundHelper 'message-status-display', (message, options) ->
+  # {{#if message.isSaving}}Sending...{{/if}}
+  # {{#if message.isError}}
+  #   <span class='error'>{{message.errorMessage}}</span>
+  # {{/if}}
+  buffer = []
+  if message.get('isSaving')
+    # Include trailing whitespace.
+    buffer.push "Sending... "
+  if message.get('isError')
+    errorMessage = message.get('errorMessage') ? ''
+    buffer.push "<span class='error'>"
+    buffer.push Ember.Handlebars.Utils.escapeExpression(errorMessage)
+    buffer.push "</span>"
+
+  buffer.join('').htmlSafe()
+, 'isSaving', 'isError', 'errorMessage'
+
+
 Ember.Handlebars.registerBoundHelper 'messageAttachmentDisplay', (message, options) ->
   opts = options.hash
 

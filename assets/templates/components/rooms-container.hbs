@@ -185,10 +185,7 @@
                       </div>
                       <div class='body-cell'>
                         <span class='status'>
-                          {{#if message.isSaving}}Sending...{{/if}}
-                          {{#if message.isError}}
-                            <span class='error'>{{message.errorMessage}}</span>
-                          {{/if}}
+                          {{message-status-display message}}
                           {{compact-timestamp-element message.createdAt classNames='timestamp'}}
                         </span>
 
