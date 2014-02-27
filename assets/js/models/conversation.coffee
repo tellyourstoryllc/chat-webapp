@@ -143,10 +143,20 @@ App.Conversation = Ember.Mixin.create
   ).observes('isOpen')
 
   didOpen: ->
-    @subscribeToMessages()
-    @fetchAndLoadAssociations()
+    @subscribeAndLoad(reload: false)
 
   didClose: ->
+
+  subscribeAndLoad: (options = {}) ->
+    _.defaults options, { reload: true }
+
+    @subscribeToMessages().then =>
+      # To prevent race condition where messages get dropped between initial
+      # load and subscribe, we need to reload after subscribing to fetch those
+      # messages.
+      @reload() if options.reload
+
+    @fetchAndLoadAssociations()
 
   fetchAndLoadAssociations: ->
     loadPromise = @get('loadPromise')
@@ -303,6 +313,9 @@ App.Conversation = Ember.Mixin.create
       @setProperties
         isOpen: true
         isDeleted: false
+      # Always subscribe.
+      @subscribeAndLoad()
+
     if App.get('preferences.clientWeb.showJoinLeaveMessages')
       message = App.SystemMessage.createFromConversation(@, localText: "#{user.get('name')} joined.")
       @didReceiveMessage(message, suppressNotifications: true)

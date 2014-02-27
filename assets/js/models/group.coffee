@@ -96,6 +96,11 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
       Ember.Logger.warn "I can't subscribe to messages without a group ID."
       return null
 
+    # TODO: Create a wrapping promise.  If subscribing fails, retry, and don't
+    # resolve the promise until subscribing succeeds.  Currently, if subscibing
+    # fails, faye doesn't seem to retry, so we're hosed, i.e. the app thinks
+    # we've subscribed but we haven't.
+
     subscription = client.subscribe "/groups/#{groupId}/messages", (json) =>
       Ember.run @, ->
         @didReceiveUpdateFromFaye(json)

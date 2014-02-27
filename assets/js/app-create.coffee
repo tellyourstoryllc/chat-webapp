@@ -400,8 +400,7 @@ window.App = App = Ember.Application.create
             # This is a Group we've never seen before, so load it and subscribe.
             instances = App.loadAll(json)
             group = instances.find (o) -> o instanceof App.Group
-            group.subscribeToMessages().then =>
-              group.reload()
+            group.subscribeAndLoad()
         else if json.object_type == 'one_to_one'
           # We received an update to a OneToOne.
           oneToOne = App.OneToOne.lookup(json.id)
@@ -410,8 +409,11 @@ window.App = App = Ember.Application.create
             # so that it can handle changes.
             oneToOne.didReceiveUpdateFromFaye(json)
           else
-            # This is a OneToOne we've never seen before, so just load it.
-            App.loadAll(json)
+            # This is a OneToOne we've never seen before, so load it and
+            # subscribe.
+            instances = App.loadAll(json)
+            convo = instances.find (o) -> o instanceof App.OneToOne
+            convo.subscribeAndLoad()
         else if json.object_type == 'user_preferences'
           # Don't synchronize the client preferences; only server preferences.
           delete json.client_web
