@@ -3057,6 +3057,10 @@ sender-column-width = 150px
     text-align right
 
   .body-cell
+    // When a message is sent with an image attachment and no text, it shows
+    // briefly before the image loads.  The arrow is broken without some height.
+    min-height 26px
+
     position relative // For bubble arrow.
     margin-left sender-column-width + 5px
     border-radius 3px
