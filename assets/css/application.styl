@@ -3063,6 +3063,7 @@ sender-column-width = 150px
 
     position relative // For bubble arrow.
     margin-left sender-column-width + 5px
+    border 1px solid rgba(0,0,0, .1)
     border-radius 3px
     padding 5px 10px
     background-color #FBFBFB
@@ -3070,13 +3071,16 @@ sender-column-width = 150px
     &:after
       content ''
       position absolute
-      top 9px
-      left -6px
+      top 10px
+      left -5px
       // Left arrow.
-      border 6px solid #FBFBFB
+      width 6px
+      height 6px
+      border 1px solid rgba(0,0,0, .1)
       border-top-color transparent
-      border-bottom-color transparent
-      border-left-width 0
+      border-right-color transparent
+      background-color #FBFBFB
+      transform rotate(45deg)
 
   &.sent-by-you
 
@@ -3084,7 +3088,7 @@ sender-column-width = 150px
       background-color #ECEDEE
 
       &:after
-        border-right-color #ECEDEE
+        background-color #ECEDEE
 
   &.system-message
 
@@ -3094,6 +3098,7 @@ sender-column-width = 150px
 
       &:after
         // No arrow on system messages.
+        border-color transparent
         background-color transparent
 
   &.is-sending
