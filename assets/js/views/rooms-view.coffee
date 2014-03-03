@@ -135,7 +135,7 @@ App.RoomsView = Ember.View.extend
     height -= 3 # Extra pixels to line up perfectly.
     commonSidebarHeight = height
     # When Contacts tab is selected, height returns 0.
-    height -= $('.join-text-container').outerHeight(true) || 48
+    height -= $('.rooms-tab-top-actions').outerHeight(true) || 48
     @$('.rooms-list').css
       height: height
 
