@@ -1629,7 +1629,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     width 18px
     height 52px
 
-    animation repeated-pointing 1s ease-in-out infinite alternate
+  &.visible
+    .chrome-permission-arrow
+      // Only turn on animation when visible to reduce CPU use.
+      animation repeated-pointing 1s ease-in-out infinite alternate
 
 ///////////////////////////////////////////////////////////
 
