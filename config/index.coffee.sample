@@ -1,5 +1,18 @@
+_ = require 'underscore'
+
 exports.getConfig = (env, app, express) ->
-  switch env
+  defaults =
+    # The name or title of the app that's displayed to users.
+    displayTitle: 'skymob'
+    # If this is present, media URLs (i.e. user-generated content, not web
+    # server built-in assets) are re-written to use this protocol and host when
+    # https is needed.  e.g. "https://something123.cloudfront.net"
+    sslMediaHost: null
+    # Set to true to actually send analytics to 3rd party services like Google
+    # Analytics GA.
+    useAnalytics: false
+
+  envConfig = switch env
     when 'development'
       apiHostname: 'testing-api.skymob.co'
       apiPort: 443
@@ -7,13 +20,7 @@ exports.getConfig = (env, app, express) ->
       fayeProtocolAndHost: 'https://testing-api.skymob.co:8080'
       webServerProtocolAndHost: 'http://localhost:3001'
       facebookAppId: '590925707640079'
-      # If this is a host, media URLs (i.e. user-generated content, not web
-      # server built-in assets) are re- written to use this host when https is
-      # needed.
-      sslMediaHost: null
       redirectHttpToHttps: false
-      useAnalytics: false
-      displayTitle: 'skymob'
     when 'staging'
       apiHostname: 'testing-api.skymob.co'
       apiPort: 443
@@ -21,10 +28,7 @@ exports.getConfig = (env, app, express) ->
       fayeProtocolAndHost: 'https://testing-api.skymob.co:8080'
       webServerProtocolAndHost: 'http://staging.skymob.co'
       facebookAppId: '590925707640079'
-      sslMediaHost: null
       redirectHttpToHttps: false
-      useAnalytics: false
-      displayTitle: 'skymob'
     when 'production'
       apiHostname: 'api.skymob.co'
       apiPort: 443
@@ -35,4 +39,5 @@ exports.getConfig = (env, app, express) ->
       sslMediaHost: 'https://ddytkvq26chic.cloudfront.net'
       redirectHttpToHttps: true
       useAnalytics: true
-      displayTitle: 'skymob'
+
+  _.extend defaults, envConfig
