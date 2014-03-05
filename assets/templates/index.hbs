@@ -8,7 +8,7 @@
 
   <div class='home-download-area'>
     {{#if needsMacApp}}
-      <a href='{{webServerUrl '/downloads/skymob.pkg'}}' class='app-btn btn-block btn-green btn-flat download-button' target='_blank' download>
+      <a href='{{unbound AppConfig.macAppDownloadUrl}}' class='app-btn btn-block btn-green btn-flat download-button' target='_blank' download>
         Get the Mac App
       </a>
       <a class='signup-link' href='#' {{action 'goToSignUp' target=view}}>
