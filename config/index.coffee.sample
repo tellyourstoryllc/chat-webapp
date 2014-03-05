@@ -4,6 +4,9 @@ exports.getConfig = (env, app, express) ->
   defaults =
     # The name or title of the app that's displayed to users.
     displayTitle: 'skymob'
+    # The directory to use for views when serving static pages that are specific
+    # to this app, like the legal pages.
+    appStaticViewsDirectory: 'skymob/'
     # If this is present, media URLs (i.e. user-generated content, not web
     # server built-in assets) are re-written to use this protocol and host when
     # https is needed.  e.g. "https://something123.cloudfront.net"
