@@ -130,7 +130,7 @@ app.configure('development', function() {
 
 
 var renderChatApp = function(req, res) {
-  res.render('index', { config: config, title: "skymob" });
+  res.render('index', { config: config, title: config.displayTitle });
 };
 
 app.get('/', renderChatApp);

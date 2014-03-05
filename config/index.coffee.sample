@@ -13,6 +13,7 @@ exports.getConfig = (env, app, express) ->
       sslMediaHost: null
       redirectHttpToHttps: false
       useAnalytics: false
+      displayTitle: 'skymob'
     when 'staging'
       apiHostname: 'testing-api.skymob.co'
       apiPort: 443
@@ -23,6 +24,7 @@ exports.getConfig = (env, app, express) ->
       sslMediaHost: null
       redirectHttpToHttps: false
       useAnalytics: false
+      displayTitle: 'skymob'
     when 'production'
       apiHostname: 'api.skymob.co'
       apiPort: 443
@@ -33,3 +35,4 @@ exports.getConfig = (env, app, express) ->
       sslMediaHost: 'https://ddytkvq26chic.cloudfront.net'
       redirectHttpToHttps: true
       useAnalytics: true
+      displayTitle: 'skymob'

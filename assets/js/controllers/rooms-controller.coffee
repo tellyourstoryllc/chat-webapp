@@ -63,7 +63,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     macgap?.dock.badge = if numUnreadRooms > 0 then "#{numUnreadRooms}" else null
 
     # Set titlebar title.
-    title = App.get('title')
+    title = App.get('documentTitle')
     if numUnreadRooms > 0
       title = "(#{numUnreadRooms}) #{title}"
     $(document).attr('title', title)
