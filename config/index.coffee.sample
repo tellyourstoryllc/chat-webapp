@@ -9,8 +9,15 @@ exports.getConfig = (env, app, express) ->
     # https is needed.  e.g. "https://something123.cloudfront.net"
     sslMediaHost: null
     # Set to true to actually send analytics to 3rd party services like Google
-    # Analytics GA.
+    # Analytics GA.  When false, it's just logged to the browser console.
     useAnalytics: false
+    # The domain used for analytics and sent to 3rd party services like Google
+    # Analytics GA.
+    analyticsDomainName: 'skymob.co'
+    # The Google Analytics GA account when running in a web browser.
+    googleAnalyticsWebAccount: 'UA-34895126-6'
+    # The Google Analytics GA account when running in the Mac app.
+    googleAnalyticsMacAppAccount: 'UA-34895126-7'
 
   envConfig = switch env
     when 'development'

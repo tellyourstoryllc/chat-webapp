@@ -17,12 +17,12 @@ html
       window.AppConfig = {};
 
       AppConfig.isMacGap = typeof macgap !== "undefined" && macgap !== null;
-      AppConfig.googleAnalyticsAccount = AppConfig.isMacGap ? 'UA-34895126-7' : 'UA-34895126-6';
+      AppConfig.googleAnalyticsAccount = AppConfig.isMacGap ? AppConfig.googleAnalyticsMacAppAccount : AppConfig.googleAnalyticsWebAccount;
 
       if (AppConfig.useAnalytics) {
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', AppConfig.googleAnalyticsAccount]);
-        _gaq.push(['_setDomainName', 'skymob.co']);
+        _gaq.push(['_setDomainName', AppConfig.analyticsDomainName]);
         _gaq.push(['_trackPageview']);
         (function() {
           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
