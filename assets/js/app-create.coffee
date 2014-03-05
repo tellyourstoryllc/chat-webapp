@@ -1,7 +1,10 @@
 window.App = App = Ember.Application.create
 
+  # Title of the app display all over.
+  title: AppConfig.displayTitle
+
   # Default title displayed in the window/tab's titlebar.
-  title: 'skymob'
+  documentTitle: AppConfig.displayTitle
 
   # Set to true to enable more verbose logging to the console.
   useDebugLogging: false
@@ -160,9 +163,9 @@ window.App = App = Ember.Application.create
 
     # Show the environment in the browser titlebar.
     if AppConfig.env in ['development', 'staging', 'testing']
-      title = "#{App.get('title')} - #{AppConfig.env}"
-      App.set('title', title)
-      $(document).attr('title', "#{title}")
+      documentTitle = "#{App.get('documentTitle')} - #{AppConfig.env}"
+      App.set('documentTitle', documentTitle)
+      $(document).attr('title', "#{documentTitle}")
 
     # Whether we're running inside MacGap.
     @set('isMacGap', AppConfig.isMacGap)
@@ -627,7 +630,11 @@ window.App = App = Ember.Application.create
   attemptToOpenMobileApp: (path) ->
     return unless Modernizr.appleios || Modernizr.android
     path = '/' + path if path[0] != '/'
-    window.location = "skymob:/" + path
+    protocol = if Modernizr.appleios
+      AppConfig.iosAppLaunchProtocol
+    else if Modernizr.android
+      AppConfig.androidAppLaunchProtocol
+    window.location = protocol ":/" + path
     # If the app isn't installed, fall back to opening the App Store.
     # window.setTimeout ->
     #   if +new Date - loadedAt < 2000

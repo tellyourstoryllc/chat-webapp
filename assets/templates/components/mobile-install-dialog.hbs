@@ -1,5 +1,5 @@
 <div class='title'>
-  <img src='{{unbound webServerUrl 'imageLogo'}}' alt='skymob'>
+  <img src='{{unbound webServerUrl 'imageLogo'}}' alt='{{unbound App.title}}'>
 </div>
 
 {{#if joinCode}}
@@ -9,7 +9,7 @@
     {{else}}
       To enter,
     {{/if}}
-    launch skymob<br>
+    launch {{unbound App.title}}<br>
     and enter code:
   </p>
 
@@ -24,13 +24,13 @@
 {{/if}}
 
 {{#if isAppleIos}}
-  <a class='app-btn btn-block btn-green app-store-link' href='https://itunes.apple.com/us/app/skymob-best-app-for-group/id778593574?ls=1&mt=8' target='_blank'>
-    Install skymob
+  <a class='app-btn btn-block btn-green app-store-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
+    Install {{unbound App.title}}
   </a>
 {{else}}
   {{#if isAndroid}}
-    <a class='app-btn btn-block btn-green app-store-link' href='https://play.google.com/store/apps/details?id=co.skymob' target='_blank'>
-      Install skymob
+    <a class='app-btn btn-block btn-green app-store-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
+      Install {{unbound App.title}}
     </a>
   {{/if}}
 {{/if}}
@@ -40,7 +40,7 @@
 </p>
 
 <button class='app-btn btn-block' {{action 'launchMobileApp'}}>
-  Launch skymob
+  Launch {{unbound App.title}}
 </button>
 
 <a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>

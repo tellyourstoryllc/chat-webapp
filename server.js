@@ -130,7 +130,7 @@ app.configure('development', function() {
 
 
 var renderChatApp = function(req, res) {
-  res.render('index', { config: config, title: "skymob" });
+  res.render('index', { config: config, title: config.displayTitle });
 };
 
 app.get('/', renderChatApp);
@@ -149,13 +149,13 @@ app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
 app.get('/legal/dmca', function(req, res) {
-  res.render('legal-dmca', { config: config, title: "Copyright Policy" });
+  res.render(config.appStaticViewsDirectory + 'legal-dmca', { config: config, title: "Copyright Policy" });
 });
 app.get('/legal/privacy', function(req, res) {
-  res.render('legal-privacy', { config: config, title: "Privacy Policy" });
+  res.render(config.appStaticViewsDirectory + 'legal-privacy', { config: config, title: "Privacy Policy" });
 });
 app.get('/legal/tos', function(req, res) {
-  res.render('legal-tos', { config: config, title: "Terms of Service" });
+  res.render(config.appStaticViewsDirectory + 'legal-tos', { config: config, title: "Terms of Service" });
 });
 app.get('/robots.txt', function(req, res) {
   res.setHeader('Content-Type', 'text/plain');
