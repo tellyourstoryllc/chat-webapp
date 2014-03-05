@@ -18,6 +18,8 @@ exports.getConfig = (env, app, express) ->
     googleAnalyticsWebAccount: 'UA-34895126-6'
     # The Google Analytics GA account when running in the Mac app.
     googleAnalyticsMacAppAccount: 'UA-34895126-7'
+    # Email address displayed for users to contact support.
+    supportEmailAddress: 'support@skymob.co'
     # Desktop Mac app link.  Can be absolute or relative to the web app.
     #
     # Note: this doesn't control where it's actually hosted.
