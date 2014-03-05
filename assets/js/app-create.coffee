@@ -630,7 +630,11 @@ window.App = App = Ember.Application.create
   attemptToOpenMobileApp: (path) ->
     return unless Modernizr.appleios || Modernizr.android
     path = '/' + path if path[0] != '/'
-    window.location = "skymob:/" + path
+    protocol = if Modernizr.appleios
+      AppConfig.iosAppLaunchProtocol
+    else if Modernizr.android
+      AppConfig.androidAppLaunchProtocol
+    window.location = protocol ":/" + path
     # If the app isn't installed, fall back to opening the App Store.
     # window.setTimeout ->
     #   if +new Date - loadedAt < 2000
