@@ -18,6 +18,9 @@ exports.getConfig = (env, app, express) ->
     googleAnalyticsWebAccount: 'UA-34895126-6'
     # The Google Analytics GA account when running in the Mac app.
     googleAnalyticsMacAppAccount: 'UA-34895126-7'
+    # Mobile app store links.
+    iosAppInstallUrl: 'https://itunes.apple.com/us/app/skymob-best-app-for-group/id778593574?ls=1&mt=8'
+    androidAppInstallUrl: 'https://play.google.com/store/apps/details?id=co.skymob'
 
   envConfig = switch env
     when 'development'
