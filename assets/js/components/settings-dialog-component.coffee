@@ -442,6 +442,13 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     changeVolumePreference: _.debounce (key) ->
       # This gets triggered as you slide, so need to debounce.
       @send('changeNotificationClientPreference', key)
+
+      # Play the sound if the user is changing the volume.
+      audio = $('.receive-message-sound').get(0)
+      if audio?
+        audio.currentTime = 0 if audio.currentTime > 0
+        audio.play()
+
       return undefined
     , 200
 
