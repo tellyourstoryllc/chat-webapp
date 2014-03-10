@@ -634,7 +634,7 @@ window.App = App = Ember.Application.create
       AppConfig.iosAppLaunchProtocol
     else if Modernizr.android
       AppConfig.androidAppLaunchProtocol
-    window.location = protocol ":/" + path
+    window.location = "#{protocol}:/#{path}"
     # If the app isn't installed, fall back to opening the App Store.
     # window.setTimeout ->
     #   if +new Date - loadedAt < 2000
