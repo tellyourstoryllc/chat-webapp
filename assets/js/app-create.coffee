@@ -1,9 +1,10 @@
 window.App = App = Ember.Application.create
 
-  # Title of the app display all over.
+  # Title of the app displayed all over.
   title: AppConfig.displayTitle
 
-  # Default title displayed in the window/tab's titlebar.
+  # Default title displayed in the window/tab's titlebar.  The environment is
+  # added to this when not in production.
   documentTitle: AppConfig.displayTitle
 
   # Set to true to enable more verbose logging to the console.
