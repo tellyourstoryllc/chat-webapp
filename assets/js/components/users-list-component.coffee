@@ -318,7 +318,7 @@ App.UsersListComponent = Ember.Component.extend
           $admin.removeClass('hidden')
         else
           $admin.addClass('hidden')
-      @addObserver('activeRoom.admins.[]', adminObserver)
+      @addObserver('activeRoom.admins.[]', @_scheduledAfterRender(adminObserver))
       # @one 'willDestroyElement', =>
       #   @removeObserver('activeRoom.admins.[]', adminObserver)
       adminObserver() # Trigger immediately.
@@ -442,3 +442,8 @@ App.UsersListComponent = Ember.Component.extend
   # Note: Need to observe the actual property, not the computed property for
   # this observer to trigger.
   ).observes('App.preferences.clientWeb.showAvatars')
+
+  # Given a function, returns a function that schedules the function after
+  # render.
+  _scheduledAfterRender: (fn) ->
+    => Ember.run.schedule 'afterRender', @, fn

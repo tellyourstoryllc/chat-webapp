@@ -150,31 +150,33 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     # If user was editing, cancel it.
     @setProperties(isEditingRoomName: false, isEditingTopic: false)
 
-    # Reset file pickers.
-    @$('.room-avatar-file, .room-wallpaper-file').val('')
-
     # Make sure copy to clipboard is setup.
     Ember.run.scheduleOnce 'afterRender', @, 'setupCopyToClipboard'
 
     Ember.run.schedule 'afterRender', @, ->
-      @setFocus(false)
+      # Reset file pickers.
+      @$('.room-avatar-file, .room-wallpaper-file').val('')
 
-      # Show invite dialog.
+      # Show invite dialog.  Run this after the hide animation completes.
       Ember.run.later @, ->
-        # This should ideally happen after the animation completes.  But it also
-        # needs to happen before the new room's animation transitions in.
         @resetInviteDialogState()
 
         room = @get('activeRoom')
         if room?.needsInviteTip?()
           @send('toggleInviteDialogOverMessages')
-      , 50
+      , 300
+
+    # Yield to the UI before setting focus since it forces layout.
+    Ember.run.next @, ->
+      Ember.run.schedule 'afterRender', @, ->
+        @setFocus(false)
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
-    if @get('activeRoom.associationsLoaded')
-      Ember.run.schedule 'afterRender', @, ->
-        @setFocus(false)
+    Ember.run.next @, ->
+      if @get('activeRoom.associationsLoaded')
+        Ember.run.schedule 'afterRender', @, ->
+          @setFocus(false)
   ).observes('activeRoom.associationsLoaded')
 
   isSendDisabled: (->
