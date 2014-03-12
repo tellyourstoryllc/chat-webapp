@@ -53,6 +53,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   isNoSidebars: false
 
+  isShowingEncryptedUi: null
+
   # Set to true to display the rooms sidebar toggle instead of the room avatar.
   showRoomsSidebarToggle: Ember.computed.alias('isNoSidebars')
 
@@ -201,7 +203,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   resize: _.debounce (event) ->
     Ember.run @, ->
-      Ember.run.schedule 'afterRender', @, 'updateSize'
+      Ember.run.scheduleOnce 'afterRender', @, 'updateSize'
   , 5
 
   showAddMembersButton: (->
@@ -209,8 +211,10 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   ).property('isLoggedIn', 'activeRoom.isCurrentUserMember')
 
   activeRoomIsEncryptedChanged: (->
-    Ember.run.schedule 'afterRender', @, ->
-      @updateSize()
+    # If encrypted state actually changed, update the UI sizes.
+    isShowingEncryptedUi = @get('isShowingEncryptedUi')
+    if ! isShowingEncryptedUi? || @get('activeRoom.isEncrypted') != isShowingEncryptedUi
+      Ember.run.scheduleOnce 'afterRender', @, 'updateSize'
   ).observes('activeRoom.isEncrypted')
 
   activeRoomArrangedMembers: (->
@@ -264,6 +268,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       width: Math.max(10, textWidth)
 
     # Send button text width can vary due to encryption.
+    @set('isShowingEncryptedUi', @get('activeRoom.isEncrypted'))
     sendButtonWidth = @$('.send-button').outerWidth(true)
 
     # Emoticon picker button.
