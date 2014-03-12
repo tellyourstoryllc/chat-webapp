@@ -113,7 +113,7 @@ App.RoomsView = Ember.View.extend
       # If we had the sidebar showing, go back to the default.
       @showDefaultSidebarView()
 
-      @updateSize()
+      Ember.run.schedule 'afterRender', @, 'updateSize'
   , 5
 
   showDefaultSidebarView: ->

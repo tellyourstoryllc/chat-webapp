@@ -201,7 +201,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   resize: _.debounce (event) ->
     Ember.run @, ->
-      @updateSize()
+      Ember.run.schedule 'afterRender', @, 'updateSize'
   , 5
 
   showAddMembersButton: (->
