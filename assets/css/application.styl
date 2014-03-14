@@ -2997,16 +2997,8 @@ room-join-dialog-media-query = "(max-width: " + room-join-dialog-width + ")"
   // When the user sets a custom wallpaper, stretch it keeping the aspect ratio.
   background-size cover
 
-  transition-duration 0.1s
-  transition-timing-function ease-out
-  transition-property left, visibility
-
   &.inactive
-    left 100%
-    visibility hidden
-
-    &.before-cursor
-      left -100%
+    display none
 
   // This class is set when the wallpaper preference is turned off.
   &.wallpaper-off
