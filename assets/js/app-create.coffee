@@ -181,6 +181,8 @@ window.App = App = Ember.Application.create
 
     @set('roomMessagesViews', Ember.Map.create())
 
+    @set('animationFrameRunner', App.AnimationFrameRunner.create())
+
     # Setup Faye client.
     try
       fayeClient = App.Faye.createClient()
@@ -642,6 +644,10 @@ window.App = App = Ember.Application.create
     #     # If we're still here, open the app store.
     #     window.location = "http://itunes.apple.com/app/XXXXXXX"
     # , 100
+
+  # Convenience to access and use singleton.
+  nextFrame: (fn) ->
+    App.get('animationFrameRunner').nextFrame(fn)
 
   loadAllWithMetaData: (json) ->
     descs = for attrs in Ember.makeArray(json)

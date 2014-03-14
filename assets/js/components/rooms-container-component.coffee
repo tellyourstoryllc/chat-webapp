@@ -167,13 +167,13 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
       , 300
 
     # Yield to the UI before setting focus since it forces layout.
-    Ember.run.next @, ->
+    App.nextFrame =>
       Ember.run.schedule 'afterRender', @, ->
         @setFocus(false)
   ).observes('activeRoom')
 
   roomAssociationsLoadedChanged: (->
-    Ember.run.next @, ->
+    App.nextFrame =>
       if @get('activeRoom.associationsLoaded')
         Ember.run.schedule 'afterRender', @, ->
           @setFocus(false)

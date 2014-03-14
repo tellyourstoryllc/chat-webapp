@@ -164,7 +164,8 @@ App.RoomMessagesView = Ember.View.extend
   ).property('App.currentlyViewingRoom', 'room')
 
   isCurrentlyViewingRoomChanged: (->
-    Ember.run.next @, ->
+    # Yield to the UI since scrolling (getting scrollHeight) forces layout.
+    App.nextFrame =>
       Ember.run.schedule 'afterRender', @, ->
         if @get('isCurrentlyViewingRoom') && @get('useAutoScroll')
           @scrollToLastMessage(true)
