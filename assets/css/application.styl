@@ -3057,19 +3057,27 @@ sender-column-width = 150px
     padding 5px 10px
     background-color #FBFBFB
 
+    &:before
+      content ''
+      position absolute
+      top 9px
+      left -7px
+      // Left arrow border.
+      border 7px solid rgba(0,0,0, .1)
+      border-top-color transparent
+      border-bottom-color transparent
+      border-left-width 0
+
     &:after
       content ''
       position absolute
       top 10px
-      left -5px
+      left -6px
       // Left arrow.
-      width 6px
-      height 6px
-      border 1px solid rgba(0,0,0, .1)
+      border 6px solid #FBFBFB
       border-top-color transparent
-      border-right-color transparent
-      background-color #FBFBFB
-      transform rotate(45deg)
+      border-bottom-color transparent
+      border-left-width 0
 
   &.sent-by-you
 
@@ -3077,13 +3085,17 @@ sender-column-width = 150px
       background-color #ECEDEE
 
       &:after
-        background-color #ECEDEE
+        border-right-color #ECEDEE
 
   &.system-message
 
     .body-cell
       background-color rgba(255,255,255, 0.97)
       color #777
+
+      &:before
+        // No arrow on system messages.
+        border-color transparent
 
       &:after
         // No arrow on system messages.
