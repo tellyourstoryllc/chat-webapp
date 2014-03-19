@@ -13,6 +13,10 @@ var request = require('request');
 var app = express();
 var config = require('./config').getConfig(process.env.NODE_ENV || 'development', app, express);
 
+// Extract API secret so it's not exposed to the browser.
+var apiSecret = config.apiSecret;
+delete config.apiSecret;
+
 // Expose environment to web app.
 config.env = config.env || process.env.NODE_ENV || 'development';
 
@@ -56,8 +60,8 @@ var apiProxy = function(pattern, host, port) {
       // Strip off /api prefix of the URL.
       req.url = matches[1];
       // Add API secret and remote client IP address.
-      if (config.apiSecret != null) {
-        req.url = addQueryParam(req.url, 'api_secret', config.apiSecret);
+      if (apiSecret != null) {
+        req.url = addQueryParam(req.url, 'api_secret', apiSecret);
       }
       req.url = addQueryParam(req.url, 'ip', remoteIp(req));
       routingProxy.proxyRequest(req, res);
