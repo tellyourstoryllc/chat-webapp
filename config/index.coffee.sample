@@ -7,6 +7,8 @@ exports.getConfig = (env, app, express) ->
     # The directory to use for views when serving static pages that are specific
     # to this app, like the legal pages.
     appStaticViewsDirectory: 'skymob/'
+    # Secret shared with the API.
+    apiSecret: null
     # If this is present, media URLs (i.e. user-generated content, not web
     # server built-in assets) are re-written to use this protocol and host when
     # https is needed.  e.g. "https://something123.cloudfront.net"
