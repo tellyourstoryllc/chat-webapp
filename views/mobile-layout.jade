@@ -14,7 +14,7 @@ html
       a.footer-link(href='/legal/privacy') Privacy Policy
       a.footer-link(href='/legal/dmca') Copyright Policy
     script.
-      window.AppConfig = {};
+      window.AppConfig = !{JSON.stringify(config)};
 
       AppConfig.isMacGap = typeof macgap !== "undefined" && macgap !== null;
       AppConfig.googleAnalyticsAccount = AppConfig.isMacGap ? AppConfig.googleAnalyticsMacAppAccount : AppConfig.googleAnalyticsWebAccount;
