@@ -40,14 +40,16 @@
     </div>
     <div {{bind-attr class=':tab-content :rooms-tab-content isRoomsTabActive::hidden'}}>
       <div class='rooms-tab-top-actions'>
-        <button class='app-btn btn-flat btn-purple-round new-room-button' {{action 'showCreateRoomDialog'}}>
-          <span class='new-room-icon'></span>
-          Create
-        </button>
-        <button class='app-btn btn-flat btn-purple-round join-room-button' {{action 'showJoinRoomDialog'}}>
-          <span class='join-room-icon'></span>
-          Join
-        </button>
+        {{#if allowGroups}}
+          <button class='app-btn btn-flat btn-purple-round new-room-button' {{action 'showCreateRoomDialog'}}>
+            <span class='new-room-icon'></span>
+            Create
+          </button>
+          <button class='app-btn btn-flat btn-purple-round join-room-button' {{action 'showJoinRoomDialog'}}>
+            <span class='join-room-icon'></span>
+            Join
+          </button>
+        {{/if}}
       </div>
       <ul class='rooms-list'>
         {{#if roomsLoaded}}

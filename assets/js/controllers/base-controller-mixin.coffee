@@ -40,3 +40,9 @@ App.BaseControllerMixin = Ember.Mixin.create
   doesBrowserSupportRangeInput: (->
     Modernizr.inputtypes.range
   ).property()
+
+  disallowGroups: (->
+    !! AppConfig.disallowGroups
+  ).property()
+
+  allowGroups: Ember.computed.not('disallowGroups')

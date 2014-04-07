@@ -38,6 +38,8 @@ exports.getConfig = (env, app, express) ->
     androidAppLaunchProtocol: 'skymob'
     # When truthy, hides the UI to attach file to messages.
     disallowFileUpload: true
+    # When truthy, hides the UI to create and join groups.
+    disallowGroups: true
 
   envConfig = switch env
     when 'development'
