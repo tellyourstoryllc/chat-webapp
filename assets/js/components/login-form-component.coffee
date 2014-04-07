@@ -54,7 +54,7 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
 
       if Ember.isEmpty(@get('facebookToken'))
         data =
-          email: @get('email')
+          login: @get('email')
           password: @get('password')
       else
         data =
