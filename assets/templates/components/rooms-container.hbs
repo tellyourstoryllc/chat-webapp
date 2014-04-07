@@ -224,7 +224,7 @@
         <span {{bind-attr class=':message-emoticon-icon roomsContainer.isSendDisabled:disabled'}}
           {{action 'chooseEmoticon' target=roomsContainer}}
           title='Insert Emoticon'></span>
-        {{#if doesBrowserSupportAjaxFileUpload}}
+        {{#if showFileAttachmentUi}}
           <span {{bind-attr class=':message-attach-icon roomsContainer.isSendDisabled:disabled'}}
             {{action 'chooseFile' target=roomsContainer}}
             title='Attach File'></span>

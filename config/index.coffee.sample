@@ -36,6 +36,8 @@ exports.getConfig = (env, app, express) ->
     # use the string "skymob" for "skymob://groups".
     iosAppLaunchProtocol: 'skymob'
     androidAppLaunchProtocol: 'skymob'
+    # When truthy, hides the UI to attach file to messages.
+    disallowFileUpload: true
 
   envConfig = switch env
     when 'development'
