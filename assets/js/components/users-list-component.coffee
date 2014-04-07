@@ -238,7 +238,7 @@ App.UsersListComponent = Ember.Component.extend
     # {{#link-to 'rooms.room' user classNames='room-member-link'
     #   classNameBindings='view.showAvatars::avatars-off'}}
     a = document.createElement('a')
-    a.href = "/rooms/#{roomId}"
+    a.href = "/view/#{roomId}"
     $a = $(a)
     $a.addClass('room-member-link')
     if ! @get('showAvatars')

@@ -437,7 +437,7 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
   # Returns true if transition was attempted.
   transitionToInternalPath: (path) ->
-    if /^\/rooms(\/|$)/.test(path)
+    if /^\/view(\/|$)/.test(path)
       # Room permalink.  Just go to it.
       router = App._getRouter()
       router.location.setURL(path)

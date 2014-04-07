@@ -224,7 +224,7 @@ App.RoomsView = Ember.View.extend
         regexp = new RegExp("/#{App.Util.escapeRegexp(roomId)}$")
       else
         # We're in the lobby.
-        regexp = new RegExp("/rooms$")
+        regexp = new RegExp("/view$")
 
       $('.room-list-item a[href]').each ->
         $link = $(@)

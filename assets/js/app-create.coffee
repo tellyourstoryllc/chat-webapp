@@ -801,7 +801,7 @@ App.Router.map ->
   @route 'forgot-password', path: '/forgot-password'
   @route 'password-reset', path: '/password/reset/:token'
 
-  @resource 'rooms', path: '/rooms', ->
+  @resource 'rooms', path: '/view', ->
     @route 'room', path: '/:room_id'
 
   @route 'invite', path: '/i/:invite_token'

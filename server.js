@@ -143,7 +143,7 @@ app.get('/login', renderChatApp);
 app.get('/signup', renderChatApp);
 app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
-app.get('/rooms(/*)?', renderChatApp);
+app.get('/view(/*)?', renderChatApp);
 
 // SMS invite link /i/:invite_token.
 app.get('/i/:invite_token', renderChatApp);

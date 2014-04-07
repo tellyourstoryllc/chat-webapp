@@ -72,7 +72,7 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
   oneToOneUrlPath: (->
     id = App.OneToOne.idFromUser(@)
     return null unless id?
-    "/rooms/#{id}"
+    "/view/#{id}"
   ).property('id')
 
 
