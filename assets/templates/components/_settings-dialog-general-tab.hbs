@@ -1,27 +1,8 @@
 <h4 class='subtitle'>Profile</h4>
 <table class='settings-table'>
-  <tr>
-    <td class='label-cell profile-first-column'>Name</td>
-    <td class='control-cell'>
-      {{#if isEditingName}}
-        <form> {{! Capture enter key. }}
-          {{input type='text' classNames='name-input' value=newName on-enter='saveName'}}
-          <button type='submit' class='save-name-button' {{action 'saveName'}}>Save</button>
-          <a href='#' {{action 'cancelEditingName'}}>Cancel</a>
-        </form>
-      {{else}}
-        {{App.currentUser.name}}
-        <a href='#' {{action 'editName'}}>Edit</a>
-      {{/if}}
-    </td>
-  </tr>
-  <tr>
-    <td class='label-cell'>Mention Name</td>
-    <td class='control-cell'>@{{App.currentUser.mentionName}}</td>
-  </tr>
   {{#if doesBrowserSupportAjaxFileUpload}}
     <tr>
-      <td class='label-cell image-label-cell'>Avatar</td>
+      <td class='label-cell image-label-cell profile-first-column'>Avatar</td>
       <td class='control-cell'>
         {{room-avatar room=App.currentUser showStatus=false alwaysShowAvatar=true}}
         <button type='button' {{action 'chooseAvatarFile'}}

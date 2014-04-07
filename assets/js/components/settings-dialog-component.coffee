@@ -1,9 +1,6 @@
 App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   classNames: ['modal', 'settings-dialog']
 
-  isEditingName: false
-  newName: ''
-
   isEditingEmail: false
   isSendingEmail: false
   newEmail: ''
@@ -54,7 +51,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
   selectedTabChanged: (->
     # Cancel editing.
     @setProperties
-      isEditingName: false
       isEditingPassword: false
     @send('cancelEditingEmail')
 
@@ -86,9 +82,7 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
       if ! (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey)
         if event.which == 27 # Escape.
           # Stop editing.
-          if @get('isEditingName')
-            @send('cancelEditingName')
-          else if @get('isEditingEmail')
+          if @get('isEditingEmail')
             @send('cancelEditingEmail')
           else if @get('isEditingPassword')
             @send('cancelEditingPassword')
@@ -249,41 +243,6 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
 
     hideDialog: ->
       @get('targetObject').send('hide')
-      return undefined
-
-    editName: ->
-      @set('isEditingName', true)
-      @set('newName', App.get('currentUser.name'))
-      Ember.run.schedule 'afterRender', @, ->
-        @$('.name-input').textrange('set') # Select all.
-      return undefined
-
-    cancelEditingName: ->
-      @set('isEditingName', false)
-      return undefined
-
-    saveName: ->
-      newName = @get('newName')
-      return if Ember.isEmpty(newName)
-
-      user = App.get('currentUser')
-      oldName = user.get('name')
-      if user.isPropertyLocked('name')
-        Ember.Logger.log "Can't change user name when it's locked."
-        return
-
-      @set('isEditingName', false)
-      # If name didn't change, we're done.
-      return if oldName == newName
-
-      data =
-        name: newName
-      url = App.get('api').buildURL('/users/update')
-      user.withLockedPropertyTransaction url, 'POST', { data: data }, 'name', =>
-        user.set('name', newName)
-      , =>
-        user.set('name', oldName)
-
       return undefined
 
     editEmail: (emailAddress) ->
