@@ -93,7 +93,7 @@ App.User.reopenClass
   propertiesFromRawAttrs: (json) ->
     id: App.BaseModel.coerceId(json.id)
     avatarUrl: App.UrlUtil.mediaUrlToHttps(json.avatar_url)
-    name: json.name
+    name: json.username # Note: we're ignoring the `user.name` field.
     clientType: json.client_type
     status: json.status
     statusText: json.status_text
