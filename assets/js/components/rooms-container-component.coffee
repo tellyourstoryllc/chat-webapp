@@ -273,12 +273,16 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
     @set('isShowingEncryptedUi', @get('activeRoom.isEncrypted'))
     sendButtonWidth = @$('.send-button').outerWidth(true)
 
-    # Emoticon picker button.
-    @$('.message-emoticon-icon').css
-      right: sendButtonWidth + 18 + 29
-    # The send message file button.
     if App.doesBrowserSupportAjaxFileUpload()
+      # Emoticon picker button.
+      @$('.message-emoticon-icon').css
+        right: sendButtonWidth + 18 + 29
+      # The send message file button.
       @$('.message-attach-icon').css
+        right: sendButtonWidth + 18
+    else
+      # Emoticon picker button.
+      @$('.message-emoticon-icon').css
         right: sendButtonWidth + 18
 
     @updateMessagesSize($window, containerHeight, messagesWidth)
