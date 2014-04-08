@@ -35,6 +35,24 @@ App.Util.reopenClass
 
     matches?[1]
 
+  currentPlatformInstallAppUrl: ->
+    if Modernizr.appleios && AppConfig.iosAppInstallUrl?
+      AppConfig.iosAppInstallUrl
+    else if Modernizr.android && AppConfig.androidAppInstallUrl?
+      AppConfig.androidAppInstallUrl
+
+  currentPlatformLaunchAppProtocol: ->
+    if Modernizr.appleios && AppConfig.iosAppLaunchProtocol?
+      AppConfig.iosAppLaunchProtocol
+    else if Modernizr.android && AppConfig.androidAppLaunchProtocol?
+      AppConfig.androidAppLaunchProtocol
+
+  redirect: (url) ->
+    try
+      window.location.replace(url)
+    catch e
+      window.location.href = url
+
   # Generates a GUID as securely as possible.
   #
   # http://stackoverflow.com/a/8472700/12887

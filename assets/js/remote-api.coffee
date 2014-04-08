@@ -255,6 +255,12 @@ App.RemoteApi = Ember.Object.extend
 
     @ajax(@buildURL("/password/reset/#{token}"), 'POST', data: data, _appUseDefaults: false)
 
+  logEvent: (data) ->
+    trackInviteParams = App.get('trackInviteParams') ? {}
+    data.invite_channel ?= trackInviteParams.invite_channel ? 'sms'
+    data.invite_method ?= trackInviteParams.invite_method ? 'native'
+    @ajax(@buildURL('/logs/event'), 'POST', data: data)
+
   deserializeUnixTimestamp: (serialized) ->
     newSerialized = if Ember.typeOf(serialized) == 'number'
       serialized * 1000

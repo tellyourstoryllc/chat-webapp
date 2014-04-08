@@ -26,6 +26,11 @@ App.BaseControllerMixin = Ember.Mixin.create
     Modernizr.android
   ).property()
 
+  hasPlatformAppInstall: (->
+    url = App.Util.currentPlatformInstallAppUrl()
+    url?
+  ).property()
+
   # When this is supported, we can read files locally and show image previews,
   # for example.
   doesBrowserSupportFileReader: (->

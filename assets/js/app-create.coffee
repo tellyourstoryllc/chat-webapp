@@ -13,6 +13,9 @@ window.App = App = Ember.Application.create
   # Query string that is appended to tracked URL for analytics.
   pendingQueryString: null
 
+  # Params from query string used for MixPanel events.
+  trackInviteParams: null
+
   # Object that mixes in `Ember.Evented` and receives application events.
   #
   # List of events:
@@ -133,10 +136,18 @@ window.App = App = Ember.Application.create
       pairs = parts.map (pair) -> pair.split('=')
       # Extract invite_token.  Don't let analytics track this.
       inviteTokenIndex = null
+
+      trackInviteParams = App.get('trackInviteParams')
+      if ! trackInviteParams?
+        trackInviteParams = {}
+        App.set('trackInviteParams', trackInviteParams)
+
       for pair, i in pairs
         if pair[0] == 'invite_token'
           inviteTokenIndex = i
-          break
+        else if pair[0] in ['invite_channel', 'invite_method']
+          trackInviteParams[pair[0]] = pair[1]
+
       if inviteTokenIndex? && (val = pairs[inviteTokenIndex][1])?
         # Convert pluses to spaces and then decode.
         inviteToken = decodeURIComponent(val.replace(/\+/g, ' '))
@@ -801,6 +812,7 @@ App.Router.map ->
   @route 'forgot-password', path: '/forgot-password'
   @route 'password-reset', path: '/password/reset/:token'
 
+  @route 'chat', path: '/chat/:one_to_one_id'
   @resource 'rooms', path: '/view', ->
     @route 'room', path: '/:room_id'
 
