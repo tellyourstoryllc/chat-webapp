@@ -23,7 +23,7 @@ config.env = config.env || process.env.NODE_ENV || 'development';
 app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.favicon(__dirname + '/public/favicon.ico'));
+app.use(express.favicon(__dirname + '/assets/images/' + config.appStaticViewsDirectory + 'favicon.ico'));
 app.use(express.logger('short'));
 
 // Proxy api requests; must be *before* `bodyParser`.
