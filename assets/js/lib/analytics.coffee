@@ -3,10 +3,9 @@ App.Analytics = Ember.Object.extend()
 App.Analytics.reopenClass
 
   trackPageView: (url) ->
+    Ember.Logger.log "trackPageView", url if ! AppConfig.useAnalytics || App.get('useDebugLogging')
     if AppConfig.useAnalytics
       ga('send', 'pageview', url) if ga?
-    else
-      Ember.Logger.log "trackPageView", url
 
   trackEvent: (name, options = {}) ->
     if AppConfig.useAnalytics
