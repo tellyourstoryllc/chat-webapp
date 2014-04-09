@@ -145,6 +145,10 @@ app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/chat(/*)?', renderChatApp);
 app.get('/view(/*)?', renderChatApp);
+app.get('/v/*', function(req, res) {
+  // Shortened form redirects to longer form.
+  res.redirect(req.url.replace(/^\/v\//, '/view/'));
+});
 
 // SMS invite link /i/:invite_token.
 app.get('/i/:invite_token', renderChatApp);
@@ -153,14 +157,23 @@ app.get('/mobile', renderChatApp);
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
+app.get('/support', function(req, res) {
+  res.redirect('/mobile/help');
+});
 app.get('/legal/dmca', function(req, res) {
   res.render(config.appStaticViewsDirectory + 'legal-dmca', { config: config, title: "Copyright Policy" });
+});
+app.get('/legal/copyright', function(req, res) {
+  res.redirect('/legal/dmca');
 });
 app.get('/legal/privacy', function(req, res) {
   res.render(config.appStaticViewsDirectory + 'legal-privacy', { config: config, title: "Privacy Policy" });
 });
 app.get('/legal/tos', function(req, res) {
   res.render(config.appStaticViewsDirectory + 'legal-tos', { config: config, title: "Terms of Service" });
+});
+app.get('/legal/licenses', function(req, res) {
+  res.render(config.appStaticViewsDirectory + 'legal-licenses', { config: config, title: "Licenses" });
 });
 app.get('/robots.txt', function(req, res) {
   res.setHeader('Content-Type', 'text/plain');
