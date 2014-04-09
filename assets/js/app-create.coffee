@@ -235,7 +235,7 @@ window.App = App = Ember.Application.create
     ZeroClipboard.setDefaults(moviePath: '/ZeroClipboard-v1.2.3.swf', hoverClass: 'hover')
 
     # If we're already running in the Mac app, we don't need it.
-    App.set('needsMacApp', ! macgap? && App.doesSystemSupportMacApp())
+    App.set('needsMacApp', ! macgap? && App.hasMacAppDownload() && App.doesSystemSupportMacApp())
 
   logInFromToken: (token) ->
     App.set('isLoggingIn', true)
@@ -555,6 +555,9 @@ window.App = App = Ember.Application.create
 
   doesBrowserSupportAjaxFileUpload: ->
     !! (Modernizr.fileinput && window.FormData)
+
+  hasMacAppDownload: ->
+    !! AppConfig.macAppDownloadUrl
 
   doesSystemSupportMacApp: ->
     matches = /Mac OS X 10_(\d+)_/i.exec(navigator.userAgent)
