@@ -1,5 +1,5 @@
 <div class='title'>
-  <img src='{{unbound webServerUrl 'imageLogo'}}' alt='{{unbound App.title}}'>
+  <img src='{{web-server-url 'imageLogo'}}' alt='{{unbound App.title}}' class='logo'>
 </div>
 
 {{#if joinCode}}
@@ -24,12 +24,12 @@
 {{/if}}
 
 {{#if isAppleIos}}
-  <a class='app-btn btn-block btn-green app-store-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
+  <a class='app-btn btn-block btn-secondary app-store-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
     Install {{unbound App.title}}
   </a>
 {{else}}
   {{#if isAndroid}}
-    <a class='app-btn btn-block btn-green app-store-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
+    <a class='app-btn btn-block btn-secondary app-store-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
       Install {{unbound App.title}}
     </a>
   {{/if}}

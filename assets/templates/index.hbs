@@ -1,17 +1,13 @@
-<div class='home-content'>
+{{#if isMobilePlatform}}
 
-  <div class='logo-container'>
-    {{#link-to 'index'}}
-      <img src='{{webServerUrl 'imageLogoBig'}}' alt='{{unbound App.title}}' style='width: 99%; max-width: 300px; height: auto;'>
-    {{/link-to}}
+  {{mobile-install-dialog joinCode=joinCode}}
+
+{{else}}
+
+  <div class='home-content'>
+    <img src='{{web-server-url 'imageLogoBig'}}' alt='{{unbound App.title}}' style='width: 99%; max-width: 300px; height: auto;'>
   </div>
 
-  <h1 class='title'>
-    {{! Note: if you're changing this, remember to also change the noscript
-      and meta tags. }}
-    Free Group Chat that Works <strong>Anywhere</strong>
-  </h1>
+  {{footer-bar showAppLinks=true}}
 
-</div>
-
-{{footer-bar showAppLinks=true}}
+{{/if}}

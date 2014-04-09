@@ -9,6 +9,11 @@ app-dark-purple = #2E1C38
 app-green = #56C0A5
 app-yellow = #E3C634
 
+app-primary-bg-color = app-purple
+app-primary-fg-color = #fff
+app-secondary-bg-color = app-green
+app-secondary-fg-color = #fff
+
 body-bg = #fff
 link-color = #3f9bcd
 // bg-texture : url used for backgound-image.
@@ -333,6 +338,13 @@ input, button, select, textarea
   &:active
     outline 0
     box-shadow inset 0 0 8px rgba(0,0,0, 0.5)
+
+  &.btn-secondary
+    background-color app-secondary-bg-color
+    color app-secondary-fg-color
+
+    &:hover, &.hover
+      background-color lighten(app-secondary-bg-color, 10%)
 
   &.btn-green
     background-color app-green
@@ -1143,51 +1155,36 @@ room-sidebar-width = 240px
   .brand
     display none
 
-  .home-content
-    max-width 960px
-    margin 0 auto
-
-  .home-content
-    position relative // For .screenshot.
-    padding-bottom 184px
-
   .logo-container
     text-align center
 
-  .title
-    margin 25px auto 30px
-    max-width 450px
-    font-size 40px
-    font-weight 300
-    line-height 120%
+  .home-content
+    margin 0 auto 50px
+    max-width 800px
     text-align center
 
-    strong
-      font-weight normal
-
   .footer
-    margin-top 0
-    border-top 1px solid rgba(213,215,215, .7)
-    padding 40px
-    background-color #EDF0F1
-    color #5c7987
-    font-size 12px
+    margin-top 20px
+    margin-bottom 10px
+    font-size 11px
+    text-align center
+
+    .app-links
+      margin-bottom 100px
+
+    .app-link
+      margin-left 10px
+      text-decoration none
+
+    .first-app-link
+      margin-left 0
 
     .footer-link
-      color #5B7887
+      margin-right 10px
+      text-decoration none
 
-@media (max-width: 867px)
-  .home-page
-    // At this width there isn't enough room for the screenshot to the right, so
-    // move it below.
-    .home-content
-      margin 0 auto
-      padding-bottom 0
-      text-align center
-    .title
-      margin-left auto
-      margin-right auto
-      text-align center
+      &:hover
+        text-decoration underline
 
 @media (max-width: 480px)
   .room-key-form-component
@@ -1446,8 +1443,9 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .with-mobile-dialog
   // Need to put the background here, otherwise on tall displays, the .mobile-
   // install-dialog does not fill the height.
-  background-color app-purple
-  background-image asseturl('/images/purple-bkg.png')
+  background-color app-primary-bg-color
+  if bg-texture is defined
+    background-image bg-texture
   background-size cover
 
   .navbar
@@ -1460,13 +1458,17 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   width 100%
   min-height 100%
 
-  border-top 6px solid app-green
   padding 15px
   color rgba(255,255,255, 0.8)
   text-align center
 
   .title
     margin 0 auto 50px
+
+  .logo
+    width 99%
+    max-width 300px
+    height auto
 
   .to-enter
     font-size 20px
@@ -1487,7 +1489,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     padding-bottom 15px
     font-size 20px
 
-  .app-btn:not(.btn-green)
+  .app-btn:not(.btn-secondary)
     color rgba(0,0,0, .8)
 
   .btn-block

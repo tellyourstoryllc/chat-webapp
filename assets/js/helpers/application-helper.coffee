@@ -89,5 +89,9 @@ Ember.Handlebars.registerBoundHelper 'message-attachment-display', (message, opt
   message.attachmentDisplayHtml?(opts)
 
 
+# ***Deprecated*** Use hyphenated version.
 Ember.Handlebars.registerHelper 'webServerUrl', (path) ->
+  App.webServerUrl(path)
+
+Ember.Handlebars.registerHelper 'web-server-url', (path) ->
   App.webServerUrl(path)
