@@ -26,5 +26,6 @@ html
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         ga('create', AppConfig.googleAnalyticsWebAccount, AppConfig.analyticsDomainName);
-        ga('send', 'pageview');
+        if (! window.dontTrackPageView) ga('send', 'pageview');
       }
+    block foot-content

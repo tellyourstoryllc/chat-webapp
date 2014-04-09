@@ -1,0 +1,56 @@
+extends mobile-layout
+
+block content
+  script.
+    // Skip tracking the default initial page view.
+    window.dontTrackPageView = true;
+  p(style='text-align: center')
+    | Redirecting...
+
+//- Make sure this goes after loading config.
+block foot-content
+  != js('mobile-utils')
+  script.
+    var redirectToRightPlace = function() {
+      var url, protocol, loadedAt;
+      var isExistingUser = #{!! isExistingUser};
+      if (isExistingUser) {
+        protocol = MobileUtils.currentPlatformLaunchAppProtocol();
+        if (protocol) {
+          loadedAt = +new Date;
+          // Launch the app.
+          window.location = '' + protocol + '://';
+          // If the app isn't installed, fall back to opening the App Store.
+          window.setTimeout(function() {
+            if (+new Date - loadedAt < 2000) {
+              // If we're still here, open the app store.
+              url = MobileUtils.currentPlatformInstallAppUrl();
+              url = url || '/';
+              window.location = url;
+            }
+          }, 100);
+          return;
+        }
+      }
+      else if (url = MobileUtils.currentPlatformInstallAppUrl()) {
+        MobileUtils.redirect(url);
+        return;
+      }
+      // Always go somewhere since there's nothing interesting here.
+      MobileUtils.redirect('/');
+    };
+
+    if (typeof ga !== 'undefined' && ga !== null) {
+      ga(function() {
+        var url = MobileUtils.stripAppTokensFromUrl(window.location.pathname);
+        // Wait for Google Analytics to load and the page view to get tracked.
+        ga('send', 'pageview', url, {
+          hitCallback: redirectToRightPlace
+        });
+      });
+      // Give up on Google Anayltics after a while.
+      window.setTimeout(redirectToRightPlace, 2000);
+    }
+    else {
+      redirectToRightPlace();
+    }

@@ -163,7 +163,17 @@ app.get('/v/*', function(req, res) {
 
 // SMS invite link /i/:invite_token.
 app.get('/i/:invite_token', renderChatApp);
+app.get('/i', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Invite", isExistingUser: false });
+});
 app.get('/mobile', renderChatApp);
+
+app.get('/download', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Download", isExistingUser: false });
+});
+app.get('/install', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Install", isExistingUser: false });
+});
 
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
