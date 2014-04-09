@@ -27,6 +27,9 @@ error-text-color       = #b94a48
 error-background-color = #f2dede
 error-border-color     = darken(adjust(error-background-color, 'hue', -10), 3%)
 
+// Pull in application-specific definitions.
+@import appStaticViewsDirectory + 'top'
+
 // Mixins
 
 // Include this mixin to style placeholder text.  Call with a plus prefix to use
@@ -3398,3 +3401,7 @@ sender-column-width = 150px
 
   .room-avatar.blank-avatar
     margin-top -2px
+
+
+// Pull in application-specific definitions.
+@import appStaticViewsDirectory + 'bottom'

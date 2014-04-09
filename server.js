@@ -127,7 +127,13 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' 
 
 app.use(express.bodyParser());
 app.use(app.router);
-app.use(connectAssets({ build: config.assetsBuild }));
+app.use(connectAssets({
+  build: config.assetsBuild,
+  stylusExtends: function(style) {
+    // Expose config to stylus.
+    style.define('appStaticViewsDirectory', config.appStaticViewsDirectory);
+  }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.configure('development', function() {

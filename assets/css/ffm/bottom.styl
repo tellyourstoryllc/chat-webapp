@@ -1,0 +1,20 @@
+// Put application-specific CSS here.  It gets included at the bottom, so it can
+// override all other styles.
+
+.home-content
+  margin-top 0
+
+@media (max-width: 480px)
+  .mobile-install-dialog
+    .title
+      // Undo the padding.
+      margin-left -(15px + 20px) // Extra 20px is to cut off the F.
+      margin-right -15px
+      // Stay in upper left corner.
+      text-align left
+
+@media (max-height: 380px)
+  .mobile-install-dialog
+    .title
+      // Reduce space to keep app store download in view on old iPhones.
+      margin-bottom 10px
