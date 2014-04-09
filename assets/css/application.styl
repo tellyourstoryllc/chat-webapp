@@ -15,6 +15,7 @@ app-secondary-bg-color = app-green
 app-secondary-fg-color = #fff
 
 body-bg = #fff
+text-color = #444
 link-color = #3f9bcd
 // bg-texture : url used for backgound-image.
 
@@ -792,7 +793,8 @@ html
   min-height 100%
 
 body
-  background-color #E4E7E8
+  background-color body-bg
+  color text-color
   font-family base-font-family
   overflow hidden
 
@@ -1145,7 +1147,7 @@ room-sidebar-width = 240px
 .home-page
   background-color body-bg
   background-size cover
-  color #fff
+  color text-color
   text-align left
 
   .navbar
@@ -1459,7 +1461,6 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   min-height 100%
 
   padding 15px
-  color rgba(255,255,255, 0.8)
   text-align center
 
   .title
