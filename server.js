@@ -4,6 +4,7 @@ require('coffee-script');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 var express = require('express');
+var fs = require('fs');
 var http = require('http');
 var path = require('path');
 var httpProxy = require('http-proxy');
@@ -19,6 +20,10 @@ delete config.apiSecret;
 
 // Expose environment to web app.
 config.env = config.env || process.env.NODE_ENV || 'development';
+
+// Do we have a gif logo?
+var hasGifLogo = fs.existsSync(__dirname + '/assets/images/' + config.appStaticViewsDirectory + 'logo.gif');
+config.imageLogoPath = '/images/' + config.appStaticViewsDirectory + (hasGifLogo ? 'logo.gif' : 'logo.png');
 
 app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');

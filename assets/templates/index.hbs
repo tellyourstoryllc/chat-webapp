@@ -1,5 +1,11 @@
 <div class='home-content'>
 
+  <div class='logo-container'>
+    {{#link-to 'index'}}
+      <img src='{{webServerUrl 'imageLogoBig'}}' alt='{{unbound App.title}}' style='width: 99%; max-width: 300px; height: auto;'>
+    {{/link-to}}
+  </div>
+
   <h1 class='title'>
     {{! Note: if you're changing this, remember to also change the noscript
       and meta tags. }}
