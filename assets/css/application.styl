@@ -9,7 +9,12 @@ app-dark-purple = #2E1C38
 app-green = #56C0A5
 app-yellow = #E3C634
 
+body-bg = #fff
 link-color = #3f9bcd
+// bg-texture : url used for backgound-image.
+
+navbar-default-color = #777
+navbar-default-bg = #f8f8f8
 
 base-font-family = gotham_rounded, Helvetica, Arial, sans-serif
 base-line-height = 20px
@@ -792,24 +797,25 @@ room-sidebar-width = 240px
   width room-sidebar-width
   min-height 52px
   padding 10px 10px
-  background-color app-purple
+  background-color navbar-default-bg
+  color navbar-default-color
 
   .right-nav-links
     float right
     text-align right
 
   a
-    color #fff
+    color #898989
     text-decoration none
 
   .nav-link
     display inline-block
-    border 2px solid #fff
+    border 2px solid #898989
     border-radius 3px
     padding 10px 25px
 
     &:hover
-      background-color rgba(255,255,255, 0.1)
+      background-color rgba(0,0,0, 0.1)
 
   .signup-nav-link
     margin-left 20px
@@ -1122,8 +1128,7 @@ room-sidebar-width = 240px
 // Home page
 
 .home-page
-  background-color app-dark-purple
-  background-image asseturl('/images/purple-bkg.png')
+  background-color body-bg
   background-size cover
   color #fff
   text-align left
@@ -1615,7 +1620,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   height 100%
   border-top 3px solid app-green
   background-color app-purple
-  background-image asseturl('/images/purple-bkg.png')
+  if bg-texture is defined
+    background-image bg-texture
   background-repeat no-repeat
   background-size cover
 
