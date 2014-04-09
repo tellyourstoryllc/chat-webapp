@@ -2,50 +2,25 @@
   <img src='{{web-server-url 'imageLogo'}}' alt='{{unbound App.title}}' class='logo'>
 </div>
 
-{{#if joinCode}}
-  <p class='to-enter'>
-    {{#if hasMessagesWaiting}}
-      To view your message,
-    {{else}}
-      To enter,
-    {{/if}}
-    launch {{unbound App.title}}<br>
-    and enter code:
-  </p>
-
-  <div class='join-code'>
-    {{joinCode}}
+{{#if isAppleIos}}
+  <div>
+    <a href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank' class='app-store-link'>
+      <img src='{{web-server-url 'imageIosAppStore'}}' alt='Download on the App Store' style='width: 200px; height: auto'>
+    </a>
   </div>
 {{else}}
-  <p class='to-enter no-join-code'>
-    Free Group Chat that<br>
-    Works Anywhere
-  </p>
-{{/if}}
-
-{{#if isAppleIos}}
-  <a class='app-btn btn-block btn-secondary app-store-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
-    Install {{unbound App.title}}
-  </a>
-{{else}}
   {{#if isAndroid}}
-    <a class='app-btn btn-block btn-secondary app-store-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
-      Install {{unbound App.title}}
-    </a>
+    <p class='to-enter no-join-code'>
+      Our Android app is coming soon.
+    </p>
   {{/if}}
 {{/if}}
 
-<p class='already-text'>
-  Already have the app?
-</p>
-
-<button class='app-btn btn-block' {{action 'launchMobileApp'}}>
-  Launch {{unbound App.title}}
-</button>
-
-<a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>
-  Use Web Version
-</a>
+<div class='section'>
+  <a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>
+    Use Web Version
+  </a>
+</div>
 
 <div class='hidden-continue'>
 </div>
