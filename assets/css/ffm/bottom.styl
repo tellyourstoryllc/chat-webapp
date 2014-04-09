@@ -18,3 +18,9 @@
     .title
       // Reduce space to keep app store download in view on old iPhones.
       margin-bottom 10px
+
+.rooms-list, .contacts-list
+  .room-avatar.unavailable
+    // Unavailable color on colored background, but fully opaque so it works in
+    // the Mac app and Safari.
+    border-color #B5BCBC

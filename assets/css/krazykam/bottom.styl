@@ -1,2 +1,8 @@
 // Put application-specific CSS here.  It gets included at the bottom, so it can
 // override all other styles.
+
+.rooms-list, .contacts-list
+  .room-avatar.unavailable
+    // Unavailable color on colored background, but fully opaque so it works in
+    // the Mac app and Safari.
+    border-color #BFBAAC
