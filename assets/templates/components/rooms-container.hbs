@@ -97,7 +97,7 @@
                     {{/if}}
                     <div>
                       <input type='password' class='set-password-input'>
-                      <button type='submit' class='app-btn btn-green btn-flat'
+                      <button type='submit' class='app-btn btn-secondary btn-flat'
                         {{bind-attr disabled='isSettingPassword'}}>
                         Set Password
                       </button>
@@ -114,7 +114,7 @@
                     </span>
                     <div class='banner-title'>Install {{unbound App.title}} for Mac and never miss a message!</div>
                     <div class='action-link-container'>
-                      <a class='app-btn btn-green btn-flat download-app-link' href='{{unbound AppConfig.macAppDownloadUrl}}'
+                      <a class='app-btn btn-secondary btn-flat download-app-link' href='{{unbound AppConfig.macAppDownloadUrl}}'
                         download>
                         Download Mac App
                       </a>
@@ -150,7 +150,7 @@
                 </div>
                 {{#if activeRoom.canJoinWithoutCode}}
                   <button type='button' {{action 'joinGroup' target=roomsContainer}}
-                    class='app-btn btn-green join-button'>Enter Room</button>
+                    class='app-btn btn-secondary join-button'>Enter Room</button>
                 {{else}}
                   <form class='join-form' {{action 'joinGroup' target=roomsContainer on='submit'}}>
                     <div class='title'>Input room key to enter.</div>
@@ -267,7 +267,7 @@
         <div {{bind-attr class=':room-specific isActiveRoomOneToOne:hidden'}}>
           <div class='invite-button-container'>
             {{#if showAddMembersButton}}
-              <button class='app-btn btn-green btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
+              <button class='app-btn btn-secondary btn-block btn-flat' {{action 'toggleInviteDialog' bubbles=false}}>
                 Add Members
               </button>
             {{else}}
@@ -343,7 +343,7 @@
       sendActionsTargetIsView=true
       isUiDisabled=isAddUsersToGroupDisabled
       enter='addUsersToGroup'}}
-    <button type='button' class='app-btn btn-green btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}
+    <button type='button' class='app-btn btn-secondary btn-flat' {{bind-attr disabled='isAddUsersToGroupDisabled'}}
       {{action 'addUsersToGroup'}}>
       Add
     </button>

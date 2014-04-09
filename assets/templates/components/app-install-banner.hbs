@@ -5,12 +5,12 @@
     <div class='pull-right' style='margin: 10px 0'>
       <span class='for-platform'></span>
       {{#if isAppleIos}}
-        <a class='app-btn btn-flat btn-green install-app-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
+        <a class='app-btn btn-flat btn-secondary install-app-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
           Install App
         </a>
       {{else}}
         {{#if isAndroid}}
-          <a class='app-btn btn-flat btn-green install-app-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
+          <a class='app-btn btn-flat btn-secondary install-app-link' href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank'>
             Install App
           </a>
         {{/if}}
