@@ -1132,7 +1132,7 @@ room-sidebar-width = 240px
     padding 30px
     background-color transparent
 
-  .home-content, .text-row-content
+  .home-content
     max-width 960px
     margin 0 auto
 
@@ -1141,79 +1141,15 @@ room-sidebar-width = 240px
     padding-bottom 184px
 
   .title
-    margin 25px 0 30px
+    margin 25px auto 30px
     max-width 450px
     font-size 40px
     font-weight 300
     line-height 120%
+    text-align center
 
     strong
       font-weight normal
-
-  .home-download-area
-    width 250px
-    text-align center
-
-    .app-btn
-      margin-bottom 10px
-      padding-top 14px
-      padding-bottom 14px
-      border-radius 4px
-      font-size 24px
-      font-weight bold
-
-    .signup-link
-      color rgba(255,250,255, .4)
-      font-size 12px
-      text-decoration none
-
-      &:hover
-        color rgba(255,240,255, .6)
-        text-decoration underline
-
-  .room-key-form-component
-    display inline-block
-
-  .screenshot
-    position absolute
-    right 0
-    bottom 0
-    width 98% // Leave some margin on small displays.
-    height auto
-    vertical-align middle
-
-  .text-row
-    padding 50px 100px
-    text-align left
-
-    &.light-row
-      background-color #fff
-
-    &.dark-row
-      background-color #EDF0F1
-      border 1px solid rgba(213,215,215, .7)
-      border-left-width 0
-      border-right-width 0
-
-    h3
-      margin-bottom 15px
-      color #384657
-      font-size 27px
-      font-weight bold
-
-    p
-      max-width 854px
-      color #5c7987
-      line-height 28px
-      font-size 18px
-
-  .big-image
-    &.pull-left
-      float left
-      margin-right 80px
-    &.pull-right
-      float right
-      margin-left 80px
 
   .footer
     margin-top 0
@@ -1238,32 +1174,10 @@ room-sidebar-width = 240px
       margin-left auto
       margin-right auto
       text-align center
-    .home-download-area
-      width 98%
-      max-width 250px
-      margin 10px auto
-
-    .screenshot
-      position static
-      margin 10px 0 0 0
 
 @media (max-width: 480px)
   .room-key-form-component
     margin-top 10px
-
-  .home-page
-    .text-row
-      padding-left 20px
-      padding-right 20px
-
-      h3
-        padding-top 0 !important
-
-    // Center images on their own line.
-    .big-image
-      display block
-      margin 0 auto 10px !important
-      float none !important
 
 .desktop-home-page
   .navbar
