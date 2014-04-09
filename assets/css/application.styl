@@ -10,7 +10,7 @@ app-green = #56C0A5
 app-yellow = #E3C634
 
 app-primary-bg-color = app-purple
-app-primary-fg-color = #fff
+app-primary-fg-color = #f8f8f8
 app-secondary-bg-color = app-green
 app-secondary-fg-color = #fff
 
@@ -1548,8 +1548,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   padding 5px
   border-bottom 1px solid rgba(0,0,0, .8)
   box-shadow 0 5px 15px rgba(0,0,0, .6)
-  background-color app-purple
-  color #F8F8F8
+  background-color app-primary-bg-color
+  color app-primary-fg-color
   font-size 12px
   line-height 1.2
 
@@ -1594,8 +1594,8 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   box-sizing border-box
   width room-sidebar-width
   height 100%
-  border-top 3px solid app-green
-  background-color app-purple
+  border-top 3px solid app-secondary-bg-color
+  background-color app-primary-bg-color
   if bg-texture is defined
     background-image bg-texture
   background-repeat no-repeat
@@ -1627,7 +1627,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
     &.active
       color rgba(255,255,255, 0.8)
-      border-bottom-color app-purple
+      border-bottom-color app-primary-bg-color
       box-shadow 0 -2px 2px rgba(0,0,0, .2), inset 0 0px 5px hsl(276, 44%, 28%)
 
     &:hover
@@ -1733,7 +1733,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       top 0
       width 4px
       height 100%
-      background-color app-green
+      background-color app-secondary-bg-color
 
       // Get the height to not cover the container's borders.
       border 1px solid transparent
@@ -1753,10 +1753,10 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       color #ccc
 
     &.active
-      background-color #3E274D
+      background-color lighten(adjust(app-primary-bg-color, 'saturation', -10), 10%) // #3E274D
       color #eee
-      border-top-color #2E1C3A
-      border-bottom-color #2E1C3A
+      border-top-color darken(app-primary-bg-color, 15%)
+      border-bottom-color darken(app-primary-bg-color, 15%)
       box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
 
       .active-indicator
@@ -1827,15 +1827,15 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   // sidebar when turning on and off the display of avatars.
   height 58px
 
-  border-top 1px solid #42314C
-  background-color app-dark-purple
-  color #aaa
+  border-top 1px solid darken(app-primary-bg-color, 15%)
+  background-color app-primary-bg-color
+  color rgba(255,255,255, .85)
 
   mobile-safari-fixed-position-fix()
 
 .current-user-status-cell
   display table-cell
-  border-right 1px solid #34223F
+  border-right 1px solid darken(app-primary-bg-color, 15%)
   padding 8px 10px
   cursor pointer // Clickable.
 
@@ -2672,8 +2672,8 @@ room-members-sidebar-width = 200px
     width 100%
 
     padding 20px
-    background-color app-purple
-    color #fff
+    background-color app-primary-bg-color
+    color app-primary-fg-color
     text-align center
     line-height 1.2
 
