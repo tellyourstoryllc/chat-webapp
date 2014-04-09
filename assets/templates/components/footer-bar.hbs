@@ -6,11 +6,13 @@
           <img src='{{unbound webServerUrl 'imageIosAppStore'}}' alt='Available on the App Store' style='width: 165px; height: auto'>
         </a>
       {{/unless}}
-      {{#unless isAppleIos}}
-        <a href='{{unbound AppConfig.androidAppInstallUrl}}' target='_blank' class='app-link'>
-          <img src='{{unbound webServerUrl 'imageGooglePlay'}}' alt='Get it on Google Play' style='width: 165px; height: auto'>
+      {{!
+      {\{#unless isAppleIos}\}
+        <a href='{\{unbound AppConfig.androidAppInstallUrl}\}' target='_blank' class='app-link'>
+          <img src='{\{unbound webServerUrl 'imageGooglePlay'}\}' alt='Get it on Google Play' style='width: 165px; height: auto'>
         </a>
-      {{/unless}}
+      {\{/unless}\}
+      }}
     </div>
   {{/if}}
   <div class='footer-links'>
