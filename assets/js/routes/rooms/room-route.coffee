@@ -33,6 +33,10 @@ App.RoomsRoomRoute = Ember.Route.extend
 
     @_super(arguments...)
 
+    if ! App.isLoggedIn()
+      # Track in MixPanel.
+      App.get('api').logEvent(event_name: 'clicked_invite_link')
+
     # Track which room is being viewed so we can determine when to notify the
     # user.
     App.set('currentlyViewingRoom', model)
