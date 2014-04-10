@@ -81,7 +81,10 @@ App.RoomsRoomRoute = Ember.Route.extend
         if xhrOrError?.status == 404
           # Room not found.
           # TODO: some kind of flash alert message.
-          @transitionTo('rooms.index')
+          if App.isLoggedIn()
+            @transitionTo('rooms.index')
+          else
+            @transitionTo('index')
         else
           throw xhrOrError
       .catch App.rejectionHandler
