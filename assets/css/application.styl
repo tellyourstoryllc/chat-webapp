@@ -857,17 +857,19 @@ room-sidebar-width = 240px
 
 // body
 .logged-out, .join-page
-  background-color #E4E6E8
+  background-color app-primary-bg-color
+  color app-primary-fg-color
   overflow auto
 
   .navbar
     display block
     position static
     width auto
+    background-color transparent
 
   .navbar-centered-content
     // Don't stretch out to the corners of the window.
-    max-width 960px
+    max-width 800px
     margin-left auto
     margin-right auto
 
