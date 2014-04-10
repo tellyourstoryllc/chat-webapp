@@ -1625,25 +1625,33 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 .left-sidebar-tabs-container
 
   .left-sidebar-tab-handles
-    border-bottom 1px solid rgba(0,0,0, .5)
-  
+    text-align center
+
   .tab-handle
     display inline-block
-    margin 5px 0 -1px 5px
+    margin 5px 0 -1px 0
+    min-width 78px
     border 1px solid rgba(0,0,0, .5)
-    border-top-left-radius 3px
-    border-top-right-radius 3px
     padding 10px
     color rgba(0,0,0, 0.6)
     font-size 12px
     line-height 1
     cursor pointer
-    box-shadow inset 0 -5px 10px rgba(0,0,0, .3)
+    box-shadow inset 0 -5px 10px rgba(255,255,255, .3)
+
+    &.rooms-tab
+      border-top-left-radius 3px
+      border-bottom-left-radius 3px
+
+    &.contacts-tab
+      margin-left -5px
+      border-top-right-radius 3px
+      border-bottom-right-radius 3px
 
     &.active
       color rgba(0,0,0, 0.8)
-      border-bottom-color app-primary-bg-color
-      box-shadow 0 -2px 2px rgba(0,0,0, .2), inset 0 0px 5px hsl(276, 44%, 28%)
+      box-shadow inset 0 0px 5px #525252
+      background-color darken(app-primary-bg-color, 10%)
 
     &:hover
       color rgba(0,0,0, 0.9)
