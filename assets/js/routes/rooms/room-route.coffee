@@ -35,7 +35,16 @@ App.RoomsRoomRoute = Ember.Route.extend
 
     if ! App.isLoggedIn()
       # Track in MixPanel.
-      App.get('api').logEvent(event_name: 'clicked_invite_link')
+      promise = App.get('api').logEvent(event_name: 'clicked_invite_link')
+
+      # If we're not showing message content, redirect after tracking.
+      if ! AppConfig.showMessages
+        promise.finally =>
+          url = App.Util.currentPlatformInstallAppUrl()
+          if url?
+            App.Util.redirect(url)
+          else
+            @replaceWith('index')
 
     # Track which room is being viewed so we can determine when to notify the
     # user.
@@ -76,6 +85,19 @@ App.RoomsRoomRoute = Ember.Route.extend
         else
           throw xhrOrError
       .catch App.rejectionHandler
+
+  renderTemplate: (controller, model) ->
+    if App.isLoggedIn()
+      # If we're logged in, business as usual.
+      @_super(arguments...)
+    else if AppConfig.showMessages
+      @render 'view-conversation',
+        controller: 'roomsViewConversation',
+        into: 'application',
+    else
+      # If we're not logged in and not showing the message, we're redirecting.
+      @render 'redirecting',
+        into: 'application'
 
   # From the given context that we transitioned here with, extract the model ID
   # and/or model without fetching anything.

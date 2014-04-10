@@ -41,6 +41,9 @@ exports.getConfig = (env, app, express) ->
     disallowFileUpload: true
     # When truthy, hides the UI to create and join groups.
     disallowGroups: true
+    # When truthy, messages are displayed on /view/:group_id.  Otherwise, it
+    # just tells the user to use the app.
+    showMessages: true
 
   envConfig = switch env
     when 'development'

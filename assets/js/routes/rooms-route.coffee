@@ -42,10 +42,13 @@ App.RoomsRoute = Ember.Route.extend
       controller: 'settingsModal'
     if ! App.isLoggedIn() && ! App.get('isLoggingIn')
       # Logged out.  Show signup form.
-      @render 'room-join-signup-modal',
-        into: 'application'
-        outlet: 'modal'
-      controller.set('showRoomsPageOverlay', true)
+      # @render 'room-join-signup-modal',
+      #   into: 'application'
+      #   outlet: 'modal'
+      # controller.set('showRoomsPageOverlay', true)
+      #
+      # Instead of showing the signup form overlayed on top of the room, we're
+      # going to either show the latest message or redirect depending on config.
     else
       controller.set('showRoomsPageOverlay', false)
     return undefined
