@@ -1634,19 +1634,19 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     border-top-left-radius 3px
     border-top-right-radius 3px
     padding 10px
-    color rgba(255,255,255, 0.6)
+    color rgba(0,0,0, 0.6)
     font-size 12px
     line-height 1
     cursor pointer
     box-shadow inset 0 -5px 10px rgba(0,0,0, .3)
 
     &.active
-      color rgba(255,255,255, 0.8)
+      color rgba(0,0,0, 0.8)
       border-bottom-color app-primary-bg-color
       box-shadow 0 -2px 2px rgba(0,0,0, .2), inset 0 0px 5px hsl(276, 44%, 28%)
 
     &:hover
-      color rgba(255,255,255, 0.9)
+      color rgba(0,0,0, 0.9)
 
     .chats-icon, .contacts-icon
       sprites-background()
@@ -1733,7 +1733,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     border-top 1px solid transparent
     border-bottom 1px solid transparent
     padding 10px
-    color rgba(254, 255, 255, 0.65)
+    color rgba(0, 0, 0, 0.65)
     text-decoration none
 
     .active-indicator
@@ -1759,11 +1759,11 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       transition-property opacity, visibility
 
     &:hover
-      color #ccc
+      color #666
 
     &.active
       background-color lighten(adjust(app-primary-bg-color, 'saturation', -10), 10%) // #3E274D
-      color #eee
+      color #333
       border-top-color darken(app-primary-bg-color, 15%)
       border-bottom-color darken(app-primary-bg-color, 15%)
       box-shadow inset 0 0 1px rgba(255,255,255, 0.2)
@@ -1838,7 +1838,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
 
   border-top 1px solid darken(app-primary-bg-color, 15%)
   background-color app-primary-bg-color
-  color rgba(255,255,255, .85)
+  color rgba(0,0,0, .85)
 
   mobile-safari-fixed-position-fix()
 
@@ -1849,7 +1849,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   cursor pointer // Clickable.
 
   &:hover
-    color #ccc
+    color #333
 
   // Need this extra nesting since Firefox can't do position relative on a
   // table-cell.
