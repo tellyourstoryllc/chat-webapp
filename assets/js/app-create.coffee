@@ -798,10 +798,27 @@ App.Router.reopen
         # Skip double trigger of the same url.
         return
 
+      # Save the original unstripped url so if we were to transition between two
+      # URLs that map to the same thing, it counts as a page view.
       @set('lastPageViewUrl', url)
-      App.Analytics.trackPageView(url)
+      App.Analytics.trackPageView(@stripAppTokensFromUrl(url))
 
     return result
+
+  # Given a route url path, returns it with any unique tokens substituted with
+  # XXX.  This allows Google Analytics tracking to treat them all as the same
+  # URL.
+  #
+  # Note: ***If you change this, also change `MobileUtils.stripAppTokensFromUrl()`***
+  stripAppTokensFromUrl: (url) ->
+    if /^\/i\/[^\/\?]+/.test(url)
+      '/i/XXX'
+    else if /^\/view\/[^\/\?]+/.test(url)
+      '/view/XXX'
+    else if /^\/chat\/[^\/\?]+/.test(url)
+      '/chat/XXX'
+    else
+      url
 
 
 App.Router.map ->

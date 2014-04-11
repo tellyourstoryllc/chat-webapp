@@ -27,7 +27,7 @@ window.MobileUtils = MobileUtils =
   # XXX.  This allows Google Analytics tracking to treat them all as the same
   # URL.
   #
-  # Note: ***If you change this, also change `App.stripAppTokensFromUrl()`***
+  # Note: ***If you change this, also change `App.Router.stripAppTokensFromUrl()`***
   stripAppTokensFromUrl: (url) ->
     if /^\/i\/[^\/\?]+/.test(url)
       '/i/XXX'
