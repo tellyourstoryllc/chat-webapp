@@ -485,15 +485,16 @@ input, button, select, textarea
   &.no-status
     border-color transparent
 
-  &.phone:after, &.tablet:after
-    position absolute
-    right -5px
-    bottom -5px
-    content ''
-    width 12px
-    height 22px
-    sprites-background()
-    background-position -88px -4px
+  // No phone or tablet indicator since it indicates presence.
+  // &.phone:after, &.tablet:after
+  //   position absolute
+  //   right -5px
+  //   bottom -5px
+  //   content ''
+  //   width 12px
+  //   height 22px
+  //   sprites-background()
+  //   background-position -88px -4px
 
 .medium-avatar-image
   width 43px
