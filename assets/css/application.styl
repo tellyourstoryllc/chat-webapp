@@ -2987,6 +2987,9 @@ sender-column-width = 150px
   .body-cell
     margin-left sender-column-width + 5px
 
+  .message-bubble-container
+    margin-right 125px // Determined experimentally to be wide enough for .status for a long timestamp.
+
   .message-bubble
     // When a message is sent with an image attachment and no text, it shows
     // briefly before the image loads.  The arrow is broken without some height.
@@ -3177,7 +3180,7 @@ sender-column-width = 150px
   .status
     min-width 48px // This is so it doesn't resize so much and reflow the text.
     float right
-    margin 0 0 5px 10px
+    margin 2px 0 5px 10px
     color rgba(0,0,0, .25)
     font-size 10px
     text-align right
