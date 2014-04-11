@@ -35,5 +35,7 @@ window.MobileUtils = MobileUtils =
       '/view/XXX'
     else if /^\/chat\/[^\/\?]+/.test(url)
       '/chat/XXX'
+    else if /^\/password\/reset\/[^\/\?]+/.test(url)
+      '/password/reset/XXX'
     else
       url
