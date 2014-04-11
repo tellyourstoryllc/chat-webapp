@@ -25,16 +25,18 @@
     <div class='clearfix'></div>
   </div>
 
-  <hr class='facebook-divider'>
+  {{#if useFacebookAuth}}
+    <hr class='facebook-divider'>
 
-  <div class='facebook-group'>
-    <div class='facebook-or'>OR</div>
-    <button type='button' class='app-btn btn-block btn-flat btn-fb' {{bind-attr disabled='isLoginDisabled'}}
-      {{action 'attemptLogInWithFacebook'}}>
-      <span class='facebook-f-icon'></span>
-      <div class='btn-fb-text-container'>
-        Log In With Facebook
-      </div>
-    </button>
-  </div>
+    <div class='facebook-group'>
+      <div class='facebook-or'>OR</div>
+      <button type='button' class='app-btn btn-block btn-flat btn-fb' {{bind-attr disabled='isLoginDisabled'}}
+        {{action 'attemptLogInWithFacebook'}}>
+        <span class='facebook-f-icon'></span>
+        <div class='btn-fb-text-container'>
+          Log In With Facebook
+        </div>
+      </button>
+    </div>
+  {{/if}}
 </form>

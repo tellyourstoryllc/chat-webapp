@@ -44,6 +44,8 @@ exports.getConfig = (env, app, express) ->
     # When truthy, messages are displayed on /view/:group_id.  Otherwise, it
     # just tells the user to use the app.
     showMessages: true
+    # When truthy, allows authentication with Facebook.
+    useFacebookAuth: false
 
   envConfig = switch env
     when 'development'

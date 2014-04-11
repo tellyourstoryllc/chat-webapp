@@ -2,7 +2,7 @@ App.FacebookAuthMixin = Ember.Mixin.create
 
   didInsertElement: ->
     # Only load the Facebook script once when we need it.
-    if ! App.get('isFacebookLoaded')
+    if AppConfig.useFacebookAuth && ! App.get('isFacebookLoaded')
       @loadFacebookLibrary()
 
   loadFacebookLibrary: ->

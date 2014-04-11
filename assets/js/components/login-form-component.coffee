@@ -16,6 +16,10 @@ App.LoginFormComponent = Ember.Component.extend App.FacebookAuthMixin,
     @_super(arguments...)
     @set('email', App.get('emailAddress') ? '')
 
+  useFacebookAuth: (->
+    !! AppConfig.useFacebookAuth
+  ).property()
+
   showClose: Ember.computed.alias('didClose')
 
   actions:
