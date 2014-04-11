@@ -119,17 +119,19 @@
 </div>
 
 <ul class='menu choose-status-menu' role='menu'>
-  {{#each status in App.User.statuses}}
-    <li class='menu-item' {{action 'setStatus' status target='view'}}>
-      <span {{bind-attr class=':room-avatar :blank-avatar status.name'}}></span>
-      {{status.title}}
+  {{!
+  {\{#each status in App.User.statuses}\}
+    <li class='menu-item' {\{action 'setStatus' status target='view'}\}>
+      <span {\{bind-attr class=':room-avatar :blank-avatar status.name'}\}></span>
+      {\{status.title}\}
     </li>
-  {{/each}}
+  {\{/each}\}
   <li class='separator'></li>
-  <li class='menu-item' {{action 'changeStatusText' target='view' bubbles=false}}>
+  <li class='menu-item' {\{action 'changeStatusText' target='view' bubbles=false}\}>
     Change Status Message...
   </li>
   <li class='separator'></li>
+  }}
   <li class='menu-item' {{action 'logOut' target='view'}}>Log Out</li>
 </ul>
 

@@ -451,6 +451,9 @@ input, button, select, textarea
   background-position center
   background-size cover
 
+  // No user status.  All border colors are the same.
+  border-color hsla(0, 0%, 73%, 0.5)
+
   &.group
     border-width 0
 
@@ -463,20 +466,21 @@ input, button, select, textarea
     background-image none !important
     margin-top 2px
 
-  &.available, &.away, &.idle, &.do_not_disturb, &.unavailable
-    transition border-color .5s ease-out
+  // Not showing user status.
+  // &.available, &.away, &.idle, &.do_not_disturb, &.unavailable
+  //   transition border-color .5s ease-out
 
-  &.available
-    border-color app-green
+  // &.available
+  //   border-color app-green
 
-  &.away, &.idle
-    border-color app-yellow
+  // &.away, &.idle
+  //   border-color app-yellow
 
-  &.do_not_disturb
-    border-color #DA362A
+  // &.do_not_disturb
+  //   border-color #DA362A
 
-  &.unavailable
-    border-color hsla(0, 0%, 73%, 0.5)
+  // &.unavailable
+  //   border-color hsla(0, 0%, 73%, 0.5)
 
   &.no-status
     border-color transparent
@@ -1917,7 +1921,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   position fixed
   left 5px
   bottom 57px
-  width room-sidebar-width + 50px
+  width room-sidebar-width
   visibility hidden // Initially hidden.
 
   mobile-safari-fixed-position-fix()
@@ -2373,14 +2377,15 @@ room-members-sidebar-width = 200px
       text-align center
     .room-avatar.blank-avatar
       margin-top 1px
-    .user-status
-      padding 10px
-    .idle-duration
-      vertical-align baseline
-    .status-text
-      margin 0 10px 10px
-    .status-text
-      max-height 4.8em !important // Override rules below.
+    // Not showing user status in sidebar.
+    // .user-status
+    //   padding 10px
+    // .idle-duration
+    //   vertical-align baseline
+    // .status-text
+    //   margin 0 10px 10px
+    // .status-text
+    //   max-height 4.8em !important // Override rules below.
 
   .invite-button-container
     padding 10px
