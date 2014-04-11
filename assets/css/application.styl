@@ -3201,8 +3201,10 @@ sender-column-width = 150px
     .body-cell
       margin-left 0
     .message-bubble
+      // Hide the left arrows.
+      &:before
+        display none
       &:after
-        // Hide the left arrows.
         display none
     .status
       margin-top -19px
