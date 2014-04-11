@@ -597,21 +597,22 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
           value: "@" + u.get('mentionName')
           user: u
       newSuggestions.pushObjects(userSuggestions)
-    else if mode == 'auto' && (matches = /(?:^|\W)(:\w*)$/.exec(beforeCursorText)) || mode == 'emoticons'
-      # `:text` found; now figure out which emoticons to suggest.
-      matchText = if mode == 'emoticons' then '' else matches[1]
-      @setProperties(suggestMatchText: matchText, textCursorPosition: range.position)
-      lowerCasedInputName = matchText.toLowerCase()
-      newSuggestions = []
+    # Not using emoticons right now.
+    # else if mode == 'auto' && (matches = /(?:^|\W)(:\w*)$/.exec(beforeCursorText)) || mode == 'emoticons'
+    #   # `:text` found; now figure out which emoticons to suggest.
+    #   matchText = if mode == 'emoticons' then '' else matches[1]
+    #   @setProperties(suggestMatchText: matchText, textCursorPosition: range.position)
+    #   lowerCasedInputName = matchText.toLowerCase()
+    #   newSuggestions = []
 
-      emoticons = App.Emoticon.allArranged()
-      emoticonSuggestions = emoticons.filter (e) ->
-        e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
-      .map (e) ->
-        Ember.Object.create
-          imageUrl: e.get('imageUrl')
-          value: e.get('name')
-      newSuggestions.pushObjects(emoticonSuggestions)
+    #   emoticons = App.Emoticon.allArranged()
+    #   emoticonSuggestions = emoticons.filter (e) ->
+    #     e.get('name').toLowerCase().indexOf(lowerCasedInputName) == 0
+    #   .map (e) ->
+    #     Ember.Object.create
+    #       imageUrl: e.get('imageUrl')
+    #       value: e.get('name')
+    #   newSuggestions.pushObjects(emoticonSuggestions)
     else
       # Nothing interesting before the cursor.
       @setProperties(suggestMatchText: null, textCursorPosition: null)
