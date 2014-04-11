@@ -39,6 +39,12 @@ App.User = App.BaseModel.extend App.LockableApiModelMixin,
     account
   ).property('_account')
 
+  isInternal: (->
+    name = @get('name')
+    return false unless name?
+    name[0] == '_'
+  ).property('name')
+
   mentionName: (->
     @get('name').replace(/\s/g, '')
   ).property('name')

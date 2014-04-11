@@ -25,6 +25,7 @@ App.RoomsRoute = Ember.Route.extend
 
     controller.set('allGroups', App.Group.all())
     controller.set('allOneToOnes', App.OneToOne.all())
+    controller.set('allUsers', App.User.all())
     if App.isLoggedIn()
       @_fetchAllConversationsAndContinue(controller)
 

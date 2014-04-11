@@ -4,6 +4,7 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
 
   allGroups: null
   allOneToOnes: null
+  allUsers: null
 
   activeTab: 'rooms'
 
@@ -24,18 +25,16 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
     App.get('currentUserContacts')
   ).property('App.currentUserContacts')
 
-  displayContacts: (->
-    App.User.all()
-  ).property()
+  displayContacts: Ember.computed.filterBy('allUsers', 'isInternal', false)
 
   isRoomsTabActive: Ember.computed.equal('activeTab', 'rooms')
   isContactsTabActive: Ember.computed.equal('activeTab', 'contacts')
 
   rooms: (->
     (@get('allGroups').concat(@get('allOneToOnes'))).filter (room) ->
-      room.get('isOpen') && ! room.get('isDeleted')
-  ).property('allGroups.@each.isOpen', 'allGroups.@each.isDeleted',
-             'allOneToOnes.@each.isOpen', 'allOneToOnes.@each.isDeleted')
+      ! room.get('isInternal') && room.get('isOpen') && ! room.get('isDeleted')
+  ).property('allGroups.@each.isInternal', 'allGroups.@each.isOpen', 'allGroups.@each.isDeleted',
+             'allOneToOnes.@each.isInternal', 'allOneToOnes.@each.isOpen', 'allOneToOnes.@each.isDeleted')
 
   arrangedRooms: (->
     App.RecordArray.create

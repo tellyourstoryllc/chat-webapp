@@ -51,6 +51,8 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
     @get('subscription')?
   ).property('subscription')
 
+  isInternal: true
+
   statusText: Ember.computed.alias('topic')
 
   # Returns true if this room should show in the UI an invite users tip.
