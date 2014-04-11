@@ -91,6 +91,7 @@ App.Util.reopenClass
       types.push('video/ogg')
     if Modernizr.video.h264
       types.push('video/mp4')
+      types.push('video/mpeg')
     if Modernizr.video.webm
       types.push('video/webm')
     # If the current user sent it, we have the actual file and can try to use
