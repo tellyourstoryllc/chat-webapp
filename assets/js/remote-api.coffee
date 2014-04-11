@@ -262,6 +262,9 @@ App.RemoteApi = Ember.Object.extend
     @ajax(@buildURL('/logs/event'), 'POST', data: data)
 
   deserializeUnixTimestamp: (serialized) ->
+    # If an integer is in string form, treat it as a number.
+    serialized = parseInt(serialized) if /^\d+$/.test(serialized)
+
     newSerialized = if Ember.typeOf(serialized) == 'number'
       serialized * 1000
     else
