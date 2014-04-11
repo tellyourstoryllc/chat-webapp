@@ -184,16 +184,18 @@
                         </span>
                       </div>
                       <div class='body-cell'>
-                        <span class='status'>
-                          {{message-status-display message}}
-                          {{compact-timestamp-element message.createdAt classNames='timestamp'}}
+                        <span class='message-bubble'>
+                          <span class='status'>
+                            {{message-status-display message}}
+                            {{compact-timestamp-element message.createdAt classNames='timestamp'}}
+                          </span>
+
+                          {{! Passing attachmentUrl so that this re-renders when it changes. }}
+                          {{message-attachment-display message
+                            attachmentUrlBinding=message.attachmentUrl}}
+
+                          <div class='message-body'>{{message.body}}</div>
                         </span>
-
-                        {{! Passing attachmentUrl so that this re-renders when it changes. }}
-                        {{message-attachment-display message
-                          attachmentUrlBinding=message.attachmentUrl}}
-
-                        <div class='message-body'>{{message.body}}</div>
                       </div>
                       <div class='clearfix'></div>
                     </div>

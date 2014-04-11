@@ -2985,12 +2985,15 @@ sender-column-width = 150px
     text-align right
 
   .body-cell
+    margin-left sender-column-width + 5px
+
+  .message-bubble
     // When a message is sent with an image attachment and no text, it shows
     // briefly before the image loads.  The arrow is broken without some height.
     min-height 26px
 
+    display inline-block
     position relative // For bubble arrow.
-    margin-left sender-column-width + 5px
     border 1px solid rgba(0,0,0, .1)
     border-radius 3px
     padding 5px 10px
@@ -3020,7 +3023,7 @@ sender-column-width = 150px
 
   &.sent-by-you
 
-    .body-cell
+    .message-bubble
       background-color #ECEDEE
 
       &:after
@@ -3028,7 +3031,7 @@ sender-column-width = 150px
 
   &.system-message
 
-    .body-cell
+    .message-bubble
       background-color rgba(255,255,255, 0.97)
       color #777
 
@@ -3042,7 +3045,7 @@ sender-column-width = 150px
         background-color transparent
 
   &.is-sending
-    .body-cell
+    .message-bubble
       opacity .8
 
   .sender, .message-body
@@ -3194,6 +3197,7 @@ sender-column-width = 150px
       text-align left
     .body-cell
       margin-left 0
+    .message-bubble
       &:after
         // Hide the left arrows.
         display none
