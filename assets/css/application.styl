@@ -3255,8 +3255,10 @@ sender-column-width = 150px
       text-align left
     .body-cell
       margin-left 0
+      // Hide the left arrows.
+      &:before
+        display none
       &:after
-        // Hide the left arrows.
         display none
     .status
       margin-top -19px
