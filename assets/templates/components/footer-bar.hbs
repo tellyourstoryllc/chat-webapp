@@ -3,13 +3,13 @@
     <div class='app-links'>
       {{#unless isAndroid}}
         <a href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank' class='app-link first-app-link'>
-          <img src='{{unbound webServerUrl 'imageIosAppStore'}}' alt='Available on the App Store' style='width: 165px; height: auto'>
+          <img src='{{unbound webServerUrl 'imageIosAppStore'}}' alt='Available on the App Store' style='width: 200px; height: auto'>
         </a>
       {{/unless}}
       {{!
       {\{#unless isAppleIos}\}
         <a href='{\{unbound AppConfig.androidAppInstallUrl}\}' target='_blank' class='app-link'>
-          <img src='{\{unbound webServerUrl 'imageGooglePlay'}\}' alt='Get it on Google Play' style='width: 165px; height: auto'>
+          <img src='{\{unbound webServerUrl 'imageGooglePlay'}\}' alt='Get it on Google Play' style='width: 200px; height: auto'>
         </a>
       {\{/unless}\}
       }}
