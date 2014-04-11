@@ -198,8 +198,8 @@ App.SettingsDialogComponent = Ember.Component.extend App.BaseControllerMixin,
     Ember.run.schedule 'afterRender', @, ->
       prefs = @get('preferences')
       return unless prefs?
-      @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
-      @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
+      # @$('.server-mention-email-checkbox').prop('checked', prefs.get('serverMentionEmail'))
+      # @$('.server-one-to-one-email-checkbox').prop('checked', prefs.get('serverOneToOneEmail'))
       clientPrefs = prefs.get('clientWeb')
       return unless clientPrefs?
       @$('#show-join-leave-messages-checkbox').prop('checked', clientPrefs.get('showJoinLeaveMessages'))
