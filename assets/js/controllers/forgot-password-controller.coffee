@@ -2,6 +2,8 @@ App.ForgotPasswordController = Ember.Controller.extend
 
   login: ''
 
+  isShowingForgotPasswordForm: false
+
   hasSentResetEmail: false
 
   isRequesting: false
