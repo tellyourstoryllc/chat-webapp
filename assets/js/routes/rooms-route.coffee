@@ -124,14 +124,16 @@ App.RoomsRoute = Ember.Route.extend
     .then (rooms) =>
       if rooms?
         rooms.forEach (room) =>
-          # Fetch all Conversations after subscribing.
+          # Fetch all Conversations after subscribing.  As an optimization,
+          # don't reload if it's internal.  We basically don't care about those.
           if room.get('isOpen') && ! room.get('isSubscribedToUpdates')
             room.subscribeToMessages().then =>
-              room.reload()
+              room.reload() if ! room.get('isInternal')
           else if ! room.get('reconnectedAt')?
             # Don't subscribe if the room isn't open.  Reload if the room itself
             # hasn't already handled the reconnect.
-            Ember.run.next room, 'reload'
+            Ember.run.next @, ->
+              room.reload() if ! room.get('isInternal')
           else
             # Clear reconnectedAt for next time.
             room.set('reconnectedAt', null)
