@@ -291,7 +291,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
 
     @updateMessagesSize($window, containerHeight, messagesWidth)
 
-    isMembersVisible = $window.width() > 700
+    # Turn off the display of the members sidebar.
+    isMembersVisible = false #$window.width() > 700
     $('.room-members-sidebar').css
       left: messagesWidth
       top: @$('.room-info').outerHeight() ? 0
@@ -334,7 +335,8 @@ App.RoomsContainerComponent = Ember.Component.extend App.BaseControllerMixin,
   # Returns the width of the list of messages in pixels.
   messagesWidth: ($window = $(window)) ->
     windowWidth = $window.width()
-    isMembersVisible = windowWidth > 700
+    # Turn off the display of the members sidebar.
+    isMembersVisible = false #windowWidth > 700
     # Less than or equal to this window width, no sidebars are shown. This
     # should match the CSS.
     noSidebarsWidth = 515
