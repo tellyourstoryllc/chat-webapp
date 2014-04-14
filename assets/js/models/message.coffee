@@ -101,7 +101,7 @@ App.Message = App.BaseModel.extend
           <div class='expand-indicator' title='Play Video'><span class='play-icon'></span> <span class='play-text'>Play</span></div>
         </a>
         <div class='video-attachment video-attachment-#{messageGuid} not-displayed'>
-          <video class='video-attachment-video' preload='auto' poster='#{escape(attachmentPreviewUrl)}' controls>
+          <video class='video-attachment-video' preload='none' poster='#{escape(attachmentPreviewUrl)}' controls>
             <source src='#{escape(attachmentUrl)}'>
           </video>
           <div class='expand-indicator expanded' title='Collapse Video' onclick='App.hideVideoAttachment(event, "#{escape(convoId)}", this, "#{escape(messageGuid)}");'>&#8601;</div>
@@ -117,7 +117,7 @@ App.Message = App.BaseModel.extend
         """.htmlSafe()
     else if @hasPlayableAudioAttachment()
       """
-      <audio class='audio-attachment audio-attachment-#{messageGuid}' preload='auto' controls
+      <audio class='audio-attachment audio-attachment-#{messageGuid}' preload='none' controls
         onended='App.onAudioEnded(event, this);'
         onerror='App.onAudioEnded(event, this);'
         onloadeddata='App.onMessageContentLoad("#{escape(@get('conversationId'))}", this, "audio");'>
