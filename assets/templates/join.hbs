@@ -1,36 +1,43 @@
-{{app-install-banner showLaunchAppButton=true joinCode=joinCode}}
+{{#if showMobileInstall}}
 
-<div class='logo-container'>
-  {{#link-to 'index'}}
-    <img class='logo' src='{{webServerUrl 'imageLogoWide'}}' alt='{{unbound App.title}}' style='width: 190px; height: auto;'>
-  {{/link-to}}
-</div>
+  {{mobile-install-dialog joinCode=joinCode
+    didDismissMobileInstallDialog='didDismissMobileInstallDialog'}}
 
-<div class='empty-page-content join-page-content'>
-  {{#if userMessage}}
-    <div class='alert alert-error'>
-      {{userMessage}}
-    </div>
-  {{/if}}
-  <div class='text-content'>
-    {{#if isLoading}}
-      Loading...
-    {{else}}
-      {{#if room}}
-        {{room-join-group-signup-form viewName='joinGroupSignupForm'
-          isInline=true
-          room=room
-          isUiDisabled=isSignupDisabled
-          didSignUp='didSignUp'
-          didLogIn='didLogIn'
-          signUpWithFacebook='signUpWithFacebook'
-          facebookDidError='facebookDidError'
-          logInWithRoom='logInWithRoom'}}
-      {{else}}
-        {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=joinCode}}
-      {{/if}}
-    {{/if}}
+{{else}}
+
+  <div class='logo-container'>
+    {{#link-to 'index'}}
+      <img class='logo' src='{{webServerUrl 'imageLogoWide'}}' alt='{{unbound App.title}}' style='width: 190px; height: auto;'>
+    {{/link-to}}
   </div>
-</div>
 
-{{footer-bar showAppLinks='mobile-only'}}
+  <div class='empty-page-content join-page-content'>
+    {{#if userMessage}}
+      <div class='alert alert-error'>
+        {{userMessage}}
+      </div>
+    {{/if}}
+    <div class='text-content'>
+      {{#if isLoading}}
+        Loading...
+      {{else}}
+        {{#if room}}
+          {{room-join-group-signup-form viewName='joinGroupSignupForm'
+            isInline=true
+            room=room
+            isUiDisabled=isSignupDisabled
+            didSignUp='didSignUp'
+            didLogIn='didLogIn'
+            signUpWithFacebook='signUpWithFacebook'
+            facebookDidError='facebookDidError'
+            logInWithRoom='logInWithRoom'}}
+        {{else}}
+          {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=joinCode}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
+  {{footer-bar showAppLinks='mobile-only'}}
+
+{{/if}}

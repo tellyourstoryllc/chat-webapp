@@ -17,6 +17,7 @@ App.JoinRoute = Ember.Route.extend
     joinCode = model
     controller.set('joinCode', joinCode)
     controller.set('room', null)
+    controller.set('showMobileInstall', Modernizr.appleios || Modernizr.android)
     @_submitRoomKey(controller)
 
   _submitRoomKey: (controller, roomKeyText) ->

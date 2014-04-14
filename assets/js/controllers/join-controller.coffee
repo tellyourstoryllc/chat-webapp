@@ -2,6 +2,7 @@
 
 App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
 
+  showMobileInstall: false
   joinCode: null
   room: null
 
@@ -16,6 +17,10 @@ App.JoinController = Ember.Controller.extend App.BaseControllerMixin,
       isSignupDisabled: false
 
   actions:
+
+    didDismissMobileInstallDialog: ->
+      @set('showMobileInstall', false)
+      return undefined
 
     logInWithRoom: ->
       room = @get('room')
