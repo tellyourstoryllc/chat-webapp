@@ -43,9 +43,11 @@
   Launch {{unbound App.title}}
 </button>
 
-<a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>
-  Use Web Version
-</a>
+{{#if showWebAppOption}}
+  <a href='#' class='subtle-link' {{action 'dismissMobileInstallDialog'}}>
+    Use Web Version
+  </a>
+{{/if}}
 
 <div class='hidden-continue'>
 </div>
