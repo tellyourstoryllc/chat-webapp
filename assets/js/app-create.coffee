@@ -152,7 +152,9 @@ window.App = App = Ember.Application.create
     # Parse out invite_token from the invite URL so we can override any stored
     # token.  URL pattern is `/i/:invite_token`
     if (matches = /^\/i\/([^\/\?]+)/.exec(window.location.pathname))
-      inviteToken = matches[1]
+      # ***Note:*** Using length to guess that it's an invite token.  This could
+      # break if we increase group id / join code length.
+      inviteToken = matches[1] if matches[1]? && matches[1].length >= 9
 
     if ! Modernizr.history
       # Browser doesn't support changing the URL without reloading the page.  If
@@ -209,6 +211,7 @@ window.App = App = Ember.Application.create
       window.localStorage.removeItem('token')
       # Log in with the invite_token.
       @logInFromInviteToken(inviteToken)
+      .catch App.rejectionHandler
     else if (token = window.localStorage.getItem('token'))?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
@@ -238,16 +241,19 @@ window.App = App = Ember.Application.create
         @continueAfterLoggingIn()
     .catch App.rejectionHandler
 
-  logInFromInviteToken: (inviteToken) ->
+  logInFromInviteToken: (inviteToken, options = {}) ->
+    _.defaults(options, { renderErrorMessage: true })
     App.set('isLoggingIn', true)
 
     blowUpWithDefaultMessage = ->
+      errorObj =
+        title: "Sorry, there was a problem with that invite link."
+        htmlMessage: "Go To <a href='/login'>Login</a>."
       # TODO: This doesn't actually do anything.  Need to change how this is
-      # rendered.
-      #
-      # App.set 'blowUpWithMessage',
-      #   title: "Sorry, there was a problem with that invite link."
-      #   htmlMessage: "Go To <a href='/login'>Login</a>."
+      # rendered.  Remember to condition on `options.renderErrorMessage`.
+      App.set('blowUpWithMessage', errorObj) if options.renderErrorMessage
+
+      errorObj
 
     App.get('api').login(invite_token: inviteToken)
     .always =>
@@ -280,15 +286,18 @@ window.App = App = Ember.Application.create
       else
         blowUpWithDefaultMessage()
 
+      return [user, token, group, json]
+
     , (xhr) =>
       if xhr.status == 401
-        # TODO: Show this error message.
-        App.set 'blowUpWithMessage',
+        errorObj =
           title: "Sorry, you don't have permission to view that."
           htmlMessage: "Go To <a href='/login'>Login</a>."
+        # TODO: Show this error message if `options.renderErrorMessage`.
+        App.set('blowUpWithMessage', errorObj) if options.renderErrorMessage
+        throw errorObj
       else
-        blowUpWithDefaultMessage()
-    .catch App.rejectionHandler
+        throw blowUpWithDefaultMessage()
 
   # Transition to somewhere more interesting.
   continueAfterLoggingIn: ->
