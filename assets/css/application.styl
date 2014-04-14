@@ -67,6 +67,11 @@ sprites-background()
   background-size 260px 118px
   background-repeat no-repeat
 
+sprites-background-dark()
+  background-image asseturl('/images/sprites-dark2x.png')
+  background-size 260px 118px
+  background-repeat no-repeat
+
 sprite-icon()
   display inline-block
   background-repeat no-repeat
@@ -1676,7 +1681,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       color rgba(0,0,0, 0.9)
 
     .chats-icon, .contacts-icon
-      sprites-background()
+      sprites-background-dark()
       sprite-icon()
       opacity .6
 
@@ -1839,7 +1844,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
     margin auto
 
     right 7px
-    sprites-background()
+    sprites-background-dark()
     sprite-icon()
     width 18px
     height 20px
@@ -1894,7 +1899,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
       content: ''
       width 12px
       height 5px
-      sprites-background()
+      sprites-background-dark()
       background-position -107px -15px
       opacity .6
 
@@ -1980,7 +1985,7 @@ home-modal-inner-width = home-modal-width - 2 * home-modal-horiz-padding
   sprite-icon()
   width 18px
   height 20px
-  sprites-background()
+  sprites-background-dark()
   background-position -235px -8px
 
   opacity .6
@@ -2127,7 +2132,7 @@ room-content-margin-height = 10px
   .toggle-sidebar-icon
     width 16px
     height 12px
-    sprites-background()
+    sprites-background-dark()
     sprite-icon()
     background-position -69px -41px
 
