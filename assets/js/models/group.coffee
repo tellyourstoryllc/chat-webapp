@@ -53,6 +53,10 @@ App.Group = App.BaseModel.extend App.Conversation, App.LockableApiModelMixin,
 
   isInternal: true
 
+  # Groups default to not open since they are all internal and aren't displayed.
+  # This is an optimization that prevents them from being subscribed to.
+  isOpen: false
+
   statusText: Ember.computed.alias('topic')
 
   # Returns true if this room should show in the UI an invite users tip.
