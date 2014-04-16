@@ -96,6 +96,14 @@ App.RoomsRoute = Ember.Route.extend
       if rooms?
         controller.set('roomsLoaded', true)
 
+        # Render a few of the most recent rooms.  If we render them all, the
+        # page can take a long time to load.
+        numRoomsToRender = 5
+        arrangedRooms = controller.get('arrangedRooms')
+        for i in [0 ... Math.min(arrangedRooms?.get('length') ? 0, numRoomsToRender)] by 1
+          room = arrangedRooms.objectAt(i)
+          room.ensureMessagesAreRendered()
+
         continueToMostRecentRoom = App.get('continueToMostRecentRoom')
         # Always consume this flag regardless of whether it was set.
         App.set('continueToMostRecentRoom', false)

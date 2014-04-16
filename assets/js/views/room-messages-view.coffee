@@ -107,7 +107,7 @@ App.RoomMessagesView = Ember.View.extend
   ).observes('room.associationsLoaded')
 
   messagesArrayChanged: (->
-    messages = @get('room.messages')
+    messages = @get('room.displayMessages')
     observingMessages = @get('_observingMessages')
     if messages != observingMessages
       # Messages array changed.  Uninstall observer on old array and add to new
@@ -129,7 +129,7 @@ App.RoomMessagesView = Ember.View.extend
 
       # Handle as if it were a change.
       @messagesChanged(messages, 0, 0, messages.length, true)
-  ).observes('room.messages').on('init')
+  ).observes('room.displayMessages').on('init')
 
   messagesWillChange: (messages, start, removeCount, addCount) -> # Ignore.
 

@@ -3,6 +3,11 @@ App.Conversation = Ember.Mixin.create
   # Array of messages in the conversation.
   messages: null
 
+  # Array of messages to actually display.  Anything in this collection is
+  # bound to the DOM.  To prevent slow initial loading in the browser, this is
+  # initially kept empty.
+  displayMessages: null
+
   # New message draft temporarily stored before sending.
   newMessageText: ''
 
@@ -158,6 +163,11 @@ App.Conversation = Ember.Mixin.create
 
     @fetchAndLoadAssociations()
 
+  # Calling this ensures that all messages are rendered in the DOM.
+  ensureMessagesAreRendered: ->
+    @set('displayMessages', @get('messages'))
+    undefined
+
   fetchAndLoadAssociations: ->
     loadPromise = @get('loadPromise')
     # If we're already loading, just return the same promise.
@@ -185,7 +195,7 @@ App.Conversation = Ember.Mixin.create
           if Ember.isEmpty(convo.get('messages'))
             newMessages = App.newInstancesFromLoadMetaData loadMetas, (o) ->
               o instanceof App.Message
-            convo.set('messages', newMessages)
+            convo.get('messages').addObjects(newMessages)
 
           resolve(loadMetas)
         , (e) =>

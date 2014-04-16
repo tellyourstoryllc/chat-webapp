@@ -174,7 +174,7 @@
                   Loading...
                 </div>
 
-                {{#each message in messages}}
+                {{#each message in displayMessages}}
                   <div {{bind-attr class=':message message.sentByClassName message.isSentByCurrentUser:sent-by-you message.isSystemMessage:system-message message.isSaving:is-sending'}}
                     {{bind-attr data-message-id='message.id'}}>
                     <div class='message-table'>
