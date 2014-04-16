@@ -241,11 +241,6 @@ App.RoomMessagesView = Ember.View.extend
     $msgs = @$('.messages')
     $msgs.height() + $msgs.prop('scrollTop') >= $msgs.prop('scrollHeight')
 
-  # Computed property version of `isScrollToLastMessage()`.
-  isScrollAnchoredToBottom: (->
-    @isScrolledToLastMessage()
-  ).property().volatile()
-
   # Triggered when an image or other DOM element loads causing the content to
   # change its rendered size.
   contentDidChangeSize: (element, objectType) ->
