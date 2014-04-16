@@ -184,11 +184,11 @@ App.RoomMessagesView = Ember.View.extend
       room = @get('room')
       return unless room?
       wallpaperUrl = room.get('wallpaperUrl')
-      if wallpaperUrl?
+      if wallpaperUrl? && room.get('isRenderingContent')
         @$('.messages').css { 'background-image': "url(#{wallpaperUrl})" }
       else
         @$('.messages').css { 'background-image': 'none' }
-  ).observes('room.wallpaperUrl').on('didInsertElement')
+  ).observes('room.wallpaperUrl', 'room.isRenderingContent').on('didInsertElement')
 
   isRoomBeforeCursor: (->
     rooms = @get('rooms')

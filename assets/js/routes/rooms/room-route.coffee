@@ -52,7 +52,7 @@ App.RoomsRoomRoute = Ember.Route.extend
 
     if model?
       # Make sure we render the messages.
-      model.ensureMessagesAreRendered()
+      model.ensureContentIsRendered()
       # Mark the room as read.
       model.set('isUnread', false)
       # Set the room as opened to show it in the list.
@@ -72,7 +72,7 @@ App.RoomsRoomRoute = Ember.Route.extend
         if ! model?
           controller.set('model', room)
           App.set('currentlyViewingRoom', room)
-          room.ensureMessagesAreRendered()
+          room.ensureContentIsRendered()
           # Load preferences.
           room.scheduleLoadUserGroupPreferences?()
 

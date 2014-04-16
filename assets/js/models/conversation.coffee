@@ -8,6 +8,9 @@ App.Conversation = Ember.Mixin.create
   # initially kept empty.
   displayMessages: null
 
+  # True when we're rending this conversation's content in the DOM.
+  isRenderingContent: false
+
   # New message draft temporarily stored before sending.
   newMessageText: ''
 
@@ -163,9 +166,11 @@ App.Conversation = Ember.Mixin.create
 
     @fetchAndLoadAssociations()
 
-  # Calling this ensures that all messages are rendered in the DOM.
-  ensureMessagesAreRendered: ->
+  # Calling this ensures that all messages and user wallpaper are rendered in
+  # the DOM.
+  ensureContentIsRendered: ->
     @set('displayMessages', @get('messages'))
+    @set('isRenderingContent', true)
     undefined
 
   fetchAndLoadAssociations: ->
