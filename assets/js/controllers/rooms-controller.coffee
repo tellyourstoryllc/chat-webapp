@@ -30,11 +30,9 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   isRoomsTabActive: Ember.computed.equal('activeTab', 'rooms')
   isContactsTabActive: Ember.computed.equal('activeTab', 'contacts')
 
-  rooms: (->
-    (@get('allGroups').concat(@get('allOneToOnes'))).filter (room) ->
-      ! room.get('isInternal') && room.get('isOpen') && ! room.get('isDeleted')
-  ).property('allGroups.@each.isInternal', 'allGroups.@each.isOpen', 'allGroups.@each.isDeleted',
-             'allOneToOnes.@each.isInternal', 'allOneToOnes.@each.isOpen', 'allOneToOnes.@each.isDeleted')
+  # Note: Not including groups since they are all internal.
+  rooms: Ember.computed.filter 'allOneToOnes.@each.{isInternal,isOpen,isDeleted}', (room) ->
+    ! room.get('isInternal') && room.get('isOpen') && ! room.get('isDeleted')
 
   arrangedRooms: (->
     App.RecordArray.create
