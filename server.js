@@ -148,7 +148,18 @@ var renderChatApp = function(req, res) {
   res.render('index', { config: config, title: config.displayTitle });
 };
 
-app.get('/', renderChatApp);
+app.get('/', function(req, res) {
+  if (config.autoRedirectToIosInstall && config.iosAppInstallUrl &&
+    /Chrome|iPhone|iPad|iPod/i.test(req.headers['user-agent']) ||
+    config.autoRedirectToAndroidInstall && config.androidAppInstallUrl &&
+    /Android/i.test(req.headers['user-agent'])) {
+    res.render('redirect-to-app', { config: config, title: config.displayTitle, isExistingUser: false });
+  }
+  else {
+    // Render the JS app.
+    renderChatApp(req, res);
+  }
+});
 app.get('/join/*', renderChatApp);
 app.get('/login', renderChatApp);
 app.get('/signup', renderChatApp);

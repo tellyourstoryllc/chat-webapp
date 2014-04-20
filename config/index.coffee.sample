@@ -37,6 +37,9 @@ exports.getConfig = (env, app, express) ->
     # use the string "skymob" for "skymob://groups".
     iosAppLaunchProtocol: 'skymob'
     androidAppLaunchProtocol: 'skymob'
+    # Auto-redirect to app store on mobile platforms when landing on home page.
+    autoRedirectToIosInstall: true
+    autoRedirectToAndroidInstall: false
     # When truthy, hides the UI to attach file to messages.
     disallowFileUpload: true
     # When truthy, hides the UI to create and join groups.
