@@ -39,7 +39,7 @@ block foot-content
         return;
       }
       // Always go somewhere since there's nothing interesting here.
-      MobileUtils.redirect('/');
+      if (window.location.pathname !== '/') MobileUtils.redirect('/');
     };
 
     if (typeof ga !== 'undefined' && ga !== null) {
