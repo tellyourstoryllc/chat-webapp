@@ -150,7 +150,7 @@ var renderChatApp = function(req, res) {
 
 app.get('/', function(req, res) {
   if (config.autoRedirectToIosInstall && config.iosAppInstallUrl &&
-    /Chrome|iPhone|iPad|iPod/i.test(req.headers['user-agent']) ||
+    /iPhone|iPad|iPod/i.test(req.headers['user-agent']) ||
     config.autoRedirectToAndroidInstall && config.androidAppInstallUrl &&
     /Android/i.test(req.headers['user-agent'])) {
     res.render('redirect-to-app', { config: config, title: config.displayTitle, isExistingUser: false });
