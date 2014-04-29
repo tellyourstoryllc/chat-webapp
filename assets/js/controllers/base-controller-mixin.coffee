@@ -51,3 +51,9 @@ App.BaseControllerMixin = Ember.Mixin.create
   ).property()
 
   allowGroups: Ember.computed.not('disallowGroups')
+
+  disallowLogin: (->
+    !! AppConfig.disallowLogin
+  ).property()
+
+  allowLogin: Ember.computed.not('disallowLogin')

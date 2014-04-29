@@ -10,7 +10,9 @@
       </div>
       {{#unless isLoggedIn}}
         <div class='right-nav-links'>
-          {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
+          {{#if allowLogin}}
+            {{#link-to 'login' classNames='nav-link'}}Log In{{/link-to}}
+          {{/if}}
           {{#if App.showRoomKeyForm}}
             {{room-key-form submitRoomKey='submitRoomKey' roomKeyText=App.roomKeyTextToShow}}
           {{/if}}

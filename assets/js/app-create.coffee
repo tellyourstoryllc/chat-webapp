@@ -198,14 +198,15 @@ window.App = App = Ember.Application.create
     try
       fayeClient = App.Faye.createClient()
     catch e
-      if /Faye/.test(e?.message)
-        Ember.Logger.error e, e.stack ? e.stacktrace
-        App.set 'blowUpWithMessage',
-          title: "500 Internal Server Error"
-          message: "There was an error connecting to the messaging server."
-          shouldRetry: true
-      else
-        throw e
+      if ! AppConfig.disallowLogin
+        if /Faye/.test(e?.message)
+          Ember.Logger.error e, e.stack ? e.stacktrace
+          App.set 'blowUpWithMessage',
+            title: "500 Internal Server Error"
+            message: "There was an error connecting to the messaging server."
+            shouldRetry: true
+        else
+          throw e
     @set('fayeClient', fayeClient)
     _.bindAll(@, 'onFayeConnect', 'onFayeTransportUp', 'onFayeTransportDown')
     if fayeClient?
