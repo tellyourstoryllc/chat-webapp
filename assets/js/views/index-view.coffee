@@ -10,12 +10,13 @@ App.IndexView = Ember.View.extend
 
   init: ->
     @_super(arguments...)
-    _.bindAll(@, 'onBodyKeyDown', 'onDownloadMacAppClick')
+    _.bindAll(@, 'onBodyKeyDown', 'onDownloadMacAppClick', 'onResize')
     # Force computed properties.
     @get('room')
 
   didInsertElement: ->
     App.set('indexView', @)
+    $(window).on 'resize', @onResize
     $('body').on 'keydown', @onBodyKeyDown
     $('body').addClass('home-page')
 
@@ -23,6 +24,8 @@ App.IndexView = Ember.View.extend
     $('body').addClass('desktop-home-page') if App.get('isMacGap')
 
     Ember.run.schedule 'afterRender', @, ->
+      @updateSize()
+
       joinCode = @get('joinCodeToShow')
       if joinCode?
         App.set('roomKeyTextToShow', joinCode)
@@ -36,6 +39,17 @@ App.IndexView = Ember.View.extend
     $('body').off 'keydown', @onBodyKeyDown
     $('body').removeClass('home-page')
     $('body').removeClass('desktop-home-page')
+
+  onResize: _.debounce (event) ->
+    Ember.run @, ->
+      @updateSize()
+      undefined
+  , 50
+
+  updateSize: ->
+    return unless @currentState == Ember.View.states.inDOM
+    $window = $(window)
+    @$('.home-content .logo').css(width: $window.width(), 'max-width': 'none')
 
   onBodyKeyDown: (event) ->
     Ember.run @, ->
