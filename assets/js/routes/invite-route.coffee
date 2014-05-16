@@ -5,7 +5,9 @@ App.InviteRoute = Ember.Route.extend
 
   afterModel: (model, transition) ->
     if ! App.isLoggedIn() && ! App.get('isLoggingIn')
-      # Attempt to log in using the invite token.
+      # Attempt to log in using the invite token.  In the normal case we don't
+      # make it here.  See `App.ready()` in app-create.coffee for some weirdness
+      # related to the invite_token.
       App.logInFromInviteToken(model)
 
     if Modernizr.appleios || Modernizr.android

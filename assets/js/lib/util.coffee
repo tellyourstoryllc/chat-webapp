@@ -53,6 +53,10 @@ App.Util.reopenClass
     catch e
       window.location.href = url
 
+  redirectToAppInstall: ->
+    if (url = App.Util.currentPlatformInstallAppUrl())?
+      App.Util.redirect(url)
+
   # Generates a GUID as securely as possible.
   #
   # http://stackoverflow.com/a/8472700/12887

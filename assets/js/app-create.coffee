@@ -220,7 +220,9 @@ window.App = App = Ember.Application.create
       # TODO: merge these two accounts?
       window.localStorage.removeItem('token')
       # Log in with the invite_token.
-      @logInFromInviteToken(inviteToken)
+      @logInFromInviteToken(inviteToken).finally =>
+        # Redirect after tracking.
+        App.Util.redirectToAppInstall() if Modernizr.appleios && AppConfig.autoRedirectToIosInstall || Modernizr.android && AppConfig.autoRedirectToAndroidInstall
     else if (token = window.localStorage.getItem('token'))?
       # We have a token.  Fetch the current user so that we can be fully logged
       # in.
