@@ -5,9 +5,23 @@
 {{else}}
 
   <div class='home-content'>
+    <div class='app-links'>
+      {{#unless isAndroid}}
+        <a href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank' class='app-link first-app-link'>
+          <img src='{{unbound webServerUrl 'imageIosAppStore'}}' alt='Available on the App Store' style='width: 200px; height: auto'>
+        </a>
+      {{/unless}}
+      {{!
+      {\{#unless isAppleIos}\}
+        <a href='{\{unbound AppConfig.androidAppInstallUrl}\}' target='_blank' class='app-link'>
+          <img src='{\{unbound webServerUrl 'imageGooglePlay'}\}' alt='Get it on Google Play' style='width: 200px; height: auto'>
+        </a>
+      {\{/unless}\}
+      }}
+    </div>
     <img src='{{web-server-url 'imageLogoBig'}}' alt='{{unbound App.title}}' style='width: 99%; max-width: 300px; height: auto;' class='logo'>
   </div>
 
-  {{footer-bar showAppLinks=true}}
+  {{footer-bar showAppLinks=false}}
 
 {{/if}}
