@@ -173,7 +173,9 @@ app.get('/v/*', function(req, res) {
 });
 
 // SMS invite link /i/:invite_token.
-app.get('/i/:invite_token', renderChatApp);
+app.get('/i/:invite_token', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Invite", isExistingUser: false });
+});
 app.get('/i', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Invite", isExistingUser: false });
 });
