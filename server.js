@@ -179,7 +179,11 @@ app.get('/i/:invite_token', function(req, res) {
 app.get('/i', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Invite", isExistingUser: false });
 });
-app.get('/mobile', renderChatApp);
+// We no longer use this URL since it used to be used by the invite link.
+// Should be able to remove this route after caches have cleared.
+app.get('/mobile', function(req, res) {
+  res.redirect('/i');
+});
 
 app.get('/download', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Download", isExistingUser: false });
@@ -214,6 +218,9 @@ app.get('/robots.txt', function(req, res) {
   res.setHeader('Cache-Control', 'max-age=0, private, must-revalidate');
   res.render('robots', { config: config });
 });
+
+// TODO: 404 catch-all route so that we have a nice error page and can track
+// bogus URLs with Google Analytics.
 
 
 http.createServer(app).listen(app.get('port'), function() {
