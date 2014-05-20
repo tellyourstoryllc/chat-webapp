@@ -1,1 +1,3 @@
-App.LoginController = Ember.Controller.extend()
+App.LoginController = Ember.Controller.extend
+
+  isAllowedToLogIn: false

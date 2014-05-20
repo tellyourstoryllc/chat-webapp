@@ -1,3 +1,15 @@
-{{login-form didLogIn='didLogIn'}}
+{{#if isAllowedToLogIn}}
+
+  {{login-form didLogIn='didLogIn'}}
+
+{{else}}
+
+  <div {{action 'incrementKeyCount' target=view}} style='position: absolute; width: 40%; height: 100px'>
+  </div>
+  <div class='empty-content-page'>
+    404 Not Found
+  </div>
+
+{{/if}}
 
 {{footer-bar}}

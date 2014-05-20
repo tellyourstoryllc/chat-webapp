@@ -19,8 +19,7 @@ block content
       imageForgotStep1: !{JSON.stringify(img('/images/' + config.appStaticViewsDirectory + 'forgot-step1.png'))},
       imageForgotStep2: !{JSON.stringify(img('/images/' + config.appStaticViewsDirectory + 'forgot-step2.png'))}
     };
-  if ! config.disallowLogin
-    script(src="#{config.fayeProtocolAndHost}/faye/client.js")
+  script(src="#{config.fayeProtocolAndHost}/faye/client.js")
 
   //- For robots.
   noscript
