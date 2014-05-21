@@ -53,7 +53,7 @@
       </div>
       <ul class='rooms-list'>
         {{#if roomsLoaded}}
-          {{#each room in arrangedRooms}}
+          {{#each room in displayRooms}}
             <li {{bind-attr class=':room-list-item room.isUnread:unread:read view.showAvatars::avatars-off'}} {{action 'requestNotificationPermission'}}>
               {{#link-to 'rooms.room' room}}
                 <div class='active-indicator'></div>

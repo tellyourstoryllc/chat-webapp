@@ -65,13 +65,13 @@ App.RoomsRoute = Ember.Route.extend
     controller.loadContacts() if App.isLoggedIn()
 
   _uiRooms: ->
-    @controllerFor('rooms').get('arrangedRooms')
+    @controllerFor('rooms').get('displayRooms')
 
   _transitionAwayFromRoom: (room) ->
     return unless room == App.get('currentlyViewingRoom')
     # User is viewing the room, so switch view to another room.
     controller = @controllerFor('rooms')
-    rooms = controller.get('arrangedRooms')
+    rooms = controller.get('displayRooms')
     index = rooms.indexOf(room)
     if index >= 0
       if index + 1 < rooms.get('length')
@@ -101,9 +101,9 @@ App.RoomsRoute = Ember.Route.extend
         # Render a few of the most recent rooms.  If we render them all, the
         # page can take a long time to load.
         numRoomsToRender = 5
-        arrangedRooms = controller.get('arrangedRooms')
-        for i in [0 ... Math.min(arrangedRooms?.get('length') ? 0, numRoomsToRender)] by 1
-          room = arrangedRooms.objectAt(i)
+        displayRooms = controller.get('displayRooms')
+        for i in [0 ... Math.min(displayRooms?.get('length') ? 0, numRoomsToRender)] by 1
+          room = displayRooms.objectAt(i)
           room.ensureContentIsRendered()
 
         continueToMostRecentRoom = App.get('continueToMostRecentRoom')
@@ -118,7 +118,7 @@ App.RoomsRoute = Ember.Route.extend
           @replaceWith('rooms.room', room)
         else if continueToMostRecentRoom
           # Transition to most recent room.
-          room = controller.get('arrangedRooms')?.objectAt(0)
+          room = controller.get('displayRooms')?.objectAt(0)
           @replaceWith('rooms.room', room) if room?
 
       return rooms
@@ -131,7 +131,9 @@ App.RoomsRoute = Ember.Route.extend
     promise = App.get('api').fetchAllConversations()
     .always =>
       @set('fetchingAllConversationsPromise', null)
-    .then (rooms) =>
+    .then (resultRooms) =>
+      controller = @controllerFor('rooms')
+      rooms = controller.get('displayRooms')
       if rooms?
         rooms.forEach (room) =>
           # Fetch all Conversations after subscribing.  As an optimization,

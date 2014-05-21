@@ -34,12 +34,16 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   rooms: Ember.computed.filter 'allOneToOnes.@each.{isInternal,isOpen,isDeleted}', (room) ->
     ! room.get('isInternal') && room.get('isOpen') && ! room.get('isDeleted')
 
-  arrangedRooms: (->
+  sortedRooms: (->
     App.RecordArray.create
       content: @get('rooms')
       sortProperties: ['lastActiveAt']
       sortAscending: false
   ).property('rooms')
+
+  displayRooms: (->
+    @get('sortedRooms').slice(0, 50)
+  ).property('sortedRooms.[]')
 
   arrangedContacts: (->
     App.RecordArray.create
