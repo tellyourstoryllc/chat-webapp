@@ -2,6 +2,7 @@ App.RoomsRoute = Ember.Route.extend
 
   didAttemptFirstFetchAllConversations: false
   fetchingAllConversationsPromise: null
+  shouldAutoLoadContacts: false
 
   activate: ->
     @_super(arguments...)
@@ -55,6 +56,7 @@ App.RoomsRoute = Ember.Route.extend
     return undefined
 
   _scheduleLoadContacts: (controller) ->
+    return unless @get('shouldAutoLoadContacts')
     controller ?= @controllerFor('rooms')
     @set('loadContactsTimer', Ember.run.later(@, '_loadContacts', controller, 30000))
 
