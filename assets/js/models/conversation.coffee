@@ -22,6 +22,8 @@ App.Conversation = Ember.Mixin.create
 
   isUnread: false
 
+  isDisplayedInList: false
+
   # Date (timestamp) that this conversation last had activity.  Non-event
   # messages count as activity.
   lastActiveAt: null
@@ -171,6 +173,14 @@ App.Conversation = Ember.Mixin.create
   ensureContentIsRendered: ->
     @set('displayMessages', @get('messages'))
     @set('isRenderingContent', true)
+    undefined
+
+  ensureDisplayableInList: ->
+    @subscribeToMessages().then =>
+      # To prevent race condition where messages get dropped between initial
+      # load and subscribe, we need to reload after subscribing to fetch those
+      # messages.
+      @reload()
     undefined
 
   fetchAndLoadAssociations: ->

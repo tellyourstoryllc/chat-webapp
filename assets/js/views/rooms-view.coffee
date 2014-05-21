@@ -22,6 +22,7 @@ App.RoomsView = Ember.View.extend
     @_super(arguments...)
     _.bindAll(@, 'resize', 'documentClick', 'documentActive', 'bodyKeyDown',
       'onMacGapActive', 'onMacGapIdle',
+      'onRoomsListScroll',
       'onToggleRoomsSidebarTouchStart')
     @showDefaultSidebarView()
     # Force computed properties.
@@ -42,6 +43,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').on 'keydown', @onJoinTextKeyDown
     @$('.join-text').on 'paste', @onJoinTextPaste
     @$('.join-text').on 'focus', @onJoinTextFocus
+    @$('.rooms-list').on 'scroll', @onRoomsListScroll
     # @$('.contacts-list').on 'click', '.contact-list-item', @onContactsListItemClick
     Ember.run.later @, 'checkIfIdleTick', 5000
 
@@ -62,6 +64,7 @@ App.RoomsView = Ember.View.extend
     @$('.join-text').off 'keydown', @onJoinTextKeyDown
     @$('.join-text').off 'paste', @onJoinTextPaste
     @$('.join-text').off 'focus', @onJoinTextFocus
+    @$('.rooms-list').off 'scroll', @onRoomsListScroll
     # @$('.contacts-list').off 'click', '.contact-list-item', @onContactsListItemClick
 
   roomsLoadedChanged: (->
@@ -156,6 +159,14 @@ App.RoomsView = Ember.View.extend
     @$('.room-content').css
       width: width
   
+  onRoomsListScroll: _.debounce (event) ->
+    # Infinite scroll pagination of rooms.
+    $rooms = @$('.rooms-list')
+    maxScrollTop = $rooms.prop('scrollHeight') - $rooms.height()
+    if maxScrollTop - $rooms.scrollTop() < 50
+      @incrementProperty('controller.displayRoomsLimit', 20)
+  , 100
+
   documentClick: (event) ->
     Ember.run @, ->
       @closeChooseStatusMenu()

@@ -13,13 +13,18 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
   contactsOffset: 0
   contactsLoaded: false
 
+  displayRooms: null
+  oldDisplayRoomsLimit: 0
+  displayRoomsLimit: 20
+
   init: ->
     @_super(arguments...)
     # Initialize to empty arrays so computed properties work.
-    for key in ['allGroups', 'allOneToOnes'] when ! @get(key)?
+    for key in ['allGroups', 'allOneToOnes', 'displayRooms'] when ! @get(key)?
       @set(key, [])
     # Force computed properties.
     @get('numUnreadRooms')
+    @get('sortedRooms')
 
   allContacts: (->
     App.get('currentUserContacts')
@@ -41,9 +46,42 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       sortAscending: false
   ).property('rooms')
 
-  displayRooms: (->
-    @get('sortedRooms').slice(0, 50)
-  ).property('sortedRooms.[]')
+  displayRooms: Ember.arrayComputed 'sortedRooms', 'displayRoomsLimit',
+    addedItem: (array, item, changeMeta, instanceMeta) ->
+      i = changeMeta.index
+      limit = @get('displayRoomsLimit')
+      if i < limit
+        array.insertAt(i, item)
+        item.set('isDisplayedInList', true)
+      len = array.get('length')
+      if len > limit
+        convo = array.popObject()
+        convo?.set('isDisplayedInList', false)
+      return array
+    removedItem: (array, item, changeMeta, instanceMeta) ->
+      i = changeMeta.index
+      if array.get('length') > i
+        item.set('isDisplayedInList', false)
+        array.removeAt(i, 1)
+      return array
+
+  displayRoomsLimitWillChange: (->
+    @set('oldDisplayRoomsLimit', @get('displayRoomsLimit'))
+  ).observesBefore('displayRoomsLimit')
+
+  # When we show more rooms, make sure they're loaded so they can display.
+  displayRoomsLimitChanged: (->
+    sortedRooms = @get('sortedRooms')
+    displayRooms = @get('displayRooms')
+    # Limit only ever increases.
+    for i in [@get('oldDisplayRoomsLimit') ... @get('displayRoomsLimit')] by 1
+      room = sortedRooms.objectAt(i)
+      continue unless room?
+      displayRooms.pushObject(room)
+      room.set('isDisplayedInList', true)
+      room.ensureDisplayableInList()
+    undefined
+  ).observes('displayRoomsLimit')
 
   arrangedContacts: (->
     App.RecordArray.create
