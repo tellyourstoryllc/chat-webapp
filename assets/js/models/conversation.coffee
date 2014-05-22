@@ -22,8 +22,6 @@ App.Conversation = Ember.Mixin.create
 
   isUnread: false
 
-  isDisplayedInList: false
-
   # Date (timestamp) that this conversation last had activity.  Non-event
   # messages count as activity.
   lastActiveAt: null

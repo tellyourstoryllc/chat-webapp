@@ -52,16 +52,13 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       limit = @get('displayRoomsLimit')
       if i < limit
         array.insertAt(i, item)
-        item.set('isDisplayedInList', true)
       len = array.get('length')
       if len > limit
         convo = array.popObject()
-        convo?.set('isDisplayedInList', false)
       return array
     removedItem: (array, item, changeMeta, instanceMeta) ->
       i = changeMeta.index
       if array.get('length') > i
-        item.set('isDisplayedInList', false)
         array.removeAt(i, 1)
       return array
 
@@ -78,7 +75,6 @@ App.RoomsController = Ember.Controller.extend App.BaseControllerMixin,
       room = sortedRooms.objectAt(i)
       continue unless room?
       displayRooms.pushObject(room)
-      room.set('isDisplayedInList', true)
       room.ensureDisplayableInList()
     undefined
   ).observes('displayRoomsLimit')
