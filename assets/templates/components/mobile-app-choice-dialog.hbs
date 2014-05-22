@@ -1,0 +1,28 @@
+<div class='title'>
+  <img src='{{web-server-url 'imageLogo'}}' alt='{{unbound App.title}}' class='logo'>
+</div>
+
+{{#if isAppleIos}}
+  <button class='app-btn btn-block btn-secondary' {{action 'launchMobileApp'}}>
+    Open the App
+  </button>
+  <a class='app-btn btn-block app-store-link' href='{{unbound AppConfig.iosAppInstallUrl}}' target='_blank'>
+    Get the App
+  </a>
+{{else}}
+  {{#if isAndroid}}
+    <p class='to-enter no-join-code'>
+      Our Android app is coming soon.
+    </p>
+  {{else}}
+    <p class='to-enter no-join-code'>
+      You must open this on a mobile device.
+    </p>
+    <div>
+      {{#link-to 'index'}}Home{{/link-to}}
+    </div>
+  {{/if}}
+{{/if}}
+
+<div class='hidden-continue'>
+</div>

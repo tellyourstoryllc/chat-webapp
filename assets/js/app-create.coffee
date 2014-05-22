@@ -648,12 +648,9 @@ window.App = App = Ember.Application.create
   # Attempts to open the mobile app with the given URL.  URL should have a
   # protocol that the app understand.
   attemptToOpenMobileApp: (path) ->
-    return unless Modernizr.appleios || Modernizr.android
+    protocol = App.Util.currentPlatformLaunchAppProtocol()
+    return unless protocol
     path = '/' + path if path[0] != '/'
-    protocol = if Modernizr.appleios
-      AppConfig.iosAppLaunchProtocol
-    else if Modernizr.android
-      AppConfig.androidAppLaunchProtocol
     window.location = "#{protocol}:/#{path}"
     # If the app isn't installed, fall back to opening the App Store.
     # window.setTimeout ->
