@@ -166,6 +166,9 @@ app.get('/signup', renderChatApp);
 app.get('/forgot-password', renderChatApp);
 app.get('/password/reset/*', renderChatApp);
 app.get('/chat(/*)?', renderChatApp);
+app.get('/missed_received_snaps', renderChatApp);
+app.get('/missed_sent_snaps', renderChatApp);
+app.get('/unviewed_snaps', renderChatApp);
 app.get('/view(/*)?', renderChatApp);
 app.get('/v/*', function(req, res) {
   // Shortened form redirects to longer form.

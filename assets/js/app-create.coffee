@@ -835,6 +835,9 @@ App.Router.map ->
   @route 'password-reset', path: '/password/reset/:token'
 
   @route 'chat', path: '/chat/:one_to_one_id'
+  @route 'missed-received-snaps', path: '/missed_received_snaps'
+  @route 'missed-sent-snaps', path: '/missed_sent_snaps'
+  @route 'unviewed-snaps', path: '/unviewed_snaps'
   @resource 'rooms', path: '/view', ->
     @route 'room', path: '/:room_id'
 
