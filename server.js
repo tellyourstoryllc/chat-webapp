@@ -222,8 +222,13 @@ app.get('/robots.txt', function(req, res) {
   res.render('robots', { config: config });
 });
 
-// TODO: 404 catch-all route so that we have a nice error page and can track
-// bogus URLs with Google Analytics.
+// 404 catch-all route so that we have a nice error page and can track bogus
+// URLs with Google Analytics.
+app.use(function(req, res, next) {
+  var code = 404;
+  res.status(code);
+  res.render('error', { config: config, title: "Not Found", code: code });
+});
 
 
 http.createServer(app).listen(app.get('port'), function() {

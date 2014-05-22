@@ -1,0 +1,10 @@
+extends mobile-layout
+
+block content
+  div(style='text-align: center')
+    p
+      a(href='/')
+        img(src=img('/images/' + config.appStaticViewsDirectory + 'logo.png') style='width: 300px; height: auto;')
+    h1(style='font-size: 24px; margin-bottom: 50px') #{code} #{title}
+    p
+      a(href='/') Home
