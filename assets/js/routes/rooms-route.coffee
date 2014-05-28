@@ -4,9 +4,12 @@ App.RoomsRoute = Ember.Route.extend
   fetchingAllConversationsPromise: null
   shouldAutoLoadContacts: false
 
+  _conversationsOffset: 0
+
   activate: ->
     @_super(arguments...)
 
+    @set('_conversationsOffset', 0)
     App.get('eventTarget').on 'didConnect', @, @_didConnect
 
   deactivate: ->
@@ -128,8 +131,25 @@ App.RoomsRoute = Ember.Route.extend
     return promise if (promise = @get('fetchingAllConversationsPromise'))?
 
     @set('didAttemptFirstFetchAllConversations', true)
-    promise = App.get('api').fetchAllConversations()
-    .always =>
+    limit = 200
+    fetchNextPage = (resultRooms) =>
+      # Base case.
+      return resultRooms if resultRooms? && resultRooms.get('length') < limit
+
+      if resultRooms?
+        # Previous page succeeded.
+        offset = @get('_conversationsOffset') ? 0
+        offset += limit
+      else
+        # First page.
+        offset = 0
+      @set('_conversationsOffset', offset)
+
+      return App.get('api').fetchAllConversations(limit: limit, offset: offset)
+      .then(fetchNextPage)
+
+    promise = fetchNextPage()
+    .finally =>
       @set('fetchingAllConversationsPromise', null)
     .then (resultRooms) =>
       controller = @controllerFor('rooms')

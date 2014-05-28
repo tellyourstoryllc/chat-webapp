@@ -209,9 +209,9 @@ App.RemoteApi = Ember.Object.extend
     # Fire and forget.
     @ajax(conversation.updateUrl(), 'POST', data: data)
 
-  fetchAllConversations: ->
+  fetchAllConversations: (data = {}) ->
     api = App.get('api')
-    api.ajax(api.buildURL('/conversations'), 'GET', data: {})
+    api.ajax(api.buildURL('/conversations'), 'GET', data: data)
     .then (json) =>
       if json.error?
         throw json
