@@ -195,6 +195,10 @@ app.get('/install', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Install", isExistingUser: false });
 });
 
+app.get('/iview', function(req, res) {
+  res.render('redirect', { config: config, url: "http://snapcracklepop.youcanbook.me/" });
+});
+
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
