@@ -200,10 +200,10 @@ app.get('/iview', function(req, res) {
 });
 
 app.get('/stories/:id', function(req, res) {
-  res.render('redirect-to-app', { config: config, title: "New Story", isExistingUser: true, appParams: 'stories/' + req.param('id') });
+  res.render('redirect-to-app', { config: config, title: "New Story", isExistingUser: true, appParams: 'stories/story_id/' + req.param('id') });
 });
 app.get('/stories/:id/liked', function(req, res) {
-  res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true, appParams: 'stories/' + req.param('id') });
+  res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true, appParams: 'stories/story_id/' + req.param('id') });
 });
 
 app.get('/mobile/help', function(req, res) {
