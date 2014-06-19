@@ -16,12 +16,15 @@ block foot-content
     var redirectToRightPlace = function() {
       var url, protocol, loadedAt;
       var isExistingUser = #{!! isExistingUser};
+      var appParams = "#{appParams}";
+
       if (isExistingUser) {
         protocol = MobileUtils.currentPlatformLaunchAppProtocol();
         if (protocol) {
           loadedAt = +new Date;
           // Launch the app.
-          window.location = '' + protocol + '://';
+          url = '' + protocol + '://' + appParams;
+          window.location = url;
           // If the app isn't installed, fall back to opening the App Store.
           window.setTimeout(function() {
             if (+new Date - loadedAt < 2000) {

@@ -199,11 +199,11 @@ app.get('/iview', function(req, res) {
   res.render('redirect', { config: config, url: "http://snapcracklepop.youcanbook.me/" });
 });
 
-app.get('/new_story', function(req, res) {
-  res.render('redirect-to-app', { config: config, title: "New Story", isExistingUser: true });
+app.get('/stories/:id', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "New Story", isExistingUser: true, appParams: 'stories/' + req.param('id') });
 });
-app.get('/liked_story', function(req, res) {
-  res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true });
+app.get('/stories/:id/liked', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true, appParams: 'stories/' + req.param('id') });
 });
 
 app.get('/mobile/help', function(req, res) {
