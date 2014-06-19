@@ -202,6 +202,9 @@ app.get('/iview', function(req, res) {
 app.get('/new_story', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "New Story", isExistingUser: true });
 });
+app.get('/liked_story', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true });
+});
 
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
