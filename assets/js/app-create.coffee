@@ -821,6 +821,8 @@ App.Router.reopen
       '/password/reset/XXX'
     else if /^\/stories\/[^\/\?]+\/liked/.test(url)
       '/stories/XXX/liked'
+    else if /^\/stories\/[^\/\?]+\/comments/.test(url)
+      '/stories/XXX/comments'
     else if /^\/stories\/[^\/\?]+/.test(url)
       '/stories/XXX'
     else

@@ -205,6 +205,9 @@ app.get('/stories/:id', function(req, res) {
 app.get('/stories/:id/liked', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Liked Story", isExistingUser: true, appParams: 'stories/story_id/' + req.param('id') });
 });
+app.get('/stories/:id/comments', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "Story Comments", isExistingUser: true, appParams: 'stories/story_id/' + req.param('id') });
+});
 
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
