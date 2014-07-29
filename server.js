@@ -209,6 +209,10 @@ app.get('/stories/:id/comments', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "Story Comments", isExistingUser: true, appParams: 'stories/story_id/' + req.param('id') });
 });
 
+app.get('/app_tips/:id', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "App Tips", isExistingUser: true });
+});
+
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });

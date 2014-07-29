@@ -825,6 +825,8 @@ App.Router.reopen
       '/stories/XXX/comments'
     else if /^\/stories\/[^\/\?]+/.test(url)
       '/stories/XXX'
+    else if /^\/app_tips\/[^\/\?]+/.test(url)
+      '/app_tips/XXX'
     else
       url
 
