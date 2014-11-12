@@ -219,6 +219,11 @@ app.get('/mobile/help', function(req, res) {
 app.get('/support', function(req, res) {
   res.redirect('/mobile/help');
 });
+
+app.get('/widget-tutorial', function(req, res) {
+  res.render('widget-tutorial', { config: config, title: "Widget Tutorial" });
+});
+
 app.get('/legal/dmca', function(req, res) {
   res.render(config.appStaticViewsDirectory + 'legal-dmca', { config: config, title: "Copyright Policy" });
 });
