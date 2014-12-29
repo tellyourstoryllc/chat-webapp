@@ -213,6 +213,10 @@ app.get('/app_tips/:id', function(req, res) {
   res.render('redirect-to-app', { config: config, title: "App Tips", isExistingUser: true });
 });
 
+app.get('/new_friend', function(req, res) {
+  res.render('redirect-to-app', { config: config, title: "New Friend", isExistingUser: true });
+});
+
 app.get('/mobile/help', function(req, res) {
   res.render('mobile-help', { config: config, title: "Help" });
 });
