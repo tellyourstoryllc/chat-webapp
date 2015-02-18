@@ -2,4 +2,4 @@
 assets/js/templates.js
 
 # Config files.
-config/index.coffee
+config/index*.coffee
